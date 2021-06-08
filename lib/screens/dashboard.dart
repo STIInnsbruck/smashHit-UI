@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/custom_widgets/contract_partner_tile.dart';
 
 class Dashboard extends StatefulWidget {
 
@@ -19,6 +20,15 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     //double screenWidth = MediaQuery.of(context).size.width;
 
-    return Container();
+    return ListView(
+      children: [
+        ContractPartnerTile(),
+        ContractPartnerTile(),
+        ContractPartnerTile(),
+        ContractPartnerTile(),
+        ContractPartnerTile(),
+        ContractPartnerTile()
+      ],
+    );
   }
 }
