@@ -29,27 +29,42 @@ class _ContractCreationState extends State<ContractCreation> {
   }
 
   Widget _sideBar(double width) {
-    return SingleChildScrollView(
-      physics: ScrollPhysics(),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-        width: width / 5,
-        color: Colors.grey,
-        child: Column(
-          children: [
-            Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
-            ListView.builder(
-              itemCount: textFieldCount,
-              itemBuilder: (BuildContext context, int index) {
-                return partyField();
-              },
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-            ),
-            _addPartyButton()
-          ],
-        ),
-      )
+    return Container(
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      width: width / 5,
+      color: Colors.grey,
+      child: Column(
+        children: [
+          SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Container(
+                child: Column(
+                  children: [
+                    Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
+                    ListView.builder(
+                      itemCount: textFieldCount,
+                      itemBuilder: (BuildContext context, int index) {
+                        return partyField();
+                      },
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    ),
+                    _addPartyButton(),
+                  ],
+                ),
+              )
+          ),
+          Spacer(),
+          ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightGreenAccent,
+                onPrimary: Colors.white,
+              ),
+              child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
+          )
+        ],
+      ),
     );
   }
 
