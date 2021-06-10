@@ -7,11 +7,10 @@ class ContractPartnerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
       margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
-      color: Colors.blueGrey,
+      color: Colors.grey,
       child: Column(
         children: [
           Container(
@@ -53,27 +52,27 @@ class ContractPartnerTile extends StatelessWidget {
             Container(
               width: 150,
               height: 75,
-              color: Colors.grey,
+              color: Colors.white,
             ),
             Container(
               width: 150,
               height: 75,
-              color: Colors.grey,
+              color: Colors.white,
             ),
             Container(
               width: 150,
               height: 75,
-              color: Colors.grey,
+              color: Colors.white,
             ),
             Container(
               width: 150,
               height: 75,
-              color: Colors.grey,
+              color: Colors.white,
             ),
             Container(
               width: 150,
               height: 75,
-              color: Colors.grey,
+              color: Colors.white,
             ),
           ],
         ),

@@ -1,0 +1,87 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:smashhit_ui/data/models.dart';
+
+class ContractCreation extends StatefulWidget {
+
+  final Function(int) changeScreen;
+  User user;
+
+  ContractCreation(this.changeScreen, this.user);
+
+  @override
+  _ContractCreationState createState() => new _ContractCreationState();
+}
+
+class _ContractCreationState extends State<ContractCreation> {
+
+  int textFieldCount = 2; //Minimum of two parties in all contracts
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Row(
+      children: [
+        _sideBar(screenWidth)
+      ],
+    );
+  }
+
+  Widget _sideBar(double width) {
+    return SingleChildScrollView(
+      physics: ScrollPhysics(),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+        width: width / 5,
+        color: Colors.grey,
+        child: Column(
+          children: [
+            Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
+            ListView.builder(
+              itemCount: textFieldCount,
+              itemBuilder: (BuildContext context, int index) {
+                return partyField();
+              },
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+            ),
+            _addPartyButton()
+          ],
+        ),
+      )
+    );
+  }
+
+  Container partyField() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      child: TextFormField(
+        textAlignVertical: TextAlignVertical.center,
+        style: TextStyle(fontSize: 20),
+        decoration: InputDecoration(
+            hintText: "Enter name"
+        ),
+      ),
+    );
+  }
+
+  Widget _addPartyButton() {
+    return GestureDetector(
+      child: Column(
+        children: [
+          Icon(Icons.add_circle_outline, size: 40),
+          Text("Add Party", style: TextStyle(color: Colors.black, fontSize: 10))
+        ],
+      ),
+      onTap: () {
+        setState(() {
+          textFieldCount++;
+        });
+      },
+    );
+  }
+}

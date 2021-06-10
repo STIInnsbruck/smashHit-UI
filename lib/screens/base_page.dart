@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/screens/dashboard.dart';
+import 'package:smashhit_ui/screens/contract_creation.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class BasePage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _BasePageState extends State<BasePage> {
             ListTile(
               title: Text("Dashboard"),
               onTap: () {
-                //Do something.
+                changeScreen(0);
               },
             ),
             ListTile(
@@ -54,7 +55,7 @@ class _BasePageState extends State<BasePage> {
             ListTile(
               title: Text("Create a new contract"),
               onTap: () {
-                //Do something.
+                changeScreen(1);
               },
             )]),
       ),
@@ -69,6 +70,11 @@ class _BasePageState extends State<BasePage> {
         case 0:
           _selectedPage = Dashboard(changeScreen, currentUser);
           _selectedTitle = "Dashboard";
+          break;
+        case 1:
+          _selectedPage = ContractCreation(changeScreen, currentUser);
+          _selectedTitle = "Contract Creation";
+          break;
       }
     });
   }
