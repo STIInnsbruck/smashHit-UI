@@ -15,11 +15,27 @@ class _ContractFormState extends State<ContractForm> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      color: Colors.blue,
-      width: screenWidth / 2,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Colors.grey,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black45,
+            blurRadius: 25.0,
+            spreadRadius: 5.0,
+            offset: Offset(
+              10.0,
+              10.0
+            )
+          )
+        ]
+      ),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      width: screenWidth / 1.5,
       child: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               titleField(),
               descriptionField(),
@@ -32,12 +48,13 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget titleField() {
-    return Row(
+    return Column(
       children: [
         Text("Title: ", style: TextStyle(fontSize: 25)),
-        Expanded(
-          child: TextField(),
-        ),
+        TextField(
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20)
+        )
       ],
     );
   }
@@ -45,14 +62,15 @@ class _ContractFormState extends State<ContractForm> {
   Widget descriptionField() {
     return Column(
       children: [
-        Text("Description: ", style: TextStyle(fontSize: 25)),
+        Text("Contract Terms: ", style: TextStyle(fontSize: 25)),
         Container(
           height: 500,
           color: Colors.white70,
           child: TextField(
             maxLines: null,
+            style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
-                hintText: "Enter contract details here..."
+                hintText: "Enter contract details here...",
             ),
           ),
         ),
@@ -67,11 +85,18 @@ class _ContractFormState extends State<ContractForm> {
           children: [
             Text("Start date: ", style: TextStyle(fontSize: 25)),
             Expanded(
-              child: TextField(),
+              child: TextField(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20)
+              ),
             ),
+            Spacer(),
             Text("End date: ", style: TextStyle(fontSize: 25)),
             Expanded(
-              child: TextField(),
+              child: TextField(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20)
+              ),
             ),
           ],
         )

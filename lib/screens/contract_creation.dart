@@ -31,7 +31,9 @@ class _ContractCreationState extends State<ContractCreation> {
         /**Expanded(
           child: ProcessTimelinePage()
         )*/
-        ContractForm()
+        Spacer(),
+        ContractForm(),
+        Spacer()
       ],
     );
   }
