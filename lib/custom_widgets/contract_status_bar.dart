@@ -48,7 +48,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       builder: TimelineTileBuilder.connected(
         connectionDirection: ConnectionDirection.before,
         itemExtentBuilder: (_, __) =>
-        MediaQuery.of(context).size.width / (_processes.length * 2),
+        MediaQuery.of(context).size.width / (_processes.length * 1.5),
         oppositeContentsBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 15.0),
