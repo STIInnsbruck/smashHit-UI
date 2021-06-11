@@ -29,13 +29,7 @@
 .packages
 .pub-cache/
 .pub/
-/build/app/
-/build/flutter_assets/
-/build/kotlin/
-/build/62f14693764db0ebbdcfdbb2f9f2aa8a/
-/build/4f2a58af27abc49ecf55570043bbf938.cache.dill.track.dill
-/build/f872507f30e2ff2523f0f1d19160266e.cache.dill.track.dill
-/build/last_build_run.json
+/build/
 
 # Web related
 lib/generated_plugin_registrant.dart
