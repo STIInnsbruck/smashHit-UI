@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/contract_status_bar.dart';
+import 'package:smashhit_ui/custom_widgets/contract_form.dart';
 
 import '../custom_widgets/contract_status_bar.dart';
 
@@ -30,6 +31,7 @@ class _ContractCreationState extends State<ContractCreation> {
         /**Expanded(
           child: ProcessTimelinePage()
         )*/
+        ContractForm()
       ],
     );
   }
