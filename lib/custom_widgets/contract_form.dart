@@ -38,6 +38,9 @@ class _ContractFormState extends State<ContractForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               titleField(),
+              Container(
+                height: 20,
+              ),
               descriptionField(),
               timeFrameField()
             ],
