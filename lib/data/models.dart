@@ -13,6 +13,16 @@ class User {
   set setName(String value) { _name = value; }
 }
 
+/// Status for the current situation of the contract.
+/// Offer = sent the contract to the other parties.
+enum Status {
+  Created,
+  Offer,
+  Agreement,
+  Denied,
+  Discussion
+}
+
 /// Contract model. There is always one party creating the contract (= contractor)
 /// and there can be 1 or more parties that accept the contract (= contractee).
 /// If the contract is supposed to only be an instant contract lasting for a day,
@@ -25,6 +35,7 @@ class Contract {
   String description;
   DateTime startDate;
   DateTime endDate;
+  Status status;
 }
 
 
