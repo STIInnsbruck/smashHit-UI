@@ -3,7 +3,7 @@ import 'package:smashhit_ui/data/models.dart';
 
 class ContractPartnerTile extends StatelessWidget {
 
-  User partner;
+  User? partner;
 
   @override
   Widget build(BuildContext context) {

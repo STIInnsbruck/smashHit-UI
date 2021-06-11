@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/custom_widgets/contract_status_bar.dart';
+
+import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
 
   final Function(int) changeScreen;
-  User user;
+  User? user;
 
   ContractCreation(this.changeScreen, this.user);
 
@@ -23,7 +26,10 @@ class _ContractCreationState extends State<ContractCreation> {
 
     return Row(
       children: [
-        _sideBar(screenWidth)
+        _sideBar(screenWidth),
+        Expanded(
+          child: ProcessTimelinePage()
+        )
       ],
     );
   }

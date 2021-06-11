@@ -11,8 +11,8 @@ class BasePage extends StatefulWidget {
 class _BasePageState extends State<BasePage> {
   int _selectedIndex = 0;
   String _selectedTitle = "";
-  Widget _selectedPage;
-  User currentUser;
+  Widget? _selectedPage;
+  User? currentUser;
 
   _BasePageState() {
     _selectedPage = Dashboard(changeScreen, currentUser);
