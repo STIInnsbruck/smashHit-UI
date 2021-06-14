@@ -77,9 +77,9 @@ class _ContractStatusBarState extends State<ContractStatusBar> {
           if (index == _processIndex) {
             color = inProgressColor;
             child = Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(6.0),
               child: CircularProgressIndicator(
-                strokeWidth: 3.0,
+                strokeWidth: 2.0,
                 valueColor: AlwaysStoppedAnimation(Colors.white),
               ),
             );
