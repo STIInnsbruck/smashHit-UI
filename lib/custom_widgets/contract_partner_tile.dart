@@ -13,7 +13,7 @@ class ContractPartnerTile extends StatelessWidget {
 
 
     return Container(
-      height: screenHeight / 5,
+      height: screenHeight / 4,
       width: screenWidth,
       margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -80,8 +80,21 @@ class ContractPartnerTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
       width: 150,
-      height: 75,
-      color: Colors.white,
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black45,
+              blurRadius: 2.0,
+              spreadRadius: 1.0,
+              offset: Offset(
+                  2.0,
+                  2.0
+              )
+          )
+        ]
+      ),
     );
   }
 }

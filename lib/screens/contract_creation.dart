@@ -37,12 +37,24 @@ class _ContractCreationState extends State<ContractCreation> {
     return Row(
       children: [
         _sideBar(screenWidth),
-        /**Expanded(
-          child: ProcessTimelinePage()
-        )*/
-        Spacer(),
-        ContractForm(),
-        Spacer()
+        Container(width: 10),
+        Expanded(
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: screenWidth * 0.66,
+                    height: 125,
+                    child: ProcessTimelinePage(),
+                  ),
+                  ContractForm()
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
