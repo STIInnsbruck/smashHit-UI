@@ -51,17 +51,17 @@ class _ContractStatusBarState extends State<ContractStatusBar> {
         MediaQuery.of(context).size.width / (_processes.length * 1.5),
         oppositeContentsBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
+            padding: const EdgeInsets.only(bottom: 0.0),
             child: Icon(
               processIcons[index],
-              size: 50.0,
+              size: 25.0,
               color: getColor(index),
             ),
           );
         },
         contentsBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(top: 15.0),
+            padding: const EdgeInsets.only(top: 0.0),
             child: Text(
               _processes[index],
               style: TextStyle(
@@ -98,7 +98,7 @@ class _ContractStatusBarState extends State<ContractStatusBar> {
             return Stack(
               children: [
                 CustomPaint(
-                  size: Size(30.0, 30.0),
+                  size: Size(20.0, 20.0),
                   painter: _BezierPainter(
                     color: color,
                     drawStart: index > 0,
@@ -106,7 +106,7 @@ class _ContractStatusBarState extends State<ContractStatusBar> {
                   ),
                 ),
                 DotIndicator(
-                  size: 30.0,
+                  size: 20.0,
                   color: color,
                   child: child,
                 ),
