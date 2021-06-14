@@ -7,9 +7,16 @@ class ContractPartnerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+
 
     return Container(
+      height: screenHeight / 5,
+      width: screenWidth,
       margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
       color: Colors.grey,
       child: Column(
         children: [
@@ -17,7 +24,6 @@ class ContractPartnerTile extends StatelessWidget {
             child: tileHeader("Name Surname"),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
             child: contractsScroller(),
           )
         ],
@@ -46,38 +52,36 @@ class ContractPartnerTile extends StatelessWidget {
     return Row(
       children: [
         IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 150,
-              height: 75,
-              color: Colors.white,
+        Expanded(
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  contractTile(),
+                  contractTile(),
+                  contractTile(),
+                  contractTile(),
+                  contractTile(),
+                  contractTile(),
+                  contractTile(),
+                  contractTile(),
+                ],
+              ),
             ),
-            Container(
-              width: 150,
-              height: 75,
-              color: Colors.white,
-            ),
-            Container(
-              width: 150,
-              height: 75,
-              color: Colors.white,
-            ),
-            Container(
-              width: 150,
-              height: 75,
-              color: Colors.white,
-            ),
-            Container(
-              width: 150,
-              height: 75,
-              color: Colors.white,
-            ),
-          ],
+          ),
         ),
         IconButton(icon: Icon(Icons.chevron_right), onPressed: () {})
       ],
+    );
+  }
+
+  Widget contractTile() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+      width: 150,
+      height: 75,
+      color: Colors.white,
     );
   }
 }

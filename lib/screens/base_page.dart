@@ -60,6 +60,7 @@ class _BasePageState extends State<BasePage> {
             )]),
       ),
       body: _selectedPage,
+      resizeToAvoidBottomInset: false,
     );
   }
 

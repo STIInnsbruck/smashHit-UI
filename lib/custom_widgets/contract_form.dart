@@ -67,7 +67,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         Text("Contract Terms: ", style: TextStyle(fontSize: 25)),
         Container(
-          height: 500,
+          height: 400,
           color: Colors.white70,
           child: TextField(
             maxLines: null,

@@ -20,6 +20,15 @@ class ContractCreation extends StatefulWidget {
 class _ContractCreationState extends State<ContractCreation> {
 
   int textFieldCount = 2; //Minimum of two parties in all contracts
+  final TextEditingController _youFieldController = new TextEditingController();
+  final TextEditingController _otherFieldController = new TextEditingController();
+  final TextEditingController _titleController = new TextEditingController();
+  final TextEditingController _descriptionController = new TextEditingController();
+  final TextEditingController _startController = new TextEditingController();
+  final TextEditingController _endController = new TextEditingController();
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +80,10 @@ class _ContractCreationState extends State<ContractCreation> {
                 primary: Colors.lightGreenAccent,
                 onPrimary: Colors.white,
               ),
-              child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
+              child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
+              )
           )
         ],
       ),
@@ -89,7 +101,7 @@ class _ContractCreationState extends State<ContractCreation> {
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.white
           ),
           child: TextFormField(
             textAlignVertical: TextAlignVertical.center,
