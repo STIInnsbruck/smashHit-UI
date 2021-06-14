@@ -47,7 +47,7 @@ class _ContractCreationState extends State<ContractCreation> {
                   SizedBox(
                     width: screenWidth * 0.66,
                     height: 125,
-                    child: ProcessTimelinePage(),
+                    child: ContractStatusBar(),
                   ),
                   ContractForm()
                 ],

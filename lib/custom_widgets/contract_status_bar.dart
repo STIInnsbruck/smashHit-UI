@@ -12,12 +12,12 @@ const completeColor = Color(0xff5e6172);
 const inProgressColor = Color(0xff5ec792);
 const todoColor = Color(0xffd1d2d7);
 
-class ProcessTimelinePage extends StatefulWidget {
+class ContractStatusBar extends StatefulWidget {
   @override
-  _ProcessTimelinePageState createState() => _ProcessTimelinePageState();
+  _ContractStatusBarState createState() => _ContractStatusBarState();
 }
 
-class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
+class _ContractStatusBarState extends State<ContractStatusBar> {
   int _processIndex = 2;
   final processIcons = [
     Icons.description,
