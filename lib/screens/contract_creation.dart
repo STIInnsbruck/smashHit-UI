@@ -43,6 +43,7 @@ class _ContractCreationState extends State<ContractCreation> {
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: screenWidth * 0.66,

@@ -1,6 +1,12 @@
 class User {
   int? _id;
   String? _name;
+  String? _email;
+  String? _streetAddress;
+  int? _telephoneNumber;
+  String? _role;
+
+
 
   User(int id, String name) {
     this._id = id;
@@ -19,6 +25,7 @@ class User {
 /// If the contract is supposed to only be an instant contract lasting for a day,
 /// then make the startDate and endDate the same date.
 class Contract {
+  int? id;
   User? contractor;
   List<User> contractee = [];
   ContractObject? contractObject;
@@ -26,6 +33,13 @@ class Contract {
   String? description;
   DateTime? startDate;
   DateTime? endDate;
+  String? addressType;
+  String? address;
+  String? agreementType;
+  String? contractType;
+  Duration? minimumDuration;
+
+
   String currentStatus = statusList[0];
   static final statusList = [
     "Created",

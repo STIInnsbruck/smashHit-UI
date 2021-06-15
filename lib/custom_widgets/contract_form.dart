@@ -16,7 +16,7 @@ class _ContractFormState extends State<ContractForm> {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
         color: Colors.grey,
         boxShadow: [
           BoxShadow(
