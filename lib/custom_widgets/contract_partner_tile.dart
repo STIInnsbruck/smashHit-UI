@@ -23,9 +23,11 @@ class ContractPartnerTile extends StatelessWidget {
           Container(
             child: tileHeader("Name Surname"),
           ),
+          Spacer(),
           Container(
             child: contractsScroller(),
-          )
+          ),
+          Spacer()
         ],
       ),
     );
