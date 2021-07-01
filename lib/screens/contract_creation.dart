@@ -71,7 +71,7 @@ class _ContractCreationState extends State<ContractCreation> {
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: height * 0.65
+              maxHeight: height * 0.50
             ),
             child: Scrollbar(
               child: SingleChildScrollView(
@@ -94,11 +94,14 @@ class _ContractCreationState extends State<ContractCreation> {
               ),
             ),
           ),
-          Spacer(),
+          Spacer(flex: 4),
           Container(
             margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: _addPartyButton(),
           ),
+          Spacer(),
+          contractTypeField(),
+          Spacer(),
           ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
@@ -133,6 +136,31 @@ class _ContractCreationState extends State<ContractCreation> {
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
                 hintText: "Enter name"
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget contractTypeField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          child: Text("Contract Type"),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          decoration: BoxDecoration(
+              color: Colors.white
+          ),
+          child: TextFormField(
+            textAlignVertical: TextAlignVertical.center,
+            style: TextStyle(fontSize: 20),
+            decoration: InputDecoration(
+                hintText: "Enter contract type"
             ),
           ),
         ),
