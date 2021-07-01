@@ -25,22 +25,22 @@ class User {
 /// If the contract is supposed to only be an instant contract lasting for a day,
 /// then make the startDate and endDate the same date.
 class Contract {
-  int? id;
+  int? contractId;
+  String? contractType;
   User? contractor;
   List<User> contractee = [];
   ContractObject? contractObject;
   String? title;
   String? description;
-  DateTime? startDate;
-  DateTime? endDate;
+  DateTime? executionDate;
+  DateTime? expireDate;
   String? addressType;
   String? address;
   String? agreementType;
-  String? contractType;
   Duration? minimumDuration;
 
 
-  String currentStatus = statusList[0];
+  String contractStatus = statusList[0];
   static final statusList = [
     "Created",
     "Offer",

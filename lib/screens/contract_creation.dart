@@ -48,7 +48,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 children: [
                   SizedBox(
                     width: screenWidth * 0.66,
-                    height: 125,
+                    height: 100,
                     child: ContractStatusBar(),
                   ),
                   ContractForm()
