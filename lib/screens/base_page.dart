@@ -34,7 +34,7 @@ class _BasePageState extends State<BasePage> {
             searchField(screenWidth),
             searchButton()
           ],
-          bottom: TabBar(
+          /**bottom: TabBar(
             tabs: [
               Tab(
                 text: "Personal Data",
@@ -49,7 +49,7 @@ class _BasePageState extends State<BasePage> {
                 text: "Subscriptions"
               )
             ],
-          ),
+          ),*/
         ),
         drawer: Drawer(
           child: ListView(

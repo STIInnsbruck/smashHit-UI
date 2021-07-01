@@ -63,7 +63,7 @@ class _ContractCreationState extends State<ContractCreation> {
 
   Widget _sideBar(double width, double height) {
     return Container(
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
       width: width / 5,
       color: Colors.blue,
       child: Column(
@@ -101,16 +101,19 @@ class _ContractCreationState extends State<ContractCreation> {
           ),
           contractEntityField(),
           contractTypeField(),
-          ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                primary: Colors.lightGreenAccent,
-                onPrimary: Colors.white,
-              ),
-              child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
-              )
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.lightGreenAccent,
+                  onPrimary: Colors.white,
+                ),
+                child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
+                )
+            ),
           )
         ],
       ),
