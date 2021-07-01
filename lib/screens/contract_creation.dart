@@ -33,10 +33,11 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Row(
       children: [
-        _sideBar(screenWidth),
+        _sideBar(screenWidth, screenHeight),
         Container(width: 10),
         Expanded(
           child: Scrollbar(
@@ -60,33 +61,41 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
-  Widget _sideBar(double width) {
+  Widget _sideBar(double width, double height) {
     return Container(
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
       width: width / 5,
-      color: Colors.grey,
+      color: Colors.blue,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Container(
-                child: Column(
-                  children: [
-                    Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
-                    ListView.builder(
-                      itemCount: textFieldCount,
-                      itemBuilder: (BuildContext context, int index) {
-                        return partyField(index);
-                      },
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: height * 0.75
+            ),
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
+                        ListView.builder(
+                          itemCount: textFieldCount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return partyField(index);
+                          },
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                        ),
+                        _addPartyButton(),
+                      ],
                     ),
-                    _addPartyButton(),
-                  ],
-                ),
-              )
+                  )
+              ),
+            ),
           ),
-          Spacer(),
+          //Spacer(),
           ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
