@@ -71,7 +71,7 @@ class _ContractCreationState extends State<ContractCreation> {
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: height * 0.75
+              maxHeight: height * 0.65
             ),
             child: Scrollbar(
               child: SingleChildScrollView(
@@ -88,14 +88,17 @@ class _ContractCreationState extends State<ContractCreation> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                         ),
-                        _addPartyButton(),
                       ],
                     ),
                   )
               ),
             ),
           ),
-          //Spacer(),
+          Spacer(),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: _addPartyButton(),
+          ),
           ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
