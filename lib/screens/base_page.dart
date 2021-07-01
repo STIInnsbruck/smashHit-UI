@@ -23,44 +23,64 @@ class _BasePageState extends State<BasePage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey,
-        title: Center(child: Text(_selectedTitle)),
-        actions: [
-          searchField(screenWidth),
-          searchButton()
-        ],
+    return DefaultTabController(
+      initialIndex: 1,
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          title: Center(child: Text(_selectedTitle)),
+          actions: [
+            searchField(screenWidth),
+            searchButton()
+          ],
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                text: "Personal Data",
+              ),
+              Tab(
+                text: "Leasing",
+              ),
+              Tab(
+                text: "Real Estate",
+              ),
+              Tab(
+                text: "Subscriptions"
+              )
+            ],
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(color: Colors.blue),
+                child: userInformation(screenWidth),
+              ),
+              ListTile(
+                title: Text("Dashboard"),
+                onTap: () {
+                  changeScreen(0);
+                },
+              ),
+              ListTile(
+                title: Text("Contacts"),
+                onTap: () {
+                  //Do something.
+                },
+              ),
+              ListTile(
+                title: Text("Create a new contract"),
+                onTap: () {
+                  changeScreen(1);
+                },
+              )]),
+        ),
+        body: _selectedPage,
+        resizeToAvoidBottomInset: false,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.grey),
-              child: userInformation(screenWidth),
-            ),
-            ListTile(
-              title: Text("Dashboard"),
-              onTap: () {
-                changeScreen(0);
-              },
-            ),
-            ListTile(
-              title: Text("Contacts"),
-              onTap: () {
-                //Do something.
-              },
-            ),
-            ListTile(
-              title: Text("Create a new contract"),
-              onTap: () {
-                changeScreen(1);
-              },
-            )]),
-      ),
-      body: _selectedPage,
-      resizeToAvoidBottomInset: false,
     );
   }
 
@@ -109,6 +129,7 @@ class _BasePageState extends State<BasePage> {
     return Column(
       children: [
         CircleAvatar(
+          backgroundColor: Colors.lightGreen,
           child: Icon(Icons.person),
           radius: 50,
         ),
