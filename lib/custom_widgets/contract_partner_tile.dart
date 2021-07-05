@@ -5,12 +5,17 @@ class ContractPartnerTile extends StatelessWidget {
 
   User? partner;
 
+  static List<Widget> contractList = [
+    contractTile(Icons.car_rental),
+    contractTile(Icons.home),
+    contractTile(Icons.person_search_rounded),
+    contractTile(Icons.work)
+  ];
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-
 
     return Container(
       height: screenHeight / 4,
@@ -60,14 +65,10 @@ class ContractPartnerTile extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  contractTile(),
-                  contractTile(),
-                  contractTile(),
-                  contractTile(),
-                  contractTile(),
-                  contractTile(),
-                  contractTile(),
-                  contractTile(),
+                  contractTile(Icons.car_rental),
+                  contractTile(Icons.home),
+                  contractTile(Icons.person_search_rounded),
+                  contractTile(Icons.work)
                 ],
               ),
             ),
@@ -78,7 +79,7 @@ class ContractPartnerTile extends StatelessWidget {
     );
   }
 
-  Widget contractTile() {
+  static Widget contractTile(IconData iconData) {
     return Container(
       margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
       width: 150,
@@ -96,6 +97,9 @@ class ContractPartnerTile extends StatelessWidget {
               )
           )
         ]
+      ),
+      child: Center(
+        child: Icon(iconData, size: 75),
       ),
     );
   }

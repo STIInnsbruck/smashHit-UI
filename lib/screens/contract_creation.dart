@@ -71,7 +71,8 @@ class _ContractCreationState extends State<ContractCreation> {
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: height * 0.50
+              maxHeight: height * 0.50,
+              minHeight: height * 0.50,
             ),
             child: Scrollbar(
               child: SingleChildScrollView(
@@ -94,9 +95,9 @@ class _ContractCreationState extends State<ContractCreation> {
               ),
             ),
           ),
-          Spacer(flex: 4),
+          Spacer(),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: _addPartyButton(),
           ),
           contractEntityField(),
