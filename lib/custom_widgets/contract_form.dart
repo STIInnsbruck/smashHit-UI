@@ -17,7 +17,7 @@ class _ContractFormState extends State<ContractForm> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
-        color: Colors.grey,
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black45,
@@ -31,7 +31,7 @@ class _ContractFormState extends State<ContractForm> {
         ]
       ),
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-      width: screenWidth / 1.5,
+      width: screenWidth * 0.50,
       child: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
@@ -51,12 +51,13 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget titleField() {
-    return Column(
+    return Row(
       children: [
         Text("Title: ", style: TextStyle(fontSize: 25)),
-        TextField(
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20)
+        Expanded(
+          child: TextFormField(
+              style: TextStyle(fontSize: 20)
+          ),
         )
       ],
     );
@@ -64,6 +65,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget descriptionField() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("Contract Terms: ", style: TextStyle(fontSize: 25)),
         Container(

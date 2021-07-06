@@ -19,7 +19,11 @@ class ContractCreation extends StatefulWidget {
 
 class _ContractCreationState extends State<ContractCreation> {
 
-  int textFieldCount = 2; //Minimum of two parties in all contracts
+  int textFieldCount = 0; //Minimum of two parties in all contracts
+  int _selectedRoleIndex = -1;//Used to highlight the selected role when adding a new party.
+  String _selectedPartyRole = "";//Used to set the label above a party textfield.
+  List<User> users = [];
+
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController = new TextEditingController();
   final TextEditingController _titleController = new TextEditingController();
@@ -28,15 +32,21 @@ class _ContractCreationState extends State<ContractCreation> {
   final TextEditingController _endController = new TextEditingController();
 
 
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Row(
       children: [
-        _sideBar(screenWidth),
+        _sideBar(screenWidth, screenHeight),
         Container(width: 10),
         Expanded(
           child: Scrollbar(
@@ -47,7 +57,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 children: [
                   SizedBox(
                     width: screenWidth * 0.66,
-                    height: 125,
+                    height: 100,
                     child: ContractStatusBar(),
                   ),
                   ContractForm()
@@ -60,56 +70,75 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
-  Widget _sideBar(double width) {
+  Widget _sideBar(double width, double height) {
     return Container(
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
       width: width / 5,
-      color: Colors.grey,
+      color: Colors.blue,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Container(
-                child: Column(
-                  children: [
-                    Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
-                    ListView.builder(
-                      itemCount: textFieldCount,
-                      itemBuilder: (BuildContext context, int index) {
-                        return partyField(index);
-                      },
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: height * 0.50,
+              minHeight: height * 0.50,
+            ),
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: Container(
+                    child: Column(
+                      children: [
+                        textFieldCount==0?
+                            Text("Currently No Parties Added", style: TextStyle(color: Colors.black, fontSize: 25), textAlign: TextAlign.center)
+                            : Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
+                        ListView.builder(
+                          itemCount: textFieldCount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return partyField(index, users[index].role);
+                          },
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                        ),
+                      ],
                     ),
-                    _addPartyButton(),
-                  ],
-                ),
-              )
+                  )
+              ),
+            ),
           ),
           Spacer(),
-          ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                primary: Colors.lightGreenAccent,
-                onPrimary: Colors.white,
-              ),
-              child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
-              )
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: _addPartyButton(),
+          ),
+          contractEntityField(),
+          contractTypeField(),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.lightGreenAccent,
+                  onPrimary: Colors.white,
+                ),
+                child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
+                )
+            ),
           )
         ],
       ),
     );
   }
 
-  Widget partyField(int index) {
+  Widget partyField(int index, String? role) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          child: index == 0? Text("You") : Text("Other party"),
+          child: Text("$role"),
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -128,6 +157,56 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
+  Widget contractTypeField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          child: Text("Contract Type"),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          decoration: BoxDecoration(
+              color: Colors.white
+          ),
+          child: TextFormField(
+            textAlignVertical: TextAlignVertical.center,
+            style: TextStyle(fontSize: 20),
+            decoration: InputDecoration(
+                hintText: "Enter contract type"
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget contractEntityField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          child: Text("Contracted Entity"),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          decoration: BoxDecoration(
+              color: Colors.white
+          ),
+          child: TextFormField(
+            textAlignVertical: TextAlignVertical.center,
+            style: TextStyle(fontSize: 20),
+            decoration: InputDecoration(
+                hintText: "What entity is being contracted?",
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _addPartyButton() {
     return GestureDetector(
       child: Column(
@@ -137,10 +216,66 @@ class _ContractCreationState extends State<ContractCreation> {
         ],
       ),
       onTap: () {
-        setState(() {
-          textFieldCount++;
-        });
+        _selectPartyRole();
       },
     );
+  }
+
+  _selectPartyRole() {
+    showDialog(
+        context: context,
+        builder: (_) => StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+           return AlertDialog(
+             title: Text("Select a role for the new party.", textAlign: TextAlign.center),
+             content: Row(
+               children: [
+                 _roleButton(Icons.person, "Primary", 0, setState),
+                 _roleButton(Icons.person, "Secondary", 1, setState),
+                 _roleButton(Icons.person, "Third", 2, setState),
+                 _roleButton(Icons.person, "On behalf of...", 3, setState),
+               ],
+             ),
+             actions: [
+               TextButton(onPressed: () {
+                 _selectedRoleIndex = -1;
+                 Navigator.of(context).pop();
+               }, child: Text("CANCEL")),
+               TextButton(onPressed: () {
+                 _selectedRoleIndex==-1?
+                 null :
+                 setState(() {
+                   users.add(new User(_selectedPartyRole));
+                   _incrementTextFieldCounter();
+                 });
+                 _selectedRoleIndex = -1;
+                 Navigator.of(context).pop();
+                  }, child: Text("CONFIRM", style: TextStyle(color: _selectedRoleIndex!=-1? Colors.blue : Colors.grey)))
+             ],
+           );
+          }
+        )
+    );
+  }
+
+  _roleButton(IconData icon, String subscript, int index, StateSetter setState) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(icon: Icon(icon), onPressed: () {
+          setState(() {
+            _selectedRoleIndex = index;
+          });
+          _selectedPartyRole = subscript;
+        }, iconSize: 100, color: _selectedRoleIndex==index? Colors.green : Colors.grey),
+        Text("$subscript"),
+      ],
+    );
+  }
+
+  _incrementTextFieldCounter() {
+    setState(() {
+      textFieldCount++;
+    });
   }
 }

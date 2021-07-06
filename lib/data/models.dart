@@ -8,14 +8,14 @@ class User {
 
 
 
-  User(int id, String name) {
-    this._id = id;
-    this._name = name;
+  User(String role) {
+    this._role = role;
   }
 
   int? get getId => _id;
   String? get getName => _name;
-  
+  String? get role => _role;
+
   set setName(String value) { _name = value; }
 }
 
@@ -25,22 +25,22 @@ class User {
 /// If the contract is supposed to only be an instant contract lasting for a day,
 /// then make the startDate and endDate the same date.
 class Contract {
-  int? id;
+  int? contractId;
+  String? contractType;
   User? contractor;
   List<User> contractee = [];
   ContractObject? contractObject;
   String? title;
   String? description;
-  DateTime? startDate;
-  DateTime? endDate;
+  DateTime? executionDate;
+  DateTime? expireDate;
   String? addressType;
   String? address;
   String? agreementType;
-  String? contractType;
   Duration? minimumDuration;
 
 
-  String currentStatus = statusList[0];
+  String contractStatus = statusList[0];
   static final statusList = [
     "Created",
     "Offer",
