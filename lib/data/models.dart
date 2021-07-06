@@ -8,14 +8,14 @@ class User {
 
 
 
-  User(int id, String name) {
-    this._id = id;
-    this._name = name;
+  User(String role) {
+    this._role = role;
   }
 
   int? get getId => _id;
   String? get getName => _name;
-  
+  String? get role => _role;
+
   set setName(String value) { _name = value; }
 }
 

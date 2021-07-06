@@ -19,9 +19,10 @@ class ContractCreation extends StatefulWidget {
 
 class _ContractCreationState extends State<ContractCreation> {
 
-  int textFieldCount = 1; //Minimum of two parties in all contracts
+  int textFieldCount = 0; //Minimum of two parties in all contracts
   int _selectedRoleIndex = -1;//Used to highlight the selected role when adding a new party.
   String _selectedPartyRole = "";//Used to set the label above a party textfield.
+  List<User> users = [];
 
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController = new TextEditingController();
@@ -31,6 +32,11 @@ class _ContractCreationState extends State<ContractCreation> {
   final TextEditingController _endController = new TextEditingController();
 
 
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
 
   @override
@@ -83,11 +89,13 @@ class _ContractCreationState extends State<ContractCreation> {
                   child: Container(
                     child: Column(
                       children: [
-                        Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
+                        textFieldCount==0?
+                            Text("Currently No Parties Added", style: TextStyle(color: Colors.black, fontSize: 25), textAlign: TextAlign.center)
+                            : Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
                         ListView.builder(
                           itemCount: textFieldCount,
                           itemBuilder: (BuildContext context, int index) {
-                            return partyField(index);
+                            return partyField(index, users[index].role);
                           },
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -124,13 +132,13 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
-  Widget partyField(int index) {
+  Widget partyField(int index, String? role) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          child: index == 0? Text("You") : Text("$_selectedPartyRole"),
+          child: Text("$role"),
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -236,7 +244,10 @@ class _ContractCreationState extends State<ContractCreation> {
                TextButton(onPressed: () {
                  _selectedRoleIndex==-1?
                  null :
-                 setState(() => _incrementTextFieldCounter());
+                 setState(() {
+                   users.add(new User(_selectedPartyRole));
+                   _incrementTextFieldCounter();
+                 });
                  _selectedRoleIndex = -1;
                  Navigator.of(context).pop();
                   }, child: Text("CONFIRM", style: TextStyle(color: _selectedRoleIndex!=-1? Colors.blue : Colors.grey)))
