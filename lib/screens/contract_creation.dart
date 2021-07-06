@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/contract_status_bar.dart';
 import 'package:smashhit_ui/custom_widgets/contract_form.dart';
-
+import 'package:smashhit_ui/data/data_provider.dart';
 import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
@@ -23,6 +23,7 @@ class _ContractCreationState extends State<ContractCreation> {
   int _selectedRoleIndex = -1;//Used to highlight the selected role when adding a new party.
   String _selectedPartyRole = "";//Used to set the label above a party textfield.
   List<User> users = [];
+  DataProvider dataProvider = new DataProvider();
 
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController = new TextEditingController();
@@ -111,8 +112,8 @@ class _ContractCreationState extends State<ContractCreation> {
             margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: _addPartyButton(),
           ),
-          contractEntityField(),
-          contractTypeField(),
+          //contractEntityField(),
+          //contractTypeField(),
           Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: ElevatedButton(
@@ -123,7 +124,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 ),
                 child: FittedBox(
                     fit: BoxFit.fitWidth,
-                    child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
+                    child: _confirmContractButton()
                 )
             ),
           )
@@ -217,6 +218,15 @@ class _ContractCreationState extends State<ContractCreation> {
       ),
       onTap: () {
         _selectPartyRole();
+      },
+    );
+  }
+
+  _confirmContractButton() {
+    return GestureDetector(
+      child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30)),
+      onTap: () {
+        dataProvider.getContracts();
       },
     );
   }

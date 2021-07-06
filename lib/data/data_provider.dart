@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
-import 'package:http/retry.dart';
 
 class DataProvider {
   //TODO: change URL to the contract url. This is currently only used to ensure correct https requests.
-  final String URL = "https://rickandmortyapi.com/api/character/";
+  static final String testUrl = "rickandmortyapi.com";
+  static final String testPath = "/";
+  Uri kTestUrl = new Uri.https(testUrl, testPath);
+
+  static final String kHost = 'actool.contract.sti2.at';
+  static final String kBasePath = '/api/character/';
+  Uri kBaseUrl = new Uri.https(kHost, kBasePath);
+
   //TODO: change dynamic model to the contract model.
   dynamic model;
 
@@ -23,24 +29,15 @@ class DataProvider {
     }
   }
 
-  fetchData(Uri path) async {
-    var response = await http.get(path);
+  postContract(Uri path) async {}
 
-    if(response.statusCode == 200) {
-      var data = json.decode(response.body)['results'];
-      return data;
-    } else {
-      throw "Unable to retrieve data.";
-    }
+  acceptContract(Uri path) async {}
+
+  rejectContract(Uri path) async {}
+
+  getContracts() async {
+    var response = await http.get(kTestUrl);
+    print("getContracts: $response");
+
   }
-
-  postContract(Uri path) async { }
-
-  acceptContract(Uri path) async { }
-
-  rejectContract(Uri path) async { }
-
-  getContracts(Uri path) async { }
-
-  
 }
