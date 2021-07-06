@@ -12,7 +12,7 @@ class DataProvider {
   dynamic model;
 
   /// Check for internet connection. Either wifi or mobile.
-  ensureInternetConnection() async {
+  Future<bool> ensureInternetConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
 
     if (connectivityResult == ConnectivityResult.mobile ||

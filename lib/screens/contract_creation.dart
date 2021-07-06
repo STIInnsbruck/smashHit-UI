@@ -19,7 +19,10 @@ class ContractCreation extends StatefulWidget {
 
 class _ContractCreationState extends State<ContractCreation> {
 
-  int textFieldCount = 2; //Minimum of two parties in all contracts
+  int textFieldCount = 1; //Minimum of two parties in all contracts
+  int _selectedRoleIndex = -1;//Used to highlight the selected role when adding a new party.
+  String _selectedPartyRole = "";//Used to set the label above a party textfield.
+
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController = new TextEditingController();
   final TextEditingController _titleController = new TextEditingController();
@@ -127,7 +130,7 @@ class _ContractCreationState extends State<ContractCreation> {
       children: [
         Container(
           margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          child: index == 0? Text("You") : Text("Other party"),
+          child: index == 0? Text("You") : Text("$_selectedPartyRole"),
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -205,10 +208,63 @@ class _ContractCreationState extends State<ContractCreation> {
         ],
       ),
       onTap: () {
-        setState(() {
-          textFieldCount++;
-        });
+        _selectPartyRole();
       },
     );
+  }
+
+  _selectPartyRole() {
+    showDialog(
+        context: context,
+        builder: (_) => StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+           return AlertDialog(
+             title: Text("Select a role for the new party.", textAlign: TextAlign.center),
+             content: Row(
+               children: [
+                 _roleButton(Icons.person, "Primary", 0, setState),
+                 _roleButton(Icons.person, "Secondary", 1, setState),
+                 _roleButton(Icons.person, "Third", 2, setState),
+                 _roleButton(Icons.person, "On behalf of...", 3, setState),
+               ],
+             ),
+             actions: [
+               TextButton(onPressed: () {
+                 _selectedRoleIndex = -1;
+                 Navigator.of(context).pop();
+               }, child: Text("CANCEL")),
+               TextButton(onPressed: () {
+                 _selectedRoleIndex==-1?
+                 null :
+                 setState(() => _incrementTextFieldCounter());
+                 _selectedRoleIndex = -1;
+                 Navigator.of(context).pop();
+                  }, child: Text("CONFIRM", style: TextStyle(color: _selectedRoleIndex!=-1? Colors.blue : Colors.grey)))
+             ],
+           );
+          }
+        )
+    );
+  }
+
+  _roleButton(IconData icon, String subscript, int index, StateSetter setState) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(icon: Icon(icon), onPressed: () {
+          setState(() {
+            _selectedRoleIndex = index;
+          });
+          _selectedPartyRole = subscript;
+        }, iconSize: 100, color: _selectedRoleIndex==index? Colors.green : Colors.grey),
+        Text("$subscript"),
+      ],
+    );
+  }
+
+  _incrementTextFieldCounter() {
+    setState(() {
+      textFieldCount++;
+    });
   }
 }
