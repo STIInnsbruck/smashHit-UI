@@ -189,12 +189,13 @@ class _ContractCreationState extends State<ContractCreation> {
     return DropdownButton(
       value: contractDropDownType,
       icon: const Icon(Icons.arrow_drop_down),
-      hint: Text("Pick a contract type"),
+      hint: Text("Pick a contract type", style: TextStyle(fontSize: 20)),
       onChanged: (String? newValue) {
         setState(() {
           contractDropDownType = newValue;
         });
       },
+      iconSize: 24,
       elevation: 16,
       style: const TextStyle(color: Colors.black),
       underline: Container(
