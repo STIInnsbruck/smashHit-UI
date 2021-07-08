@@ -25,6 +25,7 @@ class _ContractCreationState extends State<ContractCreation> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
   Contract contract = new Contract();
+  String? contractDropDownType;
 
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController = new TextEditingController();
@@ -114,7 +115,7 @@ class _ContractCreationState extends State<ContractCreation> {
             child: _addPartyButton(),
           ),
           contractEntityField(),
-          contractTypeField(),
+          contractTypeMenu(),
           Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: ElevatedButton(
@@ -184,6 +185,32 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
+  Widget contractTypeMenu() {
+    return DropdownButton(
+      value: contractDropDownType,
+      icon: const Icon(Icons.arrow_drop_down),
+      hint: Text("Pick a contract type"),
+      onChanged: (String? newValue) {
+        setState(() {
+          contractDropDownType = newValue;
+        });
+      },
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: Colors.white,
+      ),
+      items: <String>['Written Contract', 'Verbal Contract', 'Mutual Contract', 'Transferable Contract']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
   Widget contractEntityField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,7 +252,7 @@ class _ContractCreationState extends State<ContractCreation> {
 
   _confirmContractButton() {
     return GestureDetector(
-      child: Text("Confirm & Send Contract", style: TextStyle(color: Colors.black, fontSize: 30)),
+      child: Text("Confirm & Send\nContract", style: TextStyle(color: Colors.black, fontSize: 25), textAlign: TextAlign.center),
       onTap: () {
         dataProvider.getContracts();
       },

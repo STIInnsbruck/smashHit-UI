@@ -15,7 +15,7 @@ class _BasePageState extends State<BasePage> {
   User? currentUser;
 
   _BasePageState() {
-    _selectedPage = Dashboard(changeScreen, currentUser);
+    _selectedPage = ContractCreation(changeScreen, currentUser);
     _selectedTitle = "Dashboard";
   }
 
