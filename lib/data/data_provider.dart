@@ -11,7 +11,7 @@ class DataProvider {
   Uri kTestUrl = new Uri.https(testUrl, testPath);
 
   static final String kHost = 'actool.contract.sti2.at';
-  static final String kBasePath = '/api/character/';
+  static final String kBasePath = '/contract/list_of_contracts/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
   //TODO: change dynamic model to the contract model.
@@ -36,8 +36,28 @@ class DataProvider {
   rejectContract(Uri path) async {}
 
   getContracts() async {
-    var response = await http.get(kTestUrl);
-    print("getContracts: $response");
+    var response = await http.get(kBaseUrl);
+
+    if(response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Data: \t $data");
+    } else {
+      print("Error getContracts()");
+      print("${response.statusCode}");
+    }
 
   }
+
+
+/**
+ * Example request with token in it
+ *  String token = await Candidate().getToken();
+    final response = await http.get(url, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+    });
+    print('Token : ${token}');
+    print(response);
+ */
 }

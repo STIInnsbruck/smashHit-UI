@@ -24,6 +24,7 @@ class _ContractCreationState extends State<ContractCreation> {
   String _selectedPartyRole = "";//Used to set the label above a party textfield.
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
+  Contract contract = new Contract();
 
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController = new TextEditingController();
@@ -36,7 +37,7 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-
+    contract = Contract();
   }
 
 
@@ -59,7 +60,7 @@ class _ContractCreationState extends State<ContractCreation> {
                   SizedBox(
                     width: screenWidth * 0.66,
                     height: 100,
-                    child: ContractStatusBar(),
+                    child: ContractStatusBar(contract.getContractStatusAsInt()),
                   ),
                   ContractForm()
                 ],
@@ -112,8 +113,8 @@ class _ContractCreationState extends State<ContractCreation> {
             margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: _addPartyButton(),
           ),
-          //contractEntityField(),
-          //contractTypeField(),
+          contractEntityField(),
+          contractTypeField(),
           Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: ElevatedButton(
@@ -224,7 +225,7 @@ class _ContractCreationState extends State<ContractCreation> {
 
   _confirmContractButton() {
     return GestureDetector(
-      child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30)),
+      child: Text("Confirm & Send Contract", style: TextStyle(color: Colors.black, fontSize: 30)),
       onTap: () {
         dataProvider.getContracts();
       },
