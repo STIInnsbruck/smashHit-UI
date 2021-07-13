@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/contract_status_bar.dart';
 import 'package:smashhit_ui/custom_widgets/contract_form.dart';
-
+import 'package:smashhit_ui/data/data_provider.dart';
 import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
@@ -23,6 +23,9 @@ class _ContractCreationState extends State<ContractCreation> {
   int _selectedRoleIndex = -1;//Used to highlight the selected role when adding a new party.
   String _selectedPartyRole = "";//Used to set the label above a party textfield.
   List<User> users = [];
+  DataProvider dataProvider = new DataProvider();
+  Contract contract = new Contract(null, null);
+  String? contractDropDownType;
 
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController = new TextEditingController();
@@ -35,7 +38,7 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-
+    contract = Contract(null, null);
   }
 
 
@@ -58,7 +61,7 @@ class _ContractCreationState extends State<ContractCreation> {
                   SizedBox(
                     width: screenWidth * 0.66,
                     height: 100,
-                    child: ContractStatusBar(),
+                    child: ContractStatusBar(contract.getContractStatusAsInt()),
                   ),
                   ContractForm()
                 ],
@@ -80,8 +83,8 @@ class _ContractCreationState extends State<ContractCreation> {
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: height * 0.50,
-              minHeight: height * 0.50,
+              maxHeight: height * 0.45,
+              minHeight: height * 0.45,
             ),
             child: Scrollbar(
               child: SingleChildScrollView(
@@ -90,8 +93,8 @@ class _ContractCreationState extends State<ContractCreation> {
                     child: Column(
                       children: [
                         textFieldCount==0?
-                            Text("Currently No Parties Added", style: TextStyle(color: Colors.black, fontSize: 25), textAlign: TextAlign.center)
-                            : Text("Parties", style: TextStyle(color: Colors.black, fontSize: 25)),
+                            Text("Currently No Parties Added", style: TextStyle(color: Colors.black, fontSize: 20), textAlign: TextAlign.center)
+                            : Text("Parties", style: TextStyle(color: Colors.black, fontSize: 20)),
                         ListView.builder(
                           itemCount: textFieldCount,
                           itemBuilder: (BuildContext context, int index) {
@@ -112,9 +115,9 @@ class _ContractCreationState extends State<ContractCreation> {
             child: _addPartyButton(),
           ),
           contractEntityField(),
-          contractTypeField(),
+          contractTypeMenu(),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
             child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
@@ -123,7 +126,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 ),
                 child: FittedBox(
                     fit: BoxFit.fitWidth,
-                    child: Text("Confirm Contract", style: TextStyle(color: Colors.black, fontSize: 30))
+                    child: _confirmContractButton()
                 )
             ),
           )
@@ -142,6 +145,7 @@ class _ContractCreationState extends State<ContractCreation> {
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          height: 30,
           decoration: BoxDecoration(
             color: Colors.white
           ),
@@ -149,7 +153,8 @@ class _ContractCreationState extends State<ContractCreation> {
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
-                hintText: "Enter name"
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              hintText: "Enter name",
             ),
           ),
         ),
@@ -167,6 +172,7 @@ class _ContractCreationState extends State<ContractCreation> {
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          height: 30,
           decoration: BoxDecoration(
               color: Colors.white
           ),
@@ -182,6 +188,32 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
+  Widget contractTypeMenu() {
+    return DropdownButton(
+      value: contractDropDownType,
+      icon: const Icon(Icons.arrow_drop_down),
+      hint: Text("Pick a contract type", style: TextStyle(fontSize: 15)),
+      onChanged: (String? newValue) {
+        setState(() {
+          contractDropDownType = newValue;
+        });
+      },
+      elevation: 16,
+      style: const TextStyle(color: Colors.black),
+      underline: Container(
+        height: 2,
+        color: Colors.white,
+      ),
+      items: <String>['Written Contract', 'Verbal Contract', 'Mutual Contract', 'Transferable Contract']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
   Widget contractEntityField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +223,8 @@ class _ContractCreationState extends State<ContractCreation> {
           child: Text("Contracted Entity"),
         ),
         Container(
-          margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
+          height: 30,
           decoration: BoxDecoration(
               color: Colors.white
           ),
@@ -199,6 +232,7 @@ class _ContractCreationState extends State<ContractCreation> {
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                 hintText: "What entity is being contracted?",
             ),
           ),
@@ -217,6 +251,15 @@ class _ContractCreationState extends State<ContractCreation> {
       ),
       onTap: () {
         _selectPartyRole();
+      },
+    );
+  }
+
+  _confirmContractButton() {
+    return GestureDetector(
+      child: Text("Confirm & Send\nContract", style: TextStyle(color: Colors.black, fontSize: 20), textAlign: TextAlign.center),
+      onTap: () {
+        dataProvider.createContract();
       },
     );
   }

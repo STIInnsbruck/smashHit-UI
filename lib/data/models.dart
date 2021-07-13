@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class User {
   int? _id;
   String? _name;
@@ -38,16 +40,38 @@ class Contract {
   String? address;
   String? agreementType;
   Duration? minimumDuration;
+  String? contractStatus;
+  IconData? iconData;
 
+  Contract(this.contractId, this.contractType) {
+    this.contractStatus = "Created";
+  }
 
-  String contractStatus = statusList[0];
-  static final statusList = [
-    "Created",
-    "Offer",
-    "Agreement",
-    "Denied",
-    "Discussion"
-  ];
+  /// Returns an int given the contract's status. The int is needed for the
+  /// contract_status_bar as it takes in an int to track the process.
+  int getContractStatusAsInt() {
+    switch (contractStatus) {
+      case "Created":
+        return 0;
+      case "Offer":
+        return 1;
+      case "Agreement":
+        return 2;
+    }
+    return 0;
+  }
+
+  /// Return an IconData depending on the contract type. This is used for the
+  /// dashboard page to display contract tiles and show the contract type with
+  /// an icon. In the event of having a contract type that is not listed, the
+  /// default icon Icon.description is given.
+  IconData getIconDataFromContractType() {
+    switch (contractType) {
+
+    }
+    //Default icon incase another type of Contract was given but is not listed here.
+    return Icons.description;
+  }
 }
 
 

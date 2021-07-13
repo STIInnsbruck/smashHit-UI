@@ -10,6 +10,9 @@ class ContractForm extends StatefulWidget {
 
 class _ContractFormState extends State<ContractForm> {
 
+  DateTime? startDate;
+  DateTime? endDate;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -88,24 +91,75 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         Row(
           children: [
-            Text("Start date: ", style: TextStyle(fontSize: 25)),
-            Expanded(
-              child: TextField(
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20)
-              ),
-            ),
+            Text("Start date: ", style: TextStyle(fontSize: 15)),
+            startDate == null?
+                IconButton(icon: Icon(Icons.calendar_today), onPressed: () => chooseStartDate())
+                :
+                Expanded(
+                  child: Text(_formatDate(startDate))
+                ),
             Spacer(),
-            Text("End date: ", style: TextStyle(fontSize: 25)),
-            Expanded(
-              child: TextField(
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20)
-              ),
-            ),
+            Text("End date: ", style: TextStyle(fontSize: 15)),
+            endDate == null?
+                IconButton(icon: Icon(Icons.calendar_today), onPressed: () => chooseEndDate())
+                :
+                Expanded(
+                  child: Text(_formatDate(endDate))
+                ),
           ],
         )
       ],
     );
+  }
+
+  Future<void> chooseStartDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2050, 1, 1),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        startDate = pickedDate;
+      });
+    }
+  }
+
+  Future<void> chooseEndDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050, 1, 1),
+    );
+    if (pickedDate != null && startDate != null && pickedDate.isAfter(startDate!)) {
+      setState(() {
+        endDate = pickedDate;
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text("Please select a start date first and be sure that the end date is after the start date."),
+            children: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        }
+      );
+    }
+  }
+
+  ///Function to nicely display the date in the contract form.
+  String _formatDate(DateTime? date) {
+    String dateString = "${date!.day}.${date.month}.${date.year}";
+    return dateString;
   }
 }

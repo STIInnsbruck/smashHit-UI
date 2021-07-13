@@ -13,17 +13,29 @@ const inProgressColor = Color(0xff5ec792);
 const todoColor = Color(0xffd1d2d7);
 
 class ContractStatusBar extends StatefulWidget {
+
+  int currentProcess = 0;
+
+  ContractStatusBar(this.currentProcess);
+
   @override
   _ContractStatusBarState createState() => _ContractStatusBarState();
 }
 
 class _ContractStatusBarState extends State<ContractStatusBar> {
-  int _processIndex = 2;
+  int _processIndex = 0;
   final processIcons = [
     Icons.description,
     Icons.work,
     Icons.done
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _processIndex = this.widget.currentProcess;
+  }
 
   Color getColor(int index) {
     if (index == _processIndex) {
