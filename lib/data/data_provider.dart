@@ -14,7 +14,7 @@ class DataProvider {
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
-  static final String token = "asd";
+  static final String token = "sampleToken";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
@@ -32,7 +32,53 @@ class DataProvider {
   }
 
   createContract() async {
-    var response = await http.post(kBaseUrl.replace(path: "/contract/create/"));
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+
+    var body = {
+      "ContractId": "string",
+      "ContractType": "string",
+      "Purpose": "string",
+      "ContractRequester": "string",
+      "ContractProvider": "string",
+      "DataController": "string",
+      "StartDate": "2021-07-13",
+      "ExecutionDate": "2021-07-13",
+      "EffectiveDate": "2021-07-13",
+      "ExpireDate": "2021-07-13",
+      "Medium": "string",
+      "Waiver": "string",
+      "Amendment": "string",
+      "ConfidentialityObligation": "string",
+      "DataProtection": "string",
+      "LimitationOnUse": "string",
+      "MethodOfNotice": "string",
+      "NoThirdPartyBeneficiaries": "string",
+      "PermittedDisclosure": "string",
+      "ReceiptOfNotice": "string",
+      "Severability": "string",
+      "TerminationForInsolvency": "string",
+      "TerminationForMaterialBreach": "string",
+      "TerminationOnNotice": "string",
+      "ContractStatus": "string"
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    var response = await http.post(kBaseUrl.replace(path: "/contract/create/"), headers: headers, body: jsonBody);
+
+    if(response.statusCode == 201) {
+      var data = json.decode(response.body);
+      print("Data: \t $data");
+      print("Contract Created.");
+    } else {
+      print("Error createContract()");
+      print("${response.statusCode}");
+      print("${response.body}");
+    }
   }
 
   acceptContract(Uri path) async {}
@@ -55,7 +101,7 @@ class DataProvider {
         kBaseUrl.replace(path: "/contract/by_contractId/", queryParameters: queryParams),
         headers: headers);
 
-    if(response.statusCode == 201) {
+    if(response.statusCode == 200) {
       var data = json.decode(response.body);
       print("Data: \t $data");
       print("Contract Created.");

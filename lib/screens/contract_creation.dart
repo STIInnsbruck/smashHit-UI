@@ -259,7 +259,7 @@ class _ContractCreationState extends State<ContractCreation> {
     return GestureDetector(
       child: Text("Confirm & Send\nContract", style: TextStyle(color: Colors.black, fontSize: 20), textAlign: TextAlign.center),
       onTap: () {
-        dataProvider.getContracts();
+        dataProvider.createContract();
       },
     );
   }
