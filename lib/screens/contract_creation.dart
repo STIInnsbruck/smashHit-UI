@@ -24,7 +24,7 @@ class _ContractCreationState extends State<ContractCreation> {
   String _selectedPartyRole = "";//Used to set the label above a party textfield.
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
-  Contract contract = new Contract();
+  Contract contract = new Contract(null, null);
   String? contractDropDownType;
 
   final TextEditingController _youFieldController = new TextEditingController();
@@ -38,7 +38,7 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    contract = Contract();
+    contract = Contract(null, null);
   }
 
 

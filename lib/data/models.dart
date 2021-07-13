@@ -43,7 +43,7 @@ class Contract {
   String? contractStatus;
   IconData? iconData;
 
-  Contract() {
+  Contract(this.contractId, this.contractType) {
     this.contractStatus = "Created";
   }
 

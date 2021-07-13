@@ -10,6 +10,8 @@ class ContractForm extends StatefulWidget {
 
 class _ContractFormState extends State<ContractForm> {
 
+  DateTime today = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -88,7 +90,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         Row(
           children: [
-            Text("Start date: ", style: TextStyle(fontSize: 25)),
+            Text("Start date: ", style: TextStyle(fontSize: 20)),
             Expanded(
               child: TextField(
                   textAlign: TextAlign.center,
@@ -96,16 +98,26 @@ class _ContractFormState extends State<ContractForm> {
               ),
             ),
             Spacer(),
-            Text("End date: ", style: TextStyle(fontSize: 25)),
+            Text("End date: ", style: TextStyle(fontSize: 20)),
             Expanded(
               child: TextField(
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20)
+                  style: TextStyle(fontSize: 20),
+                  //onTap: chooseDate(),
               ),
             ),
           ],
         )
       ],
+    );
+  }
+
+  chooseDate() {
+    showDatePicker(
+        context: context,
+        initialDate: today,
+        firstDate: today,
+        lastDate: DateTime(2099, 1, 1),
     );
   }
 }
