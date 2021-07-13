@@ -153,7 +153,8 @@ class _ContractCreationState extends State<ContractCreation> {
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
-                hintText: "Enter name",
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              hintText: "Enter name",
             ),
           ),
         ),
@@ -231,6 +232,7 @@ class _ContractCreationState extends State<ContractCreation> {
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                 hintText: "What entity is being contracted?",
             ),
           ),
