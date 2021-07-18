@@ -68,9 +68,10 @@ class DataProvider {
 
     var jsonBody = jsonEncode(body);
 
-    var response = await http.post(kBaseUrl.replace(path: "/contract/create/"), headers: headers, body: jsonBody);
+    var response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
+        headers: headers, body: jsonBody);
 
-    if(response.statusCode == 201) {
+    if (response.statusCode == 201) {
       var data = json.decode(response.body);
       print("Data: \t $data");
       print("Contract Created.");
@@ -86,10 +87,7 @@ class DataProvider {
   rejectContract(Uri path) async {}
 
   getContractById(int contractId) async {
-
-    Map<String, String> queryParams = {
-      'id': contractId.toString()
-    };
+    Map<String, String> queryParams = {'id': contractId.toString()};
 
     var headers = {
       'Content-Type': 'application/json',
@@ -98,10 +96,11 @@ class DataProvider {
     };
 
     var response = await http.get(
-        kBaseUrl.replace(path: "/contract/by_contractId/", queryParameters: queryParams),
+        kBaseUrl.replace(
+            path: "/contract/by_contractId/", queryParameters: queryParams),
         headers: headers);
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print("Data: \t $data");
       print("Contract Created.");
@@ -118,18 +117,18 @@ class DataProvider {
       'Authorization': 'Bearer $token'
     };
 
-    var response = await http.get(kBaseUrl.replace(path: "/contract/list_of_contracts/"), headers: headers);
+    var response = await http.get(
+        kBaseUrl.replace(path: "/contract/list_of_contracts/"),
+        headers: headers);
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       var data = (response.body);
       print("$data");
     } else {
       print("Error getContracts()");
       print("${response.statusCode}");
     }
-
   }
-
 
 /**
  * Example request with token in it

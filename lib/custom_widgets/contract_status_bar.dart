@@ -1,10 +1,8 @@
-
 import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
-
 
 const kTileHeight = 50.0;
 
@@ -13,7 +11,6 @@ const inProgressColor = Color(0xff5ec792);
 const todoColor = Color(0xffd1d2d7);
 
 class ContractStatusBar extends StatefulWidget {
-
   int currentProcess = 0;
 
   ContractStatusBar(this.currentProcess);
@@ -24,11 +21,7 @@ class ContractStatusBar extends StatefulWidget {
 
 class _ContractStatusBarState extends State<ContractStatusBar> {
   int _processIndex = 0;
-  final processIcons = [
-    Icons.description,
-    Icons.work,
-    Icons.done
-  ];
+  final processIcons = [Icons.description, Icons.work, Icons.done];
 
   @override
   void initState() {
@@ -60,7 +53,7 @@ class _ContractStatusBarState extends State<ContractStatusBar> {
       builder: TimelineTileBuilder.connected(
         connectionDirection: ConnectionDirection.before,
         itemExtentBuilder: (_, __) =>
-        MediaQuery.of(context).size.width / (_processes.length * 1.5),
+            MediaQuery.of(context).size.width / (_processes.length * 1.5),
         oppositeContentsBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 0.0),
@@ -249,8 +242,4 @@ class _BezierPainter extends CustomPainter {
   }
 }
 
-final _processes = [
-  'Created',
-  'Offer',
-  'Agreement'
-];
+final _processes = ['Created', 'Offer', 'Agreement'];

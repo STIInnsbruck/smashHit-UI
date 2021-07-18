@@ -7,7 +7,6 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
-
   final Function(int) changeScreen;
   User? user;
 
@@ -18,29 +17,30 @@ class ContractCreation extends StatefulWidget {
 }
 
 class _ContractCreationState extends State<ContractCreation> {
-
   int textFieldCount = 0; //Minimum of two parties in all contracts
-  int _selectedRoleIndex = -1;//Used to highlight the selected role when adding a new party.
-  String _selectedPartyRole = "";//Used to set the label above a party textfield.
+  int _selectedRoleIndex =
+      -1; //Used to highlight the selected role when adding a new party.
+  String _selectedPartyRole =
+      ""; //Used to set the label above a party textfield.
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
   Contract contract = new Contract(null, null);
   String? contractDropDownType;
 
   final TextEditingController _youFieldController = new TextEditingController();
-  final TextEditingController _otherFieldController = new TextEditingController();
+  final TextEditingController _otherFieldController =
+      new TextEditingController();
   final TextEditingController _titleController = new TextEditingController();
-  final TextEditingController _descriptionController = new TextEditingController();
+  final TextEditingController _descriptionController =
+      new TextEditingController();
   final TextEditingController _startController = new TextEditingController();
   final TextEditingController _endController = new TextEditingController();
-
 
   @override
   void initState() {
     super.initState();
     contract = Contract(null, null);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,9 +92,14 @@ class _ContractCreationState extends State<ContractCreation> {
                   child: Container(
                     child: Column(
                       children: [
-                        textFieldCount==0?
-                            Text("Currently No Parties Added", style: TextStyle(color: Colors.black, fontSize: 20), textAlign: TextAlign.center)
-                            : Text("Parties", style: TextStyle(color: Colors.black, fontSize: 20)),
+                        textFieldCount == 0
+                            ? Text("Currently No Parties Added",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                                textAlign: TextAlign.center)
+                            : Text("Parties",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
                         ListView.builder(
                           itemCount: textFieldCount,
                           itemBuilder: (BuildContext context, int index) {
@@ -105,8 +110,7 @@ class _ContractCreationState extends State<ContractCreation> {
                         ),
                       ],
                     ),
-                  )
-              ),
+                  )),
             ),
           ),
           Spacer(),
@@ -125,10 +129,7 @@ class _ContractCreationState extends State<ContractCreation> {
                   onPrimary: Colors.white,
                 ),
                 child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: _confirmContractButton()
-                )
-            ),
+                    fit: BoxFit.fitWidth, child: _confirmContractButton())),
           )
         ],
       ),
@@ -146,9 +147,7 @@ class _ContractCreationState extends State<ContractCreation> {
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
           height: 30,
-          decoration: BoxDecoration(
-            color: Colors.white
-          ),
+          decoration: BoxDecoration(color: Colors.white),
           child: TextFormField(
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
@@ -173,15 +172,11 @@ class _ContractCreationState extends State<ContractCreation> {
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
           height: 30,
-          decoration: BoxDecoration(
-              color: Colors.white
-          ),
+          decoration: BoxDecoration(color: Colors.white),
           child: TextFormField(
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
-            decoration: InputDecoration(
-                hintText: "Enter contract type"
-            ),
+            decoration: InputDecoration(hintText: "Enter contract type"),
           ),
         ),
       ],
@@ -204,8 +199,12 @@ class _ContractCreationState extends State<ContractCreation> {
         height: 2,
         color: Colors.white,
       ),
-      items: <String>['Written Contract', 'Verbal Contract', 'Mutual Contract', 'Transferable Contract']
-          .map<DropdownMenuItem<String>>((String value) {
+      items: <String>[
+        'Written Contract',
+        'Verbal Contract',
+        'Mutual Contract',
+        'Transferable Contract'
+      ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -225,15 +224,13 @@ class _ContractCreationState extends State<ContractCreation> {
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
           height: 30,
-          decoration: BoxDecoration(
-              color: Colors.white
-          ),
+          decoration: BoxDecoration(color: Colors.white),
           child: TextFormField(
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                hintText: "What entity is being contracted?",
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              hintText: "What entity is being contracted?",
             ),
           ),
         ),
@@ -257,7 +254,9 @@ class _ContractCreationState extends State<ContractCreation> {
 
   _confirmContractButton() {
     return GestureDetector(
-      child: Text("Confirm & Send\nContract", style: TextStyle(color: Colors.black, fontSize: 20), textAlign: TextAlign.center),
+      child: Text("Confirm & Send\nContract",
+          style: TextStyle(color: Colors.black, fontSize: 20),
+          textAlign: TextAlign.center),
       onTap: () {
         dataProvider.createContract();
       },
@@ -268,49 +267,61 @@ class _ContractCreationState extends State<ContractCreation> {
     showDialog(
         context: context,
         builder: (_) => StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-           return AlertDialog(
-             title: Text("Select a role for the new party.", textAlign: TextAlign.center),
-             content: Row(
-               children: [
-                 _roleButton(Icons.person, "Primary", 0, setState),
-                 _roleButton(Icons.person, "Secondary", 1, setState),
-                 _roleButton(Icons.person, "Third", 2, setState),
-                 _roleButton(Icons.person, "On behalf of...", 3, setState),
-               ],
-             ),
-             actions: [
-               TextButton(onPressed: () {
-                 _selectedRoleIndex = -1;
-                 Navigator.of(context).pop();
-               }, child: Text("CANCEL")),
-               TextButton(onPressed: () {
-                 _selectedRoleIndex==-1?
-                 null :
-                 setState(() {
-                   users.add(new User(_selectedPartyRole));
-                   _incrementTextFieldCounter();
-                 });
-                 _selectedRoleIndex = -1;
-                 Navigator.of(context).pop();
-                  }, child: Text("CONFIRM", style: TextStyle(color: _selectedRoleIndex!=-1? Colors.blue : Colors.grey)))
-             ],
-           );
-          }
-        )
-    );
+                builder: (BuildContext context, StateSetter setState) {
+              return AlertDialog(
+                title: Text("Select a role for the new party.",
+                    textAlign: TextAlign.center),
+                content: Row(
+                  children: [
+                    _roleButton(Icons.person, "Primary", 0, setState),
+                    _roleButton(Icons.person, "Secondary", 1, setState),
+                    _roleButton(Icons.person, "Third", 2, setState),
+                    _roleButton(Icons.person, "On behalf of...", 3, setState),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        _selectedRoleIndex = -1;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("CANCEL")),
+                  TextButton(
+                      onPressed: () {
+                        _selectedRoleIndex == -1
+                            ? null
+                            : setState(() {
+                                users.add(new User(_selectedPartyRole));
+                                _incrementTextFieldCounter();
+                              });
+                        _selectedRoleIndex = -1;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("CONFIRM",
+                          style: TextStyle(
+                              color: _selectedRoleIndex != -1
+                                  ? Colors.blue
+                                  : Colors.grey)))
+                ],
+              );
+            }));
   }
 
-  _roleButton(IconData icon, String subscript, int index, StateSetter setState) {
+  _roleButton(
+      IconData icon, String subscript, int index, StateSetter setState) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(icon: Icon(icon), onPressed: () {
-          setState(() {
-            _selectedRoleIndex = index;
-          });
-          _selectedPartyRole = subscript;
-        }, iconSize: 100, color: _selectedRoleIndex==index? Colors.green : Colors.grey),
+        IconButton(
+            icon: Icon(icon),
+            onPressed: () {
+              setState(() {
+                _selectedRoleIndex = index;
+              });
+              _selectedPartyRole = subscript;
+            },
+            iconSize: 100,
+            color: _selectedRoleIndex == index ? Colors.green : Colors.grey),
         Text("$subscript"),
       ],
     );

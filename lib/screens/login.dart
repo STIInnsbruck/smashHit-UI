@@ -7,29 +7,27 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Material(
-      child: Column(
-        children: [
-          Text("SmashHit"),
-          CircleAvatar(
-            radius: screenWidth * 0.11,
-          ),
-          TextFormField(),
-          TextFormField(),
-          Row(
-            children: [
-              ElevatedButton(onPressed: null, child: Text("LOGIN")),
-              Spacer(),
-              ElevatedButton(onPressed: null, child: Text("SIGN UP"))
-            ],
-          )
-        ],
-      )
-    );
+        child: Column(
+      children: [
+        Text("SmashHit"),
+        CircleAvatar(
+          radius: screenWidth * 0.11,
+        ),
+        TextFormField(),
+        TextFormField(),
+        Row(
+          children: [
+            ElevatedButton(onPressed: null, child: Text("LOGIN")),
+            Spacer(),
+            ElevatedButton(onPressed: null, child: Text("SIGN UP"))
+          ],
+        )
+      ],
+    ));
   }
 }

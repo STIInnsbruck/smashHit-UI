@@ -30,10 +30,7 @@ class _BasePageState extends State<BasePage> {
         appBar: AppBar(
           backgroundColor: Colors.blue,
           title: Center(child: Text(_selectedTitle)),
-          actions: [
-            searchField(screenWidth),
-            searchButton()
-          ],
+          actions: [searchField(screenWidth), searchButton()],
           /**bottom: TabBar(
             tabs: [
               Tab(
@@ -52,31 +49,30 @@ class _BasePageState extends State<BasePage> {
           ),*/
         ),
         drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blue),
-                child: userInformation(screenWidth),
-              ),
-              ListTile(
-                title: Text("Dashboard"),
-                onTap: () {
-                  changeScreen(0);
-                },
-              ),
-              ListTile(
-                title: Text("Contacts"),
-                onTap: () {
-                  //Do something.
-                },
-              ),
-              ListTile(
-                title: Text("Create a new contract"),
-                onTap: () {
-                  changeScreen(1);
-                },
-              )]),
+          child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: userInformation(screenWidth),
+            ),
+            ListTile(
+              title: Text("Dashboard"),
+              onTap: () {
+                changeScreen(0);
+              },
+            ),
+            ListTile(
+              title: Text("Contacts"),
+              onTap: () {
+                //Do something.
+              },
+            ),
+            ListTile(
+              title: Text("Create a new contract"),
+              onTap: () {
+                changeScreen(1);
+              },
+            )
+          ]),
         ),
         body: _selectedPage,
         resizeToAvoidBottomInset: false,
@@ -110,9 +106,7 @@ class _BasePageState extends State<BasePage> {
       child: TextFormField(
         textAlignVertical: TextAlignVertical.center,
         style: TextStyle(fontSize: 20),
-        decoration: InputDecoration(
-            hintText: "Search..."
-        ),
+        decoration: InputDecoration(hintText: "Search..."),
       ),
     );
   }

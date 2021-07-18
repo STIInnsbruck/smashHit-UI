@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class ContractForm extends StatefulWidget {
-
   @override
   _ContractFormState createState() => new _ContractFormState();
 }
 
 class _ContractFormState extends State<ContractForm> {
-
   DateTime? startDate;
   DateTime? endDate;
 
@@ -19,20 +17,15 @@ class _ContractFormState extends State<ContractForm> {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black45,
-            blurRadius: 25.0,
-            spreadRadius: 5.0,
-            offset: Offset(
-              10.0,
-              10.0
-            )
-          )
-        ]
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 25.0,
+                spreadRadius: 5.0,
+                offset: Offset(10.0, 10.0))
+          ]),
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
       width: screenWidth * 0.50,
       child: Scrollbar(
@@ -58,9 +51,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         Text("Title: ", style: TextStyle(fontSize: 25)),
         Expanded(
-          child: TextFormField(
-              style: TextStyle(fontSize: 20)
-          ),
+          child: TextFormField(style: TextStyle(fontSize: 20)),
         )
       ],
     );
@@ -78,7 +69,7 @@ class _ContractFormState extends State<ContractForm> {
             maxLines: null,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
-                hintText: "Enter contract details here...",
+              hintText: "Enter contract details here...",
             ),
           ),
         ),
@@ -92,20 +83,36 @@ class _ContractFormState extends State<ContractForm> {
         Row(
           children: [
             Text("Start date: ", style: TextStyle(fontSize: 15)),
-            startDate == null?
-                IconButton(icon: Icon(Icons.calendar_today), onPressed: () => chooseStartDate())
-                :
-                Expanded(
-                  child: Text(_formatDate(startDate))
-                ),
+            startDate == null
+                ? IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    onPressed: () => chooseStartDate())
+                : Expanded(
+                    child: Row(
+                    children: [
+                      Text(_formatDate(startDate)),
+                      IconButton(
+                          icon: Icon(Icons.edit),
+                          iconSize: 20,
+                          onPressed: () => chooseStartDate())
+                    ],
+                  )),
             Spacer(),
             Text("End date: ", style: TextStyle(fontSize: 15)),
-            endDate == null?
-                IconButton(icon: Icon(Icons.calendar_today), onPressed: () => chooseEndDate())
-                :
-                Expanded(
-                  child: Text(_formatDate(endDate))
-                ),
+            endDate == null
+                ? IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    onPressed: () => chooseEndDate())
+                : Expanded(
+                    child: Row(
+                    children: [
+                      Text(_formatDate(endDate)),
+                      IconButton(
+                          icon: Icon(Icons.edit),
+                          iconSize: 20,
+                          onPressed: () => chooseEndDate())
+                    ],
+                  )),
           ],
         )
       ],
@@ -114,15 +121,38 @@ class _ContractFormState extends State<ContractForm> {
 
   Future<void> chooseStartDate() async {
     final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2050, 1, 1),
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050, 1, 1),
     );
-    if (pickedDate != null) {
+    if (pickedDate != null && endDate == null) {
       setState(() {
         startDate = pickedDate;
       });
+    } else if (pickedDate != null &&
+        endDate != null &&
+        pickedDate.isBefore(endDate!)) {
+      setState(() {
+        startDate = pickedDate;
+      });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text(
+                  "Please select a start date that is before the selected end date."),
+              children: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
     }
   }
 
@@ -133,27 +163,29 @@ class _ContractFormState extends State<ContractForm> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2050, 1, 1),
     );
-    if (pickedDate != null && startDate != null && pickedDate.isAfter(startDate!)) {
+    if (pickedDate != null &&
+        startDate != null &&
+        pickedDate.isAfter(startDate!)) {
       setState(() {
         endDate = pickedDate;
       });
     } else {
       showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Text("Please select a start date first and be sure that the end date is after the start date."),
-            children: <Widget>[
-              FlatButton(
-                child: Text('Okay'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        }
-      );
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text(
+                  "Please select a start date first and be sure that the end date is after the start date."),
+              children: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
     }
   }
 
