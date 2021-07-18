@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class ContractPartnerTile extends StatelessWidget {
-
   User? partner;
 
   static List<Widget> contractList = [
@@ -84,20 +83,13 @@ class ContractPartnerTile extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
       width: 150,
       height: 100,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black45,
-              blurRadius: 2.0,
-              spreadRadius: 1.0,
-              offset: Offset(
-                  2.0,
-                  2.0
-              )
-          )
-        ]
-      ),
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+        BoxShadow(
+            color: Colors.black45,
+            blurRadius: 2.0,
+            spreadRadius: 1.0,
+            offset: Offset(2.0, 2.0))
+      ]),
       child: Center(
         child: Icon(iconData, size: 75),
       ),

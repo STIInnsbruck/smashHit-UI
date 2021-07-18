@@ -4,7 +4,6 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/contract_partner_tile.dart';
 
 class Dashboard extends StatefulWidget {
-
   final Function(int) changeScreen;
   User? user;
 
@@ -15,7 +14,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
   @override
   Widget build(BuildContext context) {
     //double screenWidth = MediaQuery.of(context).size.width;

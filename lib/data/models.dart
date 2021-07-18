@@ -8,8 +8,6 @@ class User {
   int? _telephoneNumber;
   String? _role;
 
-
-
   User(String role) {
     this._role = role;
   }
@@ -18,9 +16,10 @@ class User {
   String? get getName => _name;
   String? get role => _role;
 
-  set setName(String value) { _name = value; }
+  set setName(String value) {
+    _name = value;
+  }
 }
-
 
 /// Contract model. There is always one party creating the contract (= contractor)
 /// and there can be 1 or more parties that accept the contract (= contractee).
@@ -67,13 +66,11 @@ class Contract {
   /// default icon Icon.description is given.
   IconData getIconDataFromContractType() {
     switch (contractType) {
-
     }
     //Default icon incase another type of Contract was given but is not listed here.
     return Icons.description;
   }
 }
-
 
 /// Object model to be used in a Contract. It describes the actual object
 /// (fictive or physical) that is handled in the contract.
@@ -86,5 +83,7 @@ class ContractObject {
 
   String? get getDescription => _description;
 
-  set setDescription(String description) { _description = description; }
+  set setDescription(String description) {
+    _description = description;
+  }
 }
