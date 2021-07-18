@@ -96,7 +96,12 @@ class _ContractFormState extends State<ContractForm> {
                 IconButton(icon: Icon(Icons.calendar_today), onPressed: () => chooseStartDate())
                 :
                 Expanded(
-                  child: Text(_formatDate(startDate))
+                    child: Row(
+                      children: [
+                        Text(_formatDate(startDate)),
+                        IconButton(icon: Icon(Icons.edit), iconSize: 20, onPressed: () => chooseStartDate())
+                      ],
+                    )
                 ),
             Spacer(),
             Text("End date: ", style: TextStyle(fontSize: 15)),
@@ -104,7 +109,12 @@ class _ContractFormState extends State<ContractForm> {
                 IconButton(icon: Icon(Icons.calendar_today), onPressed: () => chooseEndDate())
                 :
                 Expanded(
-                  child: Text(_formatDate(endDate))
+                  child: Row(
+                    children: [
+                      Text(_formatDate(endDate)),
+                      IconButton(icon: Icon(Icons.edit), iconSize: 20, onPressed: () => chooseEndDate())
+                    ],
+                  )
                 ),
           ],
         )
@@ -119,10 +129,31 @@ class _ContractFormState extends State<ContractForm> {
         firstDate: DateTime.now(),
         lastDate: DateTime(2050, 1, 1),
     );
-    if (pickedDate != null) {
+    if (pickedDate != null && endDate == null) {
       setState(() {
         startDate = pickedDate;
       });
+    } else if (pickedDate != null && endDate != null && pickedDate.isBefore(endDate!)) {
+      setState(() {
+        startDate = pickedDate;
+      });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text("Please select a start date that is before the selected end date."),
+              children: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          }
+      );
     }
   }
 
