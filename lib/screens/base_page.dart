@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/screens/dashboard.dart';
 import 'package:smashhit_ui/screens/contract_creation.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/screens/view_contract.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _BasePageState extends State<BasePage> {
   User? currentUser;
 
   _BasePageState() {
-    _selectedPage = ContractCreation(changeScreen, currentUser);
+    _selectedPage = ViewContract(changeScreen, currentUser);
     _selectedTitle = "Dashboard";
   }
 
@@ -61,17 +62,17 @@ class _BasePageState extends State<BasePage> {
               },
             ),
             ListTile(
-              title: Text("Contacts"),
-              onTap: () {
-                //Do something.
-              },
-            ),
-            ListTile(
               title: Text("Create a new contract"),
               onTap: () {
                 changeScreen(1);
               },
-            )
+            ),
+            ListTile(
+              title: Text("View Contract"),
+              onTap: () {
+                changeScreen(2);
+              },
+            ),
           ]),
         ),
         body: _selectedPage,
@@ -92,6 +93,9 @@ class _BasePageState extends State<BasePage> {
           _selectedPage = ContractCreation(changeScreen, currentUser);
           _selectedTitle = "Contract Creation";
           break;
+        case 2:
+          _selectedPage = ViewContract(changeScreen, currentUser);
+          _selectedTitle = "View Contract";
       }
     });
   }
