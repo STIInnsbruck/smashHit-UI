@@ -16,7 +16,7 @@ class _BasePageState extends State<BasePage> {
   User? currentUser;
 
   _BasePageState() {
-    _selectedPage = ViewContract(changeScreen, currentUser);
+    _selectedPage = Dashboard(changeScreen, currentUser);
     _selectedTitle = "Dashboard";
   }
 
@@ -32,22 +32,6 @@ class _BasePageState extends State<BasePage> {
           backgroundColor: Colors.blue,
           title: Center(child: Text(_selectedTitle)),
           actions: [searchField(screenWidth), searchButton()],
-          /**bottom: TabBar(
-            tabs: [
-              Tab(
-                text: "Personal Data",
-              ),
-              Tab(
-                text: "Leasing",
-              ),
-              Tab(
-                text: "Real Estate",
-              ),
-              Tab(
-                text: "Subscriptions"
-              )
-            ],
-          ),*/
         ),
         drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: <Widget>[
