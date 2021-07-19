@@ -44,24 +44,22 @@ class _ContractCreationState extends State<ViewContract> {
               scrollDirection: Axis.vertical,
               child: Column(children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Spacer(),
                     partiesTile(screenWidth, screenHeight),
-                    Spacer(),
                     TOSTile(screenWidth, screenHeight),
-                    Spacer(flex: 4),
                   ],
                 ),
                 Container(height: 20),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Spacer(),
                     contractedEntitiesTile(screenWidth, screenHeight),
-                    Spacer(),
                     statusTile(screenWidth, screenHeight),
-                    Spacer(flex: 4)
                   ],
-                )
+                ),
+                Container(height: 20),
+                contractTimeProgressBar(screenWidth, screenHeight)
               ]),
             ),
           ),
@@ -226,7 +224,7 @@ class _ContractCreationState extends State<ViewContract> {
                 child: Icon(Icons.person),
                 radius: height / 15,
               ),
-              Icon(Icons.compare_arrows, size: height / 8),
+              Icon(Icons.compare_arrows, color: Colors.grey, size: height / 8),
               CircleAvatar(
                 child: Icon(Icons.person),
                 radius: height / 15,
@@ -234,6 +232,17 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         ],
+      ),
+    );
+  }
+
+  Widget contractTimeProgressBar(double width, double height) {
+    return Container(
+      width: width / 2,
+      child: LinearProgressIndicator(
+        minHeight: height / 20,
+        value: 25,
+
       ),
     );
   }
