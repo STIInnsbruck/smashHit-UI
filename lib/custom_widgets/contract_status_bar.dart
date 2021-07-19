@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,8 +5,8 @@ import 'package:timelines/timelines.dart';
 
 const kTileHeight = 50.0;
 
-const completeColor = Color(0xff5e6172);
-const inProgressColor = Color(0xff5ec792);
+const inProgressColor = Color(0xff5e6172);
+const completeColor = Color(0xff5ec792);
 const todoColor = Color(0xffd1d2d7);
 
 class ContractStatusBar extends StatefulWidget {

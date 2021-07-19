@@ -56,6 +56,8 @@ class Contract {
         return 1;
       case "Agreement":
         return 2;
+      case "Done":
+        return 3;
     }
     return 0;
   }

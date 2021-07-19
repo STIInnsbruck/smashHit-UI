@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smashhit_ui/data/models.dart';
 
 class ContractForm extends StatefulWidget {
   @override
@@ -144,7 +143,7 @@ class _ContractFormState extends State<ContractForm> {
               title: Text(
                   "Please select a start date that is before the selected end date."),
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Okay'),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -177,7 +176,7 @@ class _ContractFormState extends State<ContractForm> {
               title: Text(
                   "Please select a start date first and be sure that the end date is after the start date."),
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Okay'),
                   onPressed: () {
                     Navigator.of(context).pop();
