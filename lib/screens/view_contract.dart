@@ -39,41 +39,45 @@ class _ContractCreationState extends State<ViewContract> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Column(
-      children: [
-        Expanded(
-          child: Scrollbar(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    partiesTile(screenWidth, screenHeight),
-                    TOSTile(screenWidth, screenHeight),
-                  ],
-                ),
-                Container(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    contractedEntitiesTile(screenWidth, screenHeight),
-                    statusTile(screenWidth, screenHeight),
-                  ],
-                ),
-                Container(height: 20),
-                Row(
-                  children: [
-                    Spacer(),
-                    contractTimeProgressBar(screenWidth, screenHeight),
-                    Spacer(),
-                  ],
-                ),
-              ]),
-            ),
+    return Container(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: screenHeight,
+          minHeight: screenHeight,
+        ),
+        child: Scrollbar(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      partiesTile(screenWidth, screenHeight),
+                      TOSTile(screenWidth, screenHeight),
+                    ],
+                  ),
+                  Container(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      contractedEntitiesTile(screenWidth, screenHeight),
+                      statusTile(screenWidth, screenHeight),
+                    ],
+                  ),
+                  Container(height: 20),
+                  Row(
+                    children: [
+                      Spacer(),
+                      contractTimeProgressBar(screenWidth, screenHeight),
+                      Spacer(),
+                    ],
+                  ),
+                ]),
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -247,26 +251,24 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget contractTimeProgressBar(double width, double height) {
     return Container(
-      child: Column(
-        children: [
-          Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
-          LinearPercentIndicator(
-            width: width / 2,
-            lineHeight: height / 20,
-            percent: calculateElapsedContractTime() / 100,
-            backgroundColor: Colors.grey,
-            progressColor: Colors.blue,
-            center: Text("${calculateElapsedContractTime()}%", style: TextStyle(fontSize: height / 35)),
-          ),
-
-        ]
-      )
-    );
+        child: Column(children: [
+      Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
+      LinearPercentIndicator(
+        width: width / 2,
+        lineHeight: height / 20,
+        percent: calculateElapsedContractTime() / 100,
+        backgroundColor: Colors.grey,
+        progressColor: Colors.blue,
+        center: Text("${calculateElapsedContractTime()}%",
+            style: TextStyle(fontSize: height / 35)),
+      ),
+    ]));
   }
 
   double calculateElapsedContractTime() {
     DateTime today = DateTime.now();
-    var totalTime = contract.expireDate!.difference(contract.executionDate!).inDays;
+    var totalTime =
+        contract.expireDate!.difference(contract.executionDate!).inDays;
     var elapsedTime = today.difference(contract.executionDate!).inDays;
     double progressPercentage = (elapsedTime / totalTime) * 100;
     return progressPercentage.roundToDouble();
