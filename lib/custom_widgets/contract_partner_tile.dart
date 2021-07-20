@@ -4,12 +4,12 @@ import 'package:smashhit_ui/data/models.dart';
 class ContractPartnerTile extends StatelessWidget {
   User? partner;
 
-  static List<Widget> contractList = [
+  /**static List<Widget> contractList = [
     contractTile(Icons.car_rental),
     contractTile(Icons.home),
     contractTile(Icons.person_search_rounded),
     contractTile(Icons.work)
-  ];
+  ];*/
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ContractPartnerTile extends StatelessWidget {
           ),
           Spacer(),
           Container(
-            child: contractsScroller(),
+            child: contractsScroller(screenHeight),
           ),
           Spacer()
         ],
@@ -54,7 +54,7 @@ class ContractPartnerTile extends StatelessWidget {
     );
   }
 
-  Widget contractsScroller() {
+  Widget contractsScroller(double height) {
     return Row(
       children: [
         IconButton(icon: Icon(Icons.chevron_left), onPressed: () {}),
@@ -64,10 +64,10 @@ class ContractPartnerTile extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  contractTile(Icons.car_rental),
-                  contractTile(Icons.home),
-                  contractTile(Icons.person_search_rounded),
-                  contractTile(Icons.work)
+                  contractTile(Icons.car_rental, height),
+                  contractTile(Icons.home, height),
+                  contractTile(Icons.person_search_rounded, height),
+                  contractTile(Icons.work, height)
                 ],
               ),
             ),
@@ -78,11 +78,11 @@ class ContractPartnerTile extends StatelessWidget {
     );
   }
 
-  static Widget contractTile(IconData iconData) {
+  static Widget contractTile(IconData iconData, double height) {
     return Container(
       margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-      width: 150,
-      height: 100,
+      width: 125,
+      height: height / 8,
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(
             color: Colors.black45,
@@ -91,7 +91,7 @@ class ContractPartnerTile extends StatelessWidget {
             offset: Offset(2.0, 2.0))
       ]),
       child: Center(
-        child: Icon(iconData, size: 75),
+        child: Icon(iconData, size: height / 10),
       ),
     );
   }
