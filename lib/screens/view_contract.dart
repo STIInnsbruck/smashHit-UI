@@ -60,16 +60,16 @@ class _ContractCreationState extends State<ViewContract> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           partiesTile(screenWidth, screenHeight),
-                          Container(width: screenWidth / 10),
+                          Container(width: screenWidth / 20),
                           TOSTile(screenWidth, screenHeight),
                         ]
                       ),
-                      Container(height: screenHeight / 10),
+                      Container(height: screenHeight / 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           contractedEntitiesTile(screenWidth, screenHeight),
-                          Container(width: screenWidth / 10),
+                          Container(width: screenWidth / 20),
                           statusTile(screenWidth, screenHeight),
                         ],
                       ),
