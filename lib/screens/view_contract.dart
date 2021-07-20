@@ -49,7 +49,6 @@ class _ContractCreationState extends State<ViewContract> {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

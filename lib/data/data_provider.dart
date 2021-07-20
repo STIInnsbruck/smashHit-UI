@@ -13,7 +13,7 @@ class DataProvider {
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
-  static final String token = "sampleToken";
+  static final String token = "sample token";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
@@ -85,8 +85,8 @@ class DataProvider {
 
   rejectContract(Uri path) async {}
 
-  getContractById(int contractId) async {
-    Map<String, String> queryParams = {'id': contractId.toString()};
+  getContractById() async {
+    Map<String, String> queryParams = {'id': 'kg244564'};
 
     var headers = {
       'Content-Type': 'application/json',

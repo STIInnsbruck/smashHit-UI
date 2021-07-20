@@ -22,6 +22,10 @@ class _ContractCreationState extends State<ContractCreation> {
       -1; //Used to highlight the selected role when adding a new party.
   String _selectedPartyRole =
       ""; //Used to set the label above a party textfield.
+  int _selectedEntityIndex =
+      -1; //Used to highlight the selected entity to be contracted.
+  String _selectedEntityLabel =
+      ""; //Used to set the label of what entity is being contracted and insert it into the sidebar.
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
   Contract contract = new Contract(null, null);
@@ -257,13 +261,28 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
+  Widget _addEntityButton() {
+    return GestureDetector(
+      child: Column(
+        children: [
+          Icon(Icons.add_circle_outline, size: 40),
+          Text("What is being contracted?",
+              style: TextStyle(color: Colors.black, fontSize: 10))
+        ],
+      ),
+      onTap: () {
+        _selectPartyRole();
+      },
+    );
+  }
+
   _confirmContractButton() {
     return GestureDetector(
       child: Text("Confirm & Send\nContract",
           style: TextStyle(color: Colors.black, fontSize: 20),
           textAlign: TextAlign.center),
       onTap: () {
-        dataProvider.createContract();
+        dataProvider.getContracts();
       },
     );
   }
@@ -312,6 +331,50 @@ class _ContractCreationState extends State<ContractCreation> {
             }));
   }
 
+  _selectContractedEntity() {
+    showDialog(
+        context: context,
+        builder: (_) => StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return AlertDialog(
+                title: Text("Select an entity to be contracted.",
+                    textAlign: TextAlign.center),
+                content: Row(
+                  children: [
+                    _entityButton(Icons.person_search_rounded, "Personal Data Contract", 0, setState),
+                    _entityButton(Icons.work, "Work Contract", 1, setState),
+                    _entityButton(Icons.request_quote, "Subscription Contract", 2, setState),
+                    _entityButton(Icons.description, "Insurance Contract", 3, setState),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        _selectedRoleIndex = -1;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("CANCEL")),
+                  TextButton(
+                      onPressed: () {
+                        _selectedRoleIndex == -1
+                            ? null
+                            : setState(() {
+                                users.add(new User(_selectedPartyRole));
+                                _incrementTextFieldCounter();
+                              });
+                        _selectedRoleIndex = -1;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("CONFIRM",
+                          style: TextStyle(
+                              color: _selectedRoleIndex != -1
+                                  ? Colors.blue
+                                  : Colors.grey)))
+                ],
+              );
+            }));
+  }
+
   _roleButton(
       IconData icon, String subscript, int index, StateSetter setState) {
     return Column(
@@ -324,6 +387,26 @@ class _ContractCreationState extends State<ContractCreation> {
                 _selectedRoleIndex = index;
               });
               _selectedPartyRole = subscript;
+            },
+            iconSize: 100,
+            color: _selectedRoleIndex == index ? Colors.green : Colors.grey),
+        Text("$subscript"),
+      ],
+    );
+  }
+
+  _entityButton(
+      IconData icon, String subscript, int index, StateSetter setState) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+            icon: Icon(icon),
+            onPressed: () {
+              setState(() {
+                _selectedEntityIndex = index;
+              });
+              _selectedEntityLabel = subscript;
             },
             iconSize: 100,
             color: _selectedRoleIndex == index ? Colors.green : Colors.grey),
