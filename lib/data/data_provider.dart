@@ -13,7 +13,7 @@ class DataProvider {
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
-  static final String token = "sample token";
+  static final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI2Nzc5MTkxfQ.YBpmdwFCB41thIudoJGyM_ju_1L1MF3pfM_NGp4xmyI";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;

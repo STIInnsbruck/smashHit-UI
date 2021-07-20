@@ -49,31 +49,36 @@ class _ContractCreationState extends State<ViewContract> {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
                     children: [
-                      partiesTile(screenWidth, screenHeight),
-                      TOSTile(screenWidth, screenHeight),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          partiesTile(screenWidth, screenHeight),
+                          Container(width: screenWidth / 5),
+                          TOSTile(screenWidth, screenHeight),
+                        ]
+                      ),
+                      Container(height: screenHeight / 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          contractedEntitiesTile(screenWidth, screenHeight),
+                          Container(width: screenWidth / 5),
+                          statusTile(screenWidth, screenHeight),
+                        ],
+                      ),
                     ],
                   ),
-                  Container(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      contractedEntitiesTile(screenWidth, screenHeight),
-                      statusTile(screenWidth, screenHeight),
-                    ],
-                  ),
-                  Container(height: 20),
-                  Row(
-                    children: [
-                      Spacer(),
-                      contractTimeProgressBar(screenWidth, screenHeight),
-                      Spacer(),
-                    ],
-                  ),
-                ]),
+                  contractTimeProgressBar(screenWidth, screenHeight),
+                ],
+              ),
+            ]),
           ),
         ),
       ),
@@ -249,19 +254,22 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget contractTimeProgressBar(double width, double height) {
-    return Container(
-        child: Column(children: [
-      Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
-      LinearPercentIndicator(
-        width: width / 2,
-        lineHeight: height / 20,
-        percent: calculateElapsedContractTime() / 100,
-        backgroundColor: Colors.grey,
-        progressColor: Colors.blue,
-        center: Text("${calculateElapsedContractTime()}%",
-            style: TextStyle(fontSize: height / 35)),
-      ),
-    ]));
+    return RotatedBox(
+      quarterTurns: 1,
+      child: Container(
+          child: Column(children: [
+        Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
+        LinearPercentIndicator(
+          width: height / 1.2,
+          lineHeight: width / 40,
+          percent: calculateElapsedContractTime() / 100,
+          backgroundColor: Colors.grey,
+          progressColor: Colors.blue,
+          center: Text("${calculateElapsedContractTime()}%",
+              style: TextStyle(fontSize: width / 60)),
+        ),
+      ])),
+    );
   }
 
   double calculateElapsedContractTime() {
