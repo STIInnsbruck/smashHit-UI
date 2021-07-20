@@ -31,6 +31,7 @@ dependencies:
   timelines: ^0.1.0
   http: ^0.13.3
   connectivity: ^3.0.6
+  percent_indicator: ^3.0.1
 
 dev_dependencies:
   flutter_test:

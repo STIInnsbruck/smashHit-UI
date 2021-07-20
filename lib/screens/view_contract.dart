@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class ViewContract extends StatefulWidget {
   final Function(int) changeScreen;
@@ -24,6 +25,8 @@ class _ContractCreationState extends State<ViewContract> {
     super.initState();
     contract = Contract(null, null);
     contract.contractStatus = "Done";
+    contract.executionDate = DateTime(2021, DateTime.july, 10);
+    contract.expireDate = DateTime(2021, DateTime.august, 21);
   }
 
   @override
@@ -59,7 +62,13 @@ class _ContractCreationState extends State<ViewContract> {
                   ],
                 ),
                 Container(height: 20),
-                contractTimeProgressBar(screenWidth, screenHeight)
+                Row(
+                  children: [
+                    Spacer(),
+                    contractTimeProgressBar(screenWidth, screenHeight),
+                    Spacer(),
+                  ],
+                ),
               ]),
             ),
           ),
@@ -222,12 +231,12 @@ class _ContractCreationState extends State<ViewContract> {
             children: [
               CircleAvatar(
                 child: Icon(Icons.person),
-                radius: height / 15,
+                radius: height / 17,
               ),
               Icon(Icons.compare_arrows, color: Colors.grey, size: height / 8),
               CircleAvatar(
                 child: Icon(Icons.person),
-                radius: height / 15,
+                radius: height / 17,
               )
             ],
           )
@@ -238,12 +247,28 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget contractTimeProgressBar(double width, double height) {
     return Container(
-      width: width / 2,
-      child: LinearProgressIndicator(
-        minHeight: height / 20,
-        value: 25,
+      child: Column(
+        children: [
+          Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
+          LinearPercentIndicator(
+            width: width / 2,
+            lineHeight: height / 20,
+            percent: calculateElapsedContractTime() / 100,
+            backgroundColor: Colors.grey,
+            progressColor: Colors.blue,
+            center: Text("${calculateElapsedContractTime()}%", style: TextStyle(fontSize: height / 35)),
+          ),
 
-      ),
+        ]
+      )
     );
+  }
+
+  double calculateElapsedContractTime() {
+    DateTime today = DateTime.now();
+    var totalTime = contract.expireDate!.difference(contract.executionDate!).inDays;
+    var elapsedTime = today.difference(contract.executionDate!).inDays;
+    double progressPercentage = (elapsedTime / totalTime) * 100;
+    return progressPercentage.roundToDouble();
   }
 }
