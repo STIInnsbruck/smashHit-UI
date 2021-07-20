@@ -60,16 +60,16 @@ class _ContractCreationState extends State<ViewContract> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           partiesTile(screenWidth, screenHeight),
-                          Container(width: screenWidth / 5),
+                          Container(width: screenWidth / 10),
                           TOSTile(screenWidth, screenHeight),
                         ]
                       ),
-                      Container(height: screenHeight / 5),
+                      Container(height: screenHeight / 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           contractedEntitiesTile(screenWidth, screenHeight),
-                          Container(width: screenWidth / 5),
+                          Container(width: screenWidth / 10),
                           statusTile(screenWidth, screenHeight),
                         ],
                       ),
@@ -87,8 +87,8 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget partiesTile(double width, double height) {
     return Container(
-      height: height / 4,
-      width: width / 4,
+      height: height / 3,
+      width: width / 3,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
           color: Colors.white,
@@ -138,8 +138,8 @@ class _ContractCreationState extends State<ViewContract> {
   // ignore: non_constant_identifier_names
   Widget TOSTile(double width, double height) {
     return Container(
-      height: height / 4,
-      width: width / 4,
+      height: height / 3,
+      width: width / 3,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
           color: Colors.white,
@@ -180,8 +180,8 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget statusTile(double width, double height) {
     return Container(
-      height: height / 4,
-      width: width / 4,
+      height: height / 3,
+      width: width / 3,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
           color: Colors.white,
@@ -217,8 +217,8 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget contractedEntitiesTile(double width, double height) {
     return Container(
-      height: height / 4,
-      width: width / 4,
+      height: height / 3,
+      width: width / 3,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
           color: Colors.white,
