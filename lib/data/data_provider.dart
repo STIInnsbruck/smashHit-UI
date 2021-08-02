@@ -14,7 +14,7 @@ class DataProvider {
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI3OTAxNTM1fQ.MUg_fie76Wk6PN3nrWbadDYizik17A8gEqToUKxMTOM";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI3OTA0NzQ3fQ.RI5YZQm4wSXHFueL-Aqu0gNQmuR_ermV8d7UUWdSAuw";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
@@ -31,7 +31,8 @@ class DataProvider {
     }
   }
 
-  createContract() async {
+  createContract(String title, String contractTerms, String contractType,
+      DateTime startDate, DateTime expireDate) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -39,16 +40,16 @@ class DataProvider {
     };
 
     var body = {
-      "ContractId": "string",
-      "ContractType": "string",
+      "ContractId": "",
+      "ContractType": contractType,
       "Purpose": "string",
       "ContractRequester": "string",
       "ContractProvider": "string",
       "DataController": "string",
-      "StartDate": "2021-07-13",
-      "ExecutionDate": "2021-07-13",
-      "EffectiveDate": "2021-07-13",
-      "ExpireDate": "2021-07-13",
+      "StartDate": _formatDate(startDate),
+      "ExecutionDate": _formatDate(startDate),
+      "EffectiveDate": _formatDate(startDate),
+      "ExpireDate": _formatDate(expireDate),
       "Medium": "string",
       "Waiver": "string",
       "Amendment": "string",
@@ -94,8 +95,7 @@ class DataProvider {
       'Authorization': 'Bearer $token'
     };
     var response = await http.get(
-        kBaseUrl.replace(
-            path: "/contract/by_contractId/$id"),
+        kBaseUrl.replace(path: "/contract/by_contractId/$id"),
         headers: headers);
 
     if (response.statusCode == 200) {
@@ -125,6 +125,12 @@ class DataProvider {
       print("Error getContracts()");
       print("${response.statusCode}");
     }
+  }
+
+  ///Standard function to format the date to send a correctly structured date.
+  String _formatDate(DateTime? date) {
+    String dateString = "${date!.year}-${date.month}-${date.day}";
+    return dateString;
   }
 
   ///With query params examples. I do not want to lose them in case they are

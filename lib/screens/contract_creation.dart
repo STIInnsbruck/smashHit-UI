@@ -30,6 +30,8 @@ class _ContractCreationState extends State<ContractCreation> {
   DataProvider dataProvider = new DataProvider();
   Contract contract = new Contract(null, null);
   String? contractDropDownType;
+  bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
+
 
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController =
@@ -39,6 +41,7 @@ class _ContractCreationState extends State<ContractCreation> {
       new TextEditingController();
   final TextEditingController _startController = new TextEditingController();
   final TextEditingController _endController = new TextEditingController();
+  List<TextEditingController> textControllers = [];
 
   @override
   void initState() {
@@ -131,14 +134,10 @@ class _ContractCreationState extends State<ContractCreation> {
           contractTypeMenu(),
           Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
-            child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.lightGreenAccent,
-                  onPrimary: Colors.white,
-                ),
-                child: FittedBox(
-                    fit: BoxFit.fitWidth, child: _confirmContractButton())),
+            color: isFormComplete? Colors.lightGreenAccent : Colors.grey[400],
+            width: width,
+            child: FittedBox(
+                fit: BoxFit.fitWidth, child: _confirmContractButton()),
           )
         ],
       ),
@@ -281,8 +280,14 @@ class _ContractCreationState extends State<ContractCreation> {
       child: Text("Confirm & Send\nContract",
           style: TextStyle(color: Colors.black, fontSize: 20),
           textAlign: TextAlign.center),
-      onTap: () {
-        dataProvider.getContracts();
+      onTap: () { isFormComplete ?
+        dataProvider.createContract(
+            "SampleContract",
+            "This is a test of the smashHit flutter application. Insert Terms of Service here.",
+            "string",
+            DateTime.now(),
+            DateTime.now())
+      : null;
       },
     );
   }
@@ -341,10 +346,13 @@ class _ContractCreationState extends State<ContractCreation> {
                     textAlign: TextAlign.center),
                 content: Row(
                   children: [
-                    _entityButton(Icons.person_search_rounded, "Personal Data Contract", 0, setState),
+                    _entityButton(Icons.person_search_rounded,
+                        "Personal Data Contract", 0, setState),
                     _entityButton(Icons.work, "Work Contract", 1, setState),
-                    _entityButton(Icons.request_quote, "Subscription Contract", 2, setState),
-                    _entityButton(Icons.description, "Insurance Contract", 3, setState),
+                    _entityButton(Icons.request_quote, "Subscription Contract",
+                        2, setState),
+                    _entityButton(
+                        Icons.description, "Insurance Contract", 3, setState),
                   ],
                 ),
                 actions: [
