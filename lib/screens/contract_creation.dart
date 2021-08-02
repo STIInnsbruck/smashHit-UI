@@ -22,10 +22,16 @@ class _ContractCreationState extends State<ContractCreation> {
       -1; //Used to highlight the selected role when adding a new party.
   String _selectedPartyRole =
       ""; //Used to set the label above a party textfield.
+  int _selectedEntityIndex =
+      -1; //Used to highlight the selected entity to be contracted.
+  String _selectedEntityLabel =
+      ""; //Used to set the label of what entity is being contracted and insert it into the sidebar.
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
   Contract contract = new Contract(null, null);
   String? contractDropDownType;
+  bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
+
 
   final TextEditingController _youFieldController = new TextEditingController();
   final TextEditingController _otherFieldController =
@@ -35,6 +41,7 @@ class _ContractCreationState extends State<ContractCreation> {
       new TextEditingController();
   final TextEditingController _startController = new TextEditingController();
   final TextEditingController _endController = new TextEditingController();
+  List<TextEditingController> textControllers = [];
 
   @override
   void initState() {
@@ -51,6 +58,8 @@ class _ContractCreationState extends State<ContractCreation> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    _checkIfFormComplete();
 
     return Row(
       children: [
@@ -127,14 +136,10 @@ class _ContractCreationState extends State<ContractCreation> {
           contractTypeMenu(),
           Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
-            child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.lightGreenAccent,
-                  onPrimary: Colors.white,
-                ),
-                child: FittedBox(
-                    fit: BoxFit.fitWidth, child: _confirmContractButton())),
+            color: isFormComplete? Colors.lightGreenAccent : Colors.grey[400],
+            width: width,
+            child: FittedBox(
+                fit: BoxFit.fitWidth, child: _confirmContractButton()),
           )
         ],
       ),
@@ -145,15 +150,29 @@ class _ContractCreationState extends State<ContractCreation> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          child: Text("$role"),
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+              child: Text("$role"),
+            ),
+            Spacer(),
+            IconButton(icon: Icon(Icons.highlight_remove, size: 20),
+              onPressed: () {
+                _removeParty(index);
+              },
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints()
+            )
+          ],
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
           height: 30,
           decoration: BoxDecoration(color: Colors.white),
           child: TextFormField(
+            controller: textControllers.elementAt(index),
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
@@ -257,13 +276,34 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
+  Widget _addEntityButton() {
+    return GestureDetector(
+      child: Column(
+        children: [
+          Icon(Icons.add_circle_outline, size: 40),
+          Text("What is being contracted?",
+              style: TextStyle(color: Colors.black, fontSize: 10))
+        ],
+      ),
+      onTap: () {
+        _selectPartyRole();
+      },
+    );
+  }
+
   _confirmContractButton() {
     return GestureDetector(
       child: Text("Confirm & Send\nContract",
           style: TextStyle(color: Colors.black, fontSize: 20),
           textAlign: TextAlign.center),
-      onTap: () {
-        dataProvider.createContract();
+      onTap: () { isFormComplete ?
+        dataProvider.createContract(
+            "SampleContract",
+            "This is a test of the smashHit flutter application. Insert Terms of Service here.",
+            "string",
+            DateTime.now(),
+            DateTime.now())
+      : null;
       },
     );
   }
@@ -297,6 +337,55 @@ class _ContractCreationState extends State<ContractCreation> {
                             ? null
                             : setState(() {
                                 users.add(new User(_selectedPartyRole));
+                                textControllers.add(new TextEditingController());
+                                _incrementTextFieldCounter();
+                              });
+                        _selectedRoleIndex = -1;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("CONFIRM",
+                          style: TextStyle(
+                              color: _selectedRoleIndex != -1
+                                  ? Colors.blue
+                                  : Colors.grey)))
+                ],
+              );
+            }));
+  }
+
+  _selectContractedEntity() {
+    showDialog(
+        context: context,
+        builder: (_) => StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return AlertDialog(
+                title: Text("Select an entity to be contracted.",
+                    textAlign: TextAlign.center),
+                content: Row(
+                  children: [
+                    _entityButton(Icons.person_search_rounded,
+                        "Personal Data Contract", 0, setState),
+                    _entityButton(Icons.work, "Work Contract", 1, setState),
+                    _entityButton(Icons.request_quote, "Subscription Contract",
+                        2, setState),
+                    _entityButton(
+                        Icons.description, "Insurance Contract", 3, setState),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        _selectedRoleIndex = -1;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("CANCEL")),
+                  TextButton(
+                      onPressed: () {
+                        _selectedRoleIndex == -1
+                            ? null
+                            : setState(() {
+                                users.add(new User(_selectedPartyRole));
+                                textControllers.add(new TextEditingController());
                                 _incrementTextFieldCounter();
                               });
                         _selectedRoleIndex = -1;
@@ -332,9 +421,57 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
+  _entityButton(
+      IconData icon, String subscript, int index, StateSetter setState) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+            icon: Icon(icon),
+            onPressed: () {
+              setState(() {
+                _selectedEntityIndex = index;
+              });
+              _selectedEntityLabel = subscript;
+            },
+            iconSize: 100,
+            color: _selectedRoleIndex == index ? Colors.green : Colors.grey),
+        Text("$subscript"),
+      ],
+    );
+  }
+
   _incrementTextFieldCounter() {
     setState(() {
       textFieldCount++;
     });
+  }
+
+  _removeParty(int index) {
+    setState(() {
+      users.removeAt(index);
+      textControllers.removeAt(index);
+      textFieldCount--;
+    });
+  }
+
+  _checkIfFormComplete() {
+    if(textControllers.isEmpty) {
+      setState(() {
+        isFormComplete = false;
+      });
+    } else {
+      textControllers.forEach((element) {
+        if(element.text.isNotEmpty) {
+          setState(() {
+            isFormComplete = true;
+          });
+        } else {
+          setState(() {
+            isFormComplete = false;
+          });
+        }
+      });
+    }
   }
 }

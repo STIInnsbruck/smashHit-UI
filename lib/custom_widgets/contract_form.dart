@@ -193,4 +193,6 @@ class _ContractFormState extends State<ContractForm> {
     String dateString = "${date!.day}.${date.month}.${date.year}";
     return dateString;
   }
+
+
 }
