@@ -334,6 +334,7 @@ class _ContractCreationState extends State<ContractCreation> {
                             ? null
                             : setState(() {
                                 users.add(new User(_selectedPartyRole));
+                                textControllers.add(new TextEditingController());
                                 _incrementTextFieldCounter();
                               });
                         _selectedRoleIndex = -1;
@@ -381,6 +382,7 @@ class _ContractCreationState extends State<ContractCreation> {
                             ? null
                             : setState(() {
                                 users.add(new User(_selectedPartyRole));
+                                textControllers.add(new TextEditingController());
                                 _incrementTextFieldCounter();
                               });
                         _selectedRoleIndex = -1;
@@ -445,6 +447,7 @@ class _ContractCreationState extends State<ContractCreation> {
   _removeParty(int index) {
     setState(() {
       users.removeAt(index);
+      textControllers.removeAt(index);
       textFieldCount--;
     });
   }
