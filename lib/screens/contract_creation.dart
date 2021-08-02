@@ -59,6 +59,8 @@ class _ContractCreationState extends State<ContractCreation> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    _checkIfFormComplete();
+
     return Row(
       children: [
         _sideBar(screenWidth, screenHeight),
@@ -170,6 +172,7 @@ class _ContractCreationState extends State<ContractCreation> {
           height: 30,
           decoration: BoxDecoration(color: Colors.white),
           child: TextFormField(
+            controller: textControllers.elementAt(index),
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
@@ -453,16 +456,22 @@ class _ContractCreationState extends State<ContractCreation> {
   }
 
   _checkIfFormComplete() {
-    textControllers.forEach((element) {
-      if(element.value != null) {
-        setState(() {
-          isFormComplete = true;
-        });
-      } else {
-        setState(() {
-          isFormComplete = false;
-        });
-      }
-    });
+    if(textControllers.isEmpty) {
+      setState(() {
+        isFormComplete = false;
+      });
+    } else {
+      textControllers.forEach((element) {
+        if(element.text.isNotEmpty) {
+          setState(() {
+            isFormComplete = true;
+          });
+        } else {
+          setState(() {
+            isFormComplete = false;
+          });
+        }
+      });
+    }
   }
 }
