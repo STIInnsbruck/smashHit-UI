@@ -451,4 +451,18 @@ class _ContractCreationState extends State<ContractCreation> {
       textFieldCount--;
     });
   }
+
+  _checkIfFormComplete() {
+    textControllers.forEach((element) {
+      if(element.value != null) {
+        setState(() {
+          isFormComplete = true;
+        });
+      } else {
+        setState(() {
+          isFormComplete = false;
+        });
+      }
+    });
+  }
 }
