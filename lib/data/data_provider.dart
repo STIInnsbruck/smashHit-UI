@@ -13,7 +13,8 @@ class DataProvider {
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
-  static final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI2Nzc5MTkxfQ.YBpmdwFCB41thIudoJGyM_ju_1L1MF3pfM_NGp4xmyI";
+  static final String token =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI3OTAxNTM1fQ.MUg_fie76Wk6PN3nrWbadDYizik17A8gEqToUKxMTOM";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
@@ -86,17 +87,15 @@ class DataProvider {
   rejectContract(Uri path) async {}
 
   getContractById() async {
-    Map<String, String> queryParams = {'id': 'kg244564'};
-
+    String id = "kg244564";
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
-
     var response = await http.get(
         kBaseUrl.replace(
-            path: "/contract/by_contractId/", queryParameters: queryParams),
+            path: "/contract/by_contractId/$id"),
         headers: headers);
 
     if (response.statusCode == 200) {
@@ -115,7 +114,6 @@ class DataProvider {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
-
     var response = await http.get(
         kBaseUrl.replace(path: "/contract/list_of_contracts/"),
         headers: headers);
@@ -129,15 +127,28 @@ class DataProvider {
     }
   }
 
-/**
- * Example request with token in it
- *  String token = await Candidate().getToken();
-    final response = await http.get(url, headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer $token',
-    });
-    print('Token : ${token}');
-    print(response);
- */
+  ///With query params examples. I do not want to lose them in case they are
+  ///needed in the future.
+//getContractById() async {
+//     Map<String, String> queryParams = {'id': 'kg244565'};
+//     var headers = {
+//       'Content-Type': 'application/json',
+//       'Accept': 'application/json',
+//       'Authorization': 'Bearer $token'
+//     };
+//     var response = await http.get(
+//         kBaseUrl.replace(
+//             path: "/contract/by_contractId/", queryParameters: queryParams),
+//         headers: headers);
+//
+//     if (response.statusCode == 200) {
+//       var data = json.decode(response.body);
+//       print("Data: \t $data");
+//       print("Contract Created.");
+//     } else {
+//       print("Error getContractsById()");
+//       print("${response.statusCode}");
+//       print("${response.body}");
+//     }
+//   }
 }
