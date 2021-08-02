@@ -148,9 +148,22 @@ class _ContractCreationState extends State<ContractCreation> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          child: Text("$role"),
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+              child: Text("$role"),
+            ),
+            Spacer(),
+            IconButton(icon: Icon(Icons.highlight_remove, size: 20),
+              onPressed: () {
+                _removeParty(index);
+              },
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints()
+            )
+          ],
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -426,6 +439,13 @@ class _ContractCreationState extends State<ContractCreation> {
   _incrementTextFieldCounter() {
     setState(() {
       textFieldCount++;
+    });
+  }
+
+  _removeParty(int index) {
+    setState(() {
+      users.removeAt(index);
+      textFieldCount--;
     });
   }
 }
