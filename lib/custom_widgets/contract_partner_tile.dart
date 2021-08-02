@@ -17,7 +17,7 @@ class ContractPartnerTile extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      height: screenHeight / 4,
+      height: 160,
       width: screenWidth,
       margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -82,7 +82,8 @@ class ContractPartnerTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
       width: 125,
-      height: height / 8,
+      //height: height / 8,
+      height: 100,
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(
             color: Colors.black45,
@@ -91,7 +92,7 @@ class ContractPartnerTile extends StatelessWidget {
             offset: Offset(2.0, 2.0))
       ]),
       child: Center(
-        child: Icon(iconData, size: height / 10),
+        child: Icon(iconData, size: 75),
       ),
     );
   }
