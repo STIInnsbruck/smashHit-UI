@@ -27,21 +27,16 @@ class _ContractCreationState extends State<ContractCreation> {
   String _selectedEntityLabel =
       ""; //Used to set the label of what entity is being contracted and insert it into the sidebar.
   List<User> users = [];
-  DataProvider dataProvider = new DataProvider();
-  Contract contract = new Contract(null, null);
+  DataProvider dataProvider = DataProvider();
+  Contract contract = Contract(null, null);
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
+  ContractForm contractForm = ContractForm();
 
-
-  final TextEditingController _youFieldController = new TextEditingController();
-  final TextEditingController _otherFieldController =
-      new TextEditingController();
-  final TextEditingController _titleController = new TextEditingController();
-  final TextEditingController _descriptionController =
-      new TextEditingController();
-  final TextEditingController _startController = new TextEditingController();
-  final TextEditingController _endController = new TextEditingController();
-  List<TextEditingController> textControllers = [];
+  //-------------------------------------------------- TextEditingControllers
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  List<TextEditingController> textControllers = []; //for dynamic amount of parties
 
   @override
   void initState() {
@@ -77,7 +72,7 @@ class _ContractCreationState extends State<ContractCreation> {
                     height: 100,
                     child: ContractStatusBar(contract.getContractStatusAsInt()),
                   ),
-                  ContractForm()
+                  contractForm
                 ],
               ),
             ),
@@ -132,7 +127,10 @@ class _ContractCreationState extends State<ContractCreation> {
             margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: _addPartyButton(),
           ),
-          contractEntityField(),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: _addEntityButton(),
+          ),
           contractTypeMenu(),
           Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
@@ -281,12 +279,12 @@ class _ContractCreationState extends State<ContractCreation> {
       child: Column(
         children: [
           Icon(Icons.add_circle_outline, size: 40),
-          Text("What is being contracted?",
+          Text("Add Contract Item",
               style: TextStyle(color: Colors.black, fontSize: 10))
         ],
       ),
       onTap: () {
-        _selectPartyRole();
+        _selectContractedEntity();
       },
     );
   }
@@ -359,17 +357,32 @@ class _ContractCreationState extends State<ContractCreation> {
         builder: (_) => StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
               return AlertDialog(
-                title: Text("Select an entity to be contracted.",
+                title: Text("Select an item that is being contracted.",
                     textAlign: TextAlign.center),
-                content: Row(
+                content: Column(
                   children: [
-                    _entityButton(Icons.person_search_rounded,
-                        "Personal Data Contract", 0, setState),
-                    _entityButton(Icons.work, "Work Contract", 1, setState),
-                    _entityButton(Icons.request_quote, "Subscription Contract",
-                        2, setState),
-                    _entityButton(
-                        Icons.description, "Insurance Contract", 3, setState),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _entityButton(Icons.person_search_rounded,
+                            "Personal Data", 0, setState),
+                        _entityButton(Icons.work, "Work", 1, setState),
+                        _entityButton(Icons.request_quote, "Subscription",
+                            2, setState),
+                        _entityButton(
+                            Icons.description, "Insurance", 3, setState),
+                      ],
+                    ),
+                    Spacer(),
+                    Container(
+                      height: 67,
+                      child: Column(
+                        children: [
+                          Text("Does you contract item not fit in one of the above categories? Please specify it down below."),
+                          TextField()
+                        ],
+                      ),
+                    )
                   ],
                 ),
                 actions: [
@@ -455,6 +468,8 @@ class _ContractCreationState extends State<ContractCreation> {
     });
   }
 
+  ///function to check if all textfields, and other necessary information for a
+  ///contract are filled in with some value other than null (nothing).
   _checkIfFormComplete() {
     if(textControllers.isEmpty) {
       setState(() {
@@ -463,9 +478,11 @@ class _ContractCreationState extends State<ContractCreation> {
     } else {
       textControllers.forEach((element) {
         if(element.text.isNotEmpty) {
-          setState(() {
-            isFormComplete = true;
-          });
+          if(_titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty && contractForm.startDate != null && contractForm.endDate != null) {
+            setState(() {
+              isFormComplete = true;
+            });
+          }
         } else {
           setState(() {
             isFormComplete = false;

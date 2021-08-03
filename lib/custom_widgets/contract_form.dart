@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ContractForm extends StatefulWidget {
+
+  DateTime? startDate;
+  DateTime? endDate;
+
   @override
   _ContractFormState createState() => new _ContractFormState();
 }
@@ -192,6 +196,14 @@ class _ContractFormState extends State<ContractForm> {
   String _formatDate(DateTime? date) {
     String dateString = "${date!.day}.${date.month}.${date.year}";
     return dateString;
+  }
+
+  void setWidgetStartDate() {
+    widget.startDate = startDate;
+  }
+
+  void setWidgetEndDate() {
+    widget.endDate = endDate;
   }
 
 
