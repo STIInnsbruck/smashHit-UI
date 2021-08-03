@@ -5,6 +5,8 @@ class ContractForm extends StatefulWidget {
 
   DateTime? startDate;
   DateTime? endDate;
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -54,7 +56,10 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         Text("Title: ", style: TextStyle(fontSize: 25)),
         Expanded(
-          child: TextFormField(style: TextStyle(fontSize: 20)),
+          child: TextFormField(
+              style: TextStyle(fontSize: 20),
+              controller: widget.titleController,
+          ),
         )
       ],
     );
@@ -69,6 +74,7 @@ class _ContractFormState extends State<ContractForm> {
           height: 400,
           color: Colors.white70,
           child: TextField(
+            controller: widget.descriptionController,
             maxLines: null,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
@@ -132,12 +138,14 @@ class _ContractFormState extends State<ContractForm> {
     if (pickedDate != null && endDate == null) {
       setState(() {
         startDate = pickedDate;
+        setWidgetStartDate();
       });
     } else if (pickedDate != null &&
         endDate != null &&
         pickedDate.isBefore(endDate!)) {
       setState(() {
         startDate = pickedDate;
+        setWidgetStartDate();
       });
     } else {
       showDialog(
@@ -171,6 +179,7 @@ class _ContractFormState extends State<ContractForm> {
         pickedDate.isAfter(startDate!)) {
       setState(() {
         endDate = pickedDate;
+        setWidgetEndDate();
       });
     } else {
       showDialog(

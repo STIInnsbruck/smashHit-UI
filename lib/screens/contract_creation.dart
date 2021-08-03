@@ -31,11 +31,11 @@ class _ContractCreationState extends State<ContractCreation> {
   Contract contract = Contract(null, null);
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
-  ContractForm contractForm = ContractForm();
+  static ContractForm contractForm = ContractForm();
 
   //-------------------------------------------------- TextEditingControllers
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _titleController = contractForm.titleController;
+  final TextEditingController _descriptionController = contractForm.descriptionController;
   List<TextEditingController> textControllers = []; //for dynamic amount of parties
 
   @override
@@ -425,8 +425,8 @@ class _ContractCreationState extends State<ContractCreation> {
             onPressed: () {
               setState(() {
                 _selectedRoleIndex = index;
+                _selectedPartyRole = subscript;
               });
-              _selectedPartyRole = subscript;
             },
             iconSize: 100,
             color: _selectedRoleIndex == index ? Colors.green : Colors.grey),
@@ -445,14 +445,18 @@ class _ContractCreationState extends State<ContractCreation> {
             onPressed: () {
               setState(() {
                 _selectedEntityIndex = index;
+                _selectedEntityLabel = subscript;
               });
-              _selectedEntityLabel = subscript;
             },
             iconSize: 50,
             color: _selectedEntityIndex == index ? Colors.green : Colors.grey),
         Text("$subscript", style: TextStyle(fontSize: 13)),
       ],
     );
+  }
+
+  Widget selectedContractItem() {
+    return Container();
   }
 
   _incrementTextFieldCounter() {
@@ -479,7 +483,14 @@ class _ContractCreationState extends State<ContractCreation> {
     } else {
       textControllers.forEach((element) {
         if(element.text.isNotEmpty) {
-          if(_titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty && contractForm.startDate != null && contractForm.endDate != null) {
+          print("TitleController:\t ${_titleController.text.isNotEmpty}");
+          print("DescriptionController:\t ${_descriptionController.text.isNotEmpty}");
+          print("StartDate:\t ${contractForm.startDate}");
+          print("EndDate:\t ${contractForm.endDate}");
+          print("EntityLabel:\t ${_selectedEntityLabel}");
+          print("ContractType:\t $contractDropDownType");
+          print("---------------------------------------------------------------------");
+          if(_titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty && contractForm.startDate != null && contractForm.endDate != null && _selectedEntityLabel != "" && contractDropDownType != null) {
             setState(() {
               isFormComplete = true;
             });
