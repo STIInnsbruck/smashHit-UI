@@ -35,8 +35,10 @@ class _ContractCreationState extends State<ContractCreation> {
 
   //-------------------------------------------------- TextEditingControllers
   final TextEditingController _titleController = contractForm.titleController;
-  final TextEditingController _descriptionController = contractForm.descriptionController;
-  List<TextEditingController> textControllers = []; //for dynamic amount of parties
+  final TextEditingController _descriptionController =
+      contractForm.descriptionController;
+  List<TextEditingController> textControllers =
+      []; //for dynamic amount of parties
 
   @override
   void initState() {
@@ -134,7 +136,7 @@ class _ContractCreationState extends State<ContractCreation> {
           contractTypeMenu(),
           Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
-            color: isFormComplete? Colors.lightGreenAccent : Colors.grey[400],
+            color: isFormComplete ? Colors.lightGreenAccent : Colors.grey[400],
             width: width,
             child: FittedBox(
                 fit: BoxFit.fitWidth, child: _confirmContractButton()),
@@ -155,14 +157,14 @@ class _ContractCreationState extends State<ContractCreation> {
               child: Text("$role"),
             ),
             Spacer(),
-            IconButton(icon: Icon(Icons.highlight_remove, size: 20),
-              onPressed: () {
-                _removeParty(index);
-              },
-              iconSize: 20,
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints()
-            )
+            IconButton(
+                icon: Icon(Icons.highlight_remove, size: 20),
+                onPressed: () {
+                  _removeParty(index);
+                },
+                iconSize: 20,
+                padding: EdgeInsets.zero,
+                constraints: BoxConstraints())
           ],
         ),
         Container(
@@ -294,14 +296,15 @@ class _ContractCreationState extends State<ContractCreation> {
       child: Text("Confirm & Send\nContract",
           style: TextStyle(color: Colors.black, fontSize: 20),
           textAlign: TextAlign.center),
-      onTap: () { isFormComplete ?
-        dataProvider.createContract(
-            "SampleContract",
-            "This is a test of the smashHit flutter application. Insert Terms of Service here.",
-            "string",
-            DateTime.now(),
-            DateTime.now())
-      : null;
+      onTap: () {
+        isFormComplete
+            ? dataProvider.createContract(
+                "SampleContract",
+                "This is a test of the smashHit flutter application. Insert Terms of Service here.",
+                "string",
+                DateTime.now(),
+                DateTime.now())
+            : null;
       },
     );
   }
@@ -335,7 +338,8 @@ class _ContractCreationState extends State<ContractCreation> {
                             ? null
                             : setState(() {
                                 users.add(new User(_selectedPartyRole));
-                                textControllers.add(new TextEditingController());
+                                textControllers
+                                    .add(new TextEditingController());
                                 _incrementTextFieldCounter();
                               });
                         _selectedRoleIndex = -1;
@@ -358,8 +362,11 @@ class _ContractCreationState extends State<ContractCreation> {
                 builder: (BuildContext context, StateSetter setState) {
               return SingleChildScrollView(
                 child: AlertDialog(
-                  title: Text("Select an item that is being contracted.",
-                      textAlign: TextAlign.center, style: TextStyle(fontSize: 15),),
+                  title: Text(
+                    "Select an item that is being contracted.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15),
+                  ),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -369,8 +376,8 @@ class _ContractCreationState extends State<ContractCreation> {
                           _entityButton(Icons.person_search_rounded,
                               "Personal Data", 0, setState),
                           _entityButton(Icons.work, "Work", 1, setState),
-                          _entityButton(Icons.request_quote, "Subscription",
-                              2, setState),
+                          _entityButton(
+                              Icons.request_quote, "Subscription", 2, setState),
                           _entityButton(
                               Icons.description, "Insurance", 3, setState),
                         ],
@@ -382,11 +389,10 @@ class _ContractCreationState extends State<ContractCreation> {
                         height: 70,
                         child: Column(
                           children: [
-                            Text("Does you contract item not fit in one of the above categories? Please specify it down below.",
-                              style: TextStyle(fontSize: 15)),
-                            TextField(
-
-                            )
+                            Text(
+                                "Does you contract item not fit in one of the above categories? Please specify it down below.",
+                                style: TextStyle(fontSize: 15)),
+                            TextField()
                           ],
                         ),
                       )
@@ -476,21 +482,19 @@ class _ContractCreationState extends State<ContractCreation> {
   ///function to check if all textfields, and other necessary information for a
   ///contract are filled in with some value other than null (nothing).
   _checkIfFormComplete() {
-    if(textControllers.isEmpty) {
+    if (textControllers.isEmpty) {
       setState(() {
         isFormComplete = false;
       });
     } else {
       textControllers.forEach((element) {
-        if(element.text.isNotEmpty) {
-          print("TitleController:\t ${_titleController.text.isNotEmpty}");
-          print("DescriptionController:\t ${_descriptionController.text.isNotEmpty}");
-          print("StartDate:\t ${contractForm.startDate}");
-          print("EndDate:\t ${contractForm.endDate}");
-          print("EntityLabel:\t ${_selectedEntityLabel}");
-          print("ContractType:\t $contractDropDownType");
-          print("---------------------------------------------------------------------");
-          if(_titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty && contractForm.startDate != null && contractForm.endDate != null && _selectedEntityLabel != "" && contractDropDownType != null) {
+        if (element.text.isNotEmpty) {
+          if (_titleController.text.isNotEmpty &&
+              _descriptionController.text.isNotEmpty &&
+              contractForm.startDate != null &&
+              contractForm.endDate != null &&
+              _selectedEntityLabel != "" &&
+              contractDropDownType != null) {
             setState(() {
               isFormComplete = true;
             });
