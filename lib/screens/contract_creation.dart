@@ -356,60 +356,61 @@ class _ContractCreationState extends State<ContractCreation> {
         context: context,
         builder: (_) => StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
-              return AlertDialog(
-                title: Text("Select an item that is being contracted.",
-                    textAlign: TextAlign.center),
-                content: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _entityButton(Icons.person_search_rounded,
-                            "Personal Data", 0, setState),
-                        _entityButton(Icons.work, "Work", 1, setState),
-                        _entityButton(Icons.request_quote, "Subscription",
-                            2, setState),
-                        _entityButton(
-                            Icons.description, "Insurance", 3, setState),
-                      ],
-                    ),
-                    Spacer(),
-                    Container(
-                      height: 67,
-                      child: Column(
+              return SingleChildScrollView(
+                child: AlertDialog(
+                  title: Text("Select an item that is being contracted.",
+                      textAlign: TextAlign.center, style: TextStyle(fontSize: 15),),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("Does you contract item not fit in one of the above categories? Please specify it down below."),
-                          TextField()
+                          _entityButton(Icons.person_search_rounded,
+                              "Personal Data", 0, setState),
+                          _entityButton(Icons.work, "Work", 1, setState),
+                          _entityButton(Icons.request_quote, "Subscription",
+                              2, setState),
+                          _entityButton(
+                              Icons.description, "Insurance", 3, setState),
                         ],
                       ),
-                    )
+                      Container(
+                        height: 25,
+                      ),
+                      Container(
+                        height: 70,
+                        child: Column(
+                          children: [
+                            Text("Does you contract item not fit in one of the above categories? Please specify it down below.",
+                              style: TextStyle(fontSize: 15)),
+                            TextField(
+
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          _selectedEntityIndex = -1;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("CANCEL")),
+                    TextButton(
+                        onPressed: () {
+                          _selectedEntityIndex = -1;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("CONFIRM",
+                            style: TextStyle(
+                                color: _selectedEntityIndex != -1
+                                    ? Colors.blue
+                                    : Colors.grey)))
                   ],
                 ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        _selectedRoleIndex = -1;
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("CANCEL")),
-                  TextButton(
-                      onPressed: () {
-                        _selectedRoleIndex == -1
-                            ? null
-                            : setState(() {
-                                users.add(new User(_selectedPartyRole));
-                                textControllers.add(new TextEditingController());
-                                _incrementTextFieldCounter();
-                              });
-                        _selectedRoleIndex = -1;
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("CONFIRM",
-                          style: TextStyle(
-                              color: _selectedRoleIndex != -1
-                                  ? Colors.blue
-                                  : Colors.grey)))
-                ],
               );
             }));
   }
@@ -447,9 +448,9 @@ class _ContractCreationState extends State<ContractCreation> {
               });
               _selectedEntityLabel = subscript;
             },
-            iconSize: 100,
-            color: _selectedRoleIndex == index ? Colors.green : Colors.grey),
-        Text("$subscript"),
+            iconSize: 50,
+            color: _selectedEntityIndex == index ? Colors.green : Colors.grey),
+        Text("$subscript", style: TextStyle(fontSize: 13)),
       ],
     );
   }
