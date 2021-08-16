@@ -8,9 +8,7 @@ class User {
   int? _telephoneNumber;
   String? _role;
 
-  User(String role) {
-    this._role = role;
-  }
+  User(this._name);
 
   int? get getId => _id;
   String? get getName => _name;
@@ -26,10 +24,10 @@ class User {
 /// If the contract is supposed to only be an instant contract lasting for a day,
 /// then make the startDate and endDate the same date.
 class Contract {
-  int? contractId;
+  String? contractId;
   String? contractType;
   User? contractor;
-  List<User> contractee = [];
+  List<String>? contractee = [];
   ContractObject? contractObject;
   String? title;
   String? description;
@@ -42,8 +40,9 @@ class Contract {
   String? contractStatus;
   IconData? iconData;
 
-  Contract(this.contractId, this.contractType) {
+  Contract(this.contractId, this.contractType, var contractor, this.executionDate, this.expireDate) {
     this.contractStatus = "Created";
+    this.contractor?._name = contractor;
   }
 
   /// Returns an int given the contract's status. The int is needed for the

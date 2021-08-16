@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
+import 'package:smashhit_ui/data/parser.dart';
+import 'package:smashhit_ui/data/models.dart';
 
 class DataProvider {
+
   //TODO: change URL to the contract url. This is currently only used to ensure correct https requests.
   static final String testUrl = "rickandmortyapi.com";
   static final String testPath = "/";
@@ -13,8 +16,10 @@ class DataProvider {
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
+  ResponseParser parser = ResponseParser();
+
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI3OTA0NzQ3fQ.RI5YZQm4wSXHFueL-Aqu0gNQmuR_ermV8d7UUWdSAuw";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI5MTA3MzUyfQ.U4rEJzIgjOLLkfiaC52bmg9SdQ0p4q9nJ-UGGdS1-9s";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
@@ -40,9 +45,9 @@ class DataProvider {
     };
 
     var body = {
-      "ContractId": "",
+      "ContractId": "1337",
       "ContractType": contractType,
-      "Purpose": "string",
+      "Purpose": "Testing the flutter application.",
       "ContractRequester": "string",
       "ContractProvider": "string",
       "DataController": "string",
@@ -50,7 +55,7 @@ class DataProvider {
       "ExecutionDate": _formatDate(startDate),
       "EffectiveDate": _formatDate(startDate),
       "ExpireDate": _formatDate(expireDate),
-      "Medium": "string",
+      "Medium": "SmashHitFlutterApp",
       "Waiver": "string",
       "Amendment": "string",
       "ConfidentialityObligation": "string",
@@ -88,7 +93,7 @@ class DataProvider {
   rejectContract(Uri path) async {}
 
   getContractById() async {
-    String id = "kg244564";
+    String id = "kg244565";
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -99,9 +104,11 @@ class DataProvider {
         headers: headers);
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      print("Data: \t $data");
-      print("Contract Created.");
+      var data = response.body;
+      var jsonMap = json.decode(data);
+      Contract cid = parser.parseContractId(jsonMap["bindings"][0]);
+      print("id: ${cid.executionDate}");
+      return cid;
     } else {
       print("Error getContractsById()");
       print("${response.statusCode}");
@@ -120,7 +127,10 @@ class DataProvider {
 
     if (response.statusCode == 200) {
       var data = (response.body);
-      print("$data");
+      var jsonMap = json.decode(data);
+      var id = parser.parseAllContractIds(jsonMap["bindings"]);
+      print("id: $id");
+      return id;
     } else {
       print("Error getContracts()");
       print("${response.statusCode}");

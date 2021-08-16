@@ -17,13 +17,13 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
-  Contract contract = new Contract(null, null);
+  Contract contract = new Contract(null, null, null, null, null);
   String? contractDropDownType;
 
   @override
   void initState() {
     super.initState();
-    contract = Contract(null, null);
+    contract = Contract(null, null, null, null, null);
     contract.contractStatus = "Done";
     contract.executionDate = DateTime(2021, DateTime.july, 10);
     contract.expireDate = DateTime(2021, DateTime.august, 21);
