@@ -19,7 +19,7 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI5MTA3MzUyfQ.U4rEJzIgjOLLkfiaC52bmg9SdQ0p4q9nJ-UGGdS1-9s";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMwMDU2ODE3fQ.61l6BhZVNc4UA4acQ5FplxxSJDCSEdyyAH12IaRGvZY";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
@@ -106,9 +106,8 @@ class DataProvider {
     if (response.statusCode == 200) {
       var data = response.body;
       var jsonMap = json.decode(data);
-      Contract cid = parser.parseContractId(jsonMap["bindings"][0]);
-      print("id: ${cid.executionDate}");
-      return cid;
+      Contract contract = parser.parseContractId(jsonMap["bindings"][0]);
+      return contract;
     } else {
       print("Error getContractsById()");
       print("${response.statusCode}");

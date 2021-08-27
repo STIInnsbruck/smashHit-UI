@@ -1,4 +1,4 @@
-#Tue Jul 20 10:56:59 CEST 2021
-base.0=C\:\\Users\\Svent\\StudioProjects\\smashhit_ui\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
-path.0=classes.dex
+#Fri Aug 27 11:13:53 CEST 2021
+base.0=C\:\\Users\\benj-\\StudioProjects\\smashHit-UI\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
 renamed.0=classes.dex
+path.0=classes.dex

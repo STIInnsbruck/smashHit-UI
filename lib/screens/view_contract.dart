@@ -272,12 +272,20 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
+  /// This function returns the calculated elapsed time of the contract towards the
+  /// current day. Return value must be between 0.0 and 1.0 inclusive. If the contract
+  /// lies in the past, return 1.0 to represent 100% completion of the contract.
   double calculateElapsedContractTime() {
     DateTime today = DateTime.now();
     var totalTime =
         contract.expireDate!.difference(contract.executionDate!).inDays;
     var elapsedTime = today.difference(contract.executionDate!).inDays;
-    double progressPercentage = (elapsedTime / totalTime) * 100;
-    return progressPercentage.roundToDouble();
+
+    if(elapsedTime >= totalTime) {
+      return 100.0;
+    } else {
+      double progressPercentage = (elapsedTime / totalTime) * 100;
+      return progressPercentage.roundToDouble();
+    }
   }
 }
