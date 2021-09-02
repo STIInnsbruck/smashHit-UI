@@ -17,7 +17,7 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
-  Contract? contract = new Contract(null, null, null, null, null, null);
+  Contract? contract;
   String? contractDropDownType;
 
   @override
@@ -32,7 +32,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Future<Contract>? _fetchContract() async {
-    contract = await dataProvider.getContractById();
+    contract = await dataProvider.fetchContractById();
     return contract!;
   }
 

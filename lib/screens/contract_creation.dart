@@ -28,7 +28,7 @@ class _ContractCreationState extends State<ContractCreation> {
       ""; //Used to set the label of what entity is being contracted and insert it into the sidebar.
   List<User> users = [];
   DataProvider dataProvider = DataProvider();
-  Contract contract = Contract(null, null, null, null, null, null);
+  Contract? contract;
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
   static ContractForm contractForm = ContractForm();
@@ -43,7 +43,7 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    contract = Contract(null, null, null, null, null, null);
+    //contract = Contract(null, null, null, null, null, null);
   }
 
   @override
@@ -67,7 +67,7 @@ class _ContractCreationState extends State<ContractCreation> {
                   SizedBox(
                     width: screenWidth * 0.66,
                     height: 100,
-                    child: ContractStatusBar(contract.getContractStatusAsInt()),
+                    child: ContractStatusBar(contract!.getContractStatusAsInt()),
                   ),
                   contractForm
                 ],
@@ -301,7 +301,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 "string",
                 DateTime.now(),
                 DateTime.now())
-            : dataProvider.getContractById();
+            : dataProvider.fetchContractById();
       },
     );
   }

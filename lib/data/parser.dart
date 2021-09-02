@@ -1,7 +1,7 @@
 import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
-  Contract parseContract(Map jsonEvent) {
+  /**Contract parseContract(Map jsonEvent) {
     return Contract(null, null, null, null, null, null);
   }
 
@@ -18,7 +18,7 @@ class ResponseParser {
 
   List<Contract?> parseAllContractIds(List jsonList) {
     return jsonList.map((jsonContractIds) => parseContractId(jsonContractIds)).toList();
-  }
+  }*/
 
   DateTime formatDate(String dateString) {
     var length = dateString.length;

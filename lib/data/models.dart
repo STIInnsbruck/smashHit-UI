@@ -33,18 +33,22 @@ class Contract {
   String? description;
   DateTime? executionDate;
   DateTime? expireDate;
-  String? addressType;
-  String? address;
-  String? agreementType;
-  Duration? minimumDuration;
   String? contractStatus;
   IconData? iconData;
 
-  Contract(this.contractId, this.contractType, var contractor, var contractee, this.executionDate, this.expireDate) {
-    this.contractStatus = "Created";
-    this.contractor?._name = contractor;
-    this.contractee?._name = contractee;
-  }
+  Contract({
+    required this.contractId,
+    required this.contractType,
+    required this.contractor,
+    required this.contractee,
+    required this.title,
+    required this.description,
+    required this.executionDate,
+    required this.expireDate,
+    this.contractStatus,
+    this.contractObject,
+    this.iconData
+  });
 
   /// Returns an int given the contract's status. The int is needed for the
   /// contract_status_bar as it takes in an int to track the process.
@@ -60,6 +64,30 @@ class Contract {
         return 3;
     }
     return 0;
+  }
+
+  factory Contract.fromJson(Map<String, dynamic> json) {
+    return Contract(
+      contractId: json['Contract']['value'],
+      contractType: json['ContractType']['value'],
+      contractor: json['ContractRequester']['value'],
+      contractee: json['ContractProvider']['value'],
+      title: "Contract Title (Hardcoded, not in ontology.)",
+      description: json['Purpose']['value'],
+      executionDate: formatDate(json["ExecutionDate"]["value"]),
+      expireDate: formatDate(json["EndingDate"]["value"]),
+      contractStatus: "Created"
+    );
+  }
+
+  static DateTime formatDate(String dateString) {
+    var length = dateString.length;
+    int year = int.parse(dateString.substring(length - 4, length));
+    int month = int.parse(dateString.substring(length - 7, length - 5));
+    int day = int.parse(dateString.substring(length - 10, length - 8));
+    DateTime date = new DateTime(year, month, day);
+
+    return date;
   }
 
   /// Return an IconData depending on the contract type. This is used for the
