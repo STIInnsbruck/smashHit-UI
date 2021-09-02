@@ -147,44 +147,47 @@ class _ContractCreationState extends State<ViewContract> {
 
   // ignore: non_constant_identifier_names
   Widget TOSTile(double width, double height) {
-    return Container(
-      height: height / 3,
-      width: width / 3,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 5,
-                spreadRadius: 2.5,
-                offset: Offset(2.5, 2.5))
-          ]),
-      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text("Contract Purpose"),
-          ),
-          Container(
-            color: Colors.grey[300],
-            height: height / 40,
-            width: width / 5,
-          ),
-          Container(
-            color: Colors.grey[300],
-            height: height / 40,
-            width: width / 10,
-          ),
-          Container(
-            color: Colors.grey[300],
-            height: height / 40,
-            width: width / 8,
-          ),
-        ],
+    return GestureDetector(
+      child: Container(
+        height: height / 3,
+        width: width / 3,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 5,
+                  spreadRadius: 2.5,
+                  offset: Offset(2.5, 2.5))
+            ]),
+        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text("Contract Purpose"),
+            ),
+            Container(
+              color: Colors.grey[300],
+              height: height / 40,
+              width: width / 5,
+            ),
+            Container(
+              color: Colors.grey[300],
+              height: height / 40,
+              width: width / 10,
+            ),
+            Container(
+              color: Colors.grey[300],
+              height: height / 40,
+              width: width / 8,
+            ),
+          ],
+        ),
       ),
+      onTap: () { _showContractPurposeDialog(); },
     );
   }
 
@@ -297,5 +300,29 @@ class _ContractCreationState extends State<ViewContract> {
       double progressPercentage = (elapsedTime / totalTime) * 100;
       return progressPercentage.roundToDouble();
     }
+  }
+
+  void _showContractPurposeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Contract Purpose'),
+          content: Text(contract!.description!),
+          actions: <Widget> [
+            TextButton(
+              onPressed: () {
+                _dismissDialog();
+              },
+              child: Text('Close'),
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }
