@@ -27,7 +27,7 @@ class Contract {
   String? contractId;
   String? contractType;
   User? contractor;
-  List<String>? contractee = [];
+  User? contractee;
   ContractObject? contractObject;
   String? title;
   String? description;
@@ -40,9 +40,10 @@ class Contract {
   String? contractStatus;
   IconData? iconData;
 
-  Contract(this.contractId, this.contractType, var contractor, this.executionDate, this.expireDate) {
+  Contract(this.contractId, this.contractType, var contractor, var contractee, this.executionDate, this.expireDate) {
     this.contractStatus = "Created";
     this.contractor?._name = contractor;
+    this.contractee?._name = contractee;
   }
 
   /// Returns an int given the contract's status. The int is needed for the

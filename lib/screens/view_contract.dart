@@ -17,21 +17,23 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
-  Contract contract = new Contract(null, null, null, null, null);
+  Contract? contract = new Contract(null, null, null, null, null, null);
   String? contractDropDownType;
 
   @override
   void initState() {
     super.initState();
-    contract = Contract(null, null, null, null, null);
-    contract.contractStatus = "Done";
-    contract.executionDate = DateTime(2021, DateTime.july, 10);
-    contract.expireDate = DateTime(2021, DateTime.august, 21);
+    //contract = Contract(null, null, null, null, null);
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<Contract>? _fetchContract() async {
+    contract = await dataProvider.getContractById();
+    return contract!;
   }
 
   @override
@@ -40,47 +42,55 @@ class _ContractCreationState extends State<ViewContract> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: screenHeight,
-          minHeight: screenHeight,
-        ),
-        child: Scrollbar(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          partiesTile(screenWidth, screenHeight),
-                          Container(width: screenWidth / 20),
-                          TOSTile(screenWidth, screenHeight),
-                        ]
-                      ),
-                      Container(height: screenHeight / 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          contractedEntitiesTile(screenWidth, screenHeight),
-                          Container(width: screenWidth / 20),
-                          statusTile(screenWidth, screenHeight),
-                        ],
-                      ),
-                    ],
-                  ),
-                  contractTimeProgressBar(screenWidth, screenHeight),
-                ],
+      child: FutureBuilder<Contract>(
+        future: _fetchContract(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: screenHeight,
+                minHeight: screenHeight,
               ),
-            ]),
-          ),
-        ),
+              child: Scrollbar(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      partiesTile(screenWidth, screenHeight),
+                                      Container(width: screenWidth / 20),
+                                      TOSTile(screenWidth, screenHeight),
+                                    ]
+                                ),
+                                Container(height: screenHeight / 15),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    contractedEntitiesTile(screenWidth, screenHeight),
+                                    Container(width: screenWidth / 20),
+                                    statusTile(screenWidth, screenHeight),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            contractTimeProgressBar(screenWidth, screenHeight),
+                          ],
+                        ),
+                      ]),
+                ),
+              ),
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        }
       ),
     );
   }
@@ -106,9 +116,7 @@ class _ContractCreationState extends State<ViewContract> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              partyEntity("Primary"),
-              partyEntity("On behalf of"),
-              partyEntity("Primary"),
+              partyEntity(),
             ],
           )
         ],
@@ -116,7 +124,7 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Widget partyEntity(String partyRole) {
+  Widget partyEntity() {
     return Container(
       child: Column(
         children: [
@@ -128,8 +136,8 @@ class _ContractCreationState extends State<ViewContract> {
               child: Icon(Icons.person),
             ),
           ),
-          Text("name"),
-          Text(partyRole, style: TextStyle(color: Colors.grey, fontSize: 15))
+          Text(contract!.contractor!.getName??''),
+          Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
         ],
       ),
     );
@@ -204,7 +212,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   /// Takes the current Contract's status and returns the appropriate icon.
   Icon statusIconByContractStatus(double height) {
-    switch (contract.getContractStatusAsInt()) {
+    switch (contract!.getContractStatusAsInt()) {
       case 0:
         return Icon(Icons.description, color: Colors.grey, size: height / 6);
       case 1:
@@ -278,8 +286,8 @@ class _ContractCreationState extends State<ViewContract> {
   double calculateElapsedContractTime() {
     DateTime today = DateTime.now();
     var totalTime =
-        contract.expireDate!.difference(contract.executionDate!).inDays;
-    var elapsedTime = today.difference(contract.executionDate!).inDays;
+        contract!.expireDate!.difference(contract!.executionDate!).inDays;
+    var elapsedTime = today.difference(contract!.executionDate!).inDays;
 
     if(elapsedTime >= totalTime) {
       return 100.0;

@@ -19,7 +19,7 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMwMDU2ODE3fQ.61l6BhZVNc4UA4acQ5FplxxSJDCSEdyyAH12IaRGvZY";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMwNTg4NjAyfQ.wny-5dNFHcPlIRpocoK6wFpGptWBf7za9r2LZLFxInY";
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
@@ -92,7 +92,7 @@ class DataProvider {
 
   rejectContract(Uri path) async {}
 
-  getContractById() async {
+  Future<Contract?> getContractById() async {
     String id = "kg244565";
     var headers = {
       'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       var data = response.body;
       var jsonMap = json.decode(data);
-      Contract contract = parser.parseContractId(jsonMap["bindings"][0]);
+      Contract? contract = parser.parseContractId(jsonMap["bindings"][0]);
       return contract;
     } else {
       print("Error getContractsById()");

@@ -2,20 +2,21 @@ import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
   Contract parseContract(Map jsonEvent) {
-    return Contract(null, null, null, null, null);
+    return Contract(null, null, null, null, null, null);
   }
 
-  Contract parseContractId(Map jsonEvent) {
+  Contract? parseContractId(Map jsonEvent) {
     return new Contract(
       jsonEvent["Contract"]["value"],
       jsonEvent["ContractType"]["value"],
       jsonEvent["ContractProvider"]["value"],
+      jsonEvent["ContractRequester"]["value"],
       formatDate(jsonEvent["ExecutionDate"]["value"]),
       formatDate(jsonEvent["EndingDate"]["value"])
     );jsonEvent.toString();
   }
 
-  List<Contract> parseAllContractIds(List jsonList) {
+  List<Contract?> parseAllContractIds(List jsonList) {
     return jsonList.map((jsonContractIds) => parseContractId(jsonContractIds)).toList();
   }
 
