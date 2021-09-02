@@ -17,23 +17,19 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
+  late Future<Contract> futureContract;
   Contract? contract;
   String? contractDropDownType;
 
   @override
   void initState() {
     super.initState();
-    //contract = Contract(null, null, null, null, null);
+    futureContract = dataProvider.fetchContractById();
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<Contract>? _fetchContract() async {
-    contract = await dataProvider.fetchContractById();
-    return contract!;
   }
 
   @override
@@ -43,9 +39,10 @@ class _ContractCreationState extends State<ViewContract> {
 
     return Container(
       child: FutureBuilder<Contract>(
-        future: _fetchContract(),
+        future: futureContract,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            contract = snapshot.data;
             return ConstrainedBox(
               constraints: BoxConstraints(
                 maxHeight: screenHeight,
@@ -88,7 +85,10 @@ class _ContractCreationState extends State<ViewContract> {
                 ),
               ),
             );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
           }
+          // show loading indicator while fetching.
           return Center(child: CircularProgressIndicator());
         }
       ),
@@ -136,7 +136,7 @@ class _ContractCreationState extends State<ViewContract> {
               child: Icon(Icons.person),
             ),
           ),
-          Text(contract!.contractor!.getName??''),
+          Text(contract!.title!),
           Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
         ],
       ),

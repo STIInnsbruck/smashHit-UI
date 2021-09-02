@@ -19,7 +19,7 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMwNTg4NjAyfQ.wny-5dNFHcPlIRpocoK6wFpGptWBf7za9r2LZLFxInY";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMwNTkyOTg4fQ.gaHa1f6NMIsUE8T4Rhy8628WWY-UG6KLcfodTx282s8";
 
   var headers = {
     'Content-Type': 'application/json',
@@ -33,8 +33,8 @@ class DataProvider {
   createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate) async {
     var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      //'Content-Type': 'application/json',
+      //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
 

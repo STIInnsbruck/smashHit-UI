@@ -26,8 +26,8 @@ class User {
 class Contract {
   String? contractId;
   String? contractType;
-  User? contractor;
-  User? contractee;
+  String? contractor;
+  String? contractee;
   ContractObject? contractObject;
   String? title;
   String? description;
@@ -41,14 +41,16 @@ class Contract {
     required this.contractType,
     required this.contractor,
     required this.contractee,
-    required this.title,
+    required title,
     required this.description,
     required this.executionDate,
     required this.expireDate,
     this.contractStatus,
     this.contractObject,
     this.iconData
-  });
+  }) {
+    this.title = title;
+  }
 
   /// Returns an int given the contract's status. The int is needed for the
   /// contract_status_bar as it takes in an int to track the process.
@@ -68,14 +70,14 @@ class Contract {
 
   factory Contract.fromJson(Map<String, dynamic> json) {
     return Contract(
-      contractId: json['Contract']['value'],
-      contractType: json['ContractType']['value'],
-      contractor: json['ContractRequester']['value'],
-      contractee: json['ContractProvider']['value'],
+      contractId: json["bindings"][0]['Contract']['value'],
+      contractType: json["bindings"][0]['ContractType']['value'],
+      contractor: json["bindings"][0]['ContractRequester']['value'],
+      contractee: json["bindings"][0]['ContractProvider']['value'],
       title: "Contract Title (Hardcoded, not in ontology.)",
-      description: json['Purpose']['value'],
-      executionDate: formatDate(json["ExecutionDate"]["value"]),
-      expireDate: formatDate(json["EndingDate"]["value"]),
+      description: json["bindings"][0]['Purpose']['value'],
+      executionDate: formatDate(json["bindings"][0]["ExecutionDate"]["value"]),
+      expireDate: formatDate(json["bindings"][0]["EndingDate"]["value"]),
       contractStatus: "Created"
     );
   }
