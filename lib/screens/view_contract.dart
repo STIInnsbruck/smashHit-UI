@@ -166,7 +166,7 @@ class _ContractCreationState extends State<ViewContract> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Text("Terms of Service"),
+            child: Text("Contract Purpose"),
           ),
           Container(
             color: Colors.grey[300],

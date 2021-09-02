@@ -67,7 +67,7 @@ class _ContractCreationState extends State<ContractCreation> {
                   SizedBox(
                     width: screenWidth * 0.66,
                     height: 100,
-                    child: ContractStatusBar(contract!.getContractStatusAsInt()),
+                    child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
                   ),
                   contractForm
                 ],
