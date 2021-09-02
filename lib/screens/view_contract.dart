@@ -116,7 +116,9 @@ class _ContractCreationState extends State<ViewContract> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              partyEntity(),
+              //first 45 characters are the URI from the ontology
+              partyEntity(contract!.contractor!.substring(45, contract!.contractor!.length)),
+              partyEntity(contract!.contractee!.substring(45, contract!.contractee!.length)),
             ],
           )
         ],
@@ -124,7 +126,7 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Widget partyEntity() {
+  Widget partyEntity(String partyName) {
     return Container(
       child: Column(
         children: [
@@ -136,8 +138,8 @@ class _ContractCreationState extends State<ViewContract> {
               child: Icon(Icons.person),
             ),
           ),
-          Text(contract!.title!),
-          Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
+          Text(partyName),
+          //Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
         ],
       ),
     );
