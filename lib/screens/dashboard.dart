@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
-import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
+import 'package:smashhit_ui/custom_widgets/contract_partner_tile.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 
 class Dashboard extends StatefulWidget {
@@ -45,7 +45,7 @@ class _DashboardState extends State<Dashboard> {
             return ListView.builder(
                 itemCount: contractList!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ContractTile();
+                  return ContractPartnerTile();
                 });
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
