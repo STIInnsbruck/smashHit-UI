@@ -38,13 +38,13 @@ class Contract {
 
   Contract({
     required this.contractId,
-    required this.contractType,
-    required this.contractor,
-    required this.contractee,
-    required title,
-    required this.description,
-    required this.executionDate,
-    required this.expireDate,
+    this.contractType,
+    this.contractor,
+    this.contractee,
+    this.title,
+    this.description,
+    this.executionDate,
+    this.expireDate,
     this.contractStatus,
     this.contractObject,
     this.iconData
