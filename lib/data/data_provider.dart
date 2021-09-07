@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
+import 'package:smashhit_ui/data/parser.dart';
+import 'package:smashhit_ui/data/models.dart';
 
 class DataProvider {
+
   //TODO: change URL to the contract url. This is currently only used to ensure correct https requests.
   static final String testUrl = "rickandmortyapi.com";
   static final String testPath = "/";
@@ -13,36 +16,32 @@ class DataProvider {
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
+  ResponseParser parser = ResponseParser();
+
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjI3OTA0NzQ3fQ.RI5YZQm4wSXHFueL-Aqu0gNQmuR_ermV8d7UUWdSAuw";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDA4ODc0fQ.6EEyI0qOXbEbWlQEMFztD2TsTQ7veoscv6Sj41VVVtc";
+
+  var headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token'
+  };
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
 
-  /// Check for internet connection. Either wifi or mobile.
-  Future<bool> ensureInternetConnection() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate) async {
     var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      //'Content-Type': 'application/json',
+      //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
 
     var body = {
-      "ContractId": "",
+      "ContractId": "1337",
       "ContractType": contractType,
-      "Purpose": "string",
+      "Purpose": "Testing the flutter application.",
       "ContractRequester": "string",
       "ContractProvider": "string",
       "DataController": "string",
@@ -50,7 +49,7 @@ class DataProvider {
       "ExecutionDate": _formatDate(startDate),
       "EffectiveDate": _formatDate(startDate),
       "ExpireDate": _formatDate(expireDate),
-      "Medium": "string",
+      "Medium": "SmashHitFlutterApp",
       "Waiver": "string",
       "Amendment": "string",
       "ConfidentialityObligation": "string",
@@ -87,28 +86,21 @@ class DataProvider {
 
   rejectContract(Uri path) async {}
 
-  getContractById() async {
-    String id = "kg244564";
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    var response = await http.get(
-        kBaseUrl.replace(path: "/contract/by_contractId/$id"),
-        headers: headers);
+  Future<Contract> fetchContractById() async {
+    String id = "kg244565";
+
+    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$id'), headers: headers);
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      print("Data: \t $data");
-      print("Contract Created.");
+      return Contract.fromJson(jsonDecode(response.body));
     } else {
-      print("Error getContractsById()");
-      print("${response.statusCode}");
+      throw Exception('Failed to load contract.');
     }
   }
 
-  getContracts() async {
+
+
+  /**getContracts() async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -120,12 +112,15 @@ class DataProvider {
 
     if (response.statusCode == 200) {
       var data = (response.body);
-      print("$data");
+      var jsonMap = json.decode(data);
+      var id = parser.parseAllContractIds(jsonMap["bindings"]);
+      print("id: $id");
+      return id;
     } else {
       print("Error getContracts()");
       print("${response.statusCode}");
     }
-  }
+  }*/
 
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {
@@ -133,28 +128,15 @@ class DataProvider {
     return dateString;
   }
 
-  ///With query params examples. I do not want to lose them in case they are
-  ///needed in the future.
-//getContractById() async {
-//     Map<String, String> queryParams = {'id': 'kg244565'};
-//     var headers = {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json',
-//       'Authorization': 'Bearer $token'
-//     };
-//     var response = await http.get(
-//         kBaseUrl.replace(
-//             path: "/contract/by_contractId/", queryParameters: queryParams),
-//         headers: headers);
-//
-//     if (response.statusCode == 200) {
-//       var data = json.decode(response.body);
-//       print("Data: \t $data");
-//       print("Contract Created.");
-//     } else {
-//       print("Error getContractsById()");
-//       print("${response.statusCode}");
-//       print("${response.body}");
-//     }
-//   }
+  /// Check for internet connection. Either wifi or mobile.
+  Future<bool> ensureInternetConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

@@ -28,7 +28,7 @@ class _ContractCreationState extends State<ContractCreation> {
       ""; //Used to set the label of what entity is being contracted and insert it into the sidebar.
   List<User> users = [];
   DataProvider dataProvider = DataProvider();
-  Contract contract = Contract(null, null);
+  Contract? contract;
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
   static ContractForm contractForm = ContractForm();
@@ -43,12 +43,7 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    contract = Contract(null, null);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    //contract = Contract(null, null, null, null, null, null);
   }
 
   @override
@@ -72,7 +67,7 @@ class _ContractCreationState extends State<ContractCreation> {
                   SizedBox(
                     width: screenWidth * 0.66,
                     height: 100,
-                    child: ContractStatusBar(contract.getContractStatusAsInt()),
+                    child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
                   ),
                   contractForm
                 ],
@@ -278,13 +273,15 @@ class _ContractCreationState extends State<ContractCreation> {
 
   Widget _addEntityButton() {
     return GestureDetector(
-      child: Column(
+      child: _selectedEntityLabel.compareTo("") == 0 ?
+      Column(
         children: [
           Icon(Icons.add_circle_outline, size: 40),
           Text("Add Contract Item",
               style: TextStyle(color: Colors.black, fontSize: 10))
         ],
-      ),
+      )
+      : selectedContractItem(),
       onTap: () {
         _selectContractedEntity();
       },
@@ -304,7 +301,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 "string",
                 DateTime.now(),
                 DateTime.now())
-            : null;
+            : dataProvider.fetchContractById();
       },
     );
   }
@@ -442,13 +439,20 @@ class _ContractCreationState extends State<ContractCreation> {
   }
 
   _entityButton(
-      IconData icon, String subscript, int index, StateSetter setState) {
+      IconData icon, String subscript, int index, StateSetter setStateT) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
             icon: Icon(icon),
             onPressed: () {
+              //Two setState methods are needed to update first the dialog which
+              // needs its own Statesetter and then the sideBar widget with the
+              // overall setState method.
+              setStateT(() {
+                _selectedEntityIndex = index;
+                _selectedEntityLabel = subscript;
+              });
               setState(() {
                 _selectedEntityIndex = index;
                 _selectedEntityLabel = subscript;
@@ -462,7 +466,37 @@ class _ContractCreationState extends State<ContractCreation> {
   }
 
   Widget selectedContractItem() {
-    return Container();
+    IconData itemIcon = Icons.assignment_outlined;
+    switch(_selectedEntityLabel) {
+      case "Personal Data":
+        itemIcon = Icons.person_search_rounded;
+        break;
+      case "Work":
+        itemIcon = Icons.work;
+        break;
+      case "Subscription":
+        itemIcon = Icons.request_quote;
+        break;
+      case "Insurance":
+        itemIcon = Icons.description;
+        break;
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          children: [
+            Icon(itemIcon, size: 40),
+            Text("$_selectedEntityLabel")
+          ],
+        ),
+        IconButton(
+          onPressed: _selectContractedEntity,
+          icon: Icon(Icons.edit),
+        )
+      ],
+    );
   }
 
   _incrementTextFieldCounter() {
