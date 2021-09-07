@@ -1,3 +1,5 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
 androidx/activity/R.java
  androidx.activity.R
  androidx.activity.R$attr

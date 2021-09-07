@@ -8,7 +8,7 @@ class User {
   int? _telephoneNumber;
   String? _role;
 
-  User(this._name);
+  User(this._role);
 
   int? get getId => _id;
   String? get getName => _name;
