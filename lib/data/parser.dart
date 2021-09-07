@@ -20,7 +20,7 @@ class ResponseParser {
   }
 
   List<Contract> parseAllContracts(List jsonList) {
-    return jsonList.map((jsonContractIds) => parseContract(jsonContractIds)).toList();
+    return jsonList.map((jsonContract) => parseContract(jsonContract)).toList();
   }
 
   DateTime formatDate(String dateString) {

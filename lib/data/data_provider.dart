@@ -104,8 +104,6 @@ class DataProvider {
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
-      print("DataLength -> ${data["bindings"].length}");
-      print("DataInfo -> ${data["bindings"]}");
       return parser.parseAllContracts(data["bindings"]);
     } else {
       throw Exception('Failed to load all contracts.');
