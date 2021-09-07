@@ -19,7 +19,7 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDEyNDI2fQ.OmzD2H1g7rjrRR_QcmczslgHfyPsCROxjRWBnQAyCYM";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDE2MDgxfQ.0_XAq8mV9EahAF8N9ksoOqqq0bwIb_2vj6oKm1naIRk";
 
   var headers = {
     'Content-Type': 'application/json',
@@ -103,7 +103,10 @@ class DataProvider {
     final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
 
     if (response.statusCode == 200) {
-      return [];
+      Map data = jsonDecode(response.body);
+      print("DataLength -> ${data["bindings"].length}");
+      print("DataInfo -> ${data["bindings"]}");
+      return parser.parseAllContracts(data["bindings"]);
     } else {
       throw Exception('Failed to load all contracts.');
     }

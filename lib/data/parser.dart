@@ -2,7 +2,7 @@ import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
   Contract parseContract(Map jsonContract) {
-    return Contract(contractId: jsonContract["bindings"][0]['Contract']['value']);
+    return Contract(contractId: jsonContract['Contract']['value']);
   }
 
   Contract parseContractId(Map jsonContract) {
@@ -19,8 +19,8 @@ class ResponseParser {
     );
   }
 
-  List<Contract> parseAllContractIds(List jsonList) {
-    return jsonList.map((jsonContractIds) => parseContractId(jsonContractIds)).toList();
+  List<Contract> parseAllContracts(List jsonList) {
+    return jsonList.map((jsonContractIds) => parseContract(jsonContractIds)).toList();
   }
 
   DateTime formatDate(String dateString) {

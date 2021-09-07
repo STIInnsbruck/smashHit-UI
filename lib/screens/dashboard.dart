@@ -17,26 +17,43 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
 
   List<String> contractIdList = []; //API first gives us all IDs.
-  List<Contract> contractList = []; //With the IDs we then get the specific contract.
   DataProvider dataProvider = DataProvider();
+
+  late Future<List<Contract>> futureContractList;
+  List<Contract>? contractList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    futureContractList = dataProvider.fetchAllContracts();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     //double screenWidth = MediaQuery.of(context).size.width;
-
-    return ListView(
-      children: [
-        ContractPartnerTile(),
-        ContractPartnerTile(),
-        ContractPartnerTile(),
-        ContractPartnerTile(),
-        ContractPartnerTile(),
-        ContractPartnerTile()
-      ],
+    return Container(
+      child: FutureBuilder<List<Contract>>(
+        future: futureContractList,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            contractList = snapshot.data;
+            return ListView.builder(
+                itemCount: contractList!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ContractPartnerTile();
+                });
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+      ),
     );
   }
 
-  void fetchContractIds() {
-
-  }
 }
