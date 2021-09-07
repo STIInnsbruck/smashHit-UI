@@ -68,20 +68,6 @@ class Contract {
     return 0;
   }
 
-  factory Contract.fromJson(Map<String, dynamic> json) {
-    return Contract(
-      contractId: json["bindings"][0]['Contract']['value'],
-      contractType: json["bindings"][0]['ContractType']['value'],
-      contractor: json["bindings"][0]['ContractRequester']['value'],
-      contractee: json["bindings"][0]['ContractProvider']['value'],
-      title: "Contract Title (Hardcoded, not in ontology.)",
-      description: json["bindings"][0]['Purpose']['value'],
-      executionDate: formatDate(json["bindings"][0]["ExecutionDate"]["value"]),
-      expireDate: formatDate(json["bindings"][0]["EndingDate"]["value"]),
-      contractStatus: "Created"
-    );
-  }
-
   static DateTime formatDate(String dateString) {
     var length = dateString.length;
     int year = int.parse(dateString.substring(length - 4, length));
