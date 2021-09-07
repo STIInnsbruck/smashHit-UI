@@ -65,7 +65,7 @@ class _BasePageState extends State<BasePage> {
     );
   }
 
-  changeScreen(x) {
+  changeScreen(x, [String? contractId]) {
     setState(() {
       _selectedIndex = x;
       switch (_selectedIndex) {
@@ -78,7 +78,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Contract Creation";
           break;
         case 2:
-          _selectedPage = ViewContract(changeScreen, currentUser);
+          _selectedPage = ViewContract(changeScreen, contractId!, currentUser);
           _selectedTitle = "View Contract";
       }
     });

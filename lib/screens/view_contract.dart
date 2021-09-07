@@ -6,9 +6,10 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class ViewContract extends StatefulWidget {
   final Function(int) changeScreen;
+  final String contractId;
   User? user;
 
-  ViewContract(this.changeScreen, this.user);
+  ViewContract(this.changeScreen, this.contractId, this.user);
 
   @override
   _ContractCreationState createState() => new _ContractCreationState();
@@ -24,7 +25,7 @@ class _ContractCreationState extends State<ViewContract> {
   @override
   void initState() {
     super.initState();
-    futureContract = dataProvider.fetchContractById();
+    futureContract = dataProvider.fetchContractById(widget.contractId);
   }
 
   @override
@@ -210,6 +211,7 @@ class _ContractCreationState extends State<ViewContract> {
         children: [
           Text("Contract Status:"),
           statusIconByContractStatus(height),
+          Text('${widget.contractId}')
         ],
       ),
     );

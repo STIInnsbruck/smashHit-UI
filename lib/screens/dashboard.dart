@@ -6,7 +6,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
 
 class Dashboard extends StatefulWidget {
-  final Function(int) changeScreen;
+  final Function(int, [String]) changeScreen;
   User? user;
 
   Dashboard(this.changeScreen, this.user);

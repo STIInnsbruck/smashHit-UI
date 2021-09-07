@@ -86,10 +86,10 @@ class DataProvider {
 
   rejectContract(Uri path) async {}
 
-  Future<Contract> fetchContractById() async {
-    String id = "kg244565";
+  Future<Contract> fetchContractById(String contractId) async {
+    //String id = "kg244565";
 
-    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$id'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId'), headers: headers);
 
     if (response.statusCode == 200) {
       //return Contract.fromJson(jsonDecode(response.body));
