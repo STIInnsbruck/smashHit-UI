@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class ContractTile extends StatefulWidget {
-
+  final Function(int) changeScreen;
   Contract? contract;
 
-  ContractTile(this.contract);
+  ContractTile(this.changeScreen, this.contract);
 
   @override
   _ContractTileState createState() => _ContractTileState();
@@ -42,6 +42,7 @@ class _ContractTileState extends State<ContractTile> {
         ),
         onTap: () {
           print('${widget.contract!.contractId}');
+          widget.changeScreen(2);
         },
       ),
     );
