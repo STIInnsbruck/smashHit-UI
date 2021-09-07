@@ -98,27 +98,7 @@ class DataProvider {
     }
   }
 
-/**  Future<Contract?> getContractById() async {
-    String id = "kg244565";
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    var response = await http.get(
-        kBaseUrl.replace(path: "/contract/by_contractId/$id"),
-        headers: headers);
 
-    if (response.statusCode == 200) {
-      var data = response.body;
-      var jsonMap = json.decode(data);
-      Contract? contract = parser.parseContractId(jsonMap["bindings"][0]);
-      return contract;
-    } else {
-      print("Error getContractsById()");
-      print("${response.statusCode}");
-    }
-  }*/
 
   /**getContracts() async {
     var headers = {
@@ -159,29 +139,4 @@ class DataProvider {
       return false;
     }
   }
-
-  ///With query params examples. I do not want to lose them in case they are
-  ///needed in the future.
-//getContractById() async {
-//     Map<String, String> queryParams = {'id': 'kg244565'};
-//     var headers = {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json',
-//       'Authorization': 'Bearer $token'
-//     };
-//     var response = await http.get(
-//         kBaseUrl.replace(
-//             path: "/contract/by_contractId/", queryParameters: queryParams),
-//         headers: headers);
-//
-//     if (response.statusCode == 200) {
-//       var data = json.decode(response.body);
-//       print("Data: \t $data");
-//       print("Contract Created.");
-//     } else {
-//       print("Error getContractsById()");
-//       print("${response.statusCode}");
-//       print("${response.body}");
-//     }
-//   }
 }
