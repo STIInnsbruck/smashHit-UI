@@ -8,7 +8,7 @@ class User {
   int? _telephoneNumber;
   String? _role;
 
-  User(this._name);
+  User(this._role);
 
   int? get getId => _id;
   String? get getName => _name;
@@ -26,24 +26,30 @@ class User {
 class Contract {
   String? contractId;
   String? contractType;
-  User? contractor;
-  User? contractee;
+  String? contractor;
+  String? contractee;
   ContractObject? contractObject;
   String? title;
   String? description;
   DateTime? executionDate;
   DateTime? expireDate;
-  String? addressType;
-  String? address;
-  String? agreementType;
-  Duration? minimumDuration;
   String? contractStatus;
   IconData? iconData;
 
-  Contract(this.contractId, this.contractType, var contractor, var contractee, this.executionDate, this.expireDate) {
-    this.contractStatus = "Created";
-    this.contractor?._name = contractor;
-    this.contractee?._name = contractee;
+  Contract({
+    required this.contractId,
+    required this.contractType,
+    required this.contractor,
+    required this.contractee,
+    required title,
+    required this.description,
+    required this.executionDate,
+    required this.expireDate,
+    this.contractStatus,
+    this.contractObject,
+    this.iconData
+  }) {
+    this.title = title;
   }
 
   /// Returns an int given the contract's status. The int is needed for the
@@ -60,6 +66,30 @@ class Contract {
         return 3;
     }
     return 0;
+  }
+
+  factory Contract.fromJson(Map<String, dynamic> json) {
+    return Contract(
+      contractId: json["bindings"][0]['Contract']['value'],
+      contractType: json["bindings"][0]['ContractType']['value'],
+      contractor: json["bindings"][0]['ContractRequester']['value'],
+      contractee: json["bindings"][0]['ContractProvider']['value'],
+      title: "Contract Title (Hardcoded, not in ontology.)",
+      description: json["bindings"][0]['Purpose']['value'],
+      executionDate: formatDate(json["bindings"][0]["ExecutionDate"]["value"]),
+      expireDate: formatDate(json["bindings"][0]["EndingDate"]["value"]),
+      contractStatus: "Created"
+    );
+  }
+
+  static DateTime formatDate(String dateString) {
+    var length = dateString.length;
+    int year = int.parse(dateString.substring(length - 4, length));
+    int month = int.parse(dateString.substring(length - 7, length - 5));
+    int day = int.parse(dateString.substring(length - 10, length - 8));
+    DateTime date = new DateTime(year, month, day);
+
+    return date;
   }
 
   /// Return an IconData depending on the contract type. This is used for the

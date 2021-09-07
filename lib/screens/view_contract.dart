@@ -17,23 +17,19 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
-  Contract? contract = new Contract(null, null, null, null, null, null);
+  late Future<Contract> futureContract;
+  Contract? contract;
   String? contractDropDownType;
 
   @override
   void initState() {
     super.initState();
-    //contract = Contract(null, null, null, null, null);
+    futureContract = dataProvider.fetchContractById();
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<Contract>? _fetchContract() async {
-    contract = await dataProvider.getContractById();
-    return contract!;
   }
 
   @override
@@ -43,9 +39,10 @@ class _ContractCreationState extends State<ViewContract> {
 
     return Container(
       child: FutureBuilder<Contract>(
-        future: _fetchContract(),
+        future: futureContract,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            contract = snapshot.data;
             return ConstrainedBox(
               constraints: BoxConstraints(
                 maxHeight: screenHeight,
@@ -88,7 +85,10 @@ class _ContractCreationState extends State<ViewContract> {
                 ),
               ),
             );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
           }
+          // show loading indicator while fetching.
           return Center(child: CircularProgressIndicator());
         }
       ),
@@ -116,7 +116,9 @@ class _ContractCreationState extends State<ViewContract> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              partyEntity(),
+              //first 45 characters are the URI from the ontology
+              partyEntity(contract!.contractor!.substring(45, contract!.contractor!.length)),
+              partyEntity(contract!.contractee!.substring(45, contract!.contractee!.length)),
             ],
           )
         ],
@@ -124,7 +126,7 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Widget partyEntity() {
+  Widget partyEntity(String partyName) {
     return Container(
       child: Column(
         children: [
@@ -136,8 +138,8 @@ class _ContractCreationState extends State<ViewContract> {
               child: Icon(Icons.person),
             ),
           ),
-          Text(contract!.contractor!.getName??''),
-          Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
+          Text(partyName),
+          //Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
         ],
       ),
     );
@@ -145,44 +147,47 @@ class _ContractCreationState extends State<ViewContract> {
 
   // ignore: non_constant_identifier_names
   Widget TOSTile(double width, double height) {
-    return Container(
-      height: height / 3,
-      width: width / 3,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 5,
-                spreadRadius: 2.5,
-                offset: Offset(2.5, 2.5))
-          ]),
-      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text("Terms of Service"),
-          ),
-          Container(
-            color: Colors.grey[300],
-            height: height / 40,
-            width: width / 5,
-          ),
-          Container(
-            color: Colors.grey[300],
-            height: height / 40,
-            width: width / 10,
-          ),
-          Container(
-            color: Colors.grey[300],
-            height: height / 40,
-            width: width / 8,
-          ),
-        ],
+    return GestureDetector(
+      child: Container(
+        height: height / 3,
+        width: width / 3,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 5,
+                  spreadRadius: 2.5,
+                  offset: Offset(2.5, 2.5))
+            ]),
+        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text("Contract Purpose"),
+            ),
+            Container(
+              color: Colors.grey[300],
+              height: height / 40,
+              width: width / 5,
+            ),
+            Container(
+              color: Colors.grey[300],
+              height: height / 40,
+              width: width / 10,
+            ),
+            Container(
+              color: Colors.grey[300],
+              height: height / 40,
+              width: width / 8,
+            ),
+          ],
+        ),
       ),
+      onTap: () { _showContractPurposeDialog(); },
     );
   }
 
@@ -295,5 +300,29 @@ class _ContractCreationState extends State<ViewContract> {
       double progressPercentage = (elapsedTime / totalTime) * 100;
       return progressPercentage.roundToDouble();
     }
+  }
+
+  void _showContractPurposeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Contract Purpose'),
+          content: Text(contract!.description!),
+          actions: <Widget> [
+            TextButton(
+              onPressed: () {
+                _dismissDialog();
+              },
+              child: Text('Close'),
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }

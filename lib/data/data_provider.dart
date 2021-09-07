@@ -19,28 +19,22 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMwNTg4NjAyfQ.wny-5dNFHcPlIRpocoK6wFpGptWBf7za9r2LZLFxInY";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDA4ODc0fQ.6EEyI0qOXbEbWlQEMFztD2TsTQ7veoscv6Sj41VVVtc";
+
+  var headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token'
+  };
 
   //TODO: change dynamic model to the contract model.
   dynamic model;
 
-  /// Check for internet connection. Either wifi or mobile.
-  Future<bool> ensureInternetConnection() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate) async {
     var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      //'Content-Type': 'application/json',
+      //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
 
@@ -92,29 +86,21 @@ class DataProvider {
 
   rejectContract(Uri path) async {}
 
-  Future<Contract?> getContractById() async {
+  Future<Contract> fetchContractById() async {
     String id = "kg244565";
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    var response = await http.get(
-        kBaseUrl.replace(path: "/contract/by_contractId/$id"),
-        headers: headers);
+
+    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$id'), headers: headers);
 
     if (response.statusCode == 200) {
-      var data = response.body;
-      var jsonMap = json.decode(data);
-      Contract? contract = parser.parseContractId(jsonMap["bindings"][0]);
-      return contract;
+      return Contract.fromJson(jsonDecode(response.body));
     } else {
-      print("Error getContractsById()");
-      print("${response.statusCode}");
+      throw Exception('Failed to load contract.');
     }
   }
 
-  getContracts() async {
+
+
+  /**getContracts() async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -134,7 +120,7 @@ class DataProvider {
       print("Error getContracts()");
       print("${response.statusCode}");
     }
-  }
+  }*/
 
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {
@@ -142,28 +128,15 @@ class DataProvider {
     return dateString;
   }
 
-  ///With query params examples. I do not want to lose them in case they are
-  ///needed in the future.
-//getContractById() async {
-//     Map<String, String> queryParams = {'id': 'kg244565'};
-//     var headers = {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json',
-//       'Authorization': 'Bearer $token'
-//     };
-//     var response = await http.get(
-//         kBaseUrl.replace(
-//             path: "/contract/by_contractId/", queryParameters: queryParams),
-//         headers: headers);
-//
-//     if (response.statusCode == 200) {
-//       var data = json.decode(response.body);
-//       print("Data: \t $data");
-//       print("Contract Created.");
-//     } else {
-//       print("Error getContractsById()");
-//       print("${response.statusCode}");
-//       print("${response.body}");
-//     }
-//   }
+  /// Check for internet connection. Either wifi or mobile.
+  Future<bool> ensureInternetConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
