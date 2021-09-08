@@ -6,9 +6,10 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class ViewContract extends StatefulWidget {
   final Function(int) changeScreen;
+  final String contractId;
   User? user;
 
-  ViewContract(this.changeScreen, this.user);
+  ViewContract(this.changeScreen, this.contractId, this.user);
 
   @override
   _ContractCreationState createState() => new _ContractCreationState();
@@ -24,7 +25,7 @@ class _ContractCreationState extends State<ViewContract> {
   @override
   void initState() {
     super.initState();
-    futureContract = dataProvider.fetchContractById();
+    futureContract = dataProvider.fetchContractById(widget.contractId);
   }
 
   @override
@@ -43,50 +44,61 @@ class _ContractCreationState extends State<ViewContract> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contract = snapshot.data;
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: screenHeight,
-                minHeight: screenHeight,
-              ),
-              child: Scrollbar(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                Row(
+            return Container(
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: screenHeight,
+                  minHeight: screenHeight,
+                ),
+                child: Scrollbar(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        partiesTile(screenWidth, screenHeight),
+                                        Container(width: screenWidth / 20),
+                                        TOSTile(screenWidth, screenHeight),
+                                      ]
+                                  ),
+                                  Container(height: screenHeight / 15),
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      partiesTile(screenWidth, screenHeight),
+                                      contractedEntitiesTile(screenWidth, screenHeight),
                                       Container(width: screenWidth / 20),
-                                      TOSTile(screenWidth, screenHeight),
-                                    ]
-                                ),
-                                Container(height: screenHeight / 15),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    contractedEntitiesTile(screenWidth, screenHeight),
-                                    Container(width: screenWidth / 20),
-                                    statusTile(screenWidth, screenHeight),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            contractTimeProgressBar(screenWidth, screenHeight),
-                          ],
-                        ),
-                      ]),
+                                      statusTile(screenWidth, screenHeight),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              contractTimeProgressBar(screenWidth, screenHeight),
+                            ],
+                          ),
+                        ]),
+                  ),
                 ),
               ),
             );
           } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("The contract ID you entered was not found.", style: TextStyle(fontSize: 32)),
+                  Text('${snapshot.error}')
+                ],
+              ),
+            );
           }
           // show loading indicator while fetching.
           return Center(child: CircularProgressIndicator());
@@ -209,23 +221,43 @@ class _ContractCreationState extends State<ViewContract> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text("Contract Status:"),
-          statusIconByContractStatus(height),
+          statusIconByContractStatus(height)
         ],
       ),
     );
   }
 
   /// Takes the current Contract's status and returns the appropriate icon.
-  Icon statusIconByContractStatus(double height) {
+  Widget statusIconByContractStatus(double height) {
     switch (contract!.getContractStatusAsInt()) {
       case 0:
-        return Icon(Icons.description, color: Colors.grey, size: height / 6);
+        return Column(
+          children: [
+            Icon(Icons.description, color: Colors.grey, size: height / 6),
+            Text("The contract is still being created.")
+          ],
+        );
       case 1:
-        return Icon(Icons.work, color: Colors.grey, size: height / 6);
+        return Column(
+          children: [
+            Icon(Icons.work, color: Colors.grey, size: height / 6),
+            Text("Contract is still under negotiation.")
+          ],
+        );
       case 2:
-        return Icon(Icons.check_circle, color: Colors.green, size: height / 6);
+        return Column(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green, size: height / 6),
+            Text("The contract is valid.")
+          ],
+        );
     }
-    return Icon(Icons.check_circle, color: Colors.green, size: height / 6);
+    return Column(
+      children: [
+        Icon(Icons.check_circle, color: Colors.green, size: height / 6),
+        Text("The contract is valid.")
+      ],
+    );
   }
 
   Widget contractedEntitiesTile(double width, double height) {
@@ -273,7 +305,7 @@ class _ContractCreationState extends State<ViewContract> {
           child: Column(children: [
         Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
         LinearPercentIndicator(
-          width: height / 1.2,
+          width: height / 1.4,
           lineHeight: width / 40,
           percent: calculateElapsedContractTime() / 100,
           backgroundColor: Colors.grey,

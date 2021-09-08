@@ -38,13 +38,13 @@ class Contract {
 
   Contract({
     required this.contractId,
-    required this.contractType,
-    required this.contractor,
-    required this.contractee,
-    required title,
-    required this.description,
-    required this.executionDate,
-    required this.expireDate,
+    this.contractType,
+    this.contractor,
+    this.contractee,
+    this.title,
+    this.description,
+    this.executionDate,
+    this.expireDate,
     this.contractStatus,
     this.contractObject,
     this.iconData
@@ -64,22 +64,10 @@ class Contract {
         return 2;
       case "Done":
         return 3;
+      case "http://ontologies.atb-bremen.de/smashHitCore#Valid":
+        return 4;
     }
-    return 0;
-  }
-
-  factory Contract.fromJson(Map<String, dynamic> json) {
-    return Contract(
-      contractId: json["bindings"][0]['Contract']['value'],
-      contractType: json["bindings"][0]['ContractType']['value'],
-      contractor: json["bindings"][0]['ContractRequester']['value'],
-      contractee: json["bindings"][0]['ContractProvider']['value'],
-      title: "Contract Title (Hardcoded, not in ontology.)",
-      description: json["bindings"][0]['Purpose']['value'],
-      executionDate: formatDate(json["bindings"][0]["ExecutionDate"]["value"]),
-      expireDate: formatDate(json["bindings"][0]["EndingDate"]["value"]),
-      contractStatus: "Created"
-    );
+    return -1;
   }
 
   static DateTime formatDate(String dateString) {

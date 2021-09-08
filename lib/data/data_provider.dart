@@ -19,7 +19,7 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDA4ODc0fQ.6EEyI0qOXbEbWlQEMFztD2TsTQ7veoscv6Sj41VVVtc";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDkyNzgwfQ.7gtgJgGroPUjrEtpTbJxQddkXwqUdia-yEzE45TnD10";
 
   var headers = {
     'Content-Type': 'application/json',
@@ -86,15 +86,33 @@ class DataProvider {
 
   rejectContract(Uri path) async {}
 
-  Future<Contract> fetchContractById() async {
-    String id = "kg244565";
+  Future<Contract> fetchContractById(String contractId) async {
 
-    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$id'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId'), headers: headers);
 
     if (response.statusCode == 200) {
-      return Contract.fromJson(jsonDecode(response.body));
+      //return Contract.fromJson(jsonDecode(response.body));
+      Contract contract;
+      try {
+        contract = parser.parseContractId(jsonDecode(response.body));
+        return contract;
+      } catch (e) {
+        throw Exception('Failed to load contract.');
+      }
+      return parser.parseContractId(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load contract.');
+    }
+  }
+
+  Future<List<Contract>> fetchAllContracts() async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseAllContracts(data["bindings"]);
+    } else {
+      throw Exception('Failed to load all contracts.');
     }
   }
 

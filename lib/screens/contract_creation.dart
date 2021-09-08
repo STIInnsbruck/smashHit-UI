@@ -301,7 +301,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 "string",
                 DateTime.now(),
                 DateTime.now())
-            : dataProvider.fetchContractById();
+            : dataProvider.fetchContractById("kg244565");
       },
     );
   }

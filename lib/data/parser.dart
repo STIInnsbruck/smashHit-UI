@@ -1,24 +1,27 @@
 import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
-  /**Contract parseContract(Map jsonEvent) {
-    return Contract(null, null, null, null, null, null);
+  Contract parseContract(Map jsonContract) {
+    return Contract(contractId: jsonContract['Contract']['value']);
   }
 
-  Contract? parseContractId(Map jsonEvent) {
+  Contract parseContractId(Map jsonContract) {
     return new Contract(
-      jsonEvent["Contract"]["value"],
-      jsonEvent["ContractType"]["value"],
-      jsonEvent["ContractProvider"]["value"],
-      jsonEvent["ContractRequester"]["value"],
-      formatDate(jsonEvent["ExecutionDate"]["value"]),
-      formatDate(jsonEvent["EndingDate"]["value"])
-    );jsonEvent.toString();
+        contractId: jsonContract["bindings"][0]['Contract']['value'],
+        contractType: jsonContract["bindings"][0]['ContractType']['value'],
+        contractor: jsonContract["bindings"][0]['ContractRequester']['value'],
+        contractee: jsonContract["bindings"][0]['ContractProvider']['value'],
+        title: "Contract Title (Hardcoded, not in ontology.)",
+        description: jsonContract["bindings"][0]['Purpose']['value'],
+        executionDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
+        expireDate: formatDate(jsonContract["bindings"][0]["EndingDate"]["value"]),
+        contractStatus: jsonContract["bindings"][0]['ContractStatus']['value']
+    );
   }
 
-  List<Contract?> parseAllContractIds(List jsonList) {
-    return jsonList.map((jsonContractIds) => parseContractId(jsonContractIds)).toList();
-  }*/
+  List<Contract> parseAllContracts(List jsonList) {
+    return jsonList.map((jsonContract) => parseContract(jsonContract)).toList();
+  }
 
   DateTime formatDate(String dateString) {
     var length = dateString.length;
