@@ -19,7 +19,7 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDE4MDMxfQ.AwoPKkW77DSDXr3cJuvs1kzu41mL8Io_v0agn12p69I";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDkyNzgwfQ.7gtgJgGroPUjrEtpTbJxQddkXwqUdia-yEzE45TnD10";
 
   var headers = {
     'Content-Type': 'application/json',
@@ -87,12 +87,18 @@ class DataProvider {
   rejectContract(Uri path) async {}
 
   Future<Contract> fetchContractById(String contractId) async {
-    //String id = "kg244565";
 
     final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId'), headers: headers);
 
     if (response.statusCode == 200) {
       //return Contract.fromJson(jsonDecode(response.body));
+      Contract contract;
+      try {
+        contract = parser.parseContractId(jsonDecode(response.body));
+        return contract;
+      } catch (e) {
+        throw Exception('Failed to load contract.');
+      }
       return parser.parseContractId(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load contract.');

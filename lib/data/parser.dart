@@ -15,7 +15,7 @@ class ResponseParser {
         description: jsonContract["bindings"][0]['Purpose']['value'],
         executionDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
         expireDate: formatDate(jsonContract["bindings"][0]["EndingDate"]["value"]),
-        contractStatus: "Created"
+        contractStatus: jsonContract["bindings"][0]['ContractStatus']['value']
     );
   }
 

@@ -64,8 +64,10 @@ class Contract {
         return 2;
       case "Done":
         return 3;
+      case "http://ontologies.atb-bremen.de/smashHitCore#Valid":
+        return 4;
     }
-    return 0;
+    return -1;
   }
 
   static DateTime formatDate(String dateString) {

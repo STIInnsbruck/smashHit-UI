@@ -3,6 +3,7 @@ import 'package:smashhit_ui/screens/dashboard.dart';
 import 'package:smashhit_ui/screens/contract_creation.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/screens/view_contract.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -14,6 +15,8 @@ class _BasePageState extends State<BasePage> {
   String _selectedTitle = "";
   Widget? _selectedPage;
   User? currentUser;
+  final TextEditingController searchBarController = new TextEditingController();
+  DataProvider dataProvider = DataProvider();
 
   _BasePageState() {
     _selectedPage = Dashboard(changeScreen, currentUser);
@@ -79,7 +82,7 @@ class _BasePageState extends State<BasePage> {
           break;
         case 2:
           _selectedPage = ViewContract(changeScreen, contractId!, currentUser);
-          _selectedTitle = "View Contract";
+          _selectedTitle = "Contract ID: $contractId";
       }
     });
   }
@@ -92,9 +95,10 @@ class _BasePageState extends State<BasePage> {
       ),
       width: width / 6,
       child: TextFormField(
+        controller: searchBarController,
         textAlignVertical: TextAlignVertical.center,
         style: TextStyle(fontSize: 20),
-        decoration: InputDecoration(hintText: "Search..."),
+        decoration: InputDecoration(hintText: "Search for a contract by ID"),
       ),
     );
   }
@@ -103,7 +107,9 @@ class _BasePageState extends State<BasePage> {
     return IconButton(
       icon: Icon(Icons.search),
       iconSize: 25,
-      onPressed: () {},
+      onPressed: () {
+        changeScreen(2, searchBarController.text);
+      },
     );
   }
 

@@ -41,8 +41,8 @@ class _ContractTileState extends State<ContractTile> {
           ),
         ),
         onTap: () {
-          print('${widget.contract!.contractId!.substring(45, widget.contract!.contractId!.length)}');
-          widget.changeScreen(2, '${widget.contract!.contractId!.substring(45, widget.contract!.contractId!.length)}');
+          int length = widget.contract!.contractId!.length;
+          widget.changeScreen(2, '${widget.contract!.contractId!.substring(45, length)}');
         },
       ),
     );
