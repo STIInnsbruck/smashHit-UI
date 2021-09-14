@@ -19,7 +19,7 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDkyNzgwfQ.7gtgJgGroPUjrEtpTbJxQddkXwqUdia-yEzE45TnD10";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxNjE4MDgwfQ.53JWLTClasj7uior9y1jHk7PAYwKSy8l69QSRicI88A";
 
   var headers = {
     'Content-Type': 'application/json',
