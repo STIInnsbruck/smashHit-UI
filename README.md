@@ -1,3 +1,6 @@
+# Try out the web app here!
+https://stiinnsbruck.github.io/smashHit-UI/build/web/index.html#/
+
 # smashhit_ui
 
 Frontend Application for Contract Management (smashHit).
