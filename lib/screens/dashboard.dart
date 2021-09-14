@@ -18,9 +18,9 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
 
   List<String> contractIdList = []; //API first gives us all IDs.
-  static DataProvider dataProvider = DataProvider();
+  DataProvider dataProvider = DataProvider();
 
-  late Future<List<Contract>> futureContractList;
+  late Future<List<Contract>> futureContractList = [] as Future<List<Contract>>;
   List<Contract>? contractList = [];
 
   @override
@@ -56,5 +56,6 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+
 
 }
