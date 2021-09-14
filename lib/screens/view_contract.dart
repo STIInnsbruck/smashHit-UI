@@ -4,6 +4,7 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+
 class ViewContract extends StatefulWidget {
   final Function(int) changeScreen;
   final String contractId;
