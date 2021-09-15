@@ -163,47 +163,50 @@ class _ContractCreationState extends State<ViewContract> {
 
   // ignore: non_constant_identifier_names
   Widget TOSTile(double width, double height) {
-    return GestureDetector(
-      child: Container(
-        height: height / 3,
-        width: width / 3,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 5,
-                  spreadRadius: 2.5,
-                  offset: Offset(2.5, 2.5))
-            ]),
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Text("Contract Purpose"),
-            ),
-            Container(
-              color: Colors.grey[300],
-              height: height / 40,
-              width: width / 5,
-            ),
-            Container(
-              color: Colors.grey[300],
-              height: height / 40,
-              width: width / 10,
-            ),
-            Container(
-              color: Colors.grey[300],
-              height: height / 40,
-              width: width / 8,
-            ),
-          ],
+    return Tooltip(
+      message: 'Click to view contract details.',
+      child: MaterialButton(
+        child: Container(
+          height: height / 3,
+          width: width / 3,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black45,
+                    blurRadius: 5,
+                    spreadRadius: 2.5,
+                    offset: Offset(2.5, 2.5))
+              ]),
+          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text("Contract Purpose"),
+              ),
+              Container(
+                color: Colors.grey[300],
+                height: height / 40,
+                width: width / 5,
+              ),
+              Container(
+                color: Colors.grey[300],
+                height: height / 40,
+                width: width / 10,
+              ),
+              Container(
+                color: Colors.grey[300],
+                height: height / 40,
+                width: width / 8,
+              ),
+            ],
+          ),
         ),
+        onPressed: () { _showContractPurposeDialog(); }
       ),
-      onTap: () { _showContractPurposeDialog(); },
     );
   }
 
