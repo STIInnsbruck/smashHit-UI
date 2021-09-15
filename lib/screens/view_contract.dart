@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -22,6 +23,7 @@ class _ContractCreationState extends State<ViewContract> {
   late Future<Contract> futureContract;
   Contract? contract;
   String? contractDropDownType;
+  TextEditingController? reportViolationController;
 
   @override
   void initState() {
@@ -36,7 +38,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   @override
   Widget build(BuildContext context) {
-    futureContract = dataProvider.fetchContractById(widget.contractId);
+    //futureContract = dataProvider.fetchContractById(widget.contractId);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -161,47 +163,50 @@ class _ContractCreationState extends State<ViewContract> {
 
   // ignore: non_constant_identifier_names
   Widget TOSTile(double width, double height) {
-    return GestureDetector(
-      child: Container(
-        height: height / 3,
-        width: width / 3,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 5,
-                  spreadRadius: 2.5,
-                  offset: Offset(2.5, 2.5))
-            ]),
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Text("Contract Purpose"),
-            ),
-            Container(
-              color: Colors.grey[300],
-              height: height / 40,
-              width: width / 5,
-            ),
-            Container(
-              color: Colors.grey[300],
-              height: height / 40,
-              width: width / 10,
-            ),
-            Container(
-              color: Colors.grey[300],
-              height: height / 40,
-              width: width / 8,
-            ),
-          ],
+    return Tooltip(
+      message: 'Click to view contract details.',
+      child: MaterialButton(
+        child: Container(
+          height: height / 3,
+          width: width / 3,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black45,
+                    blurRadius: 5,
+                    spreadRadius: 2.5,
+                    offset: Offset(2.5, 2.5))
+              ]),
+          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text("Contract Purpose"),
+              ),
+              Container(
+                color: Colors.grey[300],
+                height: height / 40,
+                width: width / 5,
+              ),
+              Container(
+                color: Colors.grey[300],
+                height: height / 40,
+                width: width / 10,
+              ),
+              Container(
+                color: Colors.grey[300],
+                height: height / 40,
+                width: width / 8,
+              ),
+            ],
+          ),
         ),
+        onPressed: () { _showContractPurposeDialog(); }
       ),
-      onTap: () { _showContractPurposeDialog(); },
     );
   }
 
@@ -219,13 +224,33 @@ class _ContractCreationState extends State<ViewContract> {
                 spreadRadius: 2.5,
                 offset: Offset(2.5, 2.5))
           ]),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Stack(
         children: [
-          Text("Contract Status:"),
-          statusIconByContractStatus(height)
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text("Contract Status:"),
+                statusIconByContractStatus(height)
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: reportViolationButton(),
+          )
         ],
       ),
+    );
+  }
+
+  Widget reportViolationButton() {
+    return IconButton(
+      icon: Icon(Icons.report_problem, color: Colors.orange),
+      tooltip: 'Report a contract violation.',
+      onPressed: () {
+        _showReportViolationDialog();
+      },
     );
   }
 
@@ -251,6 +276,13 @@ class _ContractCreationState extends State<ViewContract> {
           children: [
             Icon(Icons.check_circle, color: Colors.green, size: height / 6),
             Text("The contract is valid.")
+          ],
+        );
+      case 5:
+        return Column(
+          children: [
+            Icon(Icons.report, color: Colors.red, size: height / 6),
+            Text("A violation has been reported.")
           ],
         );
     }
@@ -301,21 +333,31 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget contractTimeProgressBar(double width, double height) {
-    return RotatedBox(
-      quarterTurns: 1,
-      child: Container(
-          child: Column(children: [
-        Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
-        LinearPercentIndicator(
-          width: height / 1.4,
-          lineHeight: width / 40,
-          percent: calculateElapsedContractTime() / 100,
-          backgroundColor: Colors.grey,
-          progressColor: Colors.blue,
-          center: Text("${calculateElapsedContractTime()}%",
-              style: TextStyle(fontSize: width / 60)),
-        ),
-      ])),
+    return Container(
+      child: Column(
+        children: [
+          Text("Start Date: ${_formatDate(contract!.executionDate!)}"),
+          Container(height: 10),
+          RotatedBox(
+            quarterTurns: 1,
+            child: Container(
+                child: Column(children: [
+                  Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
+                  LinearPercentIndicator(
+                    width: height / 1.4,
+                    lineHeight: width / 40,
+                    percent: calculateElapsedContractTime() / 100,
+                    backgroundColor: Colors.grey,
+                    progressColor: Colors.blue,
+                    center: Text("${calculateElapsedContractTime()}%",
+                        style: TextStyle(fontSize: width / 60)),
+                  ),
+                ])),
+          ),
+          Container(height: 10),
+          Text("End Date: ${_formatDate(contract!.expireDate!)}")
+        ],
+      ),
     );
   }
 
@@ -336,6 +378,41 @@ class _ContractCreationState extends State<ViewContract> {
     }
   }
 
+  void _showReportViolationDialog() {
+    reportViolationController = new TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Reporting a contract violation'),
+          content: TextField(
+            controller: reportViolationController,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(hintText: "Please enter and explain the violation of the contract."),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _dismissDialog();
+              },
+              child: Text('Cancel')
+            ),
+            TextButton(
+              onPressed: () {
+                print('sending report...');
+                setState(() {
+                  contract!.contractStatus = 'Violation';
+                });
+                _dismissDialog();
+              },
+              child: Text('Send Report')
+            )
+          ],
+        );
+      }
+    );
+  }
+
   void _showContractPurposeDialog() {
     showDialog(
       context: context,
@@ -354,6 +431,11 @@ class _ContractCreationState extends State<ViewContract> {
         );
       }
     );
+  }
+  
+  String _formatDate(DateTime dateTime) {
+    String dateString = '${dateTime.day}.${dateTime.month}.${dateTime.year}';
+    return dateString;
   }
 
   _dismissDialog() {

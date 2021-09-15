@@ -4,6 +4,7 @@ import 'package:smashhit_ui/screens/contract_creation.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/screens/view_contract.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
+import 'package:smashhit_ui/screens/template_selector.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class _BasePageState extends State<BasePage> {
             ListTile(
               title: Text("Create a new contract"),
               onTap: () {
-                changeScreen(1);
+                changeScreen(3);
               },
             ),
             ListTile(
@@ -82,7 +83,12 @@ class _BasePageState extends State<BasePage> {
           break;
         case 2:
           _selectedPage = ViewContract(changeScreen, contractId!, currentUser);
+          (context as Element).performRebuild();
           _selectedTitle = "Contract ID: $contractId";
+          break;
+        case 3:
+          _selectedPage = TemplateSelector(changeScreen, currentUser);
+          _selectedTitle = "Template Selector";
       }
     });
   }
