@@ -66,6 +66,8 @@ class Contract {
         return 3;
       case "http://ontologies.atb-bremen.de/smashHitCore#Valid":
         return 4;
+      case "Violation":
+        return 5;
     }
     return -1;
   }
