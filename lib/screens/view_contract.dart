@@ -4,6 +4,7 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+
 class ViewContract extends StatefulWidget {
   final Function(int) changeScreen;
   final String contractId;
@@ -35,6 +36,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   @override
   Widget build(BuildContext context) {
+    futureContract = dataProvider.fetchContractById(widget.contractId);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 

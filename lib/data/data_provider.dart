@@ -19,11 +19,10 @@ class DataProvider {
   ResponseParser parser = ResponseParser();
 
   static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxMDkyNzgwfQ.7gtgJgGroPUjrEtpTbJxQddkXwqUdia-yEzE45TnD10";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjMxNzAxNTk3fQ.wN1PcxDCAjOjux5SfAGy8ctV3IKSVB8p8tL3smBYGIk";
 
   var headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    'accept': '*/*',
     'Authorization': 'Bearer $token'
   };
 
@@ -32,11 +31,6 @@ class DataProvider {
 
   createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate) async {
-    var headers = {
-      //'Content-Type': 'application/json',
-      //'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
 
     var body = {
       "ContractId": "1337",
@@ -87,11 +81,9 @@ class DataProvider {
   rejectContract(Uri path) async {}
 
   Future<Contract> fetchContractById(String contractId) async {
-
-    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId/'), headers: headers);
 
     if (response.statusCode == 200) {
-      //return Contract.fromJson(jsonDecode(response.body));
       Contract contract;
       try {
         contract = parser.parseContractId(jsonDecode(response.body));
