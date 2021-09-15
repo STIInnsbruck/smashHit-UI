@@ -41,18 +41,23 @@ class _TemplateSelectorState extends State<TemplateSelector> {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                genericTile(screenWidth, screenHeight),
+                                templateTile(screenWidth, screenHeight, 'Generic Template', Icons.description, 'Generate a customizable generic contract.', Colors.white),
                                 Container(width: screenWidth / 20),
-                                genericTile(screenWidth, screenHeight),
+                                templateTile(screenWidth, screenHeight, 'E-Commerce Template', Icons.attach_money, 'Generate a sales related contract for selling or buying.', Colors.grey),
+                                Container(width: screenWidth / 20),
+                                templateTile(screenWidth, screenHeight, 'Games and Sports Template', Icons.sports_basketball, 'Generate a contract/clearance for players in a sports team.', Colors.grey)
+
                               ]
                           ),
                           Container(height: screenHeight / 15),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              genericTile(screenWidth, screenHeight),
+                              templateTile(screenWidth, screenHeight, 'Education Template', Icons.school, 'Generate an educational contract, e.g. a study admission contract.', Colors.grey),
                               Container(width: screenWidth / 20),
-                              genericTile(screenWidth, screenHeight),
+                              templateTile(screenWidth, screenHeight, 'Government Template', Icons.account_balance_outlined, 'Generate a government related contract.', Colors.grey),
+                              Container(width: screenWidth / 20),
+                              templateTile(screenWidth, screenHeight, 'Personal Data Processing', Icons.person_search, 'Generate a contract for personal data processing.', Colors.grey)
                             ],
                           ),
                         ],
@@ -66,16 +71,16 @@ class _TemplateSelectorState extends State<TemplateSelector> {
     );
   }
 
-  Widget genericTile(double width, double height) {
+  Widget templateTile(double width, double height, String templateType, IconData icon, String tooltipMessage, Color color) {
     return Tooltip(
-      message: 'Generate a customizable generic contract.',
+      message: tooltipMessage,
       child: Container(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        height: height / 3,
-        width: width / 4,
+        height: height / 4,
+        width: width / 5,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: Colors.white,
+            color: color,
             boxShadow: [
               BoxShadow(
                   color: Colors.black45,
@@ -86,13 +91,10 @@ class _TemplateSelectorState extends State<TemplateSelector> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Generic Contract", style: TextStyle(fontSize: 20)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                //first 45 characters are the URI from the ontology
-              ],
-            )
+            Text(templateType, style: TextStyle(fontSize: 20)),
+            Spacer(),
+            Icon((icon), size: height / 8),
+            Spacer(flex: 2)
           ],
         ),
       ),
