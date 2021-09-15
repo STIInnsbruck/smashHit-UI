@@ -82,7 +82,7 @@ class _BasePageState extends State<BasePage> {
           break;
         case 2:
           _selectedPage = ViewContract(changeScreen, contractId!, currentUser);
-          (context as Element).markNeedsBuild();
+          (context as Element).performRebuild();
           _selectedTitle = "Contract ID: $contractId";
       }
     });
