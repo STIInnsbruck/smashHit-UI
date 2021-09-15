@@ -36,6 +36,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   @override
   Widget build(BuildContext context) {
+    futureContract = dataProvider.fetchContractById(widget.contractId);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
