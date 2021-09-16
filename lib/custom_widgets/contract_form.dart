@@ -39,10 +39,9 @@ class _ContractFormState extends State<ContractForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               titleField(),
-              Container(
-                height: 20,
-              ),
+              Container(height: 20),
               descriptionField(),
+              Container(height: 20),
               timeFrameField()
             ],
           ),
@@ -72,7 +71,7 @@ class _ContractFormState extends State<ContractForm> {
         Text("Contract Terms: ", style: TextStyle(fontSize: 25)),
         Container(
           height: 400,
-          color: Colors.white70,
+          color: Colors.white54,
           child: TextField(
             controller: widget.descriptionController,
             maxLines: null,
@@ -83,6 +82,21 @@ class _ContractFormState extends State<ContractForm> {
           ),
         ),
       ],
+    );
+  }
+
+  /// CURRENTLY NOT IN USE!
+  Widget _addContractElementButton() {
+    return MaterialButton(
+      child: Column(
+        children: [
+          Icon(Icons.add_circle_outline, size: 40),
+          Text("Add Contract Element", style: TextStyle(color: Colors.black, fontSize: 10))
+        ],
+      ),
+      onPressed: () {
+        print("Add Contract Element - Pressed.");
+      },
     );
   }
 
