@@ -16,7 +16,21 @@ class ContractForm extends StatefulWidget {
 class _ContractFormState extends State<ContractForm> {
   DateTime? startDate;
   DateTime? endDate;
-  bool isChecked = false;
+
+  bool isAmendment = false;
+  bool isConfidentialObligation = false;
+  bool isDataController = false;
+  bool isDataProtection = false;
+  bool isLimitationOnUse = false;
+  bool isMethodOfNotice = false;
+  bool isNoThirdPartyBeneficiaries = false;
+  bool isPermittedDisclosure = false;
+  bool isReceiptOfNotice = false;
+  bool isSeverability = false;
+  bool isTerminationForInsolvency = false;
+  bool isTerminationForMaterialBreach = false;
+  bool isTerminationOnNotice = false;
+  bool isWaiver = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +58,25 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 20),
               descriptionField(),
               Container(height: 20),
-              checkBoxElement('Amendment', 'Has an amendment', AMENDMENT),
-              checkBoxElement('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION),
-              checkBoxElement('DataController', 'Is there a data controller?', DATA_CONTROLLER),
-              checkBoxElement('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION),
-              checkBoxElement('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE),
-              checkBoxElement('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE),
-              checkBoxElement('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES),
-              checkBoxElement('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE),
-              checkBoxElement('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE),
-              checkBoxElement('Severability', 'Is there a severability?', SEVERABILITY),
-              checkBoxElement('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY),
-              checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH),
-              checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE),
-              checkBoxElement('Waiver', 'Waiver', WAIVER),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  checkBoxElement('Amendment', 'Has an amendment', AMENDMENT, isAmendment),
+                  checkBoxElement('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION, isConfidentialObligation),
+                  checkBoxElement('DataController', 'Is there a data controller?', DATA_CONTROLLER, isDataController),
+                  checkBoxElement('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION, isDataProtection),
+                  checkBoxElement('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE, isLimitationOnUse),
+                  checkBoxElement('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE, isMethodOfNotice),
+                  checkBoxElement('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES, isNoThirdPartyBeneficiaries),
+                  checkBoxElement('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE, isPermittedDisclosure),
+                  checkBoxElement('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE, isReceiptOfNotice),
+                  checkBoxElement('Severability', 'Is there a severability?', SEVERABILITY, isSeverability),
+                  checkBoxElement('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY, isTerminationForInsolvency),
+                  checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH, isTerminationForMaterialBreach),
+                  checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE, isTerminationOnNotice),
+                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver),
+                ],
+              ),
               timeFrameField()
             ],
           ),
@@ -108,14 +127,18 @@ class _ContractFormState extends State<ContractForm> {
   /// in the contractForm.
   /// [tooltipMessage] is the message (from wikipedia) to be displayed to
   /// explain the checkbox meaning.
-  Widget checkBoxElement(String contractElement, String checkBoxTitle, String tooltipMessage) {
+  /// [isChecked] is the boolean variable that is to be attached to this
+  /// checkbox.
+  Widget checkBoxElement(String contractElement, String checkBoxTitle, String tooltipMessage, bool isChecked) {
     return Tooltip(
+      textStyle: TextStyle(fontSize: 14, color: Colors.white, fontStyle: FontStyle.italic),
       message: tooltipMessage,
       child: Container(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(checkBoxTitle),
+            Text(checkBoxTitle, style: TextStyle(fontSize: 15)),
+            Spacer(),
             Container(width: 5),
             Checkbox(
                 value: isChecked,
