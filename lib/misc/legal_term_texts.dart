@@ -1,0 +1,15 @@
+const String AMENDMENT = 'WIKIPEDIA: An amendment is a formal or official change made to a law, contract, constitution, or other legal document. It is based on the verb to amend, which means to change for better.\nAmendments can add, remove, or update parts of these agreements. They are often used when it is better to change the document than to write a new one.';
+const String CONFIDENTIALITY_OBLIGATION = "LAWINSIDER: Confidentiality Obligation means the Associate agrees to keep the proprietary terms of this Agreement confidential and to refrain from\ndisclosing any information concerning this Agreement to any one other than Associate's spouse and personal advisors.";
+const String DATA_CONTROLLER = "EUROPEAN COMMISSION: The data controller determines the purposes for which and the means by which personal data is processed.\nSo, if your company/organisation decides 'why' and 'how' the personal data should be processed it is the data controller.\nThe data processor is usually a third party external to the company.";
+const String DATA_PROTECTION = '';
+const String LIMITATION_ON_USE = '';
+const String MEDIUM = '';
+const String METHOD_OF_NOTICE = 'WIKIPEDIA: Notice is the legal concept describing a requirement that a party be aware of legal process affecting their rights, obligations or duties.\nThere are several types of notice: public notice (or legal notice), actual notice, constructive notice, and implied notice.';
+const String NO_THIRD_PARTY_BENEFICIARIES = '';
+const String PERMITTED_DISCLOSURE = '';
+const String RECEIPT_OF_NOTICE = '';
+const String SEVERABILITY = '';
+const String TERMINATION_FOR_INSOLVENCY = '';
+const String TERMINATION_FOR_MATERIAL_BREACH = '';
+const String TERMINATION_ON_NOTICE = '';
+const String WAIVER = '';

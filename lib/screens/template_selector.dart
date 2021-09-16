@@ -33,6 +33,8 @@ class _TemplateSelectorState extends State<TemplateSelector> {
             scrollDirection: Axis.vertical,
             child: Column(
                 children: [
+                  Text('Select a Template for Your Contract', style: TextStyle(fontSize: 32)),
+                  Container(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -41,7 +43,7 @@ class _TemplateSelectorState extends State<TemplateSelector> {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                templateTile(screenWidth, screenHeight, 'Generic Template', Icons.description, 'Generate a customizable generic contract.', Colors.white),
+                                templateTile(screenWidth, screenHeight, 'Generic Template', Icons.description, 'Generate a customizable generic contract.', Colors.white, widget.changeScreen),
                                 Container(width: screenWidth / 20),
                                 templateTile(screenWidth, screenHeight, 'E-Commerce Template', Icons.attach_money, 'Generate a sales related contract for selling or buying.', Colors.grey),
                                 Container(width: screenWidth / 20),
@@ -71,32 +73,39 @@ class _TemplateSelectorState extends State<TemplateSelector> {
     );
   }
 
-  Widget templateTile(double width, double height, String templateType, IconData icon, String tooltipMessage, Color color) {
+  Widget templateTile(double width, double height, String templateType, IconData icon, String tooltipMessage, Color color, [Function(int)? func]) {
     return Tooltip(
       message: tooltipMessage,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        height: height / 4,
-        width: width / 5,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: color,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 5,
-                  spreadRadius: 2.5,
-                  offset: Offset(2.5, 2.5))
-            ]),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(templateType, style: TextStyle(fontSize: 20)),
-            Spacer(),
-            Icon((icon), size: height / 8),
-            Spacer(flex: 2)
-          ],
+      child: MaterialButton(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          height: height / 4,
+          width: width / 5,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+              color: color,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black45,
+                    blurRadius: 5,
+                    spreadRadius: 2.5,
+                    offset: Offset(2.5, 2.5))
+              ]),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(templateType, style: TextStyle(fontSize: 20)),
+              Spacer(),
+              Icon((icon), size: height / 8),
+              Spacer(flex: 2)
+            ],
+          ),
         ),
+        onPressed: () {
+          if(func != null) {
+            func(1);
+          }
+        }
       ),
     );
   }
