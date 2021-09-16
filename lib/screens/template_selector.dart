@@ -94,7 +94,7 @@ class _TemplateSelectorState extends State<TemplateSelector> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(templateType, style: TextStyle(fontSize: 20)),
+              Text(templateType, style: TextStyle(fontSize: 20), textAlign: TextAlign.center,),
               Spacer(),
               Icon((icon), size: height / 8),
               Spacer(flex: 2)
