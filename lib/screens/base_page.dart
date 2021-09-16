@@ -21,7 +21,7 @@ class _BasePageState extends State<BasePage> {
 
   _BasePageState() {
     _selectedPage = Dashboard(changeScreen, currentUser);
-    _selectedTitle = "Dashboard";
+    _selectedTitle = "Contracts Dashboard";
   }
 
   @override
@@ -44,7 +44,7 @@ class _BasePageState extends State<BasePage> {
               child: userInformation(screenWidth),
             ),
             ListTile(
-              title: Text("Dashboard"),
+              title: Text("Contracts Dashboard"),
               onTap: () {
                 changeScreen(0);
               },
@@ -53,12 +53,6 @@ class _BasePageState extends State<BasePage> {
               title: Text("Create a new contract"),
               onTap: () {
                 changeScreen(3);
-              },
-            ),
-            ListTile(
-              title: Text("View Contract"),
-              onTap: () {
-                changeScreen(2);
               },
             ),
           ]),
@@ -75,7 +69,7 @@ class _BasePageState extends State<BasePage> {
       switch (_selectedIndex) {
         case 0:
           _selectedPage = Dashboard(changeScreen, currentUser);
-          _selectedTitle = "Dashboard";
+          _selectedTitle = "Contracts Dashboard";
           break;
         case 1:
           _selectedPage = ContractCreation(changeScreen, currentUser);

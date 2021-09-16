@@ -35,18 +35,22 @@ class _ContractTileState extends State<ContractTile> {
             child: Row(
               children: [
                 Icon(Icons.folder_shared, size: 75),
-                Text('${widget.contract!.contractId}'),
+                Text('Contract ID: ${_formatContractUri(widget.contract!.contractId!)}'),
               ],
             ),
           ),
         ),
         onTap: () {
           int length = widget.contract!.contractId!.length;
-          widget.changeScreen(2, '${widget.contract!.contractId!.substring(45, length)}');
+          widget.changeScreen(2, '${_formatContractUri(widget.contract!.contractId!)}');
         },
       ),
     );
   }
 
+  String _formatContractUri(String contractUri) {
+    int length = contractUri.length;
+    return contractUri.substring(45, length);
+  }
 
 }

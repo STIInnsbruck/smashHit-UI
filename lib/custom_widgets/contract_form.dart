@@ -17,20 +17,20 @@ class _ContractFormState extends State<ContractForm> {
   DateTime? startDate;
   DateTime? endDate;
 
-  bool isAmendment = false;
-  bool isConfidentialObligation = false;
-  bool isDataController = false;
-  bool isDataProtection = false;
-  bool isLimitationOnUse = false;
-  bool isMethodOfNotice = false;
-  bool isNoThirdPartyBeneficiaries = false;
-  bool isPermittedDisclosure = false;
-  bool isReceiptOfNotice = false;
-  bool isSeverability = false;
-  bool isTerminationForInsolvency = false;
-  bool isTerminationForMaterialBreach = false;
-  bool isTerminationOnNotice = false;
-  bool isWaiver = false;
+  CheckBoxBoolean isAmendment = CheckBoxBoolean();
+  CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
+  CheckBoxBoolean isDataController = CheckBoxBoolean();
+  CheckBoxBoolean isDataProtection = CheckBoxBoolean();
+  CheckBoxBoolean isLimitationOnUse = CheckBoxBoolean();
+  CheckBoxBoolean isMethodOfNotice = CheckBoxBoolean();
+  CheckBoxBoolean isNoThirdPartyBeneficiaries = CheckBoxBoolean();
+  CheckBoxBoolean isPermittedDisclosure = CheckBoxBoolean();
+  CheckBoxBoolean isReceiptOfNotice = CheckBoxBoolean();
+  CheckBoxBoolean isSeverability = CheckBoxBoolean();
+  CheckBoxBoolean isTerminationForInsolvency = CheckBoxBoolean();
+  CheckBoxBoolean isTerminationForMaterialBreach = CheckBoxBoolean();
+  CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
+  CheckBoxBoolean isWaiver = CheckBoxBoolean();
 
   @override
   Widget build(BuildContext context) {
@@ -129,27 +129,33 @@ class _ContractFormState extends State<ContractForm> {
   /// explain the checkbox meaning.
   /// [isChecked] is the boolean variable that is to be attached to this
   /// checkbox.
-  Widget checkBoxElement(String contractElement, String checkBoxTitle, String tooltipMessage, bool isChecked) {
-    return Tooltip(
-      textStyle: TextStyle(fontSize: 14, color: Colors.white, fontStyle: FontStyle.italic),
-      message: tooltipMessage,
-      child: Container(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(checkBoxTitle, style: TextStyle(fontSize: 15)),
-            Spacer(),
-            Container(width: 5),
-            Checkbox(
-                value: isChecked,
-                onChanged: (bool? value) {
-                  setState(() {
-                    isChecked = value!;
-                  });
-                }
-            )
-          ],
-        ),
+  Widget checkBoxElement(String contractElement, String checkBoxTitle, String tooltipMessage, CheckBoxBoolean isChecked) {
+    return Container(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Checkbox(
+              value: isChecked.value,
+              onChanged: (bool? value) {
+                setState(() {
+                  isChecked.value = value!;
+                });
+              }
+          ),
+          Container(width: 5),
+          Text(checkBoxTitle, style: TextStyle(fontSize: 15)),
+          Container(width: 5),
+          Tooltip(
+            textStyle: TextStyle(fontSize: 14, color: Colors.white, fontStyle: FontStyle.italic),
+            message: tooltipMessage,
+            child: CircleAvatar(
+              child: Text('?', style: TextStyle(color: Colors.white)),
+              backgroundColor: Colors.grey,
+              radius: 10,
+            ),
+          ),
+          Spacer()
+        ],
       ),
     );
   }
@@ -298,5 +304,8 @@ class _ContractFormState extends State<ContractForm> {
     widget.endDate = endDate;
   }
 
+}
 
+class CheckBoxBoolean {
+  bool value = false;
 }
