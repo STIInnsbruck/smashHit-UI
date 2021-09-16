@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/misc/legal_term_texts.dart';
 
 class ContractForm extends StatefulWidget {
 
@@ -15,6 +16,7 @@ class ContractForm extends StatefulWidget {
 class _ContractFormState extends State<ContractForm> {
   DateTime? startDate;
   DateTime? endDate;
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,20 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 20),
               descriptionField(),
               Container(height: 20),
+              checkBoxElement('Amendment', 'Has an amendment', AMENDMENT),
+              checkBoxElement('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION),
+              checkBoxElement('DataController', 'Is there a data controller?', DATA_CONTROLLER),
+              checkBoxElement('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION),
+              checkBoxElement('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE),
+              checkBoxElement('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE),
+              checkBoxElement('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES),
+              checkBoxElement('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE),
+              checkBoxElement('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE),
+              checkBoxElement('Severability', 'Is there a severability?', SEVERABILITY),
+              checkBoxElement('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY),
+              checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH),
+              checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE),
+              checkBoxElement('Waiver', 'Waiver', WAIVER),
               timeFrameField()
             ],
           ),
@@ -85,8 +101,38 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  /// Check Box for the contractForm. If checked then the value is TRUE.
+  /// [contractElement] is set by the Developer as this value is used for the
+  /// actual structure of a contract in the knowledge graph.
+  /// [checkBoxTitle] is then used on what text is displayed for the end-user
+  /// in the contractForm.
+  /// [tooltipMessage] is the message (from wikipedia) to be displayed to
+  /// explain the checkbox meaning.
+  Widget checkBoxElement(String contractElement, String checkBoxTitle, String tooltipMessage) {
+    return Tooltip(
+      message: tooltipMessage,
+      child: Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(checkBoxTitle),
+            Container(width: 5),
+            Checkbox(
+                value: isChecked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isChecked = value!;
+                  });
+                }
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   /// CURRENTLY NOT IN USE!
-  Widget _addContractElementButton() {
+  Widget addContractElementButton() {
     return MaterialButton(
       child: Column(
         children: [
