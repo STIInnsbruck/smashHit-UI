@@ -123,7 +123,7 @@ class _ContractFormState extends State<ContractForm> {
       height: 50,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.grey,
+          color: toggleStepOne == false && toggleStepTwo == false ? Colors.green : Colors.grey,
           boxShadow: [
             BoxShadow(
                 color: Colors.black45,
@@ -133,7 +133,15 @@ class _ContractFormState extends State<ContractForm> {
           ]),
       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Align(
-          child: Text("Fill in Contract Party Details", style: TextStyle(fontSize: 30, color: Colors.white)),
+          child: Row(
+            children: [
+              Text("Fill in Contract Party Details", style: TextStyle(fontSize: 30, color: Colors.white)),
+              Container(width: 10),
+              toggleStepOne == false && toggleStepTwo == false?
+              Icon(Icons.check, color: Colors.white, size: 30) :
+              Container()
+            ],
+          ),
           alignment: Alignment.centerLeft),
     );
   }
@@ -154,7 +162,15 @@ class _ContractFormState extends State<ContractForm> {
           ]),
       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Align(
-          child: Text("Terms and Conditions of the Contract", style: TextStyle(fontSize: 30, color: Colors.white)),
+          child: Row(
+            children: [
+              Text("Terms & Conditions of the Contract", style: TextStyle(fontSize: 30, color: Colors.white)),
+              Container(width: 10),
+              toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false ?
+              Icon(Icons.check, color: Colors.white, size: 30) :
+              Container()
+            ],
+          ),
           alignment: Alignment.centerLeft),
     );
   }
@@ -234,6 +250,8 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              toggleRequester == true ?
+              Text("Role: Requester", style: TextStyle(fontSize: 25)) : Text("Role: Provider", style: TextStyle(fontSize: 25)),
               toggleRequester == true ?
               requesterField() : providerField(widget.providerControllers[0]),
               toggleRequester == true ?
