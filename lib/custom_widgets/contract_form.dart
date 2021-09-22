@@ -318,32 +318,27 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              toggleRequester == true ?
-              Text("Role: Requester", style: TextStyle(fontSize: 25)) : Text("Role: Provider", style: TextStyle(fontSize: 25)),
-              toggleRequester == true ?
-              requesterField() : providerField(widget.providerControllers[0]),
-              toggleRequester == true ?
-              requesterEmailField() : providerEmailField(),
-              toggleRequester == true ?
-              requesterAddressField() : providerAddressField(),
-              toggleRequester == true ?
-              requesterStateField() : providerStateField(),
-              toggleRequester == true ?
-              requesterRegionField() : providerRegionField(),
-              toggleRequester == true ?
-              requesterCountryField() : providerCountryField(),
-              toggleRequester == true ?
-              requesterPhoneField() : providerPhoneField(),
+              descriptionField(),
               Container(height: 10),
-              toggleRequester == true ? Align(
-                alignment: Alignment.centerRight,
-                child: nextRoleButton(),
-              ) : Container(),
-              toggleProvider == true ? Align(
-                alignment: Alignment.centerLeft,
-                child: previousRoleButton(),
-              ) : Container(),
-              Container(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  checkBoxElement('Amendment', 'Has an amendment', AMENDMENT, isAmendment),
+                  checkBoxElement('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION, isConfidentialObligation),
+                  checkBoxElement('DataController', 'Is there a data controller?', DATA_CONTROLLER, isDataController),
+                  checkBoxElement('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION, isDataProtection),
+                  checkBoxElement('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE, isLimitationOnUse),
+                  checkBoxElement('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE, isMethodOfNotice),
+                  checkBoxElement('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES, isNoThirdPartyBeneficiaries),
+                  checkBoxElement('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE, isPermittedDisclosure),
+                  checkBoxElement('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE, isReceiptOfNotice),
+                  checkBoxElement('Severability', 'Is there a severability?', SEVERABILITY, isSeverability),
+                  checkBoxElement('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY, isTerminationForInsolvency),
+                  checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH, isTerminationForMaterialBreach),
+                  checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE, isTerminationOnNotice),
+                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver),
+                ],
+              ),
             ],
           ),
         ),
@@ -591,6 +586,7 @@ class _ContractFormState extends State<ContractForm> {
       ],
     );
   }
+
   Widget requesterStateField() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -808,6 +804,7 @@ class _ContractFormState extends State<ContractForm> {
       ],
     );
   }
+
   Widget providerStateField() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -902,27 +899,11 @@ class _ContractFormState extends State<ContractForm> {
   }
 
 
-  Widget _addPartyButton() {
-    return GestureDetector(
-      child: Row(
-        children: [
-          Icon(Icons.add_circle_outline, size: 40),
-          Text("Click to add another contract provider", style: TextStyle(color: Colors.black, fontSize: 10)),
-        ],
-      ),
-      onTap: () {
-        setState(() {
-          widget.providerControllers.add(TextEditingController());
-        });
-      },
-    );
-  }
-
   Widget descriptionField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Contract Terms: ", style: TextStyle(fontSize: 25)),
+        Text("What are the Terms & Conditions of the Contract?", style: TextStyle(fontSize: 25)),
         Container(
           height: 400,
           color: Colors.white54,
@@ -931,7 +912,7 @@ class _ContractFormState extends State<ContractForm> {
             maxLines: null,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
-              hintText: "Enter contract details here...",
+              hintText: "Enter Contract details here...",
             ),
           ),
         ),
@@ -950,30 +931,60 @@ class _ContractFormState extends State<ContractForm> {
   /// checkbox.
   Widget checkBoxElement(String contractElement, String checkBoxTitle, String tooltipMessage, CheckBoxBoolean isChecked) {
     return Container(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
         children: [
-          Checkbox(
-              value: isChecked.value,
-              onChanged: (bool? value) {
-                setState(() {
-                  isChecked.value = value!;
-                });
-              }
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Checkbox(
+                  value: isChecked.value,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isChecked.value = value!;
+                    });
+                  }
+              ),
+              Container(width: 5),
+              Text(checkBoxTitle, style: TextStyle(fontSize: 20)),
+              Container(width: 5),
+              Tooltip(
+                textStyle: TextStyle(fontSize: 16, color: Colors.white, fontStyle: FontStyle.italic),
+                message: tooltipMessage,
+                child: CircleAvatar(
+                  child: Text('?', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.grey,
+                  radius: 10,
+                ),
+              ),
+              Spacer()
+            ],
           ),
-          Container(width: 5),
-          Text(checkBoxTitle, style: TextStyle(fontSize: 15)),
-          Container(width: 5),
-          Tooltip(
-            textStyle: TextStyle(fontSize: 14, color: Colors.white, fontStyle: FontStyle.italic),
-            message: tooltipMessage,
-            child: CircleAvatar(
-              child: Text('?', style: TextStyle(color: Colors.white)),
-              backgroundColor: Colors.grey,
-              radius: 10,
+          isChecked.value == true?
+          Container(
+            height: 100,
+            color: Colors.white54,
+            child: TextField(
+              controller: widget.descriptionController,
+              maxLines: null,
+              style: TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                hintText: ("Please enter the $checkBoxTitle details here..."),
+                fillColor: Colors.white,
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(2.0),
+                    borderSide: BorderSide(
+                        color: Colors.blue
+                    )
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(2.0),
+                    borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 2.0
+                    )
+                ),
             ),
-          ),
-          Spacer()
+          )) : Container()
         ],
       ),
     );
