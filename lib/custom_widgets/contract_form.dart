@@ -66,6 +66,8 @@ class _ContractFormState extends State<ContractForm> {
             children: [
               contractStep1Header(screenWidth * 0.5),
               toggleStepOne == true? contractStep1(screenWidth * 0.5) : Container(),
+              contractStep2Header(screenWidth * 0.5),
+              contractStep3Header(screenWidth * 0.5),
               Align(
                 alignment: Alignment.centerRight,
                 child: nextStepButton(),
@@ -98,6 +100,48 @@ class _ContractFormState extends State<ContractForm> {
       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Align(
           child: Text("Contract Base Information", style: TextStyle(fontSize: 30, color: Colors.white)),
+          alignment: Alignment.centerLeft),
+    );
+  }
+
+  Widget contractStep2Header(double width) {
+    return Container(
+      width: width,
+      height: 50,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          color: Colors.grey,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 25.0,
+                spreadRadius: 5.0,
+                offset: Offset(10.0, 10.0))
+          ]),
+      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Align(
+          child: Text("Fill in Contract Party Details", style: TextStyle(fontSize: 30, color: Colors.white)),
+          alignment: Alignment.centerLeft),
+    );
+  }
+
+  Widget contractStep3Header(double width) {
+    return Container(
+      width: width,
+      height: 50,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          color: Colors.grey,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 25.0,
+                spreadRadius: 5.0,
+                offset: Offset(10.0, 10.0))
+          ]),
+      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Align(
+          child: Text("Terms and Conditions of the Contract", style: TextStyle(fontSize: 30, color: Colors.white)),
           alignment: Alignment.centerLeft),
     );
   }
