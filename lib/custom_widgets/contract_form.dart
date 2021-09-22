@@ -73,7 +73,7 @@ class _ContractFormState extends State<ContractForm> {
                           contractStep2Header(screenWidth * 0.5),
                           toggleStepTwo == true? contractStep2(screenWidth * 0.5) : Container(),
                           contractStep3Header(screenWidth * 0.5),
-                          //toggleStepThree == true? contractStep3(screenWidth * 0.5) : Container(),
+                          toggleStepThree == true? contractStep3(screenWidth * 0.5) : Container(),
                         ]
                     )
                 )
@@ -93,89 +93,98 @@ class _ContractFormState extends State<ContractForm> {
 
   //------------------ STEP HEADERS --------------------------------------------
   Widget contractStep1Header(double width) {
-    return Container(
-      width: width,
-      height: 50,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: toggleStepOne == true? Colors.grey : Colors.green,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Align(
-          child: Row(
-            children: [
-              Text("Contract Base Information", style: TextStyle(fontSize: 30, color: Colors.white)),
-              Container(width: 10),
-              toggleStepOne == true?
-                  Container() :
-                  Icon(Icons.check, color: Colors.white, size: 30)
-            ],
-          ),
-          alignment: Alignment.centerLeft),
+    return MaterialButton(
+      child: Container(
+        width: width,
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            color: toggleStepOne == true? Colors.grey : Colors.green,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 25.0,
+                  spreadRadius: 5.0,
+                  offset: Offset(10.0, 10.0))
+            ]),
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Align(
+            child: Row(
+              children: [
+                Text("Contract Base Information", style: TextStyle(fontSize: 30, color: Colors.white)),
+                Container(width: 10),
+                toggleStepOne == true?
+                    Container() :
+                    Icon(Icons.check, color: Colors.white, size: 30)
+              ],
+            ),
+            alignment: Alignment.centerLeft),
+      ),
+      onPressed: () => setStepOne()
     );
   }
 
   Widget contractStep2Header(double width) {
-    return Container(
-      width: width,
-      height: 50,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: toggleStepOne == false && toggleStepTwo == false ? Colors.green : Colors.grey,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Align(
-          child: Row(
-            children: [
-              Text("Fill in Contract Party Details", style: TextStyle(fontSize: 30, color: Colors.white)),
-              Container(width: 10),
-              toggleStepOne == false && toggleStepTwo == false?
-              Icon(Icons.check, color: Colors.white, size: 30) :
-              Container()
-            ],
-          ),
-          alignment: Alignment.centerLeft),
+    return MaterialButton(
+      child: Container(
+        width: width,
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            color: toggleStepOne == false && toggleStepTwo == false ? Colors.green : Colors.grey,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 25.0,
+                  spreadRadius: 5.0,
+                  offset: Offset(10.0, 10.0))
+            ]),
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Align(
+            child: Row(
+              children: [
+                Text("Fill in Contract Party Details", style: TextStyle(fontSize: 30, color: Colors.white)),
+                Container(width: 10),
+                toggleStepOne == false && toggleStepTwo == false?
+                Icon(Icons.check, color: Colors.white, size: 30) :
+                Container()
+              ],
+            ),
+            alignment: Alignment.centerLeft),
+      ),
+      onPressed: () => setStepTwo()
     );
   }
 
   Widget contractStep3Header(double width) {
-    return Container(
-      width: width,
-      height: 50,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.grey,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Align(
-          child: Row(
-            children: [
-              Text("Terms & Conditions of the Contract", style: TextStyle(fontSize: 30, color: Colors.white)),
-              Container(width: 10),
-              toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false ?
-              Icon(Icons.check, color: Colors.white, size: 30) :
-              Container()
-            ],
-          ),
-          alignment: Alignment.centerLeft),
+    return MaterialButton(
+      child: Container(
+        width: width,
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            color: toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false ? Colors.green : Colors.grey,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 25.0,
+                  spreadRadius: 5.0,
+                  offset: Offset(10.0, 10.0))
+            ]),
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Align(
+            child: Row(
+              children: [
+                Text("Terms & Conditions of the Contract", style: TextStyle(fontSize: 30, color: Colors.white)),
+                Container(width: 10),
+                toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false ?
+                Icon(Icons.check, color: Colors.white, size: 30) :
+                Container()
+              ],
+            ),
+            alignment: Alignment.centerLeft),
+      ),
+      onPressed: () => setStepThree(),
     );
   }
 
@@ -236,6 +245,61 @@ class _ContractFormState extends State<ContractForm> {
   /// step block. In the second step the user has to fill in the details about
   /// all actors in the contract.
   Widget contractStep2(double width) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 25.0,
+                spreadRadius: 5.0,
+                offset: Offset(10.0, 10.0))
+          ]),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      width: width,
+      child: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              toggleRequester == true ?
+              Text("Role: Requester", style: TextStyle(fontSize: 25)) : Text("Role: Provider", style: TextStyle(fontSize: 25)),
+              toggleRequester == true ?
+              requesterField() : providerField(widget.providerControllers[0]),
+              toggleRequester == true ?
+              requesterEmailField() : providerEmailField(),
+              toggleRequester == true ?
+              requesterAddressField() : providerAddressField(),
+              toggleRequester == true ?
+              requesterStateField() : providerStateField(),
+              toggleRequester == true ?
+              requesterRegionField() : providerRegionField(),
+              toggleRequester == true ?
+              requesterCountryField() : providerCountryField(),
+              toggleRequester == true ?
+              requesterPhoneField() : providerPhoneField(),
+              Container(height: 10),
+              toggleRequester == true ? Align(
+                alignment: Alignment.centerRight,
+                child: nextRoleButton(),
+              ) : Container(),
+              toggleProvider == true ? Align(
+                alignment: Alignment.centerLeft,
+                child: previousRoleButton(),
+              ) : Container(),
+              Container(height: 10),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// The contract creation is done primarily in 3 steps. This is the third step
+  /// block. In the third step the user has to fill in the terms and conditions
+  /// of the contract.
+  Widget contractStep3(double width) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
@@ -1084,13 +1148,13 @@ class _ContractFormState extends State<ContractForm> {
         onPressed: () {
           setState(() {
             if(toggleStepOne == true) {
-              toggleStepOne = false;
-              toggleStepTwo = true;
-              toggleStepThree = false;
+              setStepTwo();
             } else if(toggleStepTwo == true) {
+              setStepThree();
+            } else if(toggleStepThree = true) {
               toggleStepOne = false;
               toggleStepTwo = false;
-              toggleStepThree = true;
+              toggleStepThree = false;
             }
           });
         },
@@ -1109,17 +1173,13 @@ class _ContractFormState extends State<ContractForm> {
           onPressed: () {
             setState(() {
               if(toggleStepOne == true) {
-                toggleStepOne = true;
-                toggleStepTwo = false;
-                toggleStepThree = false;
+                setStepOne();
               } else if(toggleStepTwo == true) {
-                toggleStepOne = true;
-                toggleStepTwo = false;
-                toggleStepThree = false;
+                setStepOne();
               } else if(toggleStepThree == true) {
-                toggleStepOne = false;
-                toggleStepTwo = true;
-                toggleStepThree = false;
+                setStepTwo();
+              } else if(toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false) {
+                setStepThree();
               }
             });
           },
@@ -1157,6 +1217,30 @@ class _ContractFormState extends State<ContractForm> {
         }
       ),
     );
+  }
+
+  void setStepOne() {
+    setState(() {
+      toggleStepOne = true;
+      toggleStepTwo = false;
+      toggleStepThree = false;
+    });
+  }
+
+  void setStepTwo() {
+    setState(() {
+      toggleStepOne = false;
+      toggleStepTwo = true;
+      toggleStepThree = false;
+    });
+  }
+
+  void setStepThree() {
+    setState(() {
+      toggleStepOne = false;
+      toggleStepTwo = false;
+      toggleStepThree = true;
+    });
   }
 
   ///Function to nicely display the date in the contract form.
