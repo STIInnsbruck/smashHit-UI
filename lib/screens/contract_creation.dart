@@ -43,7 +43,6 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    //contract = Contract(null, null, null, null, null, null);
   }
 
   @override
