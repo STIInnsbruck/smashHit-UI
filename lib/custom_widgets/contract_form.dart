@@ -60,30 +60,34 @@ class _ContractFormState extends State<ContractForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Container(
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              contractStep1Header(screenWidth * 0.5),
-              toggleStepOne == true? contractStep1(screenWidth * 0.5) : Container(),
-              contractStep2Header(screenWidth * 0.5),
-              toggleStepTwo == true? contractStep2(screenWidth * 0.5) : Container(),
-              contractStep3Header(screenWidth * 0.5),
-              //toggleStepThree == true? contractStep3(screenWidth * 0.5) : Container(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: nextStepButton(),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: previousStepButton(),
-              )
-            ]
-          )
+    return Stack(
+      children: [
+        Container(
+            child: Scrollbar(
+                child: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          contractStep1Header(screenWidth * 0.5),
+                          toggleStepOne == true? contractStep1(screenWidth * 0.5) : Container(),
+                          contractStep2Header(screenWidth * 0.5),
+                          toggleStepTwo == true? contractStep2(screenWidth * 0.5) : Container(),
+                          contractStep3Header(screenWidth * 0.5),
+                          //toggleStepThree == true? contractStep3(screenWidth * 0.5) : Container(),
+                        ]
+                    )
+                )
+            )
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: nextStepButton(),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: previousStepButton(),
         )
-      )
+      ]
     );
   }
 
@@ -1076,7 +1080,7 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         color: Colors.green,
         hoverColor: Colors.lightGreen,
-        child: Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 30)),
+        child: Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 20)),
         onPressed: () {
           setState(() {
             if(toggleStepOne == true) {
@@ -1101,7 +1105,7 @@ class _ContractFormState extends State<ContractForm> {
         child: MaterialButton(
           color: Colors.grey,
           hoverColor: Colors.blueGrey,
-          child: Text("Previous Step", style: TextStyle(color: Colors.white, fontSize: 30)),
+          child: Text("Previous Step", style: TextStyle(color: Colors.white, fontSize: 20)),
           onPressed: () {
             setState(() {
               if(toggleStepOne == true) {
