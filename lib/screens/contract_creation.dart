@@ -43,7 +43,6 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    //contract = Contract(null, null, null, null, null, null);
   }
 
   @override
@@ -53,29 +52,23 @@ class _ContractCreationState extends State<ContractCreation> {
 
     _checkIfFormComplete();
 
-    return Row(
-      children: [
-        _sideBar(screenWidth, screenHeight),
-        Container(width: 10),
-        Expanded(
-          child: Scrollbar(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: screenWidth * 0.66,
-                    height: 100,
-                    child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
-                  ),
-                  contractForm
-                ],
+    return Center(
+      child: Scrollbar(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: screenWidth * 0.66,
+                height: 100,
+                child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
               ),
-            ),
+              contractForm
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
