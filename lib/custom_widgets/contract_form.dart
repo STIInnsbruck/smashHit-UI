@@ -961,14 +961,14 @@ class _ContractFormState extends State<ContractForm> {
           ),
           isChecked.value == true?
           Container(
-            height: 200,
+            height: 100,
             color: Colors.white54,
             child: TextField(
               controller: widget.descriptionController,
               maxLines: null,
               style: TextStyle(fontSize: 20),
               decoration: InputDecoration(
-                hintText: ("Please enter the amendment details here..."),
+                hintText: ("Please enter the $checkBoxTitle details here..."),
                 fillColor: Colors.white,
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(2.0),
