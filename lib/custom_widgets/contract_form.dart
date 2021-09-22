@@ -318,31 +318,7 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              toggleRequester == true ?
-              Text("Role: Requester", style: TextStyle(fontSize: 25)) : Text("Role: Provider", style: TextStyle(fontSize: 25)),
-              toggleRequester == true ?
-              requesterField() : providerField(widget.providerControllers[0]),
-              toggleRequester == true ?
-              requesterEmailField() : providerEmailField(),
-              toggleRequester == true ?
-              requesterAddressField() : providerAddressField(),
-              toggleRequester == true ?
-              requesterStateField() : providerStateField(),
-              toggleRequester == true ?
-              requesterRegionField() : providerRegionField(),
-              toggleRequester == true ?
-              requesterCountryField() : providerCountryField(),
-              toggleRequester == true ?
-              requesterPhoneField() : providerPhoneField(),
-              Container(height: 10),
-              toggleRequester == true ? Align(
-                alignment: Alignment.centerRight,
-                child: nextRoleButton(),
-              ) : Container(),
-              toggleProvider == true ? Align(
-                alignment: Alignment.centerLeft,
-                child: previousRoleButton(),
-              ) : Container(),
+              descriptionField(),
               Container(height: 10),
             ],
           ),
@@ -591,6 +567,7 @@ class _ContractFormState extends State<ContractForm> {
       ],
     );
   }
+
   Widget requesterStateField() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -808,6 +785,7 @@ class _ContractFormState extends State<ContractForm> {
       ],
     );
   }
+
   Widget providerStateField() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -902,27 +880,11 @@ class _ContractFormState extends State<ContractForm> {
   }
 
 
-  Widget _addPartyButton() {
-    return GestureDetector(
-      child: Row(
-        children: [
-          Icon(Icons.add_circle_outline, size: 40),
-          Text("Click to add another contract provider", style: TextStyle(color: Colors.black, fontSize: 10)),
-        ],
-      ),
-      onTap: () {
-        setState(() {
-          widget.providerControllers.add(TextEditingController());
-        });
-      },
-    );
-  }
-
   Widget descriptionField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Contract Terms: ", style: TextStyle(fontSize: 25)),
+        Text("What are the Terms & Conditions of the Contract?", style: TextStyle(fontSize: 25)),
         Container(
           height: 400,
           color: Colors.white54,
@@ -931,7 +893,7 @@ class _ContractFormState extends State<ContractForm> {
             maxLines: null,
             style: TextStyle(fontSize: 20),
             decoration: InputDecoration(
-              hintText: "Enter contract details here...",
+              hintText: "Enter Contract details here...",
             ),
           ),
         ),
