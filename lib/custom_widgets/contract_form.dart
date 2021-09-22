@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
+import 'package:smashhit_ui/data/models.dart';
+
+enum ContractType { Written, Mutual, Verbal, Transferable}
 
 class ContractForm extends StatefulWidget {
 
@@ -8,6 +11,10 @@ class ContractForm extends StatefulWidget {
   DateTime? endDate;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController requesterController = TextEditingController();
+  List<TextEditingController> providerControllers = [];
+  String? contractDropDownType;
+
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -32,13 +39,76 @@ class _ContractFormState extends State<ContractForm> {
   CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
   CheckBoxBoolean isWaiver = CheckBoxBoolean();
 
+  ContractType? _type;
+
+  bool toggleStepOne = true;
+  bool toggleStepTwo = false;
+  bool toggleStepThree = false;
+
+  List<User> providers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.providerControllers.add(TextEditingController());
+    providers.add(User("Secondary"));
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
+      child: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              contractStep1Header(screenWidth * 0.5),
+              toggleStepOne == true? contractStep1(screenWidth * 0.5) : Container(),
+              Align(
+                alignment: Alignment.centerRight,
+                child: nextStepButton(),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: previousStepButton(),
+              )
+            ]
+          )
+        )
+      )
+    );
+  }
+
+  Widget contractStep1Header(double width) {
+    return Container(
+      width: width,
+      height: 50,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          color: Colors.grey,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 25.0,
+                spreadRadius: 5.0,
+                offset: Offset(10.0, 10.0))
+          ]),
+      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Align(
+          child: Text("Contract Base Information", style: TextStyle(fontSize: 30, color: Colors.white)),
+          alignment: Alignment.centerLeft),
+    );
+  }
+
+  /// The contract creation is done primarily in 3 steps. This is the first step
+  /// block. In the first step only the title, date and medium and contract
+  /// type are required to be entered by the user.
+  Widget contractStep1(double width) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -48,36 +118,34 @@ class _ContractFormState extends State<ContractForm> {
                 offset: Offset(10.0, 10.0))
           ]),
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-      width: screenWidth * 0.50,
+      width: width,
       child: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               titleField(),
-              Container(height: 20),
-              descriptionField(),
-              Container(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Container(height: 10),
+              //contractTypeMenu(),
+              contractTypeRadioMenu(),
+              Container(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  checkBoxElement('Amendment', 'Has an amendment', AMENDMENT, isAmendment),
-                  checkBoxElement('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION, isConfidentialObligation),
-                  checkBoxElement('DataController', 'Is there a data controller?', DATA_CONTROLLER, isDataController),
-                  checkBoxElement('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION, isDataProtection),
-                  checkBoxElement('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE, isLimitationOnUse),
-                  checkBoxElement('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE, isMethodOfNotice),
-                  checkBoxElement('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES, isNoThirdPartyBeneficiaries),
-                  checkBoxElement('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE, isPermittedDisclosure),
-                  checkBoxElement('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE, isReceiptOfNotice),
-                  checkBoxElement('Severability', 'Is there a severability?', SEVERABILITY, isSeverability),
-                  checkBoxElement('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY, isTerminationForInsolvency),
-                  checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH, isTerminationForMaterialBreach),
-                  checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE, isTerminationOnNotice),
-                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver),
+                  Column(
+                    children: [
+                      startDate == null ? Container() : Text("Chosen Start Date:"),
+                      startDateButton(),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      endDate == null ? Container() : Text("Chosen End Date:"),
+                      endDateButton(),
+                    ],
+                  ),
                 ],
               ),
-              timeFrameField()
             ],
           ),
         ),
@@ -85,17 +153,197 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget titleField() {
+  Widget contractTypeMenu() {
     return Row(
       children: [
-        Text("Title: ", style: TextStyle(fontSize: 25)),
-        Expanded(
-          child: TextFormField(
-              style: TextStyle(fontSize: 20),
-              controller: widget.titleController,
+        Text("What type of contract is being formed?", style: TextStyle(fontSize: 20)),
+        Spacer(flex: 1),
+        DropdownButton(
+          value: widget.contractDropDownType,
+          icon: const Icon(Icons.arrow_drop_down),
+          hint: Text("Pick a contract type", style: TextStyle(fontSize: 20)),
+          onChanged: (String? newValue) {
+            setState(() {
+              widget.contractDropDownType = newValue;
+            });
+          },
+          elevation: 16,
+          style: const TextStyle(color: Colors.black),
+          underline: Container(
+            height: 2,
+            color: Colors.white,
           ),
+          items: <String>[
+            'Written Contract',
+            'Verbal Contract',
+            'Mutual Contract',
+            'Transferable Contract'
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value, style: TextStyle(fontSize: 20)),
+            );
+          }).toList(),
+        ),
+        Spacer(flex: 3)
+      ],
+    );
+  }
+
+  Widget contractTypeRadioMenu() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("What type of contract is being formed?", style: TextStyle(fontSize: 20)),
+        ListTile(
+          title: Text("Written Contract", style: TextStyle(fontSize: 15, color: Colors.black)),
+          leading: Radio(
+            value: ContractType.Written,
+            groupValue: _type,
+            onChanged: (ContractType? value) {
+              setState(() {
+                _type = value;
+              });})),
+        ListTile(
+          title: Text("Verbal Contract", style: TextStyle(fontSize: 15, color: Colors.black)),
+            leading: Radio(
+                value: ContractType.Verbal,
+                groupValue: _type,
+                onChanged: (ContractType? value) {
+                  setState(() {
+                    _type = value;
+                  });})
+        ),
+        ListTile(
+            title: Text("Mutual Contract", style: TextStyle(fontSize: 15, color: Colors.black)),
+            leading: Radio(
+                value: ContractType.Mutual,
+                groupValue: _type,
+                onChanged: (ContractType? value) {
+                  setState(() {
+                    _type = value;
+                  });})
+        ),
+        ListTile(
+            title: Text("Transferable Contract", style: TextStyle(fontSize: 15, color: Colors.black)),
+            leading: Radio(
+                value: ContractType.Transferable,
+                groupValue: _type,
+                onChanged: (ContractType? value) {
+                  setState(() {
+                    _type = value;
+                  });})
+        ),
+      ],
+    );
+  }
+
+  Widget titleField() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("What is the title of your contract?", style: TextStyle(fontSize: 20)),
+        Container(height: 5),
+        TextFormField(
+          decoration: InputDecoration(
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(2.0),
+              borderSide: BorderSide(
+                color: Colors.blue
+              )
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(2.0),
+              borderSide: BorderSide(
+                color: Colors.black,
+                width: 2.0
+              )
+            ),
+          ),
+          style: TextStyle(fontSize: 20),
+          controller: widget.titleController,
         )
       ],
+    );
+  }
+
+  Widget providerField(TextEditingController textController) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("What is the name of the contract provider?", style: TextStyle(fontSize: 20)),
+        Container(height: 5),
+        TextFormField(
+          decoration: InputDecoration(
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                borderSide: BorderSide(
+                    color: Colors.blue
+                )
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                borderSide: BorderSide(
+                    color: Colors.black,
+                    width: 2.0
+                )
+            ),
+          ),
+          style: TextStyle(fontSize: 20),
+          controller: textController,
+        )
+      ],
+    );
+  }
+
+  Widget requesterField() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("What is the name of the contract requester?", style: TextStyle(fontSize: 20)),
+        Container(height: 5),
+        TextFormField(
+          decoration: InputDecoration(
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                borderSide: BorderSide(
+                    color: Colors.blue
+                )
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                borderSide: BorderSide(
+                    color: Colors.black,
+                    width: 2.0
+                )
+            ),
+          ),
+          style: TextStyle(fontSize: 20),
+          controller: widget.requesterController,
+        )
+      ],
+    );
+  }
+
+  Widget _addPartyButton() {
+    return GestureDetector(
+      child: Row(
+        children: [
+          Icon(Icons.add_circle_outline, size: 40),
+          Text("Click to add another contract provider", style: TextStyle(color: Colors.black, fontSize: 10)),
+        ],
+      ),
+      onTap: () {
+        setState(() {
+          widget.providerControllers.add(TextEditingController());
+        });
+      },
     );
   }
 
@@ -172,6 +420,34 @@ class _ContractFormState extends State<ContractForm> {
       onPressed: () {
         print("Add Contract Element - Pressed.");
       },
+    );
+  }
+
+  Widget startDateButton() {
+    return Container(
+      width: 160,
+      height: 50,
+      child: MaterialButton(
+        color: Colors.blue,
+        hoverColor: Colors.lightBlueAccent,
+        child: startDate == null ? Text("Pick a Start Date", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center)
+                : Text(_formatDate(startDate), style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center),
+        onPressed: () => chooseStartDate(),
+      ),
+    );
+  }
+
+  Widget endDateButton() {
+    return Container(
+      width: 160,
+      height: 50,
+      child: MaterialButton(
+        color: Colors.blue,
+        hoverColor: Colors.lightBlueAccent,
+        child: endDate == null ? Text("Pick an End Date", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center)
+            : Text(_formatDate(endDate), style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center),
+        onPressed: () => chooseEndDate(),
+      ),
     );
   }
 
@@ -288,6 +564,60 @@ class _ContractFormState extends State<ContractForm> {
             );
           });
     }
+  }
+
+  Widget nextStepButton() {
+    return Container(
+      width: 150,
+      height: 50,
+      child: MaterialButton(
+        color: Colors.green,
+        hoverColor: Colors.lightGreen,
+        child: Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 30)),
+        onPressed: () {
+          setState(() {
+            if(toggleStepOne == true) {
+              toggleStepOne = false;
+              toggleStepTwo = true;
+              toggleStepThree = false;
+            } else if(toggleStepTwo == true) {
+              toggleStepOne = false;
+              toggleStepTwo = false;
+              toggleStepThree = true;
+            }
+          });
+        },
+      )
+    );
+  }
+
+  Widget previousStepButton() {
+    return Container(
+        width: 150,
+        height: 50,
+        child: MaterialButton(
+          color: Colors.grey,
+          hoverColor: Colors.blueGrey,
+          child: Text("Previous Step", style: TextStyle(color: Colors.white, fontSize: 30)),
+          onPressed: () {
+            setState(() {
+              if(toggleStepOne == true) {
+                toggleStepOne = true;
+                toggleStepTwo = false;
+                toggleStepThree = false;
+              } else if(toggleStepTwo == true) {
+                toggleStepOne = true;
+                toggleStepTwo = false;
+                toggleStepThree = false;
+              } else if(toggleStepThree == true) {
+                toggleStepOne = false;
+                toggleStepTwo = true;
+                toggleStepThree = false;
+              }
+            });
+          },
+        )
+    );
   }
 
   ///Function to nicely display the date in the contract form.
