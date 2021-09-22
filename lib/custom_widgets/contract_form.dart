@@ -320,6 +320,25 @@ class _ContractFormState extends State<ContractForm> {
             children: [
               descriptionField(),
               Container(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  checkBoxElement('Amendment', 'Has an amendment', AMENDMENT, isAmendment),
+                  checkBoxElement('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION, isConfidentialObligation),
+                  checkBoxElement('DataController', 'Is there a data controller?', DATA_CONTROLLER, isDataController),
+                  checkBoxElement('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION, isDataProtection),
+                  checkBoxElement('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE, isLimitationOnUse),
+                  checkBoxElement('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE, isMethodOfNotice),
+                  checkBoxElement('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES, isNoThirdPartyBeneficiaries),
+                  checkBoxElement('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE, isPermittedDisclosure),
+                  checkBoxElement('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE, isReceiptOfNotice),
+                  checkBoxElement('Severability', 'Is there a severability?', SEVERABILITY, isSeverability),
+                  checkBoxElement('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY, isTerminationForInsolvency),
+                  checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH, isTerminationForMaterialBreach),
+                  checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE, isTerminationOnNotice),
+                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver),
+                ],
+              ),
             ],
           ),
         ),
@@ -912,30 +931,60 @@ class _ContractFormState extends State<ContractForm> {
   /// checkbox.
   Widget checkBoxElement(String contractElement, String checkBoxTitle, String tooltipMessage, CheckBoxBoolean isChecked) {
     return Container(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
         children: [
-          Checkbox(
-              value: isChecked.value,
-              onChanged: (bool? value) {
-                setState(() {
-                  isChecked.value = value!;
-                });
-              }
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Checkbox(
+                  value: isChecked.value,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isChecked.value = value!;
+                    });
+                  }
+              ),
+              Container(width: 5),
+              Text(checkBoxTitle, style: TextStyle(fontSize: 20)),
+              Container(width: 5),
+              Tooltip(
+                textStyle: TextStyle(fontSize: 16, color: Colors.white, fontStyle: FontStyle.italic),
+                message: tooltipMessage,
+                child: CircleAvatar(
+                  child: Text('?', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.grey,
+                  radius: 10,
+                ),
+              ),
+              Spacer()
+            ],
           ),
-          Container(width: 5),
-          Text(checkBoxTitle, style: TextStyle(fontSize: 15)),
-          Container(width: 5),
-          Tooltip(
-            textStyle: TextStyle(fontSize: 14, color: Colors.white, fontStyle: FontStyle.italic),
-            message: tooltipMessage,
-            child: CircleAvatar(
-              child: Text('?', style: TextStyle(color: Colors.white)),
-              backgroundColor: Colors.grey,
-              radius: 10,
+          isChecked.value == true?
+          Container(
+            height: 200,
+            color: Colors.white54,
+            child: TextField(
+              controller: widget.descriptionController,
+              maxLines: null,
+              style: TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                hintText: ("Please enter the amendment details here..."),
+                fillColor: Colors.white,
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(2.0),
+                    borderSide: BorderSide(
+                        color: Colors.blue
+                    )
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(2.0),
+                    borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 2.0
+                    )
+                ),
             ),
-          ),
-          Spacer()
+          )) : Container()
         ],
       ),
     );
