@@ -1368,9 +1368,9 @@ class _ContractFormState extends State<ContractForm> {
             if(toggleStepOne == true) {
               setStepTwo();
             } else if(toggleStepTwo == true) {
-              setStepFour();
-            } else if (toggleStepThree == true) {
               setStepThree();
+            } else if (toggleStepThree == true) {
+              setStepFour();
             } else if(toggleStepFour = true) {
               toggleStepOne = false;
               toggleStepTwo = false;
@@ -1397,8 +1397,10 @@ class _ContractFormState extends State<ContractForm> {
                 setStepOne();
               } else if(toggleStepTwo == true) {
                 setStepOne();
-              } else if(toggleStepFour == true) {
+              } else if(toggleStepThree == true) {
                 setStepTwo();
+              } else if(toggleStepFour == true) {
+                setStepThree();
               } else if(toggleStepOne == false && toggleStepTwo == false && toggleStepFour == false) {
                 setStepFour();
               }
