@@ -14,6 +14,7 @@ class ContractForm extends StatefulWidget {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController requesterController = TextEditingController();
+  List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
   String? contractDropDownType;
 
@@ -52,13 +53,17 @@ class _ContractFormState extends State<ContractForm> {
   bool toggleRequester = true;
   bool toggleProvider = false;
 
+  List<User> requesters = [];
   List<User> providers = [];
 
   @override
   void initState() {
     super.initState();
-    widget.providerControllers.add(TextEditingController());
-    providers.add(User("Secondary"));
+
+    // Add at least one contract requester.
+    addRequester();
+    // Add at least one contract provider.
+    addProvider();
   }
 
   @override
@@ -76,7 +81,7 @@ class _ContractFormState extends State<ContractForm> {
                           contractStep1Header(screenWidth * 0.5),
                           toggleStepOne == true? contractStep1(screenWidth * 0.5) : Container(),
                           contractStep2Header(screenWidth * 0.5),
-                          toggleStepTwo == true? contractStep2(screenWidth * 0.5) : Container(),
+                          toggleStepTwo == true? contractStep2(screenWidth * 0.5, 0) : Container(),
                           contractStep3Header(screenWidth * 0.5),
                           toggleStepThree == true? contractStep3(screenWidth * 0.5) : Container(),
                           contractStep4Header(screenWidth * 0.5),
@@ -266,7 +271,8 @@ class _ContractFormState extends State<ContractForm> {
   /// The contract creation is done primarily in 4 steps. This is the second
   /// step block. In the second step the user has to fill in the details about
   /// all requester actors in the contract.
-  Widget contractStep2(double width) {
+  /// [index] is the requester in the list of requesters.
+  Widget contractStep2(double width, int index) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
@@ -285,14 +291,15 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Role: Requester", style: TextStyle(fontSize: 25)),
-              requesterField(),
-              requesterEmailField(),
-              requesterAddressField(),
-              requesterStateField(),
-              requesterRegionField(),
-              requesterCountryField(),
-              requesterPhoneField(),
+              Text("Role: Requester ${index+1}", style: TextStyle(fontSize: 25)),
+              // Every Requester has 7 Fields. Assign each field the right controller.
+              requesterField(index + 0),
+              requesterEmailField(index + 1),
+              requesterAddressField(index + 2),
+              requesterStateField(index + 3),
+              requesterRegionField(index + 4),
+              requesterCountryField(index + 5),
+              requesterPhoneField(index + 6),
               Container(height: 10),
               toggleRequester == true ? Align(
                 alignment: Alignment.centerRight,
@@ -438,12 +445,12 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   //------------------- REQUESTER FIELDS ---------------------------------------
-  Widget requesterField() {
+  Widget requesterField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("What is the name of the contract requester?", style: TextStyle(fontSize: 20)),
+        Text("What is the name of the contract requester ${index+1}?", style: TextStyle(fontSize: 20)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -463,13 +470,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
   }
 
-  Widget requesterEmailField() {
+  Widget requesterEmailField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -494,13 +501,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
   }
 
-  Widget requesterAddressField() {
+  Widget requesterAddressField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -525,13 +532,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
   }
 
-  Widget requesterCountryField() {
+  Widget requesterCountryField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,13 +563,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
   }
 
-  Widget requesterStateField() {
+  Widget requesterStateField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -587,13 +594,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
   }
 
-  Widget requesterRegionField() {
+  Widget requesterRegionField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -618,13 +625,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
   }
 
-  Widget requesterPhoneField() {
+  Widget requesterPhoneField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -649,7 +656,7 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
@@ -1487,6 +1494,26 @@ class _ContractFormState extends State<ContractForm> {
 
   void setWidgetEndDate() {
     widget.endDate = endDate;
+  }
+
+  /// Helper function to add a new requester into the form. Each requester has
+  /// 7 TextFields. That is why we add 7 TextEditingController, one for each
+  /// field.
+  void addRequester() {
+    for(int i = 0; i < 7; i++) {
+      widget.requesterControllers.add(TextEditingController());
+    }
+    requesters.add(User("Primary"));
+  }
+
+  /// Helper function to add a new provider into the form. Each provider has
+  /// 7 TextFields. That is why we add 7 TextEditingController, one for each
+  /// field.
+  void addProvider() {
+    for(int i = 0; i < 7; i++) {
+      widget.providerControllers.add(TextEditingController());
+    }
+    providers.add(User("Secondary"));
   }
 
 }
