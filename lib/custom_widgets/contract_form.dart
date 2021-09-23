@@ -54,7 +54,9 @@ class _ContractFormState extends State<ContractForm> {
   bool toggleProvider = false;
 
   List<User> requesters = [];
+  int currentRequesterIndex = 0;
   List<User> providers = [];
+  int currentProviderIndex = 0;
 
   @override
   void initState() {
@@ -81,7 +83,7 @@ class _ContractFormState extends State<ContractForm> {
                           contractStep1Header(screenWidth * 0.5),
                           toggleStepOne == true? contractStep1(screenWidth * 0.5) : Container(),
                           contractStep2Header(screenWidth * 0.5),
-                          toggleStepTwo == true? contractStep2(screenWidth * 0.5, 0) : Container(),
+                          toggleStepTwo == true? contractStep2(screenWidth * 0.5, currentRequesterIndex) : Container(),
                           contractStep3Header(screenWidth * 0.5),
                           toggleStepThree == true? contractStep3(screenWidth * 0.5) : Container(),
                           contractStep4Header(screenWidth * 0.5),
@@ -301,14 +303,14 @@ class _ContractFormState extends State<ContractForm> {
               requesterCountryField(index + 5),
               requesterPhoneField(index + 6),
               Container(height: 10),
-              toggleRequester == true ? Align(
-                alignment: Alignment.centerRight,
-                child: nextRoleButton(),
-              ) : Container(),
-              toggleProvider == true ? Align(
-                alignment: Alignment.centerLeft,
-                child: previousRoleButton(),
-              ) : Container(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  currentRequesterIndex - 1 >= 0 ? previousRequesterButton() : Container(width: 40),
+                  addRequesterButton(),
+                  currentRequesterIndex + 1 < requesters.length ? nextRequesterButton() : Container(width: 40),
+                ],
+              ),
               Container(height: 10),
             ],
           ),
@@ -1406,6 +1408,114 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  Widget addRequesterButton() {
+    return Tooltip(
+      message: "Add another contract requester.",
+      child: CircleAvatar(
+        radius: 20,
+        backgroundColor: Colors.blue,
+        child: IconButton(
+          icon: Icon(Icons.person_add),
+          onPressed: () {
+            setState(() {
+              addRequester();
+            });
+          }
+        )
+      ),
+    );
+  }
+
+  Widget addProviderButton() {
+    return Tooltip(
+      message: "Add another contract provider.",
+      child: CircleAvatar(
+          radius: 20,
+          backgroundColor: Colors.blue,
+          child: IconButton(
+              icon: Icon(Icons.person_add),
+              onPressed: () {
+                setState(() {
+                  addProvider();
+                });
+              }
+          )
+      ),
+    );
+  }
+
+  Widget nextRequesterButton() {
+    return Tooltip(
+      message: "Proceed to the next contract requester form.",
+      child: CircleAvatar(
+        radius: 20,
+        backgroundColor: Colors.blue,
+        child: IconButton(
+          icon: Icon(Icons.navigate_next),
+          onPressed: () {
+            setState(() {
+              currentRequesterIndex += 1;
+            });
+          }
+        )
+      )
+    );
+  }
+
+  Widget previousRequesterButton() {
+    return Tooltip(
+        message: "Go back to the previous contract requester form.",
+        child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.blue,
+            child: IconButton(
+                icon: Icon(Icons.navigate_before),
+                onPressed: () {
+                  setState(() {
+                    currentRequesterIndex -= 1;
+                  });
+                }
+            )
+        )
+    );
+  }
+
+  Widget nextProviderButton() {
+    return Tooltip(
+        message: "Proceed to the next contract provider form.",
+        child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.blue,
+            child: IconButton(
+                icon: Icon(Icons.navigate_next),
+                onPressed: () {
+                  setState(() {
+                    currentProviderIndex += 1;
+                  });
+                }
+            )
+        )
+    );
+  }
+
+  Widget previousProviderButton() {
+    return Tooltip(
+        message: "Go back to the previous contract provider form.",
+        child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.blue,
+            child: IconButton(
+                icon: Icon(Icons.navigate_next),
+                onPressed: () {
+                  setState(() {
+                    currentProviderIndex -= 1;
+                  });
+                }
+            )
+        )
+    );
+  }
+
   Widget nextRoleButton() {
     return CircleAvatar(
       radius: 20,
@@ -1500,20 +1610,24 @@ class _ContractFormState extends State<ContractForm> {
   /// 7 TextFields. That is why we add 7 TextEditingController, one for each
   /// field.
   void addRequester() {
-    for(int i = 0; i < 7; i++) {
-      widget.requesterControllers.add(TextEditingController());
-    }
-    requesters.add(User("Primary"));
+    setState(() {
+      for(int i = 0; i < 7; i++) {
+        widget.requesterControllers.add(TextEditingController());
+      }
+      requesters.add(User("Primary"));
+    });
   }
 
   /// Helper function to add a new provider into the form. Each provider has
   /// 7 TextFields. That is why we add 7 TextEditingController, one for each
   /// field.
   void addProvider() {
-    for(int i = 0; i < 7; i++) {
-      widget.providerControllers.add(TextEditingController());
-    }
-    providers.add(User("Secondary"));
+    setState(() {
+      for(int i = 0; i < 7; i++) {
+        widget.providerControllers.add(TextEditingController());
+      }
+      providers.add(User("Secondary"));
+    });
   }
 
 }
