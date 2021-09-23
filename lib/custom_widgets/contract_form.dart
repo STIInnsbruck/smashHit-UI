@@ -85,7 +85,7 @@ class _ContractFormState extends State<ContractForm> {
                           contractStep2Header(screenWidth * 0.5),
                           toggleStepTwo == true? contractStep2(screenWidth * 0.5, currentRequesterIndex) : Container(),
                           contractStep3Header(screenWidth * 0.5),
-                          toggleStepThree == true? contractStep3(screenWidth * 0.5) : Container(),
+                          toggleStepThree == true? contractStep3(screenWidth * 0.5, currentProviderIndex) : Container(),
                           contractStep4Header(screenWidth * 0.5),
                           toggleStepFour == true? contractStep4(screenWidth * 0.5) : Container(),
                         ]
@@ -322,7 +322,7 @@ class _ContractFormState extends State<ContractForm> {
   /// The contract creation is done primarily in 4 steps. This is the third step
   /// block. In the third step the user has to fill in the details about all
   /// provider actors in the contract.
-  Widget contractStep3(double width) {
+  Widget contractStep3(double width, int index) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
@@ -341,23 +341,23 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Role: Provider", style: TextStyle(fontSize: 25)),
-              providerField(widget.providerControllers[0]),
-              providerEmailField(),
-              providerAddressField(),
-              providerStateField(),
-              providerRegionField(),
-              providerCountryField(),
-              providerPhoneField(),
+              Text("Role: Provider ${index+1}", style: TextStyle(fontSize: 25)),
+              providerField(index + 0),
+              providerEmailField(index + 1),
+              providerAddressField(index + 2),
+              providerStateField(index + 3),
+              providerRegionField(index + 4),
+              providerCountryField(index + 5),
+              providerPhoneField(index + 6),
               Container(height: 10),
-              toggleRequester == true ? Align(
-                alignment: Alignment.centerRight,
-                child: nextRoleButton(),
-              ) : Container(),
-              toggleProvider == true ? Align(
-                alignment: Alignment.centerLeft,
-                child: previousRoleButton(),
-              ) : Container(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  currentProviderIndex - 1 >= 0 ? previousProviderButton() : Container(width: 40),
+                  addProviderButton(),
+                  currentProviderIndex + 1 < providers.length ? nextProviderButton() : Container(width: 40),
+                ],
+              ),
               Container(height: 10),
             ],
           ),
@@ -665,12 +665,12 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   //------------------- PROVIDER FIELDS ----------------------------------------
-  Widget providerField(TextEditingController textController) {
+  Widget providerField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("What is the name of the contract provider?", style: TextStyle(fontSize: 20)),
+        Text("What is the name of the contract provider ${index+1}?", style: TextStyle(fontSize: 20)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -690,13 +690,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: textController,
+          controller: widget.requesterControllers[index],
         )
       ],
     );
   }
 
-  Widget providerEmailField() {
+  Widget providerEmailField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -721,13 +721,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.providerControllers[index],
         )
       ],
     );
   }
 
-  Widget providerAddressField() {
+  Widget providerAddressField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -752,13 +752,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.providerControllers[index],
         )
       ],
     );
   }
 
-  Widget providerCountryField() {
+  Widget providerCountryField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -783,13 +783,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.providerControllers[index],
         )
       ],
     );
   }
 
-  Widget providerStateField() {
+  Widget providerStateField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -814,13 +814,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.providerControllers[index],
         )
       ],
     );
   }
 
-  Widget providerRegionField() {
+  Widget providerRegionField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -845,13 +845,13 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.providerControllers[index],
         )
       ],
     );
   }
 
-  Widget providerPhoneField() {
+  Widget providerPhoneField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -876,7 +876,7 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterController,
+          controller: widget.providerControllers[index],
         )
       ],
     );
@@ -1505,7 +1505,7 @@ class _ContractFormState extends State<ContractForm> {
             radius: 20,
             backgroundColor: Colors.blue,
             child: IconButton(
-                icon: Icon(Icons.navigate_next),
+                icon: Icon(Icons.navigate_before),
                 onPressed: () {
                   setState(() {
                     currentProviderIndex -= 1;
