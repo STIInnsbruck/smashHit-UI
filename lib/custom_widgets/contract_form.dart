@@ -8,6 +8,8 @@ enum ContractType { Written, Mutual, Verbal, Transferable}
 class ContractForm extends StatefulWidget {
 
   DateTime? startDate;
+  DateTime? effectiveDate;
+  DateTime? executionDate;
   DateTime? endDate;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -22,7 +24,9 @@ class ContractForm extends StatefulWidget {
 
 class _ContractFormState extends State<ContractForm> {
   DateTime? startDate;
+  DateTime? effectiveDate;
   DateTime? endDate;
+  DateTime? executionDate;
 
   CheckBoxBoolean isAmendment = CheckBoxBoolean();
   CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
@@ -252,23 +256,6 @@ class _ContractFormState extends State<ContractForm> {
               //contractTypeMenu(),
               contractTypeRadioMenu(),
               Container(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      startDate == null ? Container() : Text("Chosen Start Date:"),
-                      startDateButton(),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      endDate == null ? Container() : Text("Chosen End Date:"),
-                      endDateButton(),
-                    ],
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -411,6 +398,36 @@ class _ContractFormState extends State<ContractForm> {
                   checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH, isTerminationForMaterialBreach),
                   checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE, isTerminationOnNotice),
                   checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver),
+                ],
+              ),
+              Container(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      startDate == null ? Container() : Text("Chosen Start Date:"),
+                      startDateButton(),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      effectiveDate == null ? Container() : Text("Chosen Effective Date:"),
+                      effectiveDateButton(),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      executionDate == null ? Container() : Text("Chosen Execution Date:"),
+                      executionDateButton(),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      endDate == null ? Container() : Text("Chosen End Date:"),
+                      endDateButton(),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -1094,6 +1111,20 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  Widget effectiveDateButton() {
+    return Container(
+      width: 160,
+      height: 50,
+      child: MaterialButton(
+        color: Colors.blue,
+        hoverColor: Colors.lightBlueAccent,
+        child: effectiveDate == null ? Text("Pick an Effective Date", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center)
+            : Text(_formatDate(effectiveDate), style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center),
+        onPressed: () => chooseEffectiveDate(),
+      ),
+    );
+  }
+
   Widget endDateButton() {
     return Container(
       width: 160,
@@ -1104,6 +1135,20 @@ class _ContractFormState extends State<ContractForm> {
         child: endDate == null ? Text("Pick an End Date", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center)
             : Text(_formatDate(endDate), style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center),
         onPressed: () => chooseEndDate(),
+      ),
+    );
+  }
+
+  Widget executionDateButton() {
+    return Container(
+      width: 160,
+      height: 50,
+      child: MaterialButton(
+        color: Colors.blue,
+        hoverColor: Colors.lightBlueAccent,
+        child: executionDate == null ? Text("Pick an Execution Date", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center)
+            : Text(_formatDate(executionDate), style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center),
+        onPressed: () => chooseExecutionDate(),
       ),
     );
   }
@@ -1189,6 +1234,45 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
+  Future<void> chooseEffectiveDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050, 1, 1),
+    );
+    if (pickedDate != null && endDate == null) {
+      setState(() {
+        effectiveDate = pickedDate;
+        setWidgetStartDate();
+      });
+    } else if (pickedDate != null &&
+        endDate != null &&
+        pickedDate.isBefore(endDate!)) {
+      setState(() {
+        effectiveDate = pickedDate;
+        setWidgetStartDate();
+      });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text(
+                  "Please select an effective date that is before the selected end date."),
+              children: <Widget>[
+                TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    }
+  }
+
   Future<void> chooseEndDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -1210,6 +1294,45 @@ class _ContractFormState extends State<ContractForm> {
             return SimpleDialog(
               title: Text(
                   "Please select a start date first and be sure that the end date is after the start date."),
+              children: <Widget>[
+                TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    }
+  }
+
+  Future<void> chooseExecutionDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050, 1, 1),
+    );
+    if (pickedDate != null && endDate == null) {
+      setState(() {
+        executionDate = pickedDate;
+        setWidgetStartDate();
+      });
+    } else if (pickedDate != null &&
+        endDate != null &&
+        pickedDate.isBefore(endDate!)) {
+      setState(() {
+        executionDate = pickedDate;
+        setWidgetStartDate();
+      });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text(
+                  "Please select an execution date that is before the selected end date."),
               children: <Widget>[
                 TextButton(
                   child: Text('Okay'),
@@ -1352,6 +1475,14 @@ class _ContractFormState extends State<ContractForm> {
 
   void setWidgetStartDate() {
     widget.startDate = startDate;
+  }
+
+  void setWidgetEffectiveDate() {
+    widget.effectiveDate = effectiveDate;
+  }
+
+  void setWidgetExecutionDate() {
+    widget.executionDate = executionDate;
   }
 
   void setWidgetEndDate() {
