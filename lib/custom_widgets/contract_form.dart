@@ -491,20 +491,90 @@ class _ContractFormState extends State<ContractForm> {
                 spreadRadius: 5.0,
                 offset: Offset(10.0, 10.0))
           ]),
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      padding: EdgeInsets.fromLTRB(60, 20, 60, 20),
       width: width,
       child: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${widget.titleController.text}', style: TextStyle(fontSize: 25, decoration: TextDecoration.underline)),
-              Container(height: 10),
+              Text('${widget.titleController.text}', style: TextStyle(fontSize: 25, decoration: TextDecoration.underline), textAlign: TextAlign.center),
+              Container(height: 20),
               Align(
                   child: Text('Contract Type: $_type', style: TextStyle(fontSize: 15)),
                   alignment: Alignment.centerLeft,
               ),
               Container(height: 10),
+              Row(
+                children: [
+                  Text('Contract Requester(s):', style: TextStyle(fontSize: 15)),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      /**ListView.builder(
+                        itemCount: requesters.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Text('${widget.requesterControllers.text}');
+                        }
+                      )*/
+                      Text('${widget.requesterControllers[0].text}')
+                    ],
+                  )
+                ],
+              ),
+              Container(height: 10),
+              Row(
+                children: [
+                  Text('Contract Provider(s):', style: TextStyle(fontSize: 15)),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      /**ListView.builder(
+                          itemCount: requesters.length,
+                          itemBuilder: (BuildContext context, int index) {
+                          return Text('${widget.requesterControllers.text}');
+                          }
+                          )*/
+                      Text('${widget.providerControllers[0].text}')
+                    ],
+                  )
+                ],
+              ),
+              Container(height: 20),
+              Text('Terms & Conditions', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
+              Container(height: 20),
+              Container(
+                  //padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: Text('${widget.descriptionController.text}', textAlign: TextAlign.justify)
+              ),
+              Container(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('Start Date: ${_formatDate(startDate)}'),
+                  Text('Effective Date: ${_formatDate(effectiveDate)}'),
+                  Text('Execution Date: ${_formatDate(executionDate)}'),
+                  Text('End Date: ${_formatDate(endDate)}'),
+                ],
+              ),
+              Container(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      Text('_______________________________'),
+                      Text("Requester's Signature")
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('_______________________________'),
+                      Text("Provider's Signature")
+                    ],
+                  )
+                ],
+              )
             ],
           ),
         ),
@@ -756,7 +826,7 @@ class _ContractFormState extends State<ContractForm> {
             ),
           ),
           style: TextStyle(fontSize: 20),
-          controller: widget.requesterControllers[index],
+          controller: widget.providerControllers[index],
         )
       ],
     );
@@ -1428,7 +1498,7 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         color: Colors.green,
         hoverColor: Colors.lightGreen,
-        child: toggleStepFinal == true? Text("Go To Overview", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 20)),
+        child: toggleStepFinal == true? Text('Confirm', style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : toggleStepFour == true? Text("Go To Overview", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 20)),
         onPressed: () {
           setState(() {
             if(toggleStepOne == true) {
@@ -1437,8 +1507,12 @@ class _ContractFormState extends State<ContractForm> {
               setStepThree();
             } else if (toggleStepThree == true) {
               setStepFour();
-            } else if(toggleStepFour = true) {
+            } else if(toggleStepFour == true) {
               setStepFinal();
+            } else if(toggleStepFinal == true) {
+              setState(() {
+                toggleStepFinal = false;
+              });
             }
           });
         },
