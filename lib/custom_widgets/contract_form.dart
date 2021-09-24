@@ -50,6 +50,7 @@ class _ContractFormState extends State<ContractForm> {
   bool toggleStepTwo = false;
   bool toggleStepThree = false;
   bool toggleStepFour = false;
+  bool toggleStepFinal = false;
   bool toggleRequester = true;
   bool toggleProvider = false;
 
@@ -1556,6 +1557,8 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepTwo = false;
       toggleStepThree = false;
       toggleStepFour = false;
+      toggleStepFinal = false;
+
     });
   }
 
@@ -1565,6 +1568,7 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepTwo = true;
       toggleStepThree = false;
       toggleStepFour = false;
+      toggleStepFinal = false;
     });
   }
 
@@ -1574,6 +1578,7 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepTwo = false;
       toggleStepThree = true;
       toggleStepFour = false;
+      toggleStepFinal = false;
     });
   }
 
@@ -1583,6 +1588,18 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepTwo = false;
       toggleStepThree = false;
       toggleStepFour = true;
+      toggleStepFinal = false;
+
+    });
+  }
+
+  void setStepFinal() {
+    setState(() {
+      toggleStepOne = false;
+      toggleStepTwo = false;
+      toggleStepThree = false;
+      toggleStepFour = false;
+      toggleStepFinal = true;
     });
   }
 
