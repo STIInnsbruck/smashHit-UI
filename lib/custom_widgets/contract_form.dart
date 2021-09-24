@@ -1373,10 +1373,7 @@ class _ContractFormState extends State<ContractForm> {
             } else if (toggleStepThree == true) {
               setStepFour();
             } else if(toggleStepFour = true) {
-              toggleStepOne = false;
-              toggleStepTwo = false;
-              toggleStepThree = false;
-              toggleStepFour = false;
+              setStepFinal();
             }
           });
         },
@@ -1402,7 +1399,7 @@ class _ContractFormState extends State<ContractForm> {
                 setStepTwo();
               } else if(toggleStepFour == true) {
                 setStepThree();
-              } else if(toggleStepOne == false && toggleStepTwo == false && toggleStepFour == false) {
+              } else if(toggleStepFinal == true) {
                 setStepFour();
               }
             });

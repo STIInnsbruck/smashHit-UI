@@ -20,7 +20,7 @@ class _BasePageState extends State<BasePage> {
   DataProvider dataProvider = DataProvider();
 
   _BasePageState() {
-    _selectedPage = Dashboard(changeScreen, currentUser);
+    _selectedPage = ContractCreation(changeScreen, currentUser);
     _selectedTitle = "Contracts Dashboard";
   }
 
