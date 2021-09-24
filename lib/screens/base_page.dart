@@ -5,6 +5,7 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/screens/view_contract.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/screens/template_selector.dart';
+import 'package:smashhit_ui/screens/contract_violation.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -83,6 +84,10 @@ class _BasePageState extends State<BasePage> {
         case 3:
           _selectedPage = TemplateSelector(changeScreen, currentUser);
           _selectedTitle = "Template Selector";
+          break;
+        case 4:
+          _selectedPage = ContractViolation(changeScreen, currentUser);
+          _selectedTitle = "Violation Claim";
       }
     });
   }
