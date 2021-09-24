@@ -89,6 +89,8 @@ class _ContractFormState extends State<ContractForm> {
                           toggleStepThree == true? contractStep3(screenWidth * 0.5, currentProviderIndex) : Container(),
                           contractStep4Header(screenWidth * 0.5),
                           toggleStepFour == true? contractStep4(screenWidth * 0.5) : Container(),
+                          contractStepFinalHeader(screenWidth * 0.5),
+                          toggleStepFinal == true? contractStepFinal(screenWidth * 0.5) : Container(),
                         ]
                     )
                 )
@@ -232,6 +234,34 @@ class _ContractFormState extends State<ContractForm> {
             alignment: Alignment.centerLeft),
       ),
       onPressed: () => setStepFour(),
+    );
+  }
+
+  Widget contractStepFinalHeader(double width) {
+    return MaterialButton(
+      child: Container(
+        width: width,
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            color: Colors.grey,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 25.0,
+                  spreadRadius: 5.0,
+                  offset: Offset(10.0, 10.0))
+            ]),
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Align(
+            child: Row(
+              children: [
+                Text("Final Step - Overview", style: TextStyle(fontSize: 30, color: Colors.white)),
+              ],
+            ),
+            alignment: Alignment.centerLeft),
+      ),
+      onPressed: () => setStepFinal(),
     );
   }
 
@@ -440,6 +470,41 @@ class _ContractFormState extends State<ContractForm> {
                   ),
                 ],
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// The contract creation has a final step for the user to overview their
+  /// created contract and confirm their input.
+  Widget contractStepFinal(double width) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 25.0,
+                spreadRadius: 5.0,
+                offset: Offset(10.0, 10.0))
+          ]),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      width: width,
+      child: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('${widget.titleController.text}', style: TextStyle(fontSize: 25, decoration: TextDecoration.underline)),
+              Container(height: 10),
+              Align(
+                  child: Text('Contract Type: $_type', style: TextStyle(fontSize: 15)),
+                  alignment: Alignment.centerLeft,
+              ),
+              Container(height: 10),
             ],
           ),
         ),
@@ -1363,7 +1428,7 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         color: Colors.green,
         hoverColor: Colors.lightGreen,
-        child: Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 20)),
+        child: toggleStepFinal == true? Text("Go To Overview", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 20)),
         onPressed: () {
           setState(() {
             if(toggleStepOne == true) {
