@@ -249,7 +249,7 @@ class _ContractCreationState extends State<ViewContract> {
       icon: Icon(Icons.report_problem, color: Colors.orange),
       tooltip: 'Report a contract violation.',
       onPressed: () {
-        _showReportViolationDialog();
+        widget.changeScreen(4);
       },
     );
   }
