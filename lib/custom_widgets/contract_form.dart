@@ -128,7 +128,7 @@ class _ContractFormState extends State<ContractForm> {
         child: Align(
             child: Row(
               children: [
-                Text("Step 1. Contract Base Information", style: TextStyle(fontSize: 30, color: Colors.white)),
+                Expanded(child: Text("Step 1. Contract Base Information", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
                 Container(width: 10),
                 toggleStepOne == true?
                     Container() :
@@ -160,7 +160,7 @@ class _ContractFormState extends State<ContractForm> {
         child: Align(
             child: Row(
               children: [
-                Text("Step 2. Contract Requester(s) Details", style: TextStyle(fontSize: 30, color: Colors.white)),
+                Expanded(child: Text("Step 2. Contract Requester(s) Details", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
                 Container(width: 10),
                 toggleStepOne == false && toggleStepTwo == false?
                 Icon(Icons.check, color: Colors.white, size: 30) :
@@ -192,7 +192,7 @@ class _ContractFormState extends State<ContractForm> {
           child: Align(
               child: Row(
                 children: [
-                  Text("Step 3. Contract Provider(s) Details", style: TextStyle(fontSize: 30, color: Colors.white)),
+                  Expanded(child: Text("Step 3. Contract Provider(s) Details", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
                   Container(width: 10),
                   toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false ?
                   Icon(Icons.check, color: Colors.white, size: 30) :
@@ -224,11 +224,11 @@ class _ContractFormState extends State<ContractForm> {
         child: Align(
             child: Row(
               children: [
-                Text("Step 4. Terms & Conditions of the Contract", style: TextStyle(fontSize: 30, color: Colors.white)),
+                Expanded(child: Text("Step 4. Terms & Conditions of the Contract", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
                 Container(width: 10),
                 toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false && toggleStepFour == false ?
                 Icon(Icons.check, color: Colors.white, size: 30) :
-                Container()
+                Container(),
               ],
             ),
             alignment: Alignment.centerLeft),
@@ -256,7 +256,7 @@ class _ContractFormState extends State<ContractForm> {
         child: Align(
             child: Row(
               children: [
-                Text("Final Step - Overview", style: TextStyle(fontSize: 30, color: Colors.white)),
+                Expanded(child: Text("Final Step - Overview", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
               ],
             ),
             alignment: Alignment.centerLeft),
