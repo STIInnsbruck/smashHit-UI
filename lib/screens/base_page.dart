@@ -48,12 +48,14 @@ class _BasePageState extends State<BasePage> {
               title: Text("Contracts Dashboard"),
               onTap: () {
                 changeScreen(0);
+                Navigator.of(context).pop();
               },
             ),
             ListTile(
               title: Text("Create a new contract"),
               onTap: () {
                 changeScreen(3);
+                Navigator.of(context).pop();
               },
             ),
           ]),
