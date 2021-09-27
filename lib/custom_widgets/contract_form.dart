@@ -387,6 +387,7 @@ class _ContractFormState extends State<ContractForm> {
                 children: [
                   currentProviderIndex - 1 >= 0 ? previousProviderButton() : Container(width: 40),
                   addProviderButton(),
+                  currentProviderIndex > 0 ? removeProviderButton() : Container(),
                   currentProviderIndex + 1 < providers.length ? nextProviderButton() : Container(width: 40),
                 ],
               ),
@@ -1602,6 +1603,24 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  Widget removeProviderButton() {
+    return Tooltip(
+        message: "Remove this contract provider.",
+        child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.blue,
+            child: IconButton(
+                icon: Icon(Icons.person_remove),
+                onPressed: () {
+                  setState(() {
+                    removeProvider(currentProviderIndex);
+                  });
+                }
+            )
+        )
+    );
+  }
+
   Widget nextRequesterButton() {
     return Tooltip(
       message: "Proceed to the next contract requester form.",
@@ -1795,6 +1814,7 @@ class _ContractFormState extends State<ContractForm> {
 
   /// Helper function to remove a requester form. Each requester has 7
   /// TextFields. That is why we remove 7 TextEditingControllers.
+  /// [index] represents the current selected requester.
   void removeRequester(int index) {
     setState(() {
       for(int i = (index*7)+6; i >= (index*7); i--) {
@@ -1802,6 +1822,19 @@ class _ContractFormState extends State<ContractForm> {
       }
       requesters.removeAt(index);
       currentRequesterIndex -= 1;
+    });
+  }
+
+  /// Helper function to remove a provider form. Each provider has 7
+  /// TextFields. That is why we remove 7 TextEditingControllers.
+  /// [index] represents the current selected provider.
+  void removeProvider(int index) {
+    setState(() {
+      for(int i = (index*7)+6; i >= (index*7); i--) {
+        widget.providerControllers.removeAt(i);
+      }
+      providers.removeAt(index);
+      currentProviderIndex -= 1;
     });
   }
 
