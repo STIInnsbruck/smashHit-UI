@@ -326,19 +326,20 @@ class _ContractFormState extends State<ContractForm> {
             children: [
               Text("Role: Requester ${index+1}", style: TextStyle(fontSize: 25)),
               // Every Requester has 7 Fields. Assign each field the right controller.
-              requesterField(index + 0),
-              requesterEmailField(index + 1),
-              requesterAddressField(index + 2),
-              requesterStateField(index + 3),
-              requesterRegionField(index + 4),
-              requesterCountryField(index + 5),
-              requesterPhoneField(index + 6),
+              requesterField((index * 7) + 0),
+              requesterEmailField((index * 7) + 1),
+              requesterAddressField((index * 7) + 2),
+              requesterStateField((index * 7) + 3),
+              requesterRegionField((index * 7) + 4),
+              requesterCountryField((index * 7) + 5),
+              requesterPhoneField((index * 7) + 6),
               Container(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   currentRequesterIndex - 1 >= 0 ? previousRequesterButton() : Container(width: 40),
                   addRequesterButton(),
+                  currentRequesterIndex > 0 ? removeRequesterButton() : Container(),
                   currentRequesterIndex + 1 < requesters.length ? nextRequesterButton() : Container(width: 40),
                 ],
               ),
@@ -386,6 +387,7 @@ class _ContractFormState extends State<ContractForm> {
                 children: [
                   currentProviderIndex - 1 >= 0 ? previousProviderButton() : Container(width: 40),
                   addProviderButton(),
+                  currentProviderIndex > 0 ? removeProviderButton() : Container(),
                   currentProviderIndex + 1 < providers.length ? nextProviderButton() : Container(width: 40),
                 ],
               ),
@@ -588,7 +590,7 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("What is the name of the contract requester ${index+1}?", style: TextStyle(fontSize: 20)),
+        Text("What is the name of the contract requester ${currentRequesterIndex+1}?", style: TextStyle(fontSize: 20)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -1565,6 +1567,24 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  Widget removeRequesterButton() {
+    return Tooltip(
+      message: "Remove this contract requester.",
+      child: CircleAvatar(
+        radius: 20,
+        backgroundColor: Colors.blue,
+        child: IconButton(
+          icon: Icon(Icons.person_remove),
+          onPressed: () {
+            setState(() {
+              removeRequester(currentRequesterIndex);
+            });
+          }
+        )
+      )
+    );
+  }
+
   Widget addProviderButton() {
     return Tooltip(
       message: "Add another contract provider.",
@@ -1580,6 +1600,24 @@ class _ContractFormState extends State<ContractForm> {
               }
           )
       ),
+    );
+  }
+
+  Widget removeProviderButton() {
+    return Tooltip(
+        message: "Remove this contract provider.",
+        child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.blue,
+            child: IconButton(
+                icon: Icon(Icons.person_remove),
+                onPressed: () {
+                  setState(() {
+                    removeProvider(currentProviderIndex);
+                  });
+                }
+            )
+        )
     );
   }
 
@@ -1770,6 +1808,33 @@ class _ContractFormState extends State<ContractForm> {
         widget.requesterControllers.add(TextEditingController());
       }
       requesters.add(User("Primary"));
+    });
+  }
+
+
+  /// Helper function to remove a requester form. Each requester has 7
+  /// TextFields. That is why we remove 7 TextEditingControllers.
+  /// [index] represents the current selected requester.
+  void removeRequester(int index) {
+    setState(() {
+      for(int i = (index*7)+6; i >= (index*7); i--) {
+        widget.requesterControllers.removeAt(i);
+      }
+      requesters.removeAt(index);
+      currentRequesterIndex -= 1;
+    });
+  }
+
+  /// Helper function to remove a provider form. Each provider has 7
+  /// TextFields. That is why we remove 7 TextEditingControllers.
+  /// [index] represents the current selected provider.
+  void removeProvider(int index) {
+    setState(() {
+      for(int i = (index*7)+6; i >= (index*7); i--) {
+        widget.providerControllers.removeAt(i);
+      }
+      providers.removeAt(index);
+      currentProviderIndex -= 1;
     });
   }
 
