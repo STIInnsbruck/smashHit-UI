@@ -160,7 +160,7 @@ class _ContractFormState extends State<ContractForm> {
         child: Align(
             child: Row(
               children: [
-                Expanded(child: Text("Step 2. Contract Requester(s) Details", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
+                Expanded(child: Text("Step 2. Data Controller(s) Details", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
                 Container(width: 10),
                 toggleStepOne == false && toggleStepTwo == false?
                 Icon(Icons.check, color: Colors.white, size: 30) :
@@ -192,7 +192,7 @@ class _ContractFormState extends State<ContractForm> {
           child: Align(
               child: Row(
                 children: [
-                  Expanded(child: Text("Step 3. Contract Provider(s) Details", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
+                  Expanded(child: Text("Step 3. Data Processor(s) Details", style: TextStyle(fontSize: 30, color: Colors.white), overflow: TextOverflow.ellipsis, softWrap: false, maxLines: 1)),
                   Container(width: 10),
                   toggleStepOne == false && toggleStepTwo == false && toggleStepThree == false ?
                   Icon(Icons.check, color: Colors.white, size: 30) :
@@ -324,7 +324,7 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Role: Requester ${index+1}", style: TextStyle(fontSize: 25)),
+              Text("Role: Data Controller ${index+1}", style: TextStyle(fontSize: 25)),
               // Every Requester has 7 Fields. Assign each field the right controller.
               requesterField((index * 7) + 0),
               requesterEmailField((index * 7) + 1),
@@ -373,7 +373,7 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Role: Provider ${index+1}", style: TextStyle(fontSize: 25)),
+              Text("Role: Data Processor ${index+1}", style: TextStyle(fontSize: 25)),
               providerField(index + 0),
               providerEmailField(index + 1),
               providerAddressField(index + 2),
@@ -509,7 +509,7 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 10),
               Row(
                 children: [
-                  Text('Contract Requester(s):', style: TextStyle(fontSize: 15)),
+                  Text('Data Controller(s):', style: TextStyle(fontSize: 15)),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -527,7 +527,7 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 10),
               Row(
                 children: [
-                  Text('Contract Provider(s):', style: TextStyle(fontSize: 15)),
+                  Text('Data Processor(s):', style: TextStyle(fontSize: 15)),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -566,13 +566,13 @@ class _ContractFormState extends State<ContractForm> {
                   Column(
                     children: [
                       Text('_______________________________'),
-                      Text("Requester's Signature")
+                      Text("Data Controller's Signature")
                     ],
                   ),
                   Column(
                     children: [
                       Text('_______________________________'),
-                      Text("Provider's Signature")
+                      Text("Data Processor's Signature")
                     ],
                   )
                 ],
@@ -590,7 +590,7 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("What is the name of the contract requester ${currentRequesterIndex+1}?", style: TextStyle(fontSize: 20)),
+        Text("What is the name of the contract data controller ${currentRequesterIndex+1}?", style: TextStyle(fontSize: 20)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -808,7 +808,7 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("What is the name of the contract provider ${index+1}?", style: TextStyle(fontSize: 20)),
+        Text("What is the name of the data processor ${index+1}?", style: TextStyle(fontSize: 20)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -1551,7 +1551,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget addRequesterButton() {
     return Tooltip(
-      message: "Add another contract requester.",
+      message: "Add another data controller.",
       child: CircleAvatar(
         radius: 20,
         backgroundColor: Colors.blue,
@@ -1569,7 +1569,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget removeRequesterButton() {
     return Tooltip(
-      message: "Remove this contract requester.",
+      message: "Remove this data controller.",
       child: CircleAvatar(
         radius: 20,
         backgroundColor: Colors.blue,
@@ -1587,7 +1587,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget addProviderButton() {
     return Tooltip(
-      message: "Add another contract provider.",
+      message: "Add another data processor.",
       child: CircleAvatar(
           radius: 20,
           backgroundColor: Colors.blue,
@@ -1605,7 +1605,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget removeProviderButton() {
     return Tooltip(
-        message: "Remove this contract provider.",
+        message: "Remove this data processor.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
@@ -1623,7 +1623,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget nextRequesterButton() {
     return Tooltip(
-      message: "Proceed to the next contract requester form.",
+      message: "Proceed to the next data controller form.",
       child: CircleAvatar(
         radius: 20,
         backgroundColor: Colors.blue,
@@ -1641,7 +1641,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget previousRequesterButton() {
     return Tooltip(
-        message: "Go back to the previous contract requester form.",
+        message: "Go back to the previous data controller form.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
@@ -1659,7 +1659,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget nextProviderButton() {
     return Tooltip(
-        message: "Proceed to the next contract provider form.",
+        message: "Proceed to the next data processor form.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
@@ -1677,7 +1677,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget previousProviderButton() {
     return Tooltip(
-        message: "Go back to the previous contract provider form.",
+        message: "Go back to the previous data processor form.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
