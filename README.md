@@ -10,7 +10,7 @@ Frontend Application for Contract Management (smashHit).
 - [ ] Add submit button after creating contract.
 - [X] Implement contract requester removal, if too many were added.
 - [X] Implement contract provider removal, if too many were added.
-- [ ] Make Sidebar disappear after use/click.
+- [X] Make Sidebar disappear after use/click.
 - [X] Add drop-down list for country/region when filling out contract creation form.
-- [ ] Rename Requester to Data Controller
-- [ ] Rename Provider to Date Processor
+- [X] Rename Requester to Data Controller
+- [X] Rename Provider to Date Processor
