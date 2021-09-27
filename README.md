@@ -8,7 +8,7 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 - [ ] Add submit button after creating contract.
-- [ ] Implement contract requester removal, if too many were added.
-- [ ] Implement contract provider removal, if too many were added.
+- [X] Implement contract requester removal, if too many were added.
+- [X] Implement contract provider removal, if too many were added.
 - [ ] Make Sidebar disappear after use/click.
 - [ ] Add drop-down list for country/region when filling out contract creation form.
