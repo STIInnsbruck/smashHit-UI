@@ -599,6 +599,7 @@ class _ContractFormState extends State<ContractForm> {
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
@@ -630,6 +631,7 @@ class _ContractFormState extends State<ContractForm> {
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
@@ -661,6 +663,7 @@ class _ContractFormState extends State<ContractForm> {
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
@@ -698,99 +701,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget requesterCountryField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Country:", style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.blue
-                )
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 1.0
-                )
-            ),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.requesterControllers[index],
-        )
-      ],
-    );
-  }
-
-  Widget requesterStateField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("State:", style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.blue
-                )
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 1.0
-                )
-            ),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.requesterControllers[index],
-        )
-      ],
-    );
-  }
-
-  Widget requesterRegionField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Region:", style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.blue
-                )
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 1.0
-                )
-            ),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.requesterControllers[index],
-        )
-      ],
-    );
-  }
-
   Widget requesterPhoneField(int index) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -800,6 +710,7 @@ class _ContractFormState extends State<ContractForm> {
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
