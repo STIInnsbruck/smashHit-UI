@@ -7,16 +7,17 @@ import 'package:smashhit_ui/data/models.dart';
 
 class DataProvider {
 
-  //TODO: change URL to the contract url. This is currently only used to ensure correct https requests.
-  static final String testUrl = "rickandmortyapi.com";
-  static final String testPath = "/";
-  Uri kTestUrl = new Uri.https(testUrl, testPath);
+  ResponseParser parser = ResponseParser();
+
+  //TODO: change dynamic model to the contract model.
+  dynamic model;
+
+
+  //----------------------ACT CONTRACT API--------------------------------------
 
   static final String kHost = 'actool.contract.sti2.at';
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
-
-  ResponseParser parser = ResponseParser();
 
   static final String token =
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjQwNDI3Mzc4fQ.aD7XNfGsCqgzshdiwcqWEc2srtd56TlNCtAm0o-fFLI";
@@ -27,38 +28,8 @@ class DataProvider {
     'Authorization': 'Bearer $token'
   };
 
-  //TODO: change dynamic model to the contract model.
-  dynamic model;
-
   createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate, String requester, String provider) async {
-
-    var bodies = new Map<String, String>();
-    bodies["ContractId"] = title;
-    bodies["ContractType"] = contractType;
-    bodies["Purpose"] = contractTerms;
-    bodies["ContractRequester"] = requester;
-    bodies["ContractProvider"] = provider;
-    bodies["DataController"] = "Same as ContractRequester: $requester";
-    bodies["StartDate"] = "2021-08-02";
-    bodies["ExecutionDate"] = "2021-08-02";
-    bodies["EffectiveDate"] = "2021-08-02";
-    bodies["ExpireDate"] = "2021-08-02";
-    bodies["Medium"] = "SmashHit Flutter Application";
-    bodies["Waiver"] = "string";
-    bodies["Amendment"] = "string";
-    bodies["ConfidentialityObligation"] = "string";
-    bodies["DataProtection"] = "string";
-    bodies["LimitationOnUse"] = "string";
-    bodies["MethodOfNotice"] = "string";
-    bodies["NoThirdPartyBeneficiaries"] = "string";
-    bodies["PermittedDisclosure"] = "string";
-    bodies["ReceiptOfNotice"] = "string";
-    bodies["Severability"] = "string";
-    bodies["TerminationForInsolvency"] = "string";
-    bodies["TerminationForMaterialBreach"] = "string";
-    bodies["TerminationOnNotice"] = "string";
-    bodies["ContractStatus"] = "string";
 
     var body = {
       "ContractId": title.replaceAll(' ', ''),
@@ -89,10 +60,9 @@ class DataProvider {
     };
 
     var jsonBody = jsonEncode(body);
-    var body2 = jsonEncode(body);
 
     final response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
-        headers: headers, body: body2);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -137,30 +107,6 @@ class DataProvider {
     }
   }
 
-
-
-  /**getContracts() async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    var response = await http.get(
-        kBaseUrl.replace(path: "/contract/list_of_contracts/"),
-        headers: headers);
-
-    if (response.statusCode == 200) {
-      var data = (response.body);
-      var jsonMap = json.decode(data);
-      var id = parser.parseAllContractIds(jsonMap["bindings"]);
-      print("id: $id");
-      return id;
-    } else {
-      print("Error getContracts()");
-      print("${response.statusCode}");
-    }
-  }*/
-
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {
     String dateString = "${date!.year}-${date.month}-${date.day}";
@@ -178,4 +124,25 @@ class DataProvider {
       return false;
     }
   }
+
+  //----------------------COUNTY STATE CITY API---------------------------------
+
+  static final String cscKHost = 'api.countrystatecity.in';
+  static final String cscKBasePath = '/';
+
+  Uri cscKBaseUrl = new Uri.https(cscKHost, cscKBasePath);
+
+
+  var cscHeaders = {
+    "X-CSCAPI-KEY": "R1RmTmxsMXkxTGhjSTJIdnFxdHJxMXl4QzJWSmdpc1FLQTdTV3ZySQ=="
+  };
+
+  getCountries() async {
+    final response = await http.get(cscKBaseUrl.replace(path: '/v1/countries'), headers: cscHeaders);
+
+    print("RESPONSE: ${response}");
+    return response;
+  }
+
 }
+
