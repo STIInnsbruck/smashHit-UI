@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 
 enum ContractType { Written, Mutual, Verbal, Transferable}
 
@@ -58,6 +59,9 @@ class _ContractFormState extends State<ContractForm> {
   int currentRequesterIndex = 0;
   List<User> providers = [];
   int currentProviderIndex = 0;
+
+  DataProvider dataProvider = DataProvider();
+
 
   @override
   void initState() {
@@ -1500,7 +1504,7 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         color: Colors.green,
         hoverColor: Colors.lightGreen,
-        child: toggleStepFinal == true? Text('Confirm', style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : toggleStepFour == true? Text("Go To Overview", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 20)),
+        child: toggleStepFinal == true? Text('Confirm & Submit', style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : toggleStepFour == true? Text("Go To Overview", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center) : Text("Next Step", style: TextStyle(color: Colors.white, fontSize: 20)),
         onPressed: () {
           setState(() {
             if(toggleStepOne == true) {
@@ -1514,6 +1518,7 @@ class _ContractFormState extends State<ContractForm> {
             } else if(toggleStepFinal == true) {
               setState(() {
                 toggleStepFinal = false;
+                dataProvider.createContract(widget.titleController.text, widget.descriptionController.text, "Written", startDate!, endDate!, widget.requesterControllers[0].text, widget.providerControllers[0].text);
               });
             }
           });

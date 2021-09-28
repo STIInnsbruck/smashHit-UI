@@ -23,6 +23,7 @@ class DataProvider {
 
   var headers = {
     'accept': '*/*',
+    'Content-Type': 'application/json',
     'Authorization': 'Bearer $token'
   };
 
@@ -30,20 +31,47 @@ class DataProvider {
   dynamic model;
 
   createContract(String title, String contractTerms, String contractType,
-      DateTime startDate, DateTime expireDate) async {
+      DateTime startDate, DateTime expireDate, String requester, String provider) async {
+
+    var bodies = new Map<String, String>();
+    bodies["ContractId"] = title;
+    bodies["ContractType"] = contractType;
+    bodies["Purpose"] = contractTerms;
+    bodies["ContractRequester"] = requester;
+    bodies["ContractProvider"] = provider;
+    bodies["DataController"] = "Same as ContractRequester: $requester";
+    bodies["StartDate"] = "2021-08-02";
+    bodies["ExecutionDate"] = "2021-08-02";
+    bodies["EffectiveDate"] = "2021-08-02";
+    bodies["ExpireDate"] = "2021-08-02";
+    bodies["Medium"] = "SmashHit Flutter Application";
+    bodies["Waiver"] = "string";
+    bodies["Amendment"] = "string";
+    bodies["ConfidentialityObligation"] = "string";
+    bodies["DataProtection"] = "string";
+    bodies["LimitationOnUse"] = "string";
+    bodies["MethodOfNotice"] = "string";
+    bodies["NoThirdPartyBeneficiaries"] = "string";
+    bodies["PermittedDisclosure"] = "string";
+    bodies["ReceiptOfNotice"] = "string";
+    bodies["Severability"] = "string";
+    bodies["TerminationForInsolvency"] = "string";
+    bodies["TerminationForMaterialBreach"] = "string";
+    bodies["TerminationOnNotice"] = "string";
+    bodies["ContractStatus"] = "string";
 
     var body = {
-      "ContractId": "1337",
+      "ContractId": title.replaceAll(' ', ''),
       "ContractType": contractType,
-      "Purpose": "Testing the flutter application.",
-      "ContractRequester": "string",
-      "ContractProvider": "string",
-      "DataController": "string",
-      "StartDate": _formatDate(startDate),
+      "Purpose": contractTerms,
+      "ContractRequester": requester.replaceAll(' ', ''),
+      "ContractProvider": provider.replaceAll(' ', ''),
+      "DataController": requester.replaceAll(' ', ''),
+      "StartDate": "",
       "ExecutionDate": _formatDate(startDate),
       "EffectiveDate": _formatDate(startDate),
       "ExpireDate": _formatDate(expireDate),
-      "Medium": "SmashHitFlutterApp",
+      "Medium": "SmashHit Flutter Application",
       "Waiver": "string",
       "Amendment": "string",
       "ConfidentialityObligation": "string",
@@ -61,11 +89,12 @@ class DataProvider {
     };
 
     var jsonBody = jsonEncode(body);
+    var body2 = jsonEncode(body);
 
-    var response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
-        headers: headers, body: jsonBody);
+    final response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
+        headers: headers, body: body2);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print("Data: \t $data");
       print("Contract Created.");
