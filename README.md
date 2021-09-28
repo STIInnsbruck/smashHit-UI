@@ -7,7 +7,7 @@ https://stiinnsbruck.github.io/smashHit-UI/build/web/index.html#/
 Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
-- [ ] Add submit button after creating contract.
+- [X] Add submit button after creating contract.
 - [ ] Add 3 value radio buttons for contract creation.
 - [ ] Add drop-down list for country/region when filling out contract creation form.
 - [X] Implement contract requester removal, if too many were added.
