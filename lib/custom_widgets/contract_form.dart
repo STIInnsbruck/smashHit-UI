@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
+import 'package:country_state_city_pro/country_state_city_pro.dart';
 
 enum ContractType { Written, Mutual, Verbal, Transferable}
 
@@ -333,9 +334,9 @@ class _ContractFormState extends State<ContractForm> {
               requesterField((index * 7) + 0),
               requesterEmailField((index * 7) + 1),
               requesterAddressField((index * 7) + 2),
-              requesterStateField((index * 7) + 3),
-              requesterRegionField((index * 7) + 4),
-              requesterCountryField((index * 7) + 5),
+              Container(height: 10),
+              requesterCSCDropDownList((index * 7) + 3),
+              Container(height: 10),
               requesterPhoneField((index * 7) + 6),
               Container(height: 10),
               Row(
@@ -594,7 +595,7 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("What is the name of the contract data controller ${currentRequesterIndex+1}?", style: TextStyle(fontSize: 20)),
+        Text("What is the name of the contract data controller ${currentRequesterIndex+1}?", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -609,11 +610,11 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.requesterControllers[index],
         )
       ],
@@ -625,7 +626,7 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("E-mail:", style: TextStyle(fontSize: 20)),
+        Text("E-mail:", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -640,11 +641,11 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.requesterControllers[index],
         )
       ],
@@ -656,7 +657,7 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Address:", style: TextStyle(fontSize: 20)),
+        Text("House number and Street Name:", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -671,14 +672,29 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.requesterControllers[index],
         )
       ],
+    );
+  }
+
+  Widget requesterCSCDropDownList(int index) {
+    return CountryStateCityPicker(
+        state: widget.requesterControllers[index],
+        city: widget.requesterControllers[index+1],
+        country: widget.requesterControllers[index+2],
+        textFieldInputBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(2.0),
+          borderSide: BorderSide(
+            color: Colors.black,
+            width: 2.0
+          )
+        ),
     );
   }
 
@@ -702,7 +718,7 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
@@ -733,7 +749,7 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
@@ -764,7 +780,7 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
@@ -780,7 +796,7 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Phone number:", style: TextStyle(fontSize: 20)),
+        Text("Phone number:", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
@@ -795,11 +811,11 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.requesterControllers[index],
         )
       ],
