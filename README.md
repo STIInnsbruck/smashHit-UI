@@ -7,13 +7,13 @@ https://stiinnsbruck.github.io/smashHit-UI/build/web/index.html#/
 Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
+### Functionalities
 - [ ] Add 3 value radio buttons for contract creation.
 - [ ] Prevent/add error message when user navigates to contract overview too early
 - [ ] Add textField validators for each textField
 - [ ] Implement regex for email and phone???
 - [ ] Change contractedEntities tile when checking on active contract
 - [ ] Prettify contract terms and conditions view
-- [ ] Add Login-Screen
 - [ ] Add Scaler for data processing contract
 - [ ] Detailfy Data Processing Template
 - [ ] Center hintText in searchBar
@@ -26,3 +26,7 @@ Frontend Application for Contract Management (smashHit).
 - [X] Make Sidebar disappear after use/click.
 - [X] Rename Requester to Data Controller
 - [X] Rename Provider to Date Processor
+
+### Screens
+- [ ] Add Login-Screen
+- [ ] Add Update-Contract-Screen
