@@ -7,11 +7,17 @@ import 'package:smashhit_ui/data/models.dart';
 
 class DataProvider {
 
+  ResponseParser parser = ResponseParser();
+
+  //TODO: change dynamic model to the contract model.
+  dynamic model;
+
+
+  //----------------------ACT CONTRACT API--------------------------------------
+
   static final String kHost = 'actool.contract.sti2.at';
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
-
-  ResponseParser parser = ResponseParser();
 
   static final String token =
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjQwNDI3Mzc4fQ.aD7XNfGsCqgzshdiwcqWEc2srtd56TlNCtAm0o-fFLI";
@@ -21,12 +27,6 @@ class DataProvider {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $token'
   };
-
-  //TODO: change dynamic model to the contract model.
-  dynamic model;
-
-
-  //----------------------ACT CONTRACT API--------------------------------------
 
   createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate, String requester, String provider) async {
@@ -127,6 +127,22 @@ class DataProvider {
 
   //----------------------COUNTY STATE CITY API---------------------------------
 
+  static final String cscKHost = 'api.countrystatecity.in';
+  static final String cscKBasePath = '/';
+
+  Uri cscKBaseUrl = new Uri.https(cscKHost, cscKBasePath);
+
+
+  var cscHeaders = {
+    "X-CSCAPI-KEY": "R1RmTmxsMXkxTGhjSTJIdnFxdHJxMXl4QzJWSmdpc1FLQTdTV3ZySQ=="
+  };
+
+  getCountries() async {
+    final response = await http.get(cscKBaseUrl.replace(path: '/v1/countries'), headers: cscHeaders);
+
+    print("RESPONSE: ${response}");
+    return response;
+  }
 
 }
 
