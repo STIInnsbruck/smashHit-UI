@@ -24,12 +24,22 @@ class ResponseParser {
   }
 
   DateTime formatDate(String dateString) {
-    var length = dateString.length;
-    int year = int.parse(dateString.substring(length - 4, length));
-    int month = int.parse(dateString.substring(length - 7, length - 5));
-    int day = int.parse(dateString.substring(length - 10, length - 8));
-    DateTime date = new DateTime(year, month, day);
+    if(dateString.length > 12) {
+      var length = dateString.length;
+      int year = int.parse(dateString.substring(length - 4, length));
+      int month = int.parse(dateString.substring(length - 7, length - 5));
+      int day = int.parse(dateString.substring(length - 10, length - 8));
+      DateTime date = new DateTime(year, month, day);
 
-    return date;
+      return date;
+    } else {
+      int year = int.parse(dateString.substring(0, 4));
+      int month = int.parse(dateString.substring(5, 7));
+      int day = int.parse(dateString.substring(8, 10));
+      DateTime date = new DateTime(year, month, day);
+
+      return date;
+    }
+
   }
 }

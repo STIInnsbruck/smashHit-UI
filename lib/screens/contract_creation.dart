@@ -127,7 +127,7 @@ class _ContractCreationState extends State<ContractCreation> {
             color: isFormComplete ? Colors.lightGreenAccent : Colors.grey[400],
             width: width,
             child: FittedBox(
-                fit: BoxFit.fitWidth, child: _confirmContractButton()),
+                fit: BoxFit.fitWidth, child: Container()),
           )
         ],
       ),
@@ -281,7 +281,7 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
-  _confirmContractButton() {
+  /**_confirmContractButton() {
     return GestureDetector(
       child: Text("Confirm & Send\nContract",
           style: TextStyle(color: Colors.black, fontSize: 20),
@@ -297,7 +297,7 @@ class _ContractCreationState extends State<ContractCreation> {
             : dataProvider.fetchContractById("kg244565");
       },
     );
-  }
+  }*/
 
   _selectPartyRole() {
     showDialog(
