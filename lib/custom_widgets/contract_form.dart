@@ -379,13 +379,13 @@ class _ContractFormState extends State<ContractForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Role: Data Processor ${index+1}", style: TextStyle(fontSize: 25)),
-              providerField(index + 0),
-              providerEmailField(index + 1),
-              providerAddressField(index + 2),
-              providerStateField(index + 3),
-              providerRegionField(index + 4),
-              providerCountryField(index + 5),
-              providerPhoneField(index + 6),
+              providerField((index * 7) + 0),
+              providerEmailField((index * 7) + 1),
+              providerAddressField((index * 7) + 2),
+              Container(height: 10),
+              providerCSCDropDownList((index * 7) + 3),
+              Container(height: 10),
+              providerPhoneField((index * 7) + 6),
               Container(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -739,10 +739,11 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("What is the name of the data processor ${index+1}?", style: TextStyle(fontSize: 20)),
+        Text("What is the name of the data processor ${index+1}?", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
@@ -754,11 +755,11 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.providerControllers[index],
         )
       ],
@@ -770,10 +771,11 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("E-mail:", style: TextStyle(fontSize: 20)),
+        Text("E-mail:", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
@@ -785,11 +787,11 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.providerControllers[index],
         )
       ],
@@ -801,10 +803,11 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Address:", style: TextStyle(fontSize: 20)),
+        Text("House number and Street name:", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
@@ -816,107 +819,29 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.providerControllers[index],
         )
       ],
     );
   }
 
-  Widget providerCountryField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Country:", style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.blue
-                )
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2.0
-                )
-            ),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.providerControllers[index],
-        )
-      ],
-    );
-  }
-
-  Widget providerStateField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("State:", style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.blue
-                )
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2.0
-                )
-            ),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.providerControllers[index],
-        )
-      ],
-    );
-  }
-
-  Widget providerRegionField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Region:", style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.blue
-                )
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2.0
-                )
-            ),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.providerControllers[index],
-        )
-      ],
+  Widget providerCSCDropDownList(int index) {
+    return CountryStateCityPicker(
+      state: widget.providerControllers[index],
+      city: widget.providerControllers[index+1],
+      country: widget.providerControllers[index+2],
+      textFieldInputBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(2.0),
+          borderSide: BorderSide(
+              color: Colors.black,
+              width: 2.0
+          )
+      ),
     );
   }
 
@@ -925,10 +850,11 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Phone number:", style: TextStyle(fontSize: 20)),
+        Text("Phone number:", style: TextStyle(fontSize: 16)),
         Container(height: 5),
         TextFormField(
           decoration: InputDecoration(
+            isDense: true,
             fillColor: Colors.white,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
@@ -940,11 +866,11 @@ class _ContractFormState extends State<ContractForm> {
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: BorderSide(
                     color: Colors.black,
-                    width: 2.0
+                    width: 1.0
                 )
             ),
           ),
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 16),
           controller: widget.providerControllers[index],
         )
       ],
