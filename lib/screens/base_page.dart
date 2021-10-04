@@ -104,6 +104,7 @@ class _BasePageState extends State<BasePage> {
       child: TextFormField(
         controller: searchBarController,
         textAlignVertical: TextAlignVertical.center,
+        textAlign: TextAlign.center,
         style: TextStyle(fontSize: 20),
         decoration: InputDecoration(hintText: "Search for a contract by ID"),
       ),
