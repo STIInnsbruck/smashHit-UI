@@ -18,7 +18,7 @@ Frontend Application for Contract Management (smashHit).
 - [ ] Detailfy Data Processing Template
 - [ ] Center hintText in searchBar
 - [X] Dynamicly add more signature fields according to number of contract parties
-- [ ] Fix violation form: it is currently hard-coded to one contract
+- [X] Fix violation form: it is currently hard-coded to one contract
 - [X] Add submit button after creating contract.
 - [X] Add drop-down list for country/region when filling out contract creation form.
 - [X] Implement contract requester removal, if too many were added.
