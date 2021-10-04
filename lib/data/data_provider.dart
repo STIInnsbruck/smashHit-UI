@@ -125,24 +125,5 @@ class DataProvider {
     }
   }
 
-  //----------------------COUNTY STATE CITY API---------------------------------
-
-  static final String cscKHost = 'api.countrystatecity.in';
-  static final String cscKBasePath = '/';
-
-  Uri cscKBaseUrl = new Uri.https(cscKHost, cscKBasePath);
-
-
-  var cscHeaders = {
-    "X-CSCAPI-KEY": "R1RmTmxsMXkxTGhjSTJIdnFxdHJxMXl4QzJWSmdpc1FLQTdTV3ZySQ=="
-  };
-
-  getCountries() async {
-    final response = await http.get(cscKBaseUrl.replace(path: '/v1/countries'), headers: cscHeaders);
-
-    print("RESPONSE: ${response}");
-    return response;
-  }
-
 }
 
