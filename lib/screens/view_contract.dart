@@ -7,7 +7,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 
 class ViewContract extends StatefulWidget {
-  final Function(int) changeScreen;
+  final Function(int, [String]) changeScreen;
   final String contractId;
   User? user;
 
@@ -249,7 +249,7 @@ class _ContractCreationState extends State<ViewContract> {
       icon: Icon(Icons.report_problem, color: Colors.orange),
       tooltip: 'Report a contract violation.',
       onPressed: () {
-        widget.changeScreen(4);
+        widget.changeScreen(4, widget.contractId);
       },
     );
   }

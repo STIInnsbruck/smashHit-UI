@@ -88,7 +88,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Template Selector";
           break;
         case 4:
-          _selectedPage = ContractViolation(changeScreen, currentUser);
+          _selectedPage = ContractViolation(changeScreen, contractId!, currentUser);
           _selectedTitle = "Violation Claim";
       }
     });

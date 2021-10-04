@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
+import 'package:smashhit_ui/data/models.dart';
 
 
 class ClaimForm extends StatefulWidget {
+
+  final Contract contract;
+
+  ClaimForm(this.contract);
+
 
   @override
   _ClaimFormState createState() => new _ClaimFormState();
