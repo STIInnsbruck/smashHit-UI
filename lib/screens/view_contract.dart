@@ -335,9 +335,10 @@ class _ContractCreationState extends State<ViewContract> {
   Widget contractTimeProgressBar(double width, double height) {
     return Container(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("Start Date: ${_formatDate(contract!.executionDate!)}"),
-          Container(height: 10),
+          Container(height: 20),
           RotatedBox(
             quarterTurns: 1,
             child: Container(
@@ -354,7 +355,7 @@ class _ContractCreationState extends State<ViewContract> {
                   ),
                 ])),
           ),
-          Container(height: 10),
+          Container(height: 20),
           Text("End Date: ${_formatDate(contract!.expireDate!)}")
         ],
       ),
