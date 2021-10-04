@@ -14,7 +14,6 @@ class ContractForm extends StatefulWidget {
   DateTime? endDate;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController requesterController = TextEditingController();
   List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
   String? contractDropDownType;
@@ -24,11 +23,18 @@ class ContractForm extends StatefulWidget {
 }
 
 class _ContractFormState extends State<ContractForm> {
+
+  //------------------- General Variables --------------------------------------
   DateTime? startDate;
   DateTime? effectiveDate;
   DateTime? endDate;
   DateTime? executionDate;
 
+  ContractType? _type;
+
+  DataProvider dataProvider = DataProvider();
+
+  //------------------- CheckBox Booleans --------------------------------------
   CheckBoxBoolean isAmendment = CheckBoxBoolean();
   CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
   CheckBoxBoolean isDataController = CheckBoxBoolean();
@@ -44,8 +50,9 @@ class _ContractFormState extends State<ContractForm> {
   CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
   CheckBoxBoolean isWaiver = CheckBoxBoolean();
 
-  ContractType? _type;
 
+
+  //------------------- StepNavigation Booleans --------------------------------
   bool toggleStepOne = true;
   bool toggleStepTwo = false;
   bool toggleStepThree = false;
@@ -54,21 +61,34 @@ class _ContractFormState extends State<ContractForm> {
   bool toggleRequester = true;
   bool toggleProvider = false;
 
+  //------------------- StepValidation Booleans --------------------------------
+  bool stepOneComplete = false;
+  bool stepTwoComplete = false;
+  bool stepThreeComplete = false;
+  bool stepFourComplete = false;
+
+  //------------------- Validation Keys ----------------------------------------
+  final step1Key = GlobalKey<FormState>();
+  List<GlobalKey<FormState>> step2Keys = [];
+  List<GlobalKey<FormState>> step3Keys = [];
+  final _step4Key = GlobalKey<FormState>();
+
   List<User> requesters = [];
   int currentRequesterIndex = 0;
   List<User> providers = [];
   int currentProviderIndex = 0;
 
-  DataProvider dataProvider = DataProvider();
-
   @override
   void initState() {
     super.initState();
 
-    // Add at least one contract requester.
+    // Add at least one contract requester & one provider.
     addRequester();
-    // Add at least one contract provider.
     addProvider();
+
+    // Add minimum amount of keys for each initial textFormField.
+    addStep2Keys();
+    addStep3Keys();
   }
 
   @override
@@ -122,7 +142,7 @@ class _ContractFormState extends State<ContractForm> {
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(2)),
-              color: toggleStepOne == true ? Colors.grey : Colors.green,
+              color: stepOneComplete == false ? Colors.grey : Colors.green,
               boxShadow: [
                 BoxShadow(
                     color: Colors.black45,
@@ -141,7 +161,7 @@ class _ContractFormState extends State<ContractForm> {
                           softWrap: false,
                           maxLines: 1)),
                   Container(width: 10),
-                  toggleStepOne == true
+                  stepOneComplete == false
                       ? Container()
                       : Icon(Icons.check, color: Colors.white, size: 30)
                 ],
@@ -158,7 +178,7 @@ class _ContractFormState extends State<ContractForm> {
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(2)),
-              color: toggleStepOne == false && toggleStepTwo == false
+              color: stepTwoComplete == true
                   ? Colors.green
                   : Colors.grey,
               boxShadow: [
@@ -179,7 +199,7 @@ class _ContractFormState extends State<ContractForm> {
                           softWrap: false,
                           maxLines: 1)),
                   Container(width: 10),
-                  toggleStepOne == false && toggleStepTwo == false
+                  stepTwoComplete == true
                       ? Icon(Icons.check, color: Colors.white, size: 30)
                       : Container()
                 ],
@@ -196,9 +216,7 @@ class _ContractFormState extends State<ContractForm> {
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(2)),
-              color: toggleStepOne == false &&
-                      toggleStepTwo == false &&
-                      toggleStepThree == false
+              color: stepThreeComplete == true
                   ? Colors.green
                   : Colors.grey,
               boxShadow: [
@@ -219,9 +237,7 @@ class _ContractFormState extends State<ContractForm> {
                           softWrap: false,
                           maxLines: 1)),
                   Container(width: 10),
-                  toggleStepOne == false &&
-                          toggleStepTwo == false &&
-                          toggleStepThree == false
+                  stepThreeComplete == true
                       ? Icon(Icons.check, color: Colors.white, size: 30)
                       : Container()
                 ],
@@ -238,10 +254,7 @@ class _ContractFormState extends State<ContractForm> {
         height: 50,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: toggleStepOne == false &&
-                    toggleStepTwo == false &&
-                    toggleStepThree == false &&
-                    toggleStepFour == false
+            color: stepFourComplete == true
                 ? Colors.green
                 : Colors.grey,
             boxShadow: [
@@ -262,10 +275,7 @@ class _ContractFormState extends State<ContractForm> {
                         softWrap: false,
                         maxLines: 1)),
                 Container(width: 10),
-                toggleStepOne == false &&
-                        toggleStepTwo == false &&
-                        toggleStepThree == false &&
-                        toggleStepFour == false
+                stepFourComplete == true
                     ? Icon(Icons.check, color: Colors.white, size: 30)
                     : Container(),
               ],
@@ -688,79 +698,106 @@ class _ContractFormState extends State<ContractForm> {
 
   //------------------- REQUESTER FIELDS ---------------------------------------
   Widget requesterField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-            "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
-            style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.requesterControllers[index],
-        )
-      ],
+    return Form(
+      key: step2Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
+              style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.requesterControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a name.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
   Widget requesterEmailField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("E-mail:", style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.requesterControllers[index],
-        )
-      ],
+    return Form(
+      key: step2Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("E-mail:", style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.requesterControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a email.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
   Widget requesterAddressField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("House number and Street Name:", style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.requesterControllers[index],
-        )
-      ],
+    return Form(
+      key: step2Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("House number and Street Name:", style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.requesterControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter an address.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -776,104 +813,140 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget requesterPhoneField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Phone number:", style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.requesterControllers[index],
-        )
-      ],
+    return Form(
+      key: step2Keys[index - 3],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Phone number:", style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.requesterControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a phone number.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
   //------------------- PROVIDER FIELDS ----------------------------------------
   Widget providerField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("What is the name of the data processor ${index + 1}?",
-            style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.providerControllers[index],
-        )
-      ],
+    return Form(
+      key: step3Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("What is the name of the data processor ${index + 1}?",
+              style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.providerControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a name.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
   Widget providerEmailField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("E-mail:", style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.providerControllers[index],
-        )
-      ],
+    return Form(
+      key: step3Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("E-mail:", style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.providerControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter an email.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
   Widget providerAddressField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("House number and Street name:", style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.providerControllers[index],
-        )
-      ],
+    return Form(
+      key: step3Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("House number and Street name:", style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.providerControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter an address.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -889,50 +962,68 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget providerPhoneField(int index) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Phone number:", style: TextStyle(fontSize: 16)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 1.0)),
-          ),
-          style: TextStyle(fontSize: 16),
-          controller: widget.providerControllers[index],
-        )
-      ],
+    return Form(
+      key: step3Keys[index - 3],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Phone number:", style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              isDense: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 16),
+            controller: widget.providerControllers[index],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a phone number.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
   //------------------- CONTRACT FIELDS ----------------------------------------
   Widget descriptionField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("What are the Terms & Conditions of the Contract?",
-            style: TextStyle(fontSize: 25)),
-        Container(
-          height: 400,
-          color: Colors.white54,
-          child: TextField(
-            controller: widget.descriptionController,
-            maxLines: null,
-            style: TextStyle(fontSize: 20),
-            decoration: InputDecoration(
-              hintText: "Enter Contract details here...",
+    return Form(
+      key: _step4Key,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("What are the Terms & Conditions of the Contract?",
+              style: TextStyle(fontSize: 25)),
+          Container(
+            height: 400,
+            color: Colors.white54,
+            child: TextFormField(
+              controller: widget.descriptionController,
+              maxLines: null,
+              style: TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                hintText: "Enter Contract details here...",
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the terms and conditions of the contract.';
+                }
+                return null;
+              },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -1030,27 +1121,36 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget titleField() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("What is the title of your contract?",
-            style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 2.0)),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.titleController,
-        )
-      ],
+    return Form(
+      key: step1Key,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("What is the title of your contract?",
+              style: TextStyle(fontSize: 20)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 20),
+            controller: widget.titleController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a title for your contract.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -1668,6 +1768,9 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setStepOne() {
+    validateStepTwo();
+    validateStepThree();
+    validateStepFour();
     setState(() {
       toggleStepOne = true;
       toggleStepTwo = false;
@@ -1678,6 +1781,9 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setStepTwo() {
+    validateStepOne();
+    validateStepThree();
+    validateStepFour();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = true;
@@ -1688,6 +1794,9 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setStepThree() {
+    validateStepOne();
+    validateStepTwo();
+    validateStepFour();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = false;
@@ -1698,6 +1807,9 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setStepFour() {
+    validateStepOne();
+    validateStepTwo();
+    validateStepThree();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = false;
@@ -1708,6 +1820,10 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setStepFinal() {
+    validateStepOne();
+    validateStepTwo();
+    validateStepThree();
+    validateStepFour();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = false;
@@ -1715,6 +1831,78 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepFour = false;
       toggleStepFinal = true;
     });
+  }
+
+  void validateStepOne() {
+    if (toggleStepOne == true) {
+      if (step1Key.currentState!.validate() == true) {
+        setState(() {
+          stepOneComplete = true;
+        });
+      } else {
+        setState(() {
+          stepOneComplete = false;
+        });
+      }
+    }
+  }
+
+  /// Function that checks every textFormField in the second step of the
+  /// contract to validate if each field has content in it.
+  void validateStepTwo() {
+    if (toggleStepTwo == true) {
+      var flag = step2Keys.every((element) => element.currentState!.validate() == true);
+
+      if (flag) {
+        setState(() {
+          stepTwoComplete = true;
+        });
+      } else {
+        setState(() {
+          stepTwoComplete = false;
+        });
+      }
+    }
+  }
+
+  /// Function that checks every textFormField in the third step of the
+  /// contract to validate if each field has content in it.
+  void validateStepThree() {
+    if (toggleStepThree == true) {
+      var flag = step3Keys.every((element) => element.currentState!.validate() == true);
+
+      if (flag) {
+        setState(() {
+          stepThreeComplete = true;
+        });
+      } else {
+        setState(() {
+          stepThreeComplete = false;
+        });
+      }
+    }
+  }
+
+  void validateStepFour() {
+    if (toggleStepFour == true) {
+      if (_step4Key.currentState!.validate() == true) {
+        setState(() {
+          stepFourComplete = true;
+        });
+      } else {
+        setState(() {
+          stepFourComplete = false;
+        });
+      }
+    }
+  }
+
+  bool validateAllPreviousSteps() {
+    if (stepOneComplete && stepTwoComplete && stepThreeComplete && stepFourComplete) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   ///Function to nicely display the date in the contract form.
@@ -1786,6 +1974,26 @@ class _ContractFormState extends State<ContractForm> {
         widget.providerControllers.add(TextEditingController());
       }
       providers.add(User("Secondary"));
+    });
+  }
+
+  /// Helper function to add 7 keys to validate each textFormField in the
+  /// second step of the contract creation.
+  void addStep2Keys() {
+    setState(() {
+      for (int i = 0; i < 4; i++) {
+        step2Keys.add(GlobalKey<FormState>());
+      }
+    });
+  }
+
+  /// Helper function to add 7 keys to validate each textFormField in the
+  /// third step of the contract creation.
+  void addStep3Keys() {
+    setState(() {
+      for (int i = 0; i < 4; i++) {
+        step3Keys.add(GlobalKey<FormState>());
+      }
     });
   }
 }
