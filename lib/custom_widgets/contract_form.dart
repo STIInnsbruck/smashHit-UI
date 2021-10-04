@@ -254,10 +254,7 @@ class _ContractFormState extends State<ContractForm> {
         height: 50,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: toggleStepOne == false &&
-                    toggleStepTwo == false &&
-                    toggleStepThree == false &&
-                    toggleStepFour == false
+            color: stepFourComplete == true
                 ? Colors.green
                 : Colors.grey,
             boxShadow: [
@@ -278,10 +275,7 @@ class _ContractFormState extends State<ContractForm> {
                         softWrap: false,
                         maxLines: 1)),
                 Container(width: 10),
-                toggleStepOne == false &&
-                        toggleStepTwo == false &&
-                        toggleStepThree == false &&
-                        toggleStepFour == false
+                stepFourComplete == true
                     ? Icon(Icons.check, color: Colors.white, size: 30)
                     : Container(),
               ],
@@ -1003,24 +997,33 @@ class _ContractFormState extends State<ContractForm> {
 
   //------------------- CONTRACT FIELDS ----------------------------------------
   Widget descriptionField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("What are the Terms & Conditions of the Contract?",
-            style: TextStyle(fontSize: 25)),
-        Container(
-          height: 400,
-          color: Colors.white54,
-          child: TextField(
-            controller: widget.descriptionController,
-            maxLines: null,
-            style: TextStyle(fontSize: 20),
-            decoration: InputDecoration(
-              hintText: "Enter Contract details here...",
+    return Form(
+      key: _step4Key,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("What are the Terms & Conditions of the Contract?",
+              style: TextStyle(fontSize: 25)),
+          Container(
+            height: 400,
+            color: Colors.white54,
+            child: TextFormField(
+              controller: widget.descriptionController,
+              maxLines: null,
+              style: TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                hintText: "Enter Contract details here...",
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the terms and conditions of the contract.';
+                }
+                return null;
+              },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -1767,6 +1770,7 @@ class _ContractFormState extends State<ContractForm> {
   void setStepOne() {
     validateStepTwo();
     validateStepThree();
+    validateStepFour();
     setState(() {
       toggleStepOne = true;
       toggleStepTwo = false;
@@ -1779,6 +1783,7 @@ class _ContractFormState extends State<ContractForm> {
   void setStepTwo() {
     validateStepOne();
     validateStepThree();
+    validateStepFour();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = true;
@@ -1791,6 +1796,7 @@ class _ContractFormState extends State<ContractForm> {
   void setStepThree() {
     validateStepOne();
     validateStepTwo();
+    validateStepFour();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = false;
@@ -1817,6 +1823,7 @@ class _ContractFormState extends State<ContractForm> {
     validateStepOne();
     validateStepTwo();
     validateStepThree();
+    validateStepFour();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = false;
@@ -1876,13 +1883,22 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
-  bool validateStepFour() {
-    //TODO: implement validation step 4.
-    return true;
+  void validateStepFour() {
+    if (toggleStepFour == true) {
+      if (_step4Key.currentState!.validate() == true) {
+        setState(() {
+          stepFourComplete = true;
+        });
+      } else {
+        setState(() {
+          stepFourComplete = false;
+        });
+      }
+    }
   }
 
   bool validateAllPreviousSteps() {
-    if (stepOneComplete && stepTwoComplete && stepThreeComplete && validateStepFour()) {
+    if (stepOneComplete && stepTwoComplete && stepThreeComplete && stepFourComplete) {
       return true;
     } else {
       return false;
