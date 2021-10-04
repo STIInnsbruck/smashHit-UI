@@ -13,7 +13,7 @@ Frontend Application for Contract Management (smashHit).
 - [ ] Add textField validators for each textField
 - [ ] Implement regex for email and phone???
 - [ ] Change contractedEntities tile when checking on active contract
-- [ ] Prettify contract terms and conditions view
+- [X] Prettify contract terms and conditions view
 - [ ] Add Scaler for data processing contract
 - [ ] Detailfy Data Processing Template
 - [X] Center hintText in searchBar
