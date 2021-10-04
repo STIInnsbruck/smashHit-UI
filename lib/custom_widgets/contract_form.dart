@@ -14,7 +14,6 @@ class ContractForm extends StatefulWidget {
   DateTime? endDate;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController requesterController = TextEditingController();
   List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
   String? contractDropDownType;
