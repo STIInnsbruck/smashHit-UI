@@ -50,7 +50,7 @@ class _ContractViolationState extends State<ContractViolation> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ClaimForm(contract!)
+                    ClaimForm(widget.changeScreen, contract!)
                   ],
                 ),
               ),
