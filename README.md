@@ -16,7 +16,7 @@ Frontend Application for Contract Management (smashHit).
 - [ ] Prettify contract terms and conditions view
 - [ ] Add Scaler for data processing contract
 - [ ] Detailfy Data Processing Template
-- [ ] Center hintText in searchBar
+- [X] Center hintText in searchBar
 - [X] Dynamicly add more signature fields according to number of contract parties
 - [X] Fix violation form: it is currently hard-coded to one contract
 - [X] Add submit button after creating contract.
