@@ -24,11 +24,18 @@ class ContractForm extends StatefulWidget {
 }
 
 class _ContractFormState extends State<ContractForm> {
+
+  //------------------- General Variables --------------------------------------
   DateTime? startDate;
   DateTime? effectiveDate;
   DateTime? endDate;
   DateTime? executionDate;
 
+  ContractType? _type;
+
+  DataProvider dataProvider = DataProvider();
+
+  //------------------- CheckBox Booleans --------------------------------------
   CheckBoxBoolean isAmendment = CheckBoxBoolean();
   CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
   CheckBoxBoolean isDataController = CheckBoxBoolean();
@@ -44,8 +51,9 @@ class _ContractFormState extends State<ContractForm> {
   CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
   CheckBoxBoolean isWaiver = CheckBoxBoolean();
 
-  ContractType? _type;
 
+
+  //------------------- StepNavigation Booleans --------------------------------
   bool toggleStepOne = true;
   bool toggleStepTwo = false;
   bool toggleStepThree = false;
@@ -54,12 +62,22 @@ class _ContractFormState extends State<ContractForm> {
   bool toggleRequester = true;
   bool toggleProvider = false;
 
+  //------------------- StepValidation Booleans --------------------------------
+  bool stepOneComplete = false;
+  bool stepTwoValid = false;
+  bool stepThreeValid = false;
+  bool stepFourValid = false;
+
+  //------------------- Validation Keys ----------------------------------------
+  final _step1Key = GlobalKey<FormState>();
+  List<GlobalKey<FormState>> _step2Keys = [];
+  List<GlobalKey<FormState>> _step3Keys = [];
+  final _step4Key = GlobalKey<FormState>();
+
   List<User> requesters = [];
   int currentRequesterIndex = 0;
   List<User> providers = [];
   int currentProviderIndex = 0;
-
-  DataProvider dataProvider = DataProvider();
 
   @override
   void initState() {
@@ -122,7 +140,7 @@ class _ContractFormState extends State<ContractForm> {
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(2)),
-              color: toggleStepOne == true ? Colors.grey : Colors.green,
+              color: stepOneComplete == false ? Colors.grey : Colors.green,
               boxShadow: [
                 BoxShadow(
                     color: Colors.black45,
@@ -141,7 +159,7 @@ class _ContractFormState extends State<ContractForm> {
                           softWrap: false,
                           maxLines: 1)),
                   Container(width: 10),
-                  toggleStepOne == true
+                  stepOneComplete == false
                       ? Container()
                       : Icon(Icons.check, color: Colors.white, size: 30)
                 ],
@@ -1030,27 +1048,36 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget titleField() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("What is the title of your contract?",
-            style: TextStyle(fontSize: 20)),
-        Container(height: 5),
-        TextFormField(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.blue)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(2.0),
-                borderSide: BorderSide(color: Colors.black, width: 2.0)),
-          ),
-          style: TextStyle(fontSize: 20),
-          controller: widget.titleController,
-        )
-      ],
+    return Form(
+      key: _step1Key,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("What is the title of your contract?",
+              style: TextStyle(fontSize: 20)),
+          Container(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            style: TextStyle(fontSize: 20),
+            controller: widget.titleController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a title for your contract.';
+              }
+              return null;
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -1675,6 +1702,7 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepFour = false;
       toggleStepFinal = false;
     });
+    validateStepOne();
   }
 
   void setStepTwo() {
@@ -1685,6 +1713,7 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepFour = false;
       toggleStepFinal = false;
     });
+    validateStepOne();
   }
 
   void setStepThree() {
@@ -1695,6 +1724,7 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepFour = false;
       toggleStepFinal = false;
     });
+    validateStepOne();
   }
 
   void setStepFour() {
@@ -1705,6 +1735,7 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepFour = true;
       toggleStepFinal = false;
     });
+    validateStepOne();
   }
 
   void setStepFinal() {
@@ -1715,6 +1746,42 @@ class _ContractFormState extends State<ContractForm> {
       toggleStepFour = false;
       toggleStepFinal = true;
     });
+    validateStepOne();
+  }
+
+  void validateStepOne() {
+    if (_step1Key.currentState!.validate() == true) {
+      setState(() {
+        stepOneComplete = true;
+      });
+    } else {
+      setState(() {
+        stepOneComplete = false;
+      });
+    }
+  }
+
+  bool validateStepTwo() {
+    //TODO: implement validation step 2.
+    return true;
+  }
+
+  bool validateStepThree() {
+    //TODO: implement validation step 3.
+    return true;
+  }
+
+  bool validateStepFour() {
+    //TODO: implement validation step 4.
+    return true;
+  }
+
+  bool validateAllPreviousSteps() {
+    if (stepOneComplete && validateStepTwo() && validateStepThree() && validateStepFour()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   ///Function to nicely display the date in the contract form.
