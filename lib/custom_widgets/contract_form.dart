@@ -1834,6 +1834,8 @@ class _ContractFormState extends State<ContractForm> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(child: Icon(Icons.warning, size: 60, color: Colors.yellow)),
+                Container(height: 10),
                 Text('You have not filled out all contract details. Please complete the form before you move on to the final step.\nRevisit the following steps:'),
                 Container(height: 10),
                 stepOneComplete? Container() : Text('-    Step 1. Contract Base Information'),
