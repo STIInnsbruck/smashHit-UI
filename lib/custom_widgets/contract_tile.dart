@@ -36,8 +36,11 @@ class _ContractTileState extends State<ContractTile> {
               children: [
                 Icon(Icons.folder_shared, size: 75),
                 Text('Contract ID: ${_formatContractUri(widget.contract!.contractId!)}'),
+                Spacer(flex: 25),
+                editContractButton(_formatContractUri(widget.contract!.contractId!)),
                 Spacer(),
-
+                deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
+                Spacer()
               ],
             ),
           ),
@@ -51,7 +54,8 @@ class _ContractTileState extends State<ContractTile> {
 
   Widget editContractButton(String contractId) {
     return IconButton(
-      icon: Icon(Icons.edit),
+      padding: EdgeInsets.zero,
+      icon: Icon(Icons.edit, size: 30),
       onPressed: () {
         print("trying to edit contract $contractId");
       },
@@ -60,15 +64,45 @@ class _ContractTileState extends State<ContractTile> {
 
   Widget deleteContractButton(String contractId) {
     return IconButton(
-      icon: Icon(Icons.edit),
+      padding: EdgeInsets.zero,
+      icon: Icon(Icons.delete, size: 30),
       onPressed: () {
-        print("trying to delete contract $contractId");
+        showConfirmDeletionDialog(contractId);
       },
     );
   }
 
-  showConfirmDeletionDialog() {
-    //TODO: display a reassurance dialog to delete a contract.
+  showConfirmDeletionDialog(String contractId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.warning, size: 40, color: Colors.red),
+                Container(height: 20),
+                Text("Are you sure you want to delete the contract: $contractId?"),
+              ],
+            ),
+            actions: [
+              MaterialButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              MaterialButton(
+                  child: Text('Delete'),
+                  color: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              ),
+            ],
+          );
+        });
   }
 
   String _formatContractUri(String contractUri) {
