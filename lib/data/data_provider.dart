@@ -107,6 +107,16 @@ class DataProvider {
     }
   }
 
+  Future<bool> deleteContractById(String contractId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete contract $contractId.');
+    }
+  }
+
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {
     String dateString = "${date!.year}-${date.month}-${date.day}";

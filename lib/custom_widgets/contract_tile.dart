@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 
 class ContractTile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -12,6 +13,8 @@ class ContractTile extends StatefulWidget {
 }
 
 class _ContractTileState extends State<ContractTile> {
+
+  DataProvider dataProvider = new DataProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +75,7 @@ class _ContractTileState extends State<ContractTile> {
     );
   }
 
-  showConfirmDeletionDialog(String contractId) {
+  showConfirmDeletionDialog(String contractId) async {
     showDialog(
         context: context,
         builder: (context) {
@@ -96,13 +99,63 @@ class _ContractTileState extends State<ContractTile> {
               MaterialButton(
                   child: Text('Delete'),
                   color: Colors.red,
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    if (await dataProvider.deleteContractById(contractId)) {
+                      Navigator.of(context).pop();
+                      showSuccessfulDeletionDialog(contractId);
+                    } else {
+                      Navigator.of(context).pop();
+                      showFailedDeletionDialog(contractId);
+                    }
                   }
               ),
             ],
           );
         });
+  }
+
+  showSuccessfulDeletionDialog(String contractId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text('Success!'),
+          children: [
+            Icon(Icons.check_circle, color: Colors.green, size: 60),
+            Text('The contract $contractId was successfully deleted!'),
+            MaterialButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+
+        );
+      }
+    );
+  }
+
+  showFailedDeletionDialog(String contractId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Error!'),
+            children: [
+              Icon(Icons.error, color: Colors.red, size: 60),
+              Text('The contract $contractId could not be deleted!'),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
+    );
   }
 
   String _formatContractUri(String contractUri) {
