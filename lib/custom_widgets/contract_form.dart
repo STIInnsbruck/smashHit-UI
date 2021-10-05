@@ -633,12 +633,6 @@ class _ContractFormState extends State<ContractForm> {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  /**ListView.builder(
-                      itemCount: requesters.length,
-                      itemBuilder: (BuildContext context, int index) {
-                      return Text('${widget.requesterControllers.text}');
-                      }
-                      )*/
                   Text('${widget.requesterControllers[0].text}')
                 ],
               )
@@ -651,12 +645,6 @@ class _ContractFormState extends State<ContractForm> {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  /**ListView.builder(
-                      itemCount: requesters.length,
-                      itemBuilder: (BuildContext context, int index) {
-                      return Text('${widget.requesterControllers.text}');
-                      }
-                      )*/
                   Text('${widget.providerControllers[0].text}')
                 ],
               )
@@ -1824,13 +1812,52 @@ class _ContractFormState extends State<ContractForm> {
     validateStepTwo();
     validateStepThree();
     validateStepFour();
-    setState(() {
-      toggleStepOne = false;
-      toggleStepTwo = false;
-      toggleStepThree = false;
-      toggleStepFour = false;
-      toggleStepFinal = true;
-    });
+    if (stepOneComplete && stepTwoComplete && stepThreeComplete && stepFourComplete) {
+      setState(() {
+        toggleStepOne = false;
+        toggleStepTwo = false;
+        toggleStepThree = false;
+        toggleStepFour = false;
+        toggleStepFinal = true;
+      });
+    } else {
+      print("you have not completed the contract.");
+      showContractNotCompleteDialog();
+    }
+  }
+
+  void showContractNotCompleteDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: Icon(Icons.warning, size: 60, color: Colors.yellow)),
+                Container(height: 10),
+                Text('You have not filled out all contract details. Please complete the form before you move on to the final step.\nRevisit the following steps:'),
+                Container(height: 10),
+                stepOneComplete? Container() : Text('-    Step 1. Contract Base Information'),
+                Container(height: 5),
+                stepTwoComplete? Container() : Text('-    Step 2. Data Controller(s) Details'),
+                Container(height: 5),
+                stepThreeComplete? Container() : Text('-    Step 3. Data Processor(s) Details'),
+                Container(height: 5),
+                stepFourComplete? Container() : Text('-    Step 4. Terms & Conditions of the Contract'),
+                Container(height: 5)
+              ],
+            ),
+            children: <Widget>[
+              TextButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   void validateStepOne() {
@@ -1883,9 +1910,18 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
+  /// Function that checks every textFormField in the fourth step of the
+  /// contract to validate if each field has content in it.
+  /// Checked fields:
+  ///   - Terms & Conditions Field
+  ///   - Start Date
+  ///   - Effective Date
+  ///   - Execution Date
+  ///   - End Date
   void validateStepFour() {
     if (toggleStepFour == true) {
-      if (_step4Key.currentState!.validate() == true) {
+      if (_step4Key.currentState!.validate() == true && startDate != null &&
+          effectiveDate != null && executionDate != null && endDate != null) {
         setState(() {
           stepFourComplete = true;
         });
