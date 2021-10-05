@@ -9,7 +9,7 @@ Frontend Application for Contract Management (smashHit).
 ## Current To-Do's
 ### Functionalities
 - [ ] Add 3 value radio buttons for contract creation.
-- [ ] Prevent/add error message when user navigates to contract overview too early
+- [X] Prevent/add error message when user navigates to contract overview too early - 05.10.2021
 - [X] Add textField validators for each textField - 04.10.2021
 - [ ] Implement regex for email and phone???
 - [ ] Change contractedEntities tile when checking on active contract
