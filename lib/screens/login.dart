@@ -72,7 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Spacer(flex: 2),
                 MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    widget.changeScreen(0);
+                  },
                   child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 50)),
                   elevation: 10,
                   color: Colors.grey,
