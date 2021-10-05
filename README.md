@@ -28,5 +28,5 @@ Frontend Application for Contract Management (smashHit).
 - [X] Rename Provider to Date Processor
 
 ### Screens
-- [ ] Add Login-Screen
+- [X] Add Login-Screen
 - [ ] Add Update-Contract-Screen
