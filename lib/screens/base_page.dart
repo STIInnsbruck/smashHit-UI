@@ -7,6 +7,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/screens/template_selector.dart';
 import 'package:smashhit_ui/screens/contract_violation.dart';
 import 'package:smashhit_ui/screens/login.dart';
+import 'package:smashhit_ui/screens/contract_update.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
-  int _selectedIndex = 5;
+  int _selectedIndex = 0;
   String _selectedTitle = "";
   Widget? _selectedPage;
   User? currentUser;
@@ -22,8 +23,8 @@ class _BasePageState extends State<BasePage> {
   DataProvider dataProvider = DataProvider();
 
   _BasePageState() {
-    _selectedPage = LoginScreen(changeScreen);
-    _selectedTitle = "Login Screen";
+    _selectedPage = Dashboard(changeScreen, currentUser);
+    _selectedTitle = "Contracts Dashboard";
   }
 
   @override
@@ -95,6 +96,10 @@ class _BasePageState extends State<BasePage> {
         case 5:
           _selectedPage = LoginScreen(changeScreen);
           _selectedTitle = "Login Screen";
+          break;
+        case 6:
+          _selectedPage = UpdateScreen(changeScreen);
+          _selectedTitle = "Update Contract Screen";
       }
     });
   }

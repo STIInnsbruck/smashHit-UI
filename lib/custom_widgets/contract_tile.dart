@@ -36,16 +36,39 @@ class _ContractTileState extends State<ContractTile> {
               children: [
                 Icon(Icons.folder_shared, size: 75),
                 Text('Contract ID: ${_formatContractUri(widget.contract!.contractId!)}'),
+                Spacer(),
+
               ],
             ),
           ),
         ),
         onTap: () {
-          int length = widget.contract!.contractId!.length;
           widget.changeScreen(2, '${_formatContractUri(widget.contract!.contractId!)}');
         },
       ),
     );
+  }
+
+  Widget editContractButton(String contractId) {
+    return IconButton(
+      icon: Icon(Icons.edit),
+      onPressed: () {
+        print("trying to edit contract $contractId");
+      },
+    );
+  }
+
+  Widget deleteContractButton(String contractId) {
+    return IconButton(
+      icon: Icon(Icons.edit),
+      onPressed: () {
+        print("trying to delete contract $contractId");
+      },
+    );
+  }
+
+  showConfirmDeletionDialog() {
+    //TODO: display a reassurance dialog to delete a contract.
   }
 
   String _formatContractUri(String contractUri) {
