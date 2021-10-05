@@ -633,12 +633,6 @@ class _ContractFormState extends State<ContractForm> {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  /**ListView.builder(
-                      itemCount: requesters.length,
-                      itemBuilder: (BuildContext context, int index) {
-                      return Text('${widget.requesterControllers.text}');
-                      }
-                      )*/
                   Text('${widget.requesterControllers[0].text}')
                 ],
               )
@@ -651,12 +645,6 @@ class _ContractFormState extends State<ContractForm> {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  /**ListView.builder(
-                      itemCount: requesters.length,
-                      itemBuilder: (BuildContext context, int index) {
-                      return Text('${widget.requesterControllers.text}');
-                      }
-                      )*/
                   Text('${widget.providerControllers[0].text}')
                 ],
               )
