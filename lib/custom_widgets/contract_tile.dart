@@ -61,7 +61,7 @@ class _ContractTileState extends State<ContractTile> {
       padding: EdgeInsets.zero,
       icon: Icon(Icons.edit, size: 30),
       onPressed: () {
-        print("trying to edit contract $contractId");
+        widget.changeScreen(6);
       },
     );
   }
