@@ -99,7 +99,7 @@ class _BasePageState extends State<BasePage> {
           break;
         case 6:
           _selectedPage = UpdateScreen(changeScreen);
-          _selectedTitle = "Update Contract Screen";
+          _selectedTitle = "Change & Update Your Contract";
       }
     });
   }
