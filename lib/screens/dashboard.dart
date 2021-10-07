@@ -46,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
             return ListView.builder(
                 itemCount: contractList!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ContractTile(widget.changeScreen, contractList![index]);
+                  return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
                 });
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
@@ -57,5 +57,10 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  void refreshContractList() {
+    setState(() {
+      futureContractList = dataProvider.fetchAllContracts();
+    });
+  }
 
 }

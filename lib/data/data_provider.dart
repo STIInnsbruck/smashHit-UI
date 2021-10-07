@@ -108,12 +108,12 @@ class DataProvider {
   }
 
   Future<bool> deleteContractById(String contractId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
 
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Failed to delete contract $contractId.');
+      throw Exception('Failed to delete contract $contractId.\nBack-end response: ${response.reasonPhrase}.');
     }
   }
 

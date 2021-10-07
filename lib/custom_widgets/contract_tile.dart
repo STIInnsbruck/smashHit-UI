@@ -4,9 +4,10 @@ import 'package:smashhit_ui/data/data_provider.dart';
 
 class ContractTile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
+  final Function() refresh;
   Contract? contract;
 
-  ContractTile(this.changeScreen, this.contract);
+  ContractTile(this.changeScreen, this.refresh, this.contract);
 
   @override
   _ContractTileState createState() => _ContractTileState();
@@ -115,14 +116,16 @@ class _ContractTileState extends State<ContractTile> {
   }
 
   showSuccessfulDeletionDialog(String contractId) {
+    widget.refresh();
     showDialog(
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Text('Success!'),
+          title: Text('Success!', textAlign: TextAlign.center),
+          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
           children: [
-            Icon(Icons.check_circle, color: Colors.green, size: 60),
-            Text('The contract $contractId was successfully deleted!'),
+            Icon(Icons.check_circle, color: Colors.green, size: 100),
+            Text('The contract $contractId was successfully deleted!', textAlign: TextAlign.center),
             MaterialButton(
               child: Text('Okay'),
               onPressed: () {
