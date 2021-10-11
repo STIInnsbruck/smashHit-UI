@@ -61,7 +61,7 @@ class _ContractTileState extends State<ContractTile> {
       padding: EdgeInsets.zero,
       icon: Icon(Icons.edit, size: 30),
       onPressed: () {
-        widget.changeScreen(6);
+        widget.changeScreen(6, contractId);
       },
     );
   }

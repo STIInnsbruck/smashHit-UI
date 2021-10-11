@@ -98,7 +98,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Login Screen";
           break;
         case 6:
-          _selectedPage = UpdateScreen(changeScreen);
+          _selectedPage = UpdateScreen(changeScreen, contractId!, currentUser);
           _selectedTitle = "Change & Update Your Contract";
       }
     });

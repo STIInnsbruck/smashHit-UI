@@ -35,9 +35,6 @@ class _ContractViolationState extends State<ContractViolation> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return FutureBuilder<Contract>(
       future: futureContract,
       builder: (context, snapshot) {
