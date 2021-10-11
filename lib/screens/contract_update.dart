@@ -18,7 +18,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   late Future<Contract> futureContract;
   Contract? contract;
-  UpdateForm? updateForm;
   DataProvider dataProvider = new DataProvider();
 
   @override

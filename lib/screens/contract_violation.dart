@@ -18,7 +18,6 @@ class ContractViolation extends StatefulWidget {
 class _ContractViolationState extends State<ContractViolation> {
   late Future<Contract> futureContract;
   Contract? contract;
-  ClaimForm? claimForm;
   DataProvider dataProvider = new DataProvider();
 
   @override
