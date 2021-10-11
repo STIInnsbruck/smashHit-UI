@@ -58,7 +58,7 @@ class _UpdateFormState extends State<UpdateForm> {
               child: Column(
                 children: [
                   Center(
-                      child: Text('Contract Violation Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
+                      child: Text('Contract Update Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
                   ),
                   Container(height: 20),
                   Container(height: 20),

@@ -38,7 +38,7 @@ class DataProvider {
       "ContractRequester": requester.replaceAll(' ', ''),
       "ContractProvider": provider.replaceAll(' ', ''),
       "DataController": requester.replaceAll(' ', ''),
-      "StartDate": "",
+      "StartDate": _formatDate(startDate),
       "ExecutionDate": _formatDate(startDate),
       "EffectiveDate": _formatDate(startDate),
       "ExpireDate": _formatDate(expireDate),
