@@ -68,8 +68,8 @@ class _UpdateFormState extends State<UpdateForm> {
                   contractRequesterBlock(),
                   Container(height: 5),
                   contractProviderBlock(),
-                  Container(height: 10),
-                  Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                  Container(height: 5),
+                  contractTACBlock(),
                   Container(height: 20),
                   Container(height: 50),
                   Container(height: 20),
@@ -136,4 +136,31 @@ class _UpdateFormState extends State<UpdateForm> {
       ),
     );
   }
+
+  MaterialButton contractTACBlock() {
+    return MaterialButton(
+      color: Colors.white,
+      hoverColor: Colors.blue,
+      onPressed: () { print("edit"); },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Text('Terms & Conditions', style: TextStyle(fontSize: 25)),
+          ),
+          Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+          Container(height: 40),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('Start Date: ${widget.contract.executionDate}'),
+              Text('End Date: ${widget.contract.expireDate}')
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
 }
