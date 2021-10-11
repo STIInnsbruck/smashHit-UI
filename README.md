@@ -8,6 +8,12 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 ### Functionalities
+- [ ] Fix Date display in ClaimForm
+- [ ] Fix User display in ClaimForm
+- [ ] Display dynamic signature fields in ContractForm
+- [ ] Display dynamic signature fields in UpdateForm
+- [ ] Add hint note in updateScreen to guide the user on how to update
+- [ ] Navigate to contract editor when clicking a block in updateForm
 - [ ] Add 3 value radio buttons for contract creation.
 - [ ] Implement regex for email and phone???
 - [ ] Change contractedEntities tile when checking on active contract
@@ -31,4 +37,4 @@ Frontend Application for Contract Management (smashHit).
 
 ### Screens
 - [X] Add Login-Screen - 05.10.2021
-- [ ] Add Update-Contract-Screen
+- [X] Add Update-Contract-Screen - 11.10.2021
