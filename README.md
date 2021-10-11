@@ -19,6 +19,10 @@ Frontend Application for Contract Management (smashHit).
 - [ ] Change contractedEntities tile when checking on active contract
 - [ ] Add Scaler for data processing contract
 - [ ] Detailfy Data Processing Template
+- [ ] Add live dynamic contract search
+- [ ] add auto-fill when entering a contractor name
+- [ ] add ENTER-Button listeners to textfields
+- [ ] add ENTER-Button listeners to creation steps to continue to next step
 - [X] ADD: delete contract functionality - 07.10.2021
 - [ ] ADD: update Contract functionality
 - [X] Prettify contract terms and conditions view - 04.10.2021
