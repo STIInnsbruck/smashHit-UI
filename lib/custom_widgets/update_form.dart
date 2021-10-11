@@ -64,8 +64,10 @@ class _UpdateFormState extends State<UpdateForm> {
                   Container(height: 20),
                   Container(height: 20),
                   contractInformationBlock(),
-                  Container(height: 20),
-                  Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
+                  Container(height: 5),
+                  contractRequesterBlock(),
+                  Container(height: 5),
+                  contractProviderBlock(),
                   Container(height: 10),
                   Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                   Container(height: 20),
@@ -79,13 +81,14 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Widget contractInformationBlock() {
+  MaterialButton contractInformationBlock() {
     return MaterialButton(
       color: Colors.white,
       hoverColor: Colors.blue,
       onPressed: () { print("edit"); },
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
               child: Text('Contract Information', style: TextStyle(fontSize: 25)),
@@ -94,8 +97,43 @@ class _UpdateFormState extends State<UpdateForm> {
         ],
       ),
     );
-
   }
 
+  MaterialButton contractRequesterBlock() {
+    return MaterialButton(
+      color: Colors.white,
+      hoverColor: Colors.blue,
+      onPressed: () { print("edit"); },
+      child: Row(
+        children: [
+          Center(child: Text('Data Controller(s): ', style: TextStyle(fontSize: 15))),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(widget.contract.formatContractor(), style: TextStyle(fontSize: 15))
+            ],
+          )
+        ],
+      ),
+    );
+  }
 
+  MaterialButton contractProviderBlock() {
+    return MaterialButton(
+      color: Colors.white,
+      hoverColor: Colors.blue,
+      onPressed: () { print("edit"); },
+      child: Row(
+        children: [
+          Center(child: Text('Data Processor(s): ', style: TextStyle(fontSize: 15))),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(widget.contract.formatContractee(), style: TextStyle(fontSize: 15))
+            ],
+          )
+        ],
+      ),
+    );
+  }
 }
