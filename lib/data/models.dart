@@ -72,6 +72,10 @@ class Contract {
     return -1;
   }
 
+  String formatContractType() {
+    return this.contractType!.substring(45, this.contractType!.length);
+  }
+
   static DateTime formatDate(String dateString) {
     var length = dateString.length;
     int year = int.parse(dateString.substring(length - 4, length));

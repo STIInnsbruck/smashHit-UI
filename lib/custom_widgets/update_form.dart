@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 
@@ -18,6 +19,83 @@ class _UpdateFormState extends State<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Stack(
+        children: [
+          Container(
+              child: Scrollbar(
+                  child: SingleChildScrollView(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            updateFormBody(screenWidth * 0.5)
+                          ]
+                      )
+                  )
+              )
+          ),
+        ]
+    );
   }
+
+  Widget updateFormBody(double width) {
+    return Container(
+      width: width,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black45,
+                blurRadius: 25.0,
+                spreadRadius: 5.0,
+                offset: Offset(10.0, 10.0))
+          ]),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      child: Scrollbar(
+          child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Center(
+                      child: Text('Contract Violation Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
+                  ),
+                  Container(height: 20),
+                  Container(height: 20),
+                  Container(height: 20),
+                  contractInformationBlock(),
+                  Container(height: 20),
+                  Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
+                  Container(height: 10),
+                  Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                  Container(height: 20),
+                  Container(height: 50),
+                  Container(height: 20),
+                  Container(height: 50),
+                ],
+              )
+          )
+      ),
+    );
+  }
+
+  Widget contractInformationBlock() {
+    return MaterialButton(
+      color: Colors.white,
+      hoverColor: Colors.blue,
+      onPressed: () { print("edit"); },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+              child: Text('Contract Information', style: TextStyle(fontSize: 25)),
+          ),
+          Text('Contract Type: ${widget.contract.formatContractType()}', style: TextStyle(fontSize: 15))
+        ],
+      ),
+    );
+
+  }
+
+
 }
