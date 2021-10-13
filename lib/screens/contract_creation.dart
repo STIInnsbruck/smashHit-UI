@@ -7,7 +7,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
-  final Function(int) changeScreen;
+  final Function(int, [String]) changeScreen;
   User? user;
 
   ContractCreation(this.changeScreen, this.user);
@@ -31,18 +31,20 @@ class _ContractCreationState extends State<ContractCreation> {
   Contract? contract;
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
-  static ContractForm contractForm = ContractForm();
+  static ContractForm? contractForm;
 
   //-------------------------------------------------- TextEditingControllers
-  final TextEditingController _titleController = contractForm.titleController;
-  final TextEditingController _descriptionController =
-      contractForm.descriptionController;
+  late final TextEditingController _titleController;
+  late final TextEditingController _descriptionController;
   List<TextEditingController> textControllers =
       []; //for dynamic amount of parties
 
   @override
   void initState() {
     super.initState();
+    contractForm  = ContractForm(widget.changeScreen);
+    _titleController = contractForm!.titleController;
+    _descriptionController = contractForm!.descriptionController;
   }
 
   @override
@@ -64,7 +66,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 height: 100,
                 child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
               ),
-              contractForm
+              contractForm!
             ],
           ),
         ),
@@ -518,8 +520,8 @@ class _ContractCreationState extends State<ContractCreation> {
         if (element.text.isNotEmpty) {
           if (_titleController.text.isNotEmpty &&
               _descriptionController.text.isNotEmpty &&
-              contractForm.startDate != null &&
-              contractForm.endDate != null &&
+              contractForm!.startDate != null &&
+              contractForm!.endDate != null &&
               _selectedEntityLabel != "" &&
               contractDropDownType != null) {
             setState(() {

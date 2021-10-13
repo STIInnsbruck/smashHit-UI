@@ -8,6 +8,7 @@ import 'package:country_state_city_pro/country_state_city_pro.dart';
 enum ContractType { Written, Mutual, Verbal, Transferable }
 
 class ContractForm extends StatefulWidget {
+  final Function(int, [String]) changeScreen;
   DateTime? startDate;
   DateTime? effectiveDate;
   DateTime? executionDate;
@@ -17,6 +18,8 @@ class ContractForm extends StatefulWidget {
   List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
   String? contractDropDownType;
+
+  ContractForm(this.changeScreen);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -389,7 +392,7 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 10),
               requesterPhoneField((index * 7) + 6),
               Container(height: 10),
-              Row(
+              /**Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   currentRequesterIndex - 1 >= 0
@@ -403,7 +406,7 @@ class _ContractFormState extends State<ContractForm> {
                       ? nextRequesterButton()
                       : Container(width: 40),
                 ],
-              ),
+              ),*/
               Container(height: 10),
             ],
           ),
@@ -445,7 +448,7 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 10),
               providerPhoneField((index * 7) + 6),
               Container(height: 10),
-              Row(
+              /**Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   currentProviderIndex - 1 >= 0
@@ -459,7 +462,7 @@ class _ContractFormState extends State<ContractForm> {
                       ? nextProviderButton()
                       : Container(width: 40),
                 ],
-              ),
+              ),*/
               Container(height: 10),
             ],
           ),
@@ -1513,30 +1516,34 @@ class _ContractFormState extends State<ContractForm> {
                       textAlign: TextAlign.center)
                   : Text("Next Step",
                       style: TextStyle(color: Colors.white, fontSize: 20)),
-          onPressed: () {
-            setState(() {
-              if (toggleStepOne == true) {
-                setStepTwo();
-              } else if (toggleStepTwo == true) {
-                setStepThree();
-              } else if (toggleStepThree == true) {
-                setStepFour();
-              } else if (toggleStepFour == true) {
-                setStepFinal();
-              } else if (toggleStepFinal == true) {
-                setState(() {
-                  toggleStepFinal = false;
-                  dataProvider.createContract(
-                      widget.titleController.text,
-                      widget.descriptionController.text,
-                      "Written",
-                      startDate!,
-                      endDate!,
-                      widget.requesterControllers[0].text,
-                      widget.providerControllers[0].text);
-                });
+          onPressed: () async {
+            if (toggleStepOne == true) {
+              setStepTwo();
+            } else if (toggleStepTwo == true) {
+              setStepThree();
+            } else if (toggleStepThree == true) {
+              setStepFour();
+            } else if (toggleStepFour == true) {
+              setStepFinal();
+            } else if (toggleStepFinal == true) {
+              setState(() {
+                toggleStepFinal = false;
+              });
+              if (await dataProvider.createContract(
+                  widget.titleController.text,
+                  widget.descriptionController.text,
+                  "Written",
+                  startDate!,
+                  endDate!,
+                  widget.requesterControllers[0].text,
+                  widget.providerControllers[0].text)) {
+                _showCreateSuccessDialog();
+                //TODO: change so that this navigation function is not in this widget but in a screen
+                widget.changeScreen(2, widget.titleController.text.replaceAll(' ', ''));
+              } else {
+                _showCreateFailDialog();
               }
-            });
+            }
           },
         ));
   }
@@ -1858,6 +1865,53 @@ class _ContractFormState extends State<ContractForm> {
             ],
           );
         });
+  }
+
+  _showCreateSuccessDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Success!', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 100),
+              Text('The contract was successfully created!', textAlign: TextAlign.center),
+              Container(height: 5),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
+    );
+  }
+
+  _showCreateFailDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Error!'),
+            children: [
+              Icon(Icons.error, color: Colors.red, size: 60),
+              Text('Ups! The contract could not be created!'),
+              Container(height: 5),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
+    );
   }
 
   void validateStepOne() {
