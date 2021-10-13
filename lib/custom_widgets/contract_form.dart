@@ -389,7 +389,7 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 10),
               requesterPhoneField((index * 7) + 6),
               Container(height: 10),
-              Row(
+              /**Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   currentRequesterIndex - 1 >= 0
@@ -403,7 +403,7 @@ class _ContractFormState extends State<ContractForm> {
                       ? nextRequesterButton()
                       : Container(width: 40),
                 ],
-              ),
+              ),*/
               Container(height: 10),
             ],
           ),
@@ -445,7 +445,7 @@ class _ContractFormState extends State<ContractForm> {
               Container(height: 10),
               providerPhoneField((index * 7) + 6),
               Container(height: 10),
-              Row(
+              /**Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   currentProviderIndex - 1 >= 0
@@ -459,7 +459,7 @@ class _ContractFormState extends State<ContractForm> {
                       ? nextProviderButton()
                       : Container(width: 40),
                 ],
-              ),
+              ),*/
               Container(height: 10),
             ],
           ),
