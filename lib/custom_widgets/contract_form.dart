@@ -8,6 +8,7 @@ import 'package:country_state_city_pro/country_state_city_pro.dart';
 enum ContractType { Written, Mutual, Verbal, Transferable }
 
 class ContractForm extends StatefulWidget {
+  final Function(int, [String]) changeScreen;
   DateTime? startDate;
   DateTime? effectiveDate;
   DateTime? executionDate;
@@ -17,6 +18,8 @@ class ContractForm extends StatefulWidget {
   List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
   String? contractDropDownType;
+
+  ContractForm(this.changeScreen);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -1535,6 +1538,8 @@ class _ContractFormState extends State<ContractForm> {
                   widget.requesterControllers[0].text,
                   widget.providerControllers[0].text)) {
                 _showCreateSuccessDialog();
+                //TODO: change so that this navigation function is not in this widget but in a screen
+                widget.changeScreen(2, widget.titleController.text.replaceAll(' ', ''));
               } else {
                 _showCreateFailDialog();
               }
