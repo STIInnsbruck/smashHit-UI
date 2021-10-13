@@ -28,17 +28,17 @@ class DataProvider {
     'Authorization': 'Bearer $token'
   };
 
-  createContract(String title, String contractTerms, String contractType,
+  Future<bool> createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate, String requester, String provider) async {
 
     var body = {
       "ContractId": title.replaceAll(' ', ''),
       "ContractType": contractType,
-      "Purpose": contractTerms,
+      "Purpose": contractTerms.replaceAll('\n', ''),
       "ContractRequester": requester.replaceAll(' ', ''),
       "ContractProvider": provider.replaceAll(' ', ''),
       "DataController": requester.replaceAll(' ', ''),
-      "StartDate": "",
+      "StartDate": _formatDate(startDate),
       "ExecutionDate": _formatDate(startDate),
       "EffectiveDate": _formatDate(startDate),
       "ExpireDate": _formatDate(expireDate),
@@ -68,10 +68,12 @@ class DataProvider {
       var data = json.decode(response.body);
       print("Data: \t $data");
       print("Contract Created.");
+      return true;
     } else {
       print("Error createContract()");
       print("${response.statusCode}");
       print("${response.body}");
+      return false;
     }
   }
 
@@ -104,6 +106,16 @@ class DataProvider {
       return parser.parseAllContracts(data["bindings"]);
     } else {
       throw Exception('Failed to load all contracts.');
+    }
+  }
+
+  Future<bool> deleteContractById(String contractId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete contract $contractId.\nBack-end response: ${response.reasonPhrase}.');
     }
   }
 

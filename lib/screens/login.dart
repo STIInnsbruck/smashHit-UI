@@ -22,7 +22,13 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
       children: [
             Spacer(),
-            Text("SmashHit", style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.blue)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("smash",style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                Text("Hit", style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.blue))
+              ],
+            ),
             Spacer(),
             CircleAvatar(
               radius: screenWidth * 0.10,
@@ -53,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintStyle: TextStyle(fontSize: 30)
                 ),
                 textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 30),
               )
             ),
             Container(),
@@ -65,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 obscureText: true,
                 textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 30),
               )
             ),
             Spacer(flex: 2),

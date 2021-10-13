@@ -246,6 +246,8 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget reportViolationButton() {
     return IconButton(
+      iconSize: 50,
+      padding: EdgeInsets.zero,
       icon: Icon(Icons.report_problem, color: Colors.orange),
       tooltip: 'Report a contract violation.',
       onPressed: () {

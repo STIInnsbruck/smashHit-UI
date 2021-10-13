@@ -18,7 +18,6 @@ class ContractViolation extends StatefulWidget {
 class _ContractViolationState extends State<ContractViolation> {
   late Future<Contract> futureContract;
   Contract? contract;
-  ClaimForm? claimForm;
   DataProvider dataProvider = new DataProvider();
 
   @override
@@ -35,9 +34,6 @@ class _ContractViolationState extends State<ContractViolation> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return FutureBuilder<Contract>(
       future: futureContract,
       builder: (context, snapshot) {
