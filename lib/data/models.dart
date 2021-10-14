@@ -84,6 +84,10 @@ class Contract {
     return this.contractee!.substring(45, this.contractee!.length);
   }
 
+  String formatContractId() {
+    return this.contractId!.substring(45, this.contractId!.length);
+  }
+
   static DateTime formatDate(String dateString) {
     var length = dateString.length;
     int year = int.parse(dateString.substring(length - 4, length));
