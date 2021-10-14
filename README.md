@@ -10,6 +10,7 @@ Frontend Application for Contract Management (smashHit).
 ### Functionalities
 - [ ] Fix Date display in ClaimForm
 - [ ] Fix User display in ClaimForm
+- [ ] Re-implement add parties function (key listeners and textControllers do not align and break upon checking)
 - [ ] Display dynamic signature fields in ContractForm
 - [ ] Display dynamic signature fields in UpdateForm
 - [ ] Add hint note in updateScreen to guide the user on how to update
