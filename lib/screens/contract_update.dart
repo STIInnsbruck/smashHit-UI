@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/custom_widgets/contract_form.dart';
 import 'package:smashhit_ui/custom_widgets/update_form.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 
 class UpdateScreen extends StatefulWidget {
-  Function(int) changeScreen;
+  Function(int, [String]) changeScreen;
   final String contractId;
   User? user;
 
@@ -15,6 +16,9 @@ class UpdateScreen extends StatefulWidget {
 }
 
 class _UpdateScreenState extends State<UpdateScreen> {
+
+  bool isEditing = false;
+  int currentStep = 1;
 
   late Future<Contract> futureContract;
   Contract? contract;
@@ -45,7 +49,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    UpdateForm(widget.changeScreen, contract!)
+                    isEditing? ContractForm(widget.changeScreen, currentStep, contract!) : UpdateForm(widget.changeScreen, toggleEditing, contract!)
                   ],
                 ),
               ),
@@ -55,7 +59,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text('Error; fetching contract by ID: ${widget.contractId}'),
               ],
@@ -65,6 +68,19 @@ class _UpdateScreenState extends State<UpdateScreen> {
         return Center(child: CircularProgressIndicator());
       }
     );
+  }
+
+  void toggleEditing(int x) {
+    setStep(x);
+    setState(() {
+      isEditing = !isEditing;
+    });
+  }
+
+  void setStep(int x) {
+    setState(() {
+      currentStep = x;
+    });
   }
 
 }

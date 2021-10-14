@@ -4,9 +4,10 @@ import 'package:smashhit_ui/data/models.dart';
 
 class UpdateForm extends StatefulWidget {
   Function (int) changeScreen;
+  Function(int) toggleEditing;
   final Contract contract;
 
-  UpdateForm(this.changeScreen, this.contract);
+  UpdateForm(this.changeScreen, this.toggleEditing, this.contract);
 
   @override
   _UpdateFormState createState() => new _UpdateFormState();
@@ -84,7 +85,7 @@ class _UpdateFormState extends State<UpdateForm> {
       child: MaterialButton(
         color: Colors.white,
         hoverColor: Colors.blue,
-        onPressed: () { print("edit"); },
+        onPressed: () { widget.toggleEditing(1); },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +106,7 @@ class _UpdateFormState extends State<UpdateForm> {
       child: MaterialButton(
         color: Colors.white,
         hoverColor: Colors.blue,
-        onPressed: () { print("edit"); },
+        onPressed: () { widget.toggleEditing(2); },
         child: Row(
           children: [
             Center(child: Text('Data Controller(s): ', style: TextStyle(fontSize: 15))),
@@ -127,7 +128,7 @@ class _UpdateFormState extends State<UpdateForm> {
       child: MaterialButton(
         color: Colors.white,
         hoverColor: Colors.blue,
-        onPressed: () { print("edit"); },
+        onPressed: () { widget.toggleEditing(3); },
         child: Row(
           children: [
             Center(child: Text('Data Processor(s): ', style: TextStyle(fontSize: 15))),
@@ -149,7 +150,7 @@ class _UpdateFormState extends State<UpdateForm> {
       child: MaterialButton(
         color: Colors.white,
         hoverColor: Colors.blue,
-        onPressed: () { print("edit"); },
+        onPressed: () { widget.toggleEditing(4); },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

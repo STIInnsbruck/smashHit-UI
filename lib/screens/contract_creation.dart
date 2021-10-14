@@ -42,7 +42,7 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    contractForm  = ContractForm(widget.changeScreen);
+    contractForm  = ContractForm(widget.changeScreen, 1, null);
     _titleController = contractForm!.titleController;
     _descriptionController = contractForm!.descriptionController;
   }

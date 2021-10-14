@@ -9,6 +9,8 @@ enum ContractType { Written, Mutual, Verbal, Transferable }
 
 class ContractForm extends StatefulWidget {
   final Function(int, [String]) changeScreen;
+  int step;
+  Contract? contract;
   DateTime? startDate;
   DateTime? effectiveDate;
   DateTime? executionDate;
@@ -19,7 +21,7 @@ class ContractForm extends StatefulWidget {
   List<TextEditingController> providerControllers = [];
   String? contractDropDownType;
 
-  ContractForm(this.changeScreen);
+  ContractForm(this.changeScreen, this.step, this.contract);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -92,6 +94,12 @@ class _ContractFormState extends State<ContractForm> {
     // Add minimum amount of keys for each initial textFormField.
     addStep2Keys();
     addStep3Keys();
+    setStep();
+    if (widget.contract != null) {
+      setFormFields();
+    } else {
+
+    }
   }
 
   @override
@@ -1760,6 +1768,54 @@ class _ContractFormState extends State<ContractForm> {
             return fields[index];
           })
     );
+  }
+
+  void setContract() {
+    widget.contract = new Contract(
+      contractId: widget.titleController.text,
+      description: widget.descriptionController.text,
+      contractee: widget.providerControllers[0].text,
+      contractor: widget.requesterControllers[0].text,
+      contractType: 'Written',
+      executionDate: startDate!,
+      expireDate: endDate!
+    );
+  }
+
+  void setFormFields() {
+    setState(() {
+      widget.titleController.text = widget.contract!.title!;
+      _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
+      widget.requesterControllers[0].text = widget.contract!.contractor!; //TODO: this only takes the first data controller, make it take all existing ones.
+      widget.providerControllers[0].text = widget.contract!.contractee!; //TODO: this only takes the first data processor, make it take all existing ones.
+      widget.descriptionController.text = widget.contract!.description!;
+      startDate = widget.contract!.executionDate;
+      effectiveDate = widget.contract!.executionDate;
+      executionDate = widget.contract!.executionDate;
+      endDate = widget.contract!.expireDate;
+    });
+  }
+
+  void setFields() {}
+
+  void setStep() {
+    switch (widget.step) {
+      case 1:
+        setStepOne();
+        break;
+      case 2:
+        setStepTwo();
+        break;
+      case 3:
+        setStepThree();
+        break;
+      case 4:
+        setStepFour();
+        break;
+      case 5:
+        setStepFinal();
+        break;
+    }
   }
 
   void setStepOne() {
