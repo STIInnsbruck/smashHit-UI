@@ -9,12 +9,12 @@ Frontend Application for Contract Management (smashHit).
 ## Current To-Do's
 ### Functionalities
 - [ ] Fix Date display in ClaimForm
-- [ ] Fix User display in ClaimForm
+- [X] Fix User display in ClaimForm - 14.10.2021
 - [ ] Re-implement add parties function (key listeners and textControllers do not align and break upon checking)
 - [ ] Display dynamic signature fields in ContractForm
 - [ ] Display dynamic signature fields in UpdateForm
 - [ ] Add hint note in updateScreen to guide the user on how to update
-- [ ] Navigate to contract editor when clicking a block in updateForm
+- [X] Navigate to contract editor when clicking a block in updateForm - 14.10.2021
 - [ ] Add 3 value radio buttons for contract creation.
 - [ ] Implement regex for email and phone???
 - [ ] Change contractedEntities tile when checking on active contract
