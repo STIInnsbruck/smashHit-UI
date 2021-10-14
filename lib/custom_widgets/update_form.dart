@@ -81,84 +81,96 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  MaterialButton contractInformationBlock() {
-    return MaterialButton(
-      color: Colors.white,
-      hoverColor: Colors.blue,
-      onPressed: () { print("edit"); },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-              child: Text('Contract Information', style: TextStyle(fontSize: 25)),
-          ),
-          Text('Contract Type: ${widget.contract.formatContractType()}', style: TextStyle(fontSize: 15))
-        ],
+  Tooltip contractInformationBlock() {
+    return Tooltip(
+      message: 'Tap to edit contract information.',
+      child: MaterialButton(
+        color: Colors.white,
+        hoverColor: Colors.blue,
+        onPressed: () { print("edit"); },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+                child: Text('Contract Information', style: TextStyle(fontSize: 25)),
+            ),
+            Text('Contract Type: ${widget.contract.formatContractType()}', style: TextStyle(fontSize: 15))
+          ],
+        ),
       ),
     );
   }
 
-  MaterialButton contractRequesterBlock() {
-    return MaterialButton(
-      color: Colors.white,
-      hoverColor: Colors.blue,
-      onPressed: () { print("edit"); },
-      child: Row(
-        children: [
-          Center(child: Text('Data Controller(s): ', style: TextStyle(fontSize: 15))),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(widget.contract.formatContractor(), style: TextStyle(fontSize: 15))
-            ],
-          )
-        ],
+  Tooltip contractRequesterBlock() {
+    return Tooltip(
+      message: 'Tap to edit data controller information',
+      child: MaterialButton(
+        color: Colors.white,
+        hoverColor: Colors.blue,
+        onPressed: () { print("edit"); },
+        child: Row(
+          children: [
+            Center(child: Text('Data Controller(s): ', style: TextStyle(fontSize: 15))),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(widget.contract.formatContractor(), style: TextStyle(fontSize: 15))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
-  MaterialButton contractProviderBlock() {
-    return MaterialButton(
-      color: Colors.white,
-      hoverColor: Colors.blue,
-      onPressed: () { print("edit"); },
-      child: Row(
-        children: [
-          Center(child: Text('Data Processor(s): ', style: TextStyle(fontSize: 15))),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(widget.contract.formatContractee(), style: TextStyle(fontSize: 15))
-            ],
-          )
-        ],
+  Tooltip contractProviderBlock() {
+    return Tooltip(
+      message: 'Tap to edit data processor information',
+      child: MaterialButton(
+        color: Colors.white,
+        hoverColor: Colors.blue,
+        onPressed: () { print("edit"); },
+        child: Row(
+          children: [
+            Center(child: Text('Data Processor(s): ', style: TextStyle(fontSize: 15))),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(widget.contract.formatContractee(), style: TextStyle(fontSize: 15))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
-  MaterialButton contractTACBlock() {
-    return MaterialButton(
-      color: Colors.white,
-      hoverColor: Colors.blue,
-      onPressed: () { print("edit"); },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text('Terms & Conditions', style: TextStyle(fontSize: 25)),
-          ),
-          Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
-          Container(height: 40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text('Start Date: ${widget.contract.executionDate}'),
-              Text('End Date: ${widget.contract.expireDate}')
-            ],
-          ),
-        ],
+  Tooltip contractTACBlock() {
+    return Tooltip(
+      message: 'Tap to edit the terms & conditions',
+      child: MaterialButton(
+        color: Colors.white,
+        hoverColor: Colors.blue,
+        onPressed: () { print("edit"); },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text('Terms & Conditions', style: TextStyle(fontSize: 25)),
+            ),
+            Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+            Container(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text('Start Date: ${widget.contract.executionDate}'),
+                Text('End Date: ${widget.contract.expireDate}')
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
