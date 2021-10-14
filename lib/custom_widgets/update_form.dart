@@ -71,9 +71,6 @@ class _UpdateFormState extends State<UpdateForm> {
                   Container(height: 5),
                   contractTACBlock(),
                   Container(height: 20),
-                  Container(height: 50),
-                  Container(height: 20),
-                  Container(height: 50),
                 ],
               )
           )
