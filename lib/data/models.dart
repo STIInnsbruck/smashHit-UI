@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
 class User {
-  int? _id;
-  String? _name;
-  String? _email;
-  String? _streetAddress;
-  int? _telephoneNumber;
-  String? _role;
+  int? id;
+  String? name;
+  String? email;
+  String? streetAddress;
+  String? state;
+  String? country;
+  String? city;
+  int? telephoneNumber;
+  String? role;
 
-  User(this._role);
+  User({this.id, this.name, this.email, this.streetAddress, this.state, this.country, this.city, this.telephoneNumber, this.role});
 
-  int? get getId => _id;
-  String? get getName => _name;
-  String? get role => _role;
+  int? get getId => id;
+  String? get getName => name;
 
-  set setName(String value) {
-    _name = value;
-  }
 }
 
 /// Contract model. There is always one party creating the contract (= contractor)

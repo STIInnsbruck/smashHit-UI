@@ -2081,7 +2081,7 @@ class _ContractFormState extends State<ContractForm> {
       for (int i = 0; i < 7; i++) {
         widget.requesterControllers.add(TextEditingController());
       }
-      requesters.add(User("Primary"));
+      requesters.add(User(role: "Primary"));
     });
   }
 
@@ -2119,7 +2119,7 @@ class _ContractFormState extends State<ContractForm> {
       for (int i = 0; i < 7; i++) {
         widget.providerControllers.add(TextEditingController());
       }
-      providers.add(User("Secondary"));
+      providers.add(User(role: "Secondary"));
     });
   }
 

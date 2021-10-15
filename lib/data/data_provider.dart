@@ -77,6 +77,8 @@ class DataProvider {
     }
   }
 
+
+
   acceptContract(Uri path) async {}
 
   rejectContract(Uri path) async {}

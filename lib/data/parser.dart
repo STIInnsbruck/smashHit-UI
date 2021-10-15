@@ -1,6 +1,20 @@
 import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
+
+  User parseUser(Map jsonUser) {
+    return User(
+      name: jsonUser['bindings'][0]['Contract']['value'],
+      streetAddress: jsonUser['bindings'][0]['address']['value'],
+      email: jsonUser['bindings'][0]['email']['value'],
+      telephoneNumber: jsonUser['bindings'][0]['telephone']['value'],
+    );
+  }
+
+  List<User> parseAllUsers(List jsonList) {
+    return jsonList.map((jsonUser) => parseUser(jsonUser)).toList();
+  }
+
   Contract parseContract(Map jsonContract) {
     return Contract(contractId: jsonContract['Contract']['value']);
   }

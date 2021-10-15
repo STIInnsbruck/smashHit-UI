@@ -329,7 +329,7 @@ class _ContractCreationState extends State<ContractCreation> {
                         _selectedRoleIndex == -1
                             ? null
                             : setState(() {
-                                users.add(new User(_selectedPartyRole));
+                                users.add(new User(role: _selectedPartyRole));
                                 textControllers
                                     .add(new TextEditingController());
                                 _incrementTextFieldCounter();
