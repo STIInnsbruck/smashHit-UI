@@ -758,6 +758,7 @@ class _ContractFormState extends State<ContractForm> {
             },
             onSelected: (User selection) {
               print('You selected ${_displayStringForOption(selection)}');
+              _fillRequesterForm(selection, index);
             },
             fieldViewBuilder: (
               BuildContext context,
@@ -788,6 +789,17 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   static String _displayStringForOption(User option) => option.name!;
+
+  _fillRequesterForm(User selected, int index) {
+    widget.requesterControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    widget.requesterControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    widget.requesterControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    widget.requesterControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
+    widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
+
+
+  }
 
   Widget requesterEmailField(int index) {
     return Form(
