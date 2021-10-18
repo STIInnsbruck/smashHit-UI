@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'package:smashhit_ui/data/models.dart';
@@ -82,6 +81,7 @@ class _ContractFormState extends State<ContractForm> {
   int currentRequesterIndex = 0;
   List<User> providers = [];
   int currentProviderIndex = 0;
+  static List<User> contractors = [];
 
   @override
   void initState() {
@@ -212,12 +212,15 @@ class _ContractFormState extends State<ContractForm> {
                   Container(width: 10),
                   stepTwoComplete == true
                       ? Icon(Icons.check, color: Colors.white, size: 30)
-                      : Container()
+                      : Container(),
                 ],
               ),
               alignment: Alignment.centerLeft),
         ),
-        onPressed: () => setStepTwo());
+        onPressed: () async {
+          setStepTwo();
+          contractors = await dataProvider.fetchAllUsers();
+        });
   }
 
   Widget contractStep3Header(double width) {
@@ -392,7 +395,7 @@ class _ContractFormState extends State<ContractForm> {
               Text("Role: Data Controller ${index + 1}",
                   style: TextStyle(fontSize: 25)),
               // Every Requester has 7 Fields. Assign each field the right controller.
-              requesterField((index * 7) + 0),
+              requesterFieldSuggestor((index * 7) + 0),
               requesterEmailField((index * 7) + 1),
               requesterAddressField((index * 7) + 2),
               Container(height: 10),
@@ -731,6 +734,60 @@ class _ContractFormState extends State<ContractForm> {
       ),
     );
   }
+
+  Widget requesterFieldSuggestor(int index) {
+    return Form(
+      key: step2Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
+              style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          Autocomplete(
+            displayStringForOption: _displayStringForOption,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<User>.empty();
+              }
+              return contractors.where((User option) {
+                return option.toString().contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (User selection) {
+              print('You selected ${_displayStringForOption(selection)}');
+            },
+            fieldViewBuilder: (
+              BuildContext context,
+              TextEditingController fieldTextEditingController,
+              FocusNode fieldFocusNode,
+              VoidCallback onFieldSubmitted
+            ) {
+              return TextField(
+                controller: fieldTextEditingController,
+                focusNode: fieldFocusNode,
+                decoration: InputDecoration(
+                  isDense: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.blue)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                ),
+                style: TextStyle(fontSize: 16),
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  static String _displayStringForOption(User option) => option.name!;
 
   Widget requesterEmailField(int index) {
     return Form(

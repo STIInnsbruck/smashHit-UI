@@ -8,13 +8,18 @@ class User {
   String? state;
   String? country;
   String? city;
-  int? telephoneNumber;
+  String? telephoneNumber;
   String? role;
 
   User({this.id, this.name, this.email, this.streetAddress, this.state, this.country, this.city, this.telephoneNumber, this.role});
 
   int? get getId => id;
   String? get getName => name;
+
+  @override
+  String toString() {
+    return '$name, $email';
+  }
 
 }
 

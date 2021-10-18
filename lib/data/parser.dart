@@ -4,10 +4,10 @@ class ResponseParser {
 
   User parseUser(Map jsonUser) {
     return User(
-      name: jsonUser['bindings'][0]['Contract']['value'],
-      streetAddress: jsonUser['bindings'][0]['address']['value'],
-      email: jsonUser['bindings'][0]['email']['value'],
-      telephoneNumber: jsonUser['bindings'][0]['telephone']['value'],
+      name: jsonUser['Contract']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      streetAddress: jsonUser['address'] == null ? null : jsonUser['address']['value'],
+      email: jsonUser['email'] == null ? null : jsonUser['email']['value'],
+      telephoneNumber: jsonUser['telephone'] == null ? null : jsonUser['telephone']['value'],
     );
   }
 

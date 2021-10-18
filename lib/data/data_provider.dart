@@ -77,8 +77,6 @@ class DataProvider {
     }
   }
 
-
-
   acceptContract(Uri path) async {}
 
   rejectContract(Uri path) async {}
@@ -108,6 +106,17 @@ class DataProvider {
       return parser.parseAllContracts(data["bindings"]);
     } else {
       throw Exception('Failed to load all contracts.');
+    }
+  }
+
+  Future<List<User>> fetchAllUsers() async {
+    final response = await http.get(kBaseUrl.replace(path: 'contract/contractors/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseAllUsers(data["bindings"]);
+    } else {
+      throw Exception('Failed to load all users.');
     }
   }
 
