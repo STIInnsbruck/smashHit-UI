@@ -8,6 +8,7 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 ### Functionalities
+- [ ] Send email when inviting someone into a contract
 - [ ] Fix Date display in ClaimForm
 - [X] Fix User display in ClaimForm - 14.10.2021
 - [ ] Re-implement add parties function (key listeners and textControllers do not align and break upon checking)
