@@ -451,7 +451,7 @@ class _ContractFormState extends State<ContractForm> {
             children: [
               Text("Role: Data Processor ${index + 1}",
                   style: TextStyle(fontSize: 25)),
-              providerField((index * 7) + 0),
+              providerFieldSuggestor((index * 7) + 0),
               providerEmailField((index * 7) + 1),
               providerAddressField((index * 7) + 2),
               Container(height: 10),
@@ -797,8 +797,6 @@ class _ContractFormState extends State<ContractForm> {
     widget.requesterControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
     widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
     widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
-
-
   }
 
   Widget requesterEmailField(int index) {
@@ -948,6 +946,68 @@ class _ContractFormState extends State<ContractForm> {
         ],
       ),
     );
+  }
+
+  Widget providerFieldSuggestor(int index) {
+    return Form(
+      key: step3Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "What is the name of the contract data processor ${currentProviderIndex + 1}?",
+              style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          Autocomplete(
+            displayStringForOption: _displayStringForOption,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<User>.empty();
+              }
+              return contractors.where((User option) {
+                return option.toString().contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (User selection) {
+              print('You selected ${_displayStringForOption(selection)}');
+              _fillProviderForm(selection, index);
+            },
+            fieldViewBuilder: (
+                BuildContext context,
+                TextEditingController fieldTextEditingController,
+                FocusNode fieldFocusNode,
+                VoidCallback onFieldSubmitted
+                ) {
+              return TextField(
+                controller: fieldTextEditingController,
+                focusNode: fieldFocusNode,
+                decoration: InputDecoration(
+                  isDense: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.blue)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                ),
+                style: TextStyle(fontSize: 16),
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  _fillProviderForm(User selected, int index) {
+    widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    widget.providerControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
+    widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    widget.providerControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
   }
 
   Widget providerEmailField(int index) {
