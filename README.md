@@ -8,7 +8,7 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 ### Functionalities
-- [ ] Auotfill form after clicking on suggestion
+- [X] Auotfill form after clicking on suggestion
 - [ ] Send email when inviting someone into a contract
 - [ ] Fix Date display in ClaimForm
 - [X] Fix User display in ClaimForm - 14.10.2021
