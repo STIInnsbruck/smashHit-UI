@@ -8,6 +8,7 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 ### Functionalities
+- [ ] Auotfill form after clicking on suggestion
 - [ ] Send email when inviting someone into a contract
 - [ ] Fix Date display in ClaimForm
 - [X] Fix User display in ClaimForm - 14.10.2021
@@ -22,7 +23,7 @@ Frontend Application for Contract Management (smashHit).
 - [ ] Add Scaler for data processing contract
 - [ ] Detailfy Data Processing Template
 - [ ] Add live dynamic contract search
-- [ ] add auto-fill when entering a contractor name
+- [X] add auto-fill when entering a contractor name - 18.10.2021
 - [ ] add ENTER-Button listeners to textfields
 - [ ] add ENTER-Button listeners to creation steps to continue to next step
 - [X] ADD: delete contract functionality - 07.10.2021
