@@ -766,6 +766,7 @@ class _ContractFormState extends State<ContractForm> {
               FocusNode fieldFocusNode,
               VoidCallback onFieldSubmitted
             ) {
+              fieldTextEditingController.text = widget.requesterControllers[index].text;
               return TextField(
                 controller: fieldTextEditingController,
                 focusNode: fieldFocusNode,
@@ -789,15 +790,6 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   static String _displayStringForOption(User option) => option.name!;
-
-  _fillRequesterForm(User selected, int index) {
-    widget.requesterControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    widget.requesterControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    widget.requesterControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.requesterControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
-    widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
-  }
 
   Widget requesterEmailField(int index) {
     return Form(
@@ -979,6 +971,7 @@ class _ContractFormState extends State<ContractForm> {
                 FocusNode fieldFocusNode,
                 VoidCallback onFieldSubmitted
                 ) {
+              fieldTextEditingController.text = widget.providerControllers[index].text;
               return TextField(
                 controller: fieldTextEditingController,
                 focusNode: fieldFocusNode,
@@ -999,15 +992,6 @@ class _ContractFormState extends State<ContractForm> {
         ],
       ),
     );
-  }
-
-  _fillProviderForm(User selected, int index) {
-    widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.providerControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
-    widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.providerControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
   }
 
   Widget providerEmailField(int index) {
@@ -2111,6 +2095,26 @@ class _ContractFormState extends State<ContractForm> {
         });
       }
     }
+  }
+
+  void _fillProviderForm(User selected, int index) {
+    widget.providerControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
+    widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    widget.providerControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
+    widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    widget.providerControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
+  }
+
+  void _fillRequesterForm(User selected, int index) {
+    widget.requesterControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
+    widget.requesterControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    widget.requesterControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    widget.requesterControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    widget.requesterControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
+    widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
   }
 
   /// Function that checks every textFormField in the second step of the
