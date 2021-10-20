@@ -109,6 +109,17 @@ class DataProvider {
     }
   }
 
+  Future<List<User>> fetchAllUsers() async {
+    final response = await http.get(kBaseUrl.replace(path: 'contract/contractors/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseAllUsers(data["bindings"]);
+    } else {
+      throw Exception('Failed to load all users.');
+    }
+  }
+
   Future<bool> deleteContractById(String contractId) async {
     final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
 

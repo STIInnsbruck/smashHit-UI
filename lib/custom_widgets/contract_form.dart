@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'package:smashhit_ui/data/models.dart';
@@ -82,6 +81,7 @@ class _ContractFormState extends State<ContractForm> {
   int currentRequesterIndex = 0;
   List<User> providers = [];
   int currentProviderIndex = 0;
+  static List<User> contractors = [];
 
   @override
   void initState() {
@@ -212,12 +212,15 @@ class _ContractFormState extends State<ContractForm> {
                   Container(width: 10),
                   stepTwoComplete == true
                       ? Icon(Icons.check, color: Colors.white, size: 30)
-                      : Container()
+                      : Container(),
                 ],
               ),
               alignment: Alignment.centerLeft),
         ),
-        onPressed: () => setStepTwo());
+        onPressed: () async {
+          setStepTwo();
+          contractors = await dataProvider.fetchAllUsers();
+        });
   }
 
   Widget contractStep3Header(double width) {
@@ -392,7 +395,7 @@ class _ContractFormState extends State<ContractForm> {
               Text("Role: Data Controller ${index + 1}",
                   style: TextStyle(fontSize: 25)),
               // Every Requester has 7 Fields. Assign each field the right controller.
-              requesterField((index * 7) + 0),
+              requesterFieldSuggestor((index * 7) + 0),
               requesterEmailField((index * 7) + 1),
               requesterAddressField((index * 7) + 2),
               Container(height: 10),
@@ -448,7 +451,7 @@ class _ContractFormState extends State<ContractForm> {
             children: [
               Text("Role: Data Processor ${index + 1}",
                   style: TextStyle(fontSize: 25)),
-              providerField((index * 7) + 0),
+              providerFieldSuggestor((index * 7) + 0),
               providerEmailField((index * 7) + 1),
               providerAddressField((index * 7) + 2),
               Container(height: 10),
@@ -732,6 +735,62 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  Widget requesterFieldSuggestor(int index) {
+    return Form(
+      key: step2Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
+              style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          Autocomplete(
+            displayStringForOption: _displayStringForOption,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<User>.empty();
+              }
+              return contractors.where((User option) {
+                return option.toString().contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (User selection) {
+              print('You selected ${_displayStringForOption(selection)}');
+              _fillRequesterForm(selection, index);
+            },
+            fieldViewBuilder: (
+              BuildContext context,
+              TextEditingController fieldTextEditingController,
+              FocusNode fieldFocusNode,
+              VoidCallback onFieldSubmitted
+            ) {
+              fieldTextEditingController.text = widget.requesterControllers[index].text;
+              return TextField(
+                controller: fieldTextEditingController,
+                focusNode: fieldFocusNode,
+                decoration: InputDecoration(
+                  isDense: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.blue)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                ),
+                style: TextStyle(fontSize: 16),
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  static String _displayStringForOption(User option) => option.name!;
+
   Widget requesterEmailField(int index) {
     return Form(
       key: step2Keys[index],
@@ -874,6 +933,60 @@ class _ContractFormState extends State<ContractForm> {
                 return 'Please enter a name.';
               }
               return null;
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget providerFieldSuggestor(int index) {
+    return Form(
+      key: step3Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "What is the name of the contract data processor ${currentProviderIndex + 1}?",
+              style: TextStyle(fontSize: 16)),
+          Container(height: 5),
+          Autocomplete(
+            displayStringForOption: _displayStringForOption,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<User>.empty();
+              }
+              return contractors.where((User option) {
+                return option.toString().contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (User selection) {
+              print('You selected ${_displayStringForOption(selection)}');
+              _fillProviderForm(selection, index);
+            },
+            fieldViewBuilder: (
+                BuildContext context,
+                TextEditingController fieldTextEditingController,
+                FocusNode fieldFocusNode,
+                VoidCallback onFieldSubmitted
+                ) {
+              fieldTextEditingController.text = widget.providerControllers[index].text;
+              return TextField(
+                controller: fieldTextEditingController,
+                focusNode: fieldFocusNode,
+                decoration: InputDecoration(
+                  isDense: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.blue)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                ),
+                style: TextStyle(fontSize: 16),
+              );
             },
           )
         ],
@@ -1984,6 +2097,26 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
+  void _fillProviderForm(User selected, int index) {
+    widget.providerControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
+    widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    widget.providerControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
+    widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    widget.providerControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
+  }
+
+  void _fillRequesterForm(User selected, int index) {
+    widget.requesterControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
+    widget.requesterControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    widget.requesterControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    widget.requesterControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    widget.requesterControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
+    widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
+  }
+
   /// Function that checks every textFormField in the second step of the
   /// contract to validate if each field has content in it.
   void validateStepTwo() {
@@ -2081,7 +2214,7 @@ class _ContractFormState extends State<ContractForm> {
       for (int i = 0; i < 7; i++) {
         widget.requesterControllers.add(TextEditingController());
       }
-      requesters.add(User("Primary"));
+      requesters.add(User(role: "Primary"));
     });
   }
 
@@ -2119,7 +2252,7 @@ class _ContractFormState extends State<ContractForm> {
       for (int i = 0; i < 7; i++) {
         widget.providerControllers.add(TextEditingController());
       }
-      providers.add(User("Secondary"));
+      providers.add(User(role: "Secondary"));
     });
   }
 

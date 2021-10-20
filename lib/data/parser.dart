@@ -1,6 +1,20 @@
 import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
+
+  User parseUser(Map jsonUser) {
+    return User(
+      name: jsonUser['Contract']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      streetAddress: jsonUser['address'] == null ? null : jsonUser['address']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      email: jsonUser['email'] == null ? null : jsonUser['email']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      telephoneNumber: jsonUser['telephone'] == null ? null : jsonUser['telephone']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+    );
+  }
+
+  List<User> parseAllUsers(List jsonList) {
+    return jsonList.map((jsonUser) => parseUser(jsonUser)).toList();
+  }
+
   Contract parseContract(Map jsonContract) {
     return Contract(contractId: jsonContract['Contract']['value']);
   }

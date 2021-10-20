@@ -283,24 +283,6 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
-  /**_confirmContractButton() {
-    return GestureDetector(
-      child: Text("Confirm & Send\nContract",
-          style: TextStyle(color: Colors.black, fontSize: 20),
-          textAlign: TextAlign.center),
-      onTap: () {
-        isFormComplete
-            ? dataProvider.createContract(
-                "SampleContract",
-                "This is a test of the smashHit flutter application. Insert Terms of Service here.",
-                "string",
-                DateTime.now(),
-                DateTime.now())
-            : dataProvider.fetchContractById("kg244565");
-      },
-    );
-  }*/
-
   _selectPartyRole() {
     showDialog(
         context: context,
@@ -329,7 +311,7 @@ class _ContractCreationState extends State<ContractCreation> {
                         _selectedRoleIndex == -1
                             ? null
                             : setState(() {
-                                users.add(new User(_selectedPartyRole));
+                                users.add(new User(role: _selectedPartyRole));
                                 textControllers
                                     .add(new TextEditingController());
                                 _incrementTextFieldCounter();
