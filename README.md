@@ -8,7 +8,7 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 ### Functionalities
-- [X] Added: Registration form
+- [X] Added: Registration form - 20.10.2021
 - [X] Auotfill form after clicking on suggestion - 18.10.2021
 - [ ] Send email when inviting someone into a contract
 - [ ] Fix Date display in ClaimForm
