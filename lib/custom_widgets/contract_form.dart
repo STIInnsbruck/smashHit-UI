@@ -258,7 +258,10 @@ class _ContractFormState extends State<ContractForm> {
               ),
               alignment: Alignment.centerLeft),
         ),
-        onPressed: () => setStepThree());
+        onPressed: () async  {
+          setStepThree();
+          contractors = await dataProvider.fetchAllUsers();
+        });
   }
 
   Widget contractStep4Header(double width) {
@@ -757,7 +760,6 @@ class _ContractFormState extends State<ContractForm> {
               });
             },
             onSelected: (User selection) {
-              print('You selected ${_displayStringForOption(selection)}');
               _fillRequesterForm(selection, index);
             },
             fieldViewBuilder: (
@@ -962,7 +964,6 @@ class _ContractFormState extends State<ContractForm> {
               });
             },
             onSelected: (User selection) {
-              print('You selected ${_displayStringForOption(selection)}');
               _fillProviderForm(selection, index);
             },
             fieldViewBuilder: (
@@ -1895,12 +1896,15 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  void setFormFields() {
+  void setFormFields() async {
+    contractors = await dataProvider.fetchAllUsers();
     setState(() {
       widget.titleController.text = widget.contract!.title!;
       _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
-      widget.requesterControllers[0].text = widget.contract!.contractor!; //TODO: this only takes the first data controller, make it take all existing ones.
-      widget.providerControllers[0].text = widget.contract!.contractee!; //TODO: this only takes the first data processor, make it take all existing ones.
+      //TODO: this only takes the first data controller, make it take all existing ones.
+      _fillRequesterForm(contractors.firstWhere((element) => element.name!.compareTo(widget.contract!.contractor!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '')) == 0), 0);
+      //TODO: this only takes the first data processor, make it take all existing ones.
+      _fillProviderForm(contractors.firstWhere((element) => element.name!.compareTo(widget.contract!.contractee!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '')) == 0), 0);
       widget.descriptionController.text = widget.contract!.description!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
@@ -2083,20 +2087,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  void validateStepOne() {
-    if (toggleStepOne == true) {
-      if (step1Key.currentState!.validate() == true) {
-        setState(() {
-          stepOneComplete = true;
-        });
-      } else {
-        setState(() {
-          stepOneComplete = false;
-        });
-      }
-    }
-  }
-
   void _fillProviderForm(User selected, int index) {
     widget.providerControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
     widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
@@ -2115,6 +2105,25 @@ class _ContractFormState extends State<ContractForm> {
     widget.requesterControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
     widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
     widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
+  }
+
+  void validateStepOne() {
+    // step1Key.currentState is null when we edit the contract in a step greater than 1.
+    if (toggleStepOne == true && step1Key.currentState != null) {
+      if (step1Key.currentState!.validate() == true) {
+        setState(() {
+          stepOneComplete = true;
+        });
+      } else {
+        setState(() {
+          stepOneComplete = false;
+        });
+      }
+    } else { //TODO: this is a temp work-around. This case only comes up during an edit attempt.
+      setState(() {
+        stepOneComplete = true;
+      });
+    }
   }
 
   /// Function that checks every textFormField in the second step of the
