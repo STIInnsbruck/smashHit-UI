@@ -11,14 +11,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  bool _signUp = false;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Material(
         child: Center(
           child: Container(
             width: screenWidth * 0.7,
+            height: screenHeight,
             child: Column(
       children: [
             Spacer(),
@@ -30,51 +35,27 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             Spacer(),
-            CircleAvatar(
-              radius: screenWidth * 0.10,
-              backgroundColor: Colors.grey,
-              child: CircleAvatar(
-                radius: screenWidth * 0.098,
-                backgroundColor: Colors.white,
-                child: Container(
-                  width: screenWidth * 0.192,
-                  height: screenWidth * 0.192,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.bottomCenter,
-                  child: ClipOval(
-                    child: Icon(Icons.person, size: screenWidth * 0.192, color: Colors.white),
-                  ),
-                )
-              ),
-            ),
-            Spacer(),
-            Container(
-              width: screenWidth * 0.20,
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Username',
-                  hintStyle: TextStyle(fontSize: 30)
+        CircleAvatar(
+          radius: screenWidth * 0.10,
+          backgroundColor: Colors.grey,
+          child: CircleAvatar(
+              radius: screenWidth * 0.098,
+              backgroundColor: Colors.white,
+              child: Container(
+                width: screenWidth * 0.192,
+                height: screenWidth * 0.192,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  shape: BoxShape.circle,
                 ),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 30),
-              )
-            ),
-            Container(),
-            Container(
-              width: screenWidth * 0.20,
-              child: TextFormField(
-                decoration: InputDecoration(
-                    hintText: 'Password',
-                    hintStyle: TextStyle(fontSize: 30),
+                alignment: Alignment.bottomCenter,
+                child: ClipOval(
+                  child: Icon(Icons.person, size: screenWidth * 0.192, color: Colors.white),
                 ),
-                obscureText: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 30),
               )
-            ),
+          ),
+        ),
+            _signUp? registration(screenWidth) : login(screenWidth),
             Spacer(flex: 2),
             Row(
               children: [
@@ -83,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     widget.changeScreen(0);
                   },
-                  child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 50)),
+                  child: _signUp? Text('Register', style: TextStyle(color: Colors.white, fontSize: 50)) : Text('Login', style: TextStyle(color: Colors.white, fontSize: 50)),
                   elevation: 10,
                   color: Colors.grey,
                   minWidth: screenWidth * 0.12,
@@ -91,8 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Spacer(),
                 MaterialButton(
-                  onPressed: () {},
-                  child: Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: 50)),
+                  onPressed: () {
+                    _toggleSignUp();
+                  },
+                  child: _signUp? Text('Sign In', style: TextStyle(color: Colors.white, fontSize: 50)) : Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: 50)),
                   elevation: 10,
                   color: Colors.grey,
                   minWidth: screenWidth * 0.12,
@@ -106,5 +89,112 @@ class _LoginScreenState extends State<LoginScreen> {
     ),
           ),
         ));
+  }
+
+  Widget login(double screenWidth) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Username',
+                  hintStyle: TextStyle(fontSize: 30)
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30),
+            )
+        ),
+        Container(height: 15),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Password',
+                hintStyle: TextStyle(fontSize: 30),
+              ),
+              obscureText: true,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30),
+            )
+        ),
+      ],
+    );
+  }
+
+  Widget registration(double screenWidth) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Name',
+                  hintStyle: TextStyle(fontSize: 30)
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30),
+            )
+        ),
+        Container(height: 15),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Surname',
+                  hintStyle: TextStyle(fontSize: 30)
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30),
+            )
+        ),
+        Container(height: 15),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Username',
+                  hintStyle: TextStyle(fontSize: 30)
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30),
+            )
+        ),
+        Container(height: 15),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Password',
+                hintStyle: TextStyle(fontSize: 30),
+              ),
+              obscureText: true,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30),
+            )
+        ),
+        Container(height: 15),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Confirm Password',
+                hintStyle: TextStyle(fontSize: 30),
+              ),
+              obscureText: true,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30),
+            )
+        ),
+      ],
+    );
+  }
+
+  void _toggleSignUp() {
+    setState(() {
+      _signUp = !_signUp;
+    });
   }
 }

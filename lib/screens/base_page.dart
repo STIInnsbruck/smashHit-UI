@@ -15,7 +15,7 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 5;
   String _selectedTitle = "";
   Widget? _selectedPage;
   User? currentUser;
@@ -23,7 +23,7 @@ class _BasePageState extends State<BasePage> {
   DataProvider dataProvider = DataProvider();
 
   _BasePageState() {
-    _selectedPage = Dashboard(changeScreen, currentUser);
+    _selectedPage = LoginScreen(changeScreen);
     _selectedTitle = "Contracts Dashboard";
   }
 
