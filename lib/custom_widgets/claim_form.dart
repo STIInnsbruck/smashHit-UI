@@ -103,7 +103,7 @@ class _ClaimFormState extends State<ClaimForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text('Date of Violation: ${_formatDate(DateTime.now())}'),
-                  Text('Contract ID: ${widget.contract.contractId}')
+                  Text('Contract ID: ${widget.contract.formatContractId()}')
                 ],
               ),
               Container(height: 20),
@@ -115,9 +115,9 @@ class _ClaimFormState extends State<ClaimForm> {
                 children: [
                   Text('Involved Parties:', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 2),
-                  Text(widget.contract.contractor!, style: TextStyle(fontSize: 15)),
+                  Text(widget.contract.formatContractor(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
-                  Text(widget.contract.contractee!, style: TextStyle(fontSize: 15)),
+                  Text(widget.contract.formatContractee(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 2),
                 ],
               ),
