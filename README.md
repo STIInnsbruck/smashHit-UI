@@ -8,6 +8,7 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 ### Functionalities
+- [X] Added: Registration form
 - [X] Auotfill form after clicking on suggestion - 18.10.2021
 - [ ] Send email when inviting someone into a contract
 - [ ] Fix Date display in ClaimForm
@@ -27,7 +28,7 @@ Frontend Application for Contract Management (smashHit).
 - [ ] add ENTER-Button listeners to textfields
 - [ ] add ENTER-Button listeners to creation steps to continue to next step
 - [X] ADD: delete contract functionality - 07.10.2021
-- [ ] ADD: update Contract functionality
+- [X] ADD: update Contract functionality - 20.10.2021
 - [X] Prettify contract terms and conditions view - 04.10.2021
 - [X] Prevent/add error message when user navigates to contract overview too early - 05.10.2021
 - [X] Add textField validators for each textField - 04.10.2021
