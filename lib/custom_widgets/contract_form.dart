@@ -258,7 +258,10 @@ class _ContractFormState extends State<ContractForm> {
               ),
               alignment: Alignment.centerLeft),
         ),
-        onPressed: () => setStepThree());
+        onPressed: () async  {
+          setStepThree();
+          contractors = await dataProvider.fetchAllUsers();
+        });
   }
 
   Widget contractStep4Header(double width) {
@@ -757,7 +760,6 @@ class _ContractFormState extends State<ContractForm> {
               });
             },
             onSelected: (User selection) {
-              print('You selected ${_displayStringForOption(selection)}');
               _fillRequesterForm(selection, index);
             },
             fieldViewBuilder: (
@@ -962,7 +964,6 @@ class _ContractFormState extends State<ContractForm> {
               });
             },
             onSelected: (User selection) {
-              print('You selected ${_displayStringForOption(selection)}');
               _fillProviderForm(selection, index);
             },
             fieldViewBuilder: (
@@ -1895,12 +1896,15 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  void setFormFields() {
+  void setFormFields() async {
+    contractors = await dataProvider.fetchAllUsers();
     setState(() {
       widget.titleController.text = widget.contract!.title!;
       _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
-      widget.requesterControllers[0].text = widget.contract!.contractor!; //TODO: this only takes the first data controller, make it take all existing ones.
-      widget.providerControllers[0].text = widget.contract!.contractee!; //TODO: this only takes the first data processor, make it take all existing ones.
+      _fillRequesterForm(contractors.firstWhere((element) => element.name!.compareTo(widget.contract!.contractor!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '')) == 0), 0);
+      _fillProviderForm(contractors.firstWhere((element) => element.name!.compareTo(widget.contract!.contractee!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '')) == 0), 0);
+      //widget.requesterControllers[0].text = widget.contract!.contractor!; //TODO: this only takes the first data controller, make it take all existing ones.
+      //widget.providerControllers[0].text = widget.contract!.contractee!; //TODO: this only takes the first data processor, make it take all existing ones.
       widget.descriptionController.text = widget.contract!.description!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
