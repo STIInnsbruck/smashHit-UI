@@ -130,6 +130,54 @@ class DataProvider {
     }
   }
 
+  updateContract(String title, String contractTerms, String contractType,
+      DateTime startDate, DateTime expireDate, String requester, String provider) async {
+
+    var body = {
+      "ContractId": title.replaceAll(' ', ''),
+      "ContractType": contractType,
+      "Purpose": contractTerms.replaceAll('\n', ''),
+      "ContractRequester": requester.replaceAll(' ', ''),
+      "ContractProvider": provider.replaceAll(' ', ''),
+      "DataController": requester.replaceAll(' ', ''),
+      "StartDate": _formatDate(startDate),
+      "ExecutionDate": _formatDate(startDate),
+      "EffectiveDate": _formatDate(startDate),
+      "ExpireDate": _formatDate(expireDate),
+      "Medium": "SmashHit Flutter Application",
+      "Waiver": "string",
+      "Amendment": "string",
+      "ConfidentialityObligation": "string",
+      "DataProtection": "string",
+      "LimitationOnUse": "string",
+      "MethodOfNotice": "string",
+      "NoThirdPartyBeneficiaries": "string",
+      "PermittedDisclosure": "string",
+      "ReceiptOfNotice": "string",
+      "Severability": "string",
+      "TerminationForInsolvency": "string",
+      "TerminationForMaterialBreach": "string",
+      "TerminationOnNotice": "string",
+      "ContractStatus": "string"
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/contract/update/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Contract Updated.");
+      return true;
+    } else {
+      print("Error createContract()");
+      print("${response.statusCode}");
+      print("${response.body}");
+      return false;
+    }
+  }
+
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {
     String dateString = "${date!.year}-${date.month}-${date.day}";

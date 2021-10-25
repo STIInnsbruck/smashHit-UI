@@ -19,6 +19,7 @@ class _DashboardState extends State<Dashboard> {
 
   List<String> contractIdList = []; //API first gives us all IDs.
   DataProvider dataProvider = DataProvider();
+  String searchId = "";
 
   late Future<List<Contract>> futureContractList = [] as Future<List<Contract>>;
   List<Contract>? contractList = [];
@@ -46,7 +47,15 @@ class _DashboardState extends State<Dashboard> {
             return ListView.builder(
                 itemCount: contractList!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+                  if (searchId.compareTo("") == 0) {
+                    return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+                  } else {
+                    if (contractList![index].contractId!.contains(searchId)) {
+                      return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+                    } else {
+                      return Container();
+                    }
+                  }
                 });
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
@@ -60,6 +69,12 @@ class _DashboardState extends State<Dashboard> {
   void refreshContractList() {
     setState(() {
       futureContractList = dataProvider.fetchAllContracts();
+    });
+  }
+
+  void setSearchId(String input) {
+    setState(() {
+      searchId = input;
     });
   }
 

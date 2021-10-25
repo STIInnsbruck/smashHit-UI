@@ -49,7 +49,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    isEditing? ContractForm(widget.changeScreen, currentStep, contract!) : UpdateForm(widget.changeScreen, toggleEditing, contract!)
+                    isEditing? ContractForm(widget.changeScreen, currentStep, contract!, toggleEditing) : UpdateForm(widget.changeScreen, toggleEditing, contract!)
                   ],
                 ),
               ),
@@ -70,8 +70,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
     );
   }
 
-  void toggleEditing(int x) {
-    setStep(x);
+  void toggleEditing([int? x]) {
+    if(x != null) {setStep(x);}
+    print("toggling...");
     setState(() {
       isEditing = !isEditing;
     });

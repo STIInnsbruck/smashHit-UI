@@ -117,6 +117,9 @@ class _BasePageState extends State<BasePage> {
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 20),
         decoration: InputDecoration(hintText: "Search for a contract by ID"),
+        onChanged: (String value) {
+
+        },
       ),
     );
   }

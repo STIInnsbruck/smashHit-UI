@@ -8,6 +8,7 @@ enum ContractType { Written, Mutual, Verbal, Transferable }
 
 class ContractForm extends StatefulWidget {
   final Function(int, [String]) changeScreen;
+  Function(int?)? toggleEditing;
   int step;
   Contract? contract;
   DateTime? startDate;
@@ -20,7 +21,7 @@ class ContractForm extends StatefulWidget {
   List<TextEditingController> providerControllers = [];
   String? contractDropDownType;
 
-  ContractForm(this.changeScreen, this.step, this.contract);
+  ContractForm(this.changeScreen, this.step, this.contract, [this.toggleEditing]);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -77,11 +78,13 @@ class _ContractFormState extends State<ContractForm> {
   List<GlobalKey<FormState>> step3Keys = [];
   final _step4Key = GlobalKey<FormState>();
 
+  //------------------- Other Variables ----------------------------------------
   List<User> requesters = [];
   int currentRequesterIndex = 0;
   List<User> providers = [];
   int currentProviderIndex = 0;
   static List<User> contractors = [];
+  Contract? tmpContract;
 
   @override
   void initState() {
@@ -97,6 +100,7 @@ class _ContractFormState extends State<ContractForm> {
     setStep();
     if (widget.contract != null) {
       setFormFields();
+      tmpContract = widget.contract;
     } else {
 
     }
@@ -135,8 +139,14 @@ class _ContractFormState extends State<ContractForm> {
                 : Container(),
           ])))),
       Align(
-        alignment: Alignment.bottomRight,
-        child: nextStepButton(),
+        alignment: Alignment.centerRight,
+        child: widget.contract != null? Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            nextStepButton(),
+            confirmEditButton()
+          ],
+        ) : nextStepButton(),
       ),
       Align(
         alignment: Alignment.bottomLeft,
@@ -1670,6 +1680,24 @@ class _ContractFormState extends State<ContractForm> {
         ));
   }
 
+  Widget confirmEditButton() {
+    return Container(
+      width: 150,
+      height: 50,
+      child: MaterialButton(
+        color: Colors.grey,
+        hoverColor: Colors.blueGrey,
+        child: Text("Confirm Changes", style: TextStyle(color: Colors.white, fontSize: 20)),
+        onPressed: () {
+          setState(() {
+            widget.contract = tmpContract;
+          });
+          widget.toggleEditing!(null);
+        }
+      )
+    );
+  }
+
   Widget previousStepButton() {
     return Container(
         width: 150,
@@ -1899,18 +1927,24 @@ class _ContractFormState extends State<ContractForm> {
   void setFormFields() async {
     contractors = await dataProvider.fetchAllUsers();
     setState(() {
-      widget.titleController.text = widget.contract!.title!;
+      widget.titleController.text = displayStringWithoutUri(widget.contract!.contractId!);
       _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
       //TODO: this only takes the first data controller, make it take all existing ones.
-      _fillRequesterForm(contractors.firstWhere((element) => element.name!.compareTo(widget.contract!.contractor!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '')) == 0), 0);
+      _fillRequesterForm(contractors.firstWhere((element) => element.name!.compareTo(displayStringWithoutUri(widget.contract!.contractor!)) == 0), 0);
       //TODO: this only takes the first data processor, make it take all existing ones.
-      _fillProviderForm(contractors.firstWhere((element) => element.name!.compareTo(widget.contract!.contractee!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '')) == 0), 0);
+      _fillProviderForm(contractors.firstWhere((element) => element.name!.compareTo(displayStringWithoutUri(widget.contract!.contractee!)) == 0), 0);
       widget.descriptionController.text = widget.contract!.description!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
       executionDate = widget.contract!.executionDate;
       endDate = widget.contract!.expireDate;
     });
+  }
+
+  /// Helper function to display contract value without the uri. This is just
+  /// a DISPLAY function. It does NOT remove the uri in the value.
+  String displayStringWithoutUri(String s) {
+    return s.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   void setFields() {}
