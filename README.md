@@ -8,25 +8,22 @@ Frontend Application for Contract Management (smashHit).
 
 ## Current To-Do's
 ### Functionalities
-- [X] Added: Registration form - 20.10.2021
-- [X] Auotfill form after clicking on suggestion - 18.10.2021
 - [ ] Send email when inviting someone into a contract
 - [ ] Fix Date display in ClaimForm
-- [X] Fix User display in ClaimForm - 14.10.2021
 - [ ] Re-implement add parties function (key listeners and textControllers do not align and break upon checking)
 - [ ] Display dynamic signature fields in ContractForm
 - [ ] Display dynamic signature fields in UpdateForm
 - [ ] Add hint note in updateScreen to guide the user on how to update
-- [X] Navigate to contract editor when clicking a block in updateForm - 14.10.2021
 - [ ] Add 3 value radio buttons for contract creation.
 - [ ] Implement regex for email and phone???
 - [ ] Change contractedEntities tile when checking on active contract
 - [ ] Add Scaler for data processing contract
 - [ ] Detailfy Data Processing Template
 - [ ] Add live dynamic contract search
-- [X] add auto-fill when entering a contractor name - 18.10.2021
 - [ ] add ENTER-Button listeners to textfields
 - [ ] add ENTER-Button listeners to creation steps to continue to next step
+
+##Completed ToDo's
 - [X] ADD: delete contract functionality - 07.10.2021
 - [X] ADD: update Contract functionality - 20.10.2021
 - [X] Prettify contract terms and conditions view - 04.10.2021
@@ -42,6 +39,11 @@ Frontend Application for Contract Management (smashHit).
 - [X] Make Sidebar disappear after use/click.
 - [X] Rename Requester to Data Controller
 - [X] Rename Provider to Date Processor
+- [X] add auto-fill when entering a contractor name - 18.10.2021
+- [X] Navigate to contract editor when clicking a block in updateForm - 14.10.2021
+- [X] Fix User display in ClaimForm - 14.10.2021
+- [X] Added: Registration form - 20.10.2021
+- [X] Auotfill form after clicking on suggestion - 18.10.2021
 
 ### Screens
 - [X] Add Login-Screen - 05.10.2021
