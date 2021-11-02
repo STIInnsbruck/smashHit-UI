@@ -690,6 +690,118 @@ class _ContractFormState extends State<ContractForm> {
             //padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
               child: Text('${widget.descriptionController.text}',
                   textAlign: TextAlign.justify)),
+          Container(height: 20),
+          Text('Amendment',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isAmendment, widget.termControllers[0]) == true
+            ? Text('${widget.termControllers[0].text}', textAlign: TextAlign.justify)
+            : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Confidentiality Obligation',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isConfidentialObligation, widget.termControllers[1]) == true
+              ? Text('${widget.termControllers[1].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Data Controller',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isDataController, widget.termControllers[2]) == true
+              ? Text('${widget.termControllers[2].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Data Protection',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isDataProtection, widget.termControllers[3]) == true
+              ? Text('${widget.termControllers[3].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Limitation On Use',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isLimitationOnUse, widget.termControllers[4]) == true
+              ? Text('${widget.termControllers[4].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Method Of Notice',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isMethodOfNotice, widget.termControllers[5]) == true
+              ? Text('${widget.termControllers[5].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Third Party Beneficiaries',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isNoThirdPartyBeneficiaries, widget.termControllers[6]) == true
+              ? Text('${widget.termControllers[6].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Permitted Disclosure',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isPermittedDisclosure, widget.termControllers[7]) == true
+              ? Text('${widget.termControllers[7].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Receipt of Notice',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isConfidentialObligation, widget.termControllers[8]) == true
+              ? Text('${widget.termControllers[8].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Severability',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isSeverability, widget.termControllers[9]) == true
+              ? Text('${widget.termControllers[9].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Termination Of Insolvency',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isTerminationForInsolvency, widget.termControllers[10]) == true
+              ? Text('${widget.termControllers[10].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Termination For Material Breach',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isTerminationForMaterialBreach, widget.termControllers[11]) == true
+              ? Text('${widget.termControllers[11].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Termination On Notice',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isTerminationOnNotice, widget.termControllers[12]) == true
+              ? Text('${widget.termControllers[12].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
+          Container(height: 20),
+          Text('Waiver',
+              style: TextStyle(
+                  fontSize: 15, decoration: TextDecoration.underline)),
+          checkTermElement(isWaiver, widget.termControllers[13]) == true
+              ? Text('${widget.termControllers[13].text}', textAlign: TextAlign.justify)
+              : Text('None.', textAlign: TextAlign.justify),
+
           Container(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -2254,6 +2366,14 @@ class _ContractFormState extends State<ContractForm> {
 
   void setWidgetEndDate() {
     widget.endDate = endDate;
+  }
+
+  bool checkTermElement(CheckBoxBoolean isChecked, TextEditingController controller) {
+    if (controller.text.compareTo("") == 0 || isChecked.value == false) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   /// Helper function to add a new requester into the form. Each requester has
