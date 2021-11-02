@@ -38,7 +38,7 @@ class _BasePageState extends State<BasePage> {
         appBar: _selectedIndex == 5 ? null : AppBar(
           backgroundColor: Colors.blue,
           title: Center(child: Text(_selectedTitle)),
-          actions: [searchField(screenWidth), searchButton()],
+          actions: [inboxIcon(), searchField(screenWidth), searchButton()],
         ),
         drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: <Widget>[
@@ -127,6 +127,24 @@ class _BasePageState extends State<BasePage> {
     );
   }
 
+  MaterialButton inboxIcon() {
+    return MaterialButton(
+      onPressed: () {
+        print("Inbox Pressed.");
+      },
+      child: Stack(
+        children: [
+          Icon(Icons.inbox, size: 25, color: Colors.white),
+          CircleAvatar(
+            radius: 5,
+            backgroundColor: Colors.red[400],
+          )
+        ],
+      ),
+      minWidth: 25,
+    );
+  }
+
   IconButton searchButton() {
     return IconButton(
       icon: Icon(Icons.search),
@@ -135,6 +153,11 @@ class _BasePageState extends State<BasePage> {
         changeScreen(2, searchBarController.text);
       },
     );
+  }
+
+  //TODO: implement mail reader
+  bool existsUnreadMail() {
+    return true;
   }
 
   Column userInformation(double width) {
