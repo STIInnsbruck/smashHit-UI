@@ -77,19 +77,19 @@ class Contract {
   }
 
   String formatContractType() {
-    return this.contractType!.substring(45, this.contractType!.length);
+    return this.contractType!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String formatContractor() {
-    return this.contractor!.substring(45, this.contractor!.length);
+    return this.contractor!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String formatContractee() {
-    return this.contractee!.substring(45, this.contractee!.length);
+    return this.contractee!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String formatContractId() {
-    return this.contractId!.substring(45, this.contractId!.length);
+    return this.contractId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   static DateTime formatDate(String dateString) {
