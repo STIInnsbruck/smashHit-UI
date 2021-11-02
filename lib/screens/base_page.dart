@@ -127,28 +127,35 @@ class _BasePageState extends State<BasePage> {
     );
   }
 
-  MaterialButton inboxIcon() {
-    return MaterialButton(
-      onPressed: () {
-        print("Inbox Pressed.");
-      },
-      child: Stack(
-        children: [
-          Icon(Icons.inbox, size: 25, color: Colors.white),
-          CircleAvatar(
-            radius: 5,
-            backgroundColor: Colors.red[400],
-          )
-        ],
+  PopupMenuButton inboxIcon() {
+    return PopupMenuButton(
+      tooltip: "Show notifications",
+      child: Center(
+        child: Stack(
+          children: [
+            Icon(Icons.inbox, size: 40, color: Colors.white),
+            CircleAvatar(
+              radius: 7,
+              backgroundColor: Colors.red[400],
+            )
+          ],
+        ),
       ),
-      minWidth: 25,
+      onSelected: (value) { print("Selected value: $value"); },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<Object>>[
+        PopupMenuItem(child: Text("Example Notification 1")),
+        PopupMenuItem(child: Text("Example Notification 2")),
+        PopupMenuItem(child: Text("Example Notification 3")),
+        PopupMenuItem(child: Text("Example Notification 4")),
+        PopupMenuItem(child: Text("Example Notification 5"))
+      ],
     );
   }
 
   IconButton searchButton() {
     return IconButton(
       icon: Icon(Icons.search),
-      iconSize: 25,
+      iconSize: 30,
       onPressed: () {
         changeScreen(2, searchBarController.text);
       },
