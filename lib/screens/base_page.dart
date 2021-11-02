@@ -120,6 +120,9 @@ class _BasePageState extends State<BasePage> {
         onChanged: (String value) {
 
         },
+        onFieldSubmitted: (String value) {
+          print("Enter pressed: $value");
+        },
       ),
     );
   }
