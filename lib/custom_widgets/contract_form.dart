@@ -19,6 +19,7 @@ class ContractForm extends StatefulWidget {
   TextEditingController descriptionController = TextEditingController();
   List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
+  List<TextEditingController> termControllers = [];
   String? contractDropDownType;
 
   ContractForm(this.changeScreen, this.step, this.contract, [this.toggleEditing]);
@@ -94,13 +95,16 @@ class _ContractFormState extends State<ContractForm> {
     addRequester();
     addProvider();
 
+    //Initialize the term controllers.
+    initTermControllers();
+
     // Add minimum amount of keys for each initial textFormField.
     addStep2Keys();
     addStep3Keys();
     setStep();
     if (widget.contract != null) {
       setFormFields();
-      tmpContract = widget.contract;
+      //tmpContract = widget.contract;
     } else {
 
     }
@@ -523,62 +527,62 @@ class _ContractFormState extends State<ContractForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   checkBoxElement(
-                      'Amendment', 'Has an amendment', AMENDMENT, isAmendment),
+                      'Amendment', 'Has an amendment', AMENDMENT, isAmendment, widget.termControllers[0]),
                   checkBoxElement(
                       'ConfidentialityObligation',
                       'Is there a confidentiality obligation?',
                       CONFIDENTIALITY_OBLIGATION,
-                      isConfidentialObligation),
+                      isConfidentialObligation, widget.termControllers[1]),
                   checkBoxElement(
                       'DataController',
                       'Is there a data controller?',
                       DATA_CONTROLLER,
-                      isDataController),
+                      isDataController, widget.termControllers[2]),
                   checkBoxElement(
                       'DataProtection',
                       'Does the contract contain data protection?',
                       DATA_PROTECTION,
-                      isDataProtection),
+                      isDataProtection, widget.termControllers[3]),
                   checkBoxElement(
                       'LimitationOnUse',
                       'Is there a limitation on use?',
                       LIMITATION_ON_USE,
-                      isLimitationOnUse),
+                      isLimitationOnUse, widget.termControllers[4]),
                   checkBoxElement('MethodOfNotice', 'Has method of notice?',
-                      METHOD_OF_NOTICE, isMethodOfNotice),
+                      METHOD_OF_NOTICE, isMethodOfNotice, widget.termControllers[5]),
                   checkBoxElement(
                       'NoThirdPartyBeneficiaries',
                       'Are there third party beneficiaries?',
                       NO_THIRD_PARTY_BENEFICIARIES,
-                      isNoThirdPartyBeneficiaries),
+                      isNoThirdPartyBeneficiaries, widget.termControllers[6]),
                   checkBoxElement(
                       'PermittedDisclosure',
                       'Is there a permitted disclosure?',
                       PERMITTED_DISCLOSURE,
-                      isPermittedDisclosure),
+                      isPermittedDisclosure, widget.termControllers[7]),
                   checkBoxElement(
                       'ReceiptOfNotice',
                       'Is there a receipt of notice?',
                       RECEIPT_OF_NOTICE,
-                      isReceiptOfNotice),
+                      isReceiptOfNotice, widget.termControllers[8]),
                   checkBoxElement('Severability', 'Is there a severability?',
-                      SEVERABILITY, isSeverability),
+                      SEVERABILITY, isSeverability, widget.termControllers[9]),
                   checkBoxElement(
                       'TerminationForInsolvency',
                       'Is there a termination for insolvency?',
                       TERMINATION_FOR_INSOLVENCY,
-                      isTerminationForInsolvency),
+                      isTerminationForInsolvency, widget.termControllers[10]),
                   checkBoxElement(
                       'TerminationForMaterialBreach',
                       'Is there a termination for material breach?',
                       TERMINATION_FOR_MATERIAL_BREACH,
-                      isTerminationForMaterialBreach),
+                      isTerminationForMaterialBreach, widget.termControllers[11]),
                   checkBoxElement(
                       'TerminationOnNotice',
                       'Is there a termination on notice?',
                       TERMINATION_ON_NOTICE,
-                      isTerminationOnNotice),
-                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver),
+                      isTerminationOnNotice, widget.termControllers[12]),
+                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13]),
                 ],
               ),
               Container(height: 10),
@@ -1287,7 +1291,7 @@ class _ContractFormState extends State<ContractForm> {
   /// [isChecked] is the boolean variable that is to be attached to this
   /// checkbox.
   Widget checkBoxElement(String contractElement, String checkBoxTitle,
-      String tooltipMessage, CheckBoxBoolean isChecked) {
+      String tooltipMessage, CheckBoxBoolean isChecked, TextEditingController textController) {
     return Container(
       child: Column(
         children: [
@@ -1321,10 +1325,10 @@ class _ContractFormState extends State<ContractForm> {
           ),
           isChecked.value == true
               ? Container(
-                  height: 100,
+                  height: 200,
                   color: Colors.white54,
                   child: TextField(
-                    controller: widget.descriptionController,
+                    controller: textController,
                     maxLines: null,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
@@ -1337,7 +1341,7 @@ class _ContractFormState extends State<ContractForm> {
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(2.0),
                           borderSide:
-                              BorderSide(color: Colors.black, width: 2.0)),
+                              BorderSide(color: Colors.black, width: 1.0)),
                     ),
                   ))
               : Container()
@@ -1689,8 +1693,11 @@ class _ContractFormState extends State<ContractForm> {
         hoverColor: Colors.blueGrey,
         child: Text("Confirm Changes", style: TextStyle(color: Colors.white, fontSize: 20)),
         onPressed: () {
+          setContract();
+          print("Original contract ID: ${widget.contract!.contractId!}");
           setState(() {
             widget.contract = tmpContract;
+            print("Modified contract ID: ${widget.contract!.contractId!}");
           });
           widget.toggleEditing!(null);
         }
@@ -1913,14 +1920,14 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setContract() {
-    widget.contract = new Contract(
+    tmpContract = new Contract(
       contractId: widget.titleController.text,
       description: widget.descriptionController.text,
       contractee: widget.providerControllers[0].text,
       contractor: widget.requesterControllers[0].text,
       contractType: 'Written',
-      executionDate: startDate!,
-      expireDate: endDate!
+      executionDate: startDate,
+      expireDate: endDate
     );
   }
 
@@ -1932,7 +1939,7 @@ class _ContractFormState extends State<ContractForm> {
       //TODO: this only takes the first data controller, make it take all existing ones.
       _fillRequesterForm(contractors.firstWhere((element) => element.name!.compareTo(displayStringWithoutUri(widget.contract!.contractor!)) == 0), 0);
       //TODO: this only takes the first data processor, make it take all existing ones.
-      _fillProviderForm(contractors.firstWhere((element) => element.name!.compareTo(displayStringWithoutUri(widget.contract!.contractee!)) == 0), 0);
+      //_fillProviderForm(contractors.firstWhere((element) => element.name!.compareTo(displayStringWithoutUri(widget.contract!.contractee!)) == 0), 0);
       widget.descriptionController.text = widget.contract!.description!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
@@ -2296,6 +2303,14 @@ class _ContractFormState extends State<ContractForm> {
         widget.providerControllers.add(TextEditingController());
       }
       providers.add(User(role: "Secondary"));
+    });
+  }
+
+  void initTermControllers() {
+    setState(() {
+      for (int i = 0; i < 14; i++) {
+        widget.termControllers.add(TextEditingController());
+      }
     });
   }
 

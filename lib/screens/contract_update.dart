@@ -72,7 +72,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   void toggleEditing([int? x]) {
     if(x != null) {setStep(x);}
-    print("toggling...");
+    print("Updatable Contrac ID: ${contract!.contractId}");
     setState(() {
       isEditing = !isEditing;
     });
