@@ -152,8 +152,41 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontSize: 20),
             )
         ),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Email',
+                  hintStyle: TextStyle(fontSize: 20)
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20),
+            )
+        ),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Phone Number',
+                  hintStyle: TextStyle(fontSize: 20)
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20),
+            )
+        ),
         Container(height: 10),
-        CSCDropdownPicker(screenWidth * 0.20)
+        CSCDropdownPicker(screenWidth * 0.20),
+        Container(
+            width: screenWidth * 0.20,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'Street Address',
+                  hintStyle: TextStyle(fontSize: 20)
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20),
+            )
+        ),
       ],
     );
   }
