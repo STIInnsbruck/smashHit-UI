@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:country_state_city_pro/country_state_city_pro.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
@@ -13,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   bool _signUp = false;
+  TextEditingController city = new TextEditingController();
+  TextEditingController state = new TextEditingController();
+  TextEditingController country = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -99,24 +103,23 @@ class _LoginScreenState extends State<LoginScreen> {
             width: screenWidth * 0.20,
             child: TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Username',
-                  hintStyle: TextStyle(fontSize: 30)
+                  hintText: 'Name',
+                  hintStyle: TextStyle(fontSize: 20)
               ),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
+              style: TextStyle(fontSize: 20),
             )
         ),
-        Container(height: 15),
         Container(
             width: screenWidth * 0.20,
             child: TextFormField(
               decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(fontSize: 30),
+                hintText: 'Surname',
+                hintStyle: TextStyle(fontSize: 20),
               ),
-              obscureText: true,
+              obscureText: false,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
+              style: TextStyle(fontSize: 20),
             )
         ),
       ],
@@ -132,63 +135,40 @@ class _LoginScreenState extends State<LoginScreen> {
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: 30)
+                  hintStyle: TextStyle(fontSize: 20)
               ),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
+              style: TextStyle(fontSize: 20),
             )
         ),
-        Container(height: 15),
         Container(
             width: screenWidth * 0.20,
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Surname',
-                  hintStyle: TextStyle(fontSize: 30)
+                  hintStyle: TextStyle(fontSize: 20)
               ),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
+              style: TextStyle(fontSize: 20),
             )
         ),
-        Container(height: 15),
-        Container(
-            width: screenWidth * 0.20,
-            child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'Username',
-                  hintStyle: TextStyle(fontSize: 30)
-              ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
-            )
-        ),
-        Container(height: 15),
-        Container(
-            width: screenWidth * 0.20,
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(fontSize: 30),
-              ),
-              obscureText: true,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
-            )
-        ),
-        Container(height: 15),
-        Container(
-            width: screenWidth * 0.20,
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Confirm Password',
-                hintStyle: TextStyle(fontSize: 30),
-              ),
-              obscureText: true,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
-            )
-        ),
+        Container(height: 10),
+        CSCDropdownPicker(screenWidth * 0.20)
       ],
+    );
+  }
+
+  Widget CSCDropdownPicker(double width) {
+    return Container(
+      width: width,
+      child: CountryStateCityPicker(
+        city: city,
+        country: country,
+        state: state,
+        textFieldInputBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(2.0),
+            borderSide: BorderSide(color: Colors.black, width: 2.0)),
+      ),
     );
   }
 
