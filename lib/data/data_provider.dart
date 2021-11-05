@@ -23,10 +23,41 @@ class DataProvider {
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjQwNDI3Mzc4fQ.aD7XNfGsCqgzshdiwcqWEc2srtd56TlNCtAm0o-fFLI";
 
   var headers = {
-    'accept': '*/*',
+    'Accept': '*/*',
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $token'
   };
+
+  Future<bool> createAgent(String name, String agentId, String address, String city,
+      String country, String state, String phone, String agentType, String email) async {
+
+    var body = {
+      "Name": "Bob",
+      "AgentId": "BobRoss",
+      "Address": "11, rue de mondorf",
+      "City": "Mondorf",
+      "Country": "Luxembourg",
+      "State": "Suden",
+      "Phone": "651457895",
+      "AgentType": "Person",
+      "Email": "bobross@gmail.com"
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/agent/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Message: \t $data");
+      return true;
+    } else {
+      print("Statuscode: ${response.statusCode}");
+      print("Response body: ${response.body}");
+      return false;
+    }
+  }
 
   Future<bool> createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate, String requester, String provider) async {

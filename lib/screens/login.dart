@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
@@ -13,10 +14,18 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
+  DataProvider dataProvider = new DataProvider();
   bool _signUp = false;
+  bool loading = false;
+
   TextEditingController city = new TextEditingController();
   TextEditingController state = new TextEditingController();
   TextEditingController country = new TextEditingController();
+  TextEditingController address = new TextEditingController();
+  TextEditingController name = new TextEditingController();
+  TextEditingController surname = new TextEditingController();
+  TextEditingController email = new TextEditingController();
+  TextEditingController phone = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,27 +68,50 @@ class _LoginScreenState extends State<LoginScreen> {
               )
           ),
         ),
-            _signUp? registration(screenWidth) : login(screenWidth),
+            _signUp? registrationForm(screenWidth) : loginForm(screenWidth),
             Spacer(flex: 2),
             Row(
               children: [
                 Spacer(flex: 2),
+                _signUp?
+                MaterialButton(
+                  onPressed: () async {
+                    _register();
+                    //_registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                  },
+                  child: Text('Register', style: TextStyle(color: Colors.white, fontSize: 50)),
+                  elevation: 10,
+                  color: Colors.grey,
+                  minWidth: screenWidth * 0.12,
+                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                ) :
                 MaterialButton(
                   onPressed: () {
                     widget.changeScreen(0);
                   },
-                  child: _signUp? Text('Register', style: TextStyle(color: Colors.white, fontSize: 50)) : Text('Login', style: TextStyle(color: Colors.white, fontSize: 50)),
+                  child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 50)),
                   elevation: 10,
                   color: Colors.grey,
                   minWidth: screenWidth * 0.12,
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 ),
                 Spacer(),
+                _signUp?
                 MaterialButton(
                   onPressed: () {
                     _toggleSignUp();
                   },
-                  child: _signUp? Text('Sign In', style: TextStyle(color: Colors.white, fontSize: 50)) : Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: 50)),
+                  child: Text('Sign In', style: TextStyle(color: Colors.white, fontSize: 50)),
+                  elevation: 10,
+                  color: Colors.grey,
+                  minWidth: screenWidth * 0.12,
+                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                ) :
+                MaterialButton(
+                  onPressed: () {
+                    _toggleSignUp();
+                  },
+                  child: Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: 50)),
                   elevation: 10,
                   color: Colors.grey,
                   minWidth: screenWidth * 0.12,
@@ -95,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  Widget login(double screenWidth) {
+  Widget loginForm(double screenWidth) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -106,18 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: 'Name',
                   hintStyle: TextStyle(fontSize: 20)
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            )
-        ),
-        Container(
-            width: screenWidth * 0.20,
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Surname',
-                hintStyle: TextStyle(fontSize: 20),
-              ),
-              obscureText: false,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20),
             )
@@ -126,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget registration(double screenWidth) {
+  Widget registrationForm(double screenWidth) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -135,10 +155,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: 20)
+                  hintStyle: TextStyle(fontSize: 16)
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+              controller: name,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 16),
             )
         ),
         Container(
@@ -146,10 +167,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Surname',
-                  hintStyle: TextStyle(fontSize: 20)
+                  hintStyle: TextStyle(fontSize: 16)
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+              controller: surname,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 16),
             )
         ),
         Container(
@@ -157,10 +179,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Email',
-                  hintStyle: TextStyle(fontSize: 20)
+                  hintStyle: TextStyle(fontSize: 16)
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+              controller: email,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 16),
             )
         ),
         Container(
@@ -168,10 +191,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Phone Number',
-                  hintStyle: TextStyle(fontSize: 20)
+                  hintStyle: TextStyle(fontSize: 16)
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+              controller: phone,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 16),
             )
         ),
         Container(height: 10),
@@ -181,10 +205,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Street Address',
-                  hintStyle: TextStyle(fontSize: 20)
+                  hintStyle: TextStyle(fontSize: 16)
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+              controller: address,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 16),
             )
         ),
       ],
@@ -209,5 +234,28 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _signUp = !_signUp;
     });
+  }
+
+  void _toggleLoading() {
+    setState(() {
+      loading = !loading;
+    });
+  }
+
+  void _register() {
+    dataProvider.createAgent("null", "null", "null", "null", "null", "null", "null", "null", "null");
+  }
+
+  Future<bool> _registerUser(String name, String agentId, String address, String city,
+      String country, String state, String phone, String agentType, String email) async {
+    _toggleLoading();
+    var result = await dataProvider.createAgent(name, agentId, address, city, country, state, phone, agentType, email);
+    if (result) {
+      _toggleLoading();
+      return true;
+    } else {
+      _toggleLoading();
+      return false;
+    }
   }
 }
