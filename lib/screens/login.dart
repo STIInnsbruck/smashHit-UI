@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   DataProvider dataProvider = new DataProvider();
   bool _signUp = false;
   bool loading = false;
+  double smallSide = 10;
 
   TextEditingController city = new TextEditingController();
   TextEditingController state = new TextEditingController();
@@ -31,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    getSmallerSide(screenHeight, screenWidth);
 
     return Material(
         child: Center(
@@ -43,82 +45,92 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("smash",style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
-                Text("Hit", style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.blue))
+                Text("smash",style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                Text("Hit", style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blue))
               ],
             ),
             Spacer(),
         CircleAvatar(
-          radius: screenWidth * 0.10,
+          radius: smallSide * 0.10,
           backgroundColor: Colors.grey,
           child: CircleAvatar(
-              radius: screenWidth * 0.098,
+              radius: smallSide * 0.098,
               backgroundColor: Colors.white,
               child: Container(
-                width: screenWidth * 0.192,
-                height: screenWidth * 0.192,
+                width: smallSide * 0.192,
+                height: smallSide * 0.192,
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.bottomCenter,
                 child: ClipOval(
-                  child: Icon(Icons.person, size: screenWidth * 0.192, color: Colors.white),
+                  child: Icon(Icons.person, size: smallSide * 0.192, color: Colors.white),
                 ),
               )
           ),
         ),
-            _signUp? registrationForm(screenWidth) : loginForm(screenWidth),
+            _signUp?
+            registrationForm(smallSide) : loginForm(smallSide),
             Spacer(flex: 2),
-            Row(
-              children: [
-                Spacer(flex: 2),
-                _signUp?
-                MaterialButton(
-                  onPressed: () async {
-                    _register();
-                    //_registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
-                  },
-                  child: Text('Register', style: TextStyle(color: Colors.white, fontSize: 50)),
-                  elevation: 10,
-                  color: Colors.grey,
-                  minWidth: screenWidth * 0.12,
-                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                ) :
-                MaterialButton(
-                  onPressed: () {
-                    widget.changeScreen(0);
-                  },
-                  child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 50)),
-                  elevation: 10,
-                  color: Colors.grey,
-                  minWidth: screenWidth * 0.12,
-                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                ),
-                Spacer(),
-                _signUp?
-                MaterialButton(
-                  onPressed: () {
-                    _toggleSignUp();
-                  },
-                  child: Text('Sign In', style: TextStyle(color: Colors.white, fontSize: 50)),
-                  elevation: 10,
-                  color: Colors.grey,
-                  minWidth: screenWidth * 0.12,
-                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                ) :
-                MaterialButton(
-                  onPressed: () {
-                    _toggleSignUp();
-                  },
-                  child: Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: 50)),
-                  elevation: 10,
-                  color: Colors.grey,
-                  minWidth: screenWidth * 0.12,
-                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                ),
-                Spacer(flex: 2),
-              ],
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _signUp?
+                  Flexible(
+                    flex: 2,
+                    child: MaterialButton(
+                      onPressed: () async {
+                        _register();
+                        //_registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                      },
+                      child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                      elevation: 10,
+                      color: Colors.grey,
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    ),
+                  ) :
+                  Flexible(
+                    flex: 2,
+                    child: MaterialButton(
+                      onPressed: () {
+                        widget.changeScreen(0);
+                      },
+                      child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                      elevation: 10,
+                      color: Colors.grey,
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    ),
+                  ),
+                  Spacer(),
+                  _signUp?
+                  Flexible(
+                    flex: 2,
+                    child: MaterialButton(
+                      onPressed: () {
+                        _toggleSignUp();
+                      },
+                      child: Text('Sign In', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                      elevation: 10,
+                      color: Colors.grey,
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    ),
+                  ) :
+                  Flexible(
+                    flex: 2,
+                    child: MaterialButton(
+                      onPressed: () {
+                        _toggleSignUp();
+                      },
+                      child: Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                      elevation: 10,
+                      color: Colors.grey,
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Spacer(flex: 4)
       ],
@@ -127,12 +139,22 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
+  void getSmallerSide(double height, double width) {
+    setState(() {
+      if (height >= width) {
+        smallSide = width;
+      } else {
+        smallSide = height;
+      }
+    });
+  }
+
   Widget loginForm(double screenWidth) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-            width: screenWidth * 0.20,
+            width: screenWidth * 0.30,
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Name',
@@ -151,65 +173,69 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-            width: screenWidth * 0.20,
+            width: screenWidth * 0.30,
+            height: screenWidth * 0.05,
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: 16)
+                  hintStyle: TextStyle(fontSize: screenWidth / 45)
               ),
               controller: name,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: screenWidth / 45),
             )
         ),
         Container(
-            width: screenWidth * 0.20,
+            width: screenWidth * 0.30,
+            height: screenWidth * 0.05,
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Surname',
-                  hintStyle: TextStyle(fontSize: 16)
+                  hintStyle: TextStyle(fontSize: screenWidth / 45)
               ),
               controller: surname,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: screenWidth / 45),
             )
         ),
         Container(
-            width: screenWidth * 0.20,
+            width: screenWidth * 0.30,
+            height: screenWidth * 0.05,
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Email',
-                  hintStyle: TextStyle(fontSize: 16)
+                  hintStyle: TextStyle(fontSize: screenWidth / 45)
               ),
               controller: email,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: screenWidth / 45),
             )
         ),
         Container(
-            width: screenWidth * 0.20,
+            width: screenWidth * 0.30,
+            height: screenWidth * 0.05,
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Phone Number',
-                  hintStyle: TextStyle(fontSize: 16)
+                  hintStyle: TextStyle(fontSize: screenWidth / 45)
               ),
               controller: phone,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: screenWidth / 45),
             )
         ),
-        Container(height: 10),
-        CSCDropdownPicker(screenWidth * 0.20),
+        CSCDropdownPicker(screenWidth * 0.30),
         Container(
-            width: screenWidth * 0.20,
+            width: screenWidth * 0.30,
+            height: screenWidth * 0.05,
             child: TextFormField(
               decoration: InputDecoration(
                   hintText: 'Street Address',
-                  hintStyle: TextStyle(fontSize: 16)
+                  hintStyle: TextStyle(fontSize: screenWidth / 45)
               ),
               controller: address,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: screenWidth / 45),
             )
         ),
       ],
