@@ -23,7 +23,7 @@ class DataProvider {
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjQwNDI3Mzc4fQ.aD7XNfGsCqgzshdiwcqWEc2srtd56TlNCtAm0o-fFLI";
 
   var headers = {
-    'Accept': '*/*',
+    'accept': 'application/json',
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $token'
   };
@@ -32,15 +32,15 @@ class DataProvider {
       String country, String state, String phone, String agentType, String email) async {
 
     var body = {
-      "Name": "Bob",
-      "AgentId": "BobRoss",
-      "Address": "11, rue de mondorf",
-      "City": "Mondorf",
-      "Country": "Luxembourg",
-      "State": "Suden",
-      "Phone": "651457895",
+      "Address": "16, Fuerstenweg",
+      "AgentId": "SvenR",
       "AgentType": "Person",
-      "Email": "bobross@gmail.com"
+      "City": "Innsbruck",
+      "Country": "Austria",
+      "Email": "sven@home.lu",
+      "Name": "Sven",
+      "Phone": "69187542169",
+      "State": "Tyrol"
     };
 
     var jsonBody = jsonEncode(body);
@@ -141,7 +141,7 @@ class DataProvider {
   }
 
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: 'contract/contractors/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: 'contract/agents/'), headers: headers);
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);

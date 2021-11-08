@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class User {
-  int? id;
+  String? id;
   String? name;
   String? email;
   String? streetAddress;
@@ -13,7 +13,7 @@ class User {
 
   User({this.id, this.name, this.email, this.streetAddress, this.state, this.country, this.city, this.telephoneNumber, this.role});
 
-  int? get getId => id;
+  String? get getId => id;
   String? get getName => name;
 
   @override
