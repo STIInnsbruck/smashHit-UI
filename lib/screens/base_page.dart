@@ -21,6 +21,7 @@ class _BasePageState extends State<BasePage> {
   User? currentUser;
   final TextEditingController searchBarController = new TextEditingController();
   DataProvider dataProvider = DataProvider();
+  String? searchId;
 
   _BasePageState() {
     _selectedPage = LoginScreen(changeScreen);
@@ -62,7 +63,7 @@ class _BasePageState extends State<BasePage> {
             ),
           ]),
         ),
-        body: _selectedPage,
+        body: _selectedIndex == 0? Dashboard(changeScreen, currentUser, searchId) : _selectedPage,
         resizeToAvoidBottomInset: false,
       ),
     );
@@ -73,7 +74,7 @@ class _BasePageState extends State<BasePage> {
       _selectedIndex = x;
       switch (_selectedIndex) {
         case 0:
-          _selectedPage = Dashboard(changeScreen, currentUser);
+          //_selectedPage = Dashboard(changeScreen, currentUser, searchId);
           _selectedTitle = "Contracts Dashboard";
           break;
         case 1:
@@ -118,13 +119,19 @@ class _BasePageState extends State<BasePage> {
         style: TextStyle(fontSize: 20),
         decoration: InputDecoration(hintText: "Search for a contract by ID"),
         onChanged: (String value) {
-
+          setSearchId(value);
         },
         onFieldSubmitted: (String value) {
           print("Enter pressed: $value");
         },
       ),
     );
+  }
+
+  void setSearchId(String value) {
+    setState(() {
+      searchId = value;
+    });
   }
 
   PopupMenuButton inboxIcon() {

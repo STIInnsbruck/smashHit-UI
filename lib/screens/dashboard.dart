@@ -8,8 +8,9 @@ import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
 class Dashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   User? user;
+  String? searchId;
 
-  Dashboard(this.changeScreen, this.user);
+  Dashboard(this.changeScreen, this.user, this.searchId);
 
   @override
   _DashboardState createState() => new _DashboardState();
@@ -19,10 +20,10 @@ class _DashboardState extends State<Dashboard> {
 
   List<String> contractIdList = []; //API first gives us all IDs.
   DataProvider dataProvider = DataProvider();
-  String searchId = "";
 
   late Future<List<Contract>> futureContractList = [] as Future<List<Contract>>;
   List<Contract>? contractList = [];
+  String? searchId;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     //double screenWidth = MediaQuery.of(context).size.width;
+    searchId = widget.searchId;
     return Container(
       child: FutureBuilder<List<Contract>>(
         future: futureContractList,
@@ -47,10 +49,10 @@ class _DashboardState extends State<Dashboard> {
             return ListView.builder(
                 itemCount: contractList!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if (searchId.compareTo("") == 0) {
+                  if (searchId == null) {
                     return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
                   } else {
-                    if (contractList![index].contractId!.contains(searchId)) {
+                    if (contractList![index].contractId!.contains(searchId!)) {
                       return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
                     } else {
                       return Container();
@@ -71,11 +73,4 @@ class _DashboardState extends State<Dashboard> {
       futureContractList = dataProvider.fetchAllContracts();
     });
   }
-
-  void setSearchId(String input) {
-    setState(() {
-      searchId = input;
-    });
-  }
-
 }
