@@ -25,6 +25,7 @@ class _UpdateFormState extends State<UpdateForm> {
     return Stack(
         children: [
           Container(
+            alignment: Alignment.center,
               child: Scrollbar(
                   child: SingleChildScrollView(
                       child: Column(
@@ -36,6 +37,10 @@ class _UpdateFormState extends State<UpdateForm> {
                   )
               )
           ),
+          Align(
+            child: submitChangesButton(),
+            alignment: Alignment.centerRight,
+          )
         ]
     );
   }
@@ -173,4 +178,18 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
+  Widget submitChangesButton() {
+    return Container(
+        width: 150,
+        height: 50,
+        child: MaterialButton(
+            color: Colors.grey,
+            hoverColor: Colors.blueGrey,
+            child: Text("Submit Changes", style: TextStyle(color: Colors.white, fontSize: 20)),
+            onPressed: () {
+              print("not implemented yet.");
+            }
+        )
+    );
+  }
 }
