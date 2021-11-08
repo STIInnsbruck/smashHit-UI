@@ -23,10 +23,41 @@ class DataProvider {
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjQwNDI3Mzc4fQ.aD7XNfGsCqgzshdiwcqWEc2srtd56TlNCtAm0o-fFLI";
 
   var headers = {
-    'accept': '*/*',
+    'accept': 'application/json',
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $token'
   };
+
+  Future<bool> createAgent(String name, String agentId, String address, String city,
+      String country, String state, String phone, String agentType, String email) async {
+
+    var body = {
+      "Address": "16, Fuerstenweg",
+      "AgentId": "SvenR",
+      "AgentType": "Person",
+      "City": "Innsbruck",
+      "Country": "Austria",
+      "Email": "sven@home.lu",
+      "Name": "Sven",
+      "Phone": "69187542169",
+      "State": "Tyrol"
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/agent/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Message: \t $data");
+      return true;
+    } else {
+      print("Statuscode: ${response.statusCode}");
+      print("Response body: ${response.body}");
+      return false;
+    }
+  }
 
   Future<bool> createContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate, String requester, String provider) async {
@@ -110,7 +141,7 @@ class DataProvider {
   }
 
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: 'contract/contractors/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: 'contract/agents/'), headers: headers);
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
@@ -127,6 +158,54 @@ class DataProvider {
       return true;
     } else {
       throw Exception('Failed to delete contract $contractId.\nBack-end response: ${response.reasonPhrase}.');
+    }
+  }
+
+  updateContract(String title, String contractTerms, String contractType,
+      DateTime startDate, DateTime expireDate, String requester, String provider) async {
+
+    var body = {
+      "ContractId": title.replaceAll(' ', ''),
+      "ContractType": contractType,
+      "Purpose": contractTerms.replaceAll('\n', ''),
+      "ContractRequester": requester.replaceAll(' ', ''),
+      "ContractProvider": provider.replaceAll(' ', ''),
+      "DataController": requester.replaceAll(' ', ''),
+      "StartDate": _formatDate(startDate),
+      "ExecutionDate": _formatDate(startDate),
+      "EffectiveDate": _formatDate(startDate),
+      "ExpireDate": _formatDate(expireDate),
+      "Medium": "SmashHit Flutter Application",
+      "Waiver": "string",
+      "Amendment": "string",
+      "ConfidentialityObligation": "string",
+      "DataProtection": "string",
+      "LimitationOnUse": "string",
+      "MethodOfNotice": "string",
+      "NoThirdPartyBeneficiaries": "string",
+      "PermittedDisclosure": "string",
+      "ReceiptOfNotice": "string",
+      "Severability": "string",
+      "TerminationForInsolvency": "string",
+      "TerminationForMaterialBreach": "string",
+      "TerminationOnNotice": "string",
+      "ContractStatus": "string"
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/contract/update/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Contract Updated.");
+      return true;
+    } else {
+      print("Error createContract()");
+      print("${response.statusCode}");
+      print("${response.body}");
+      return false;
     }
   }
 

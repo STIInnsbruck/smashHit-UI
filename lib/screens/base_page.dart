@@ -15,15 +15,16 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 5;
   String _selectedTitle = "";
   Widget? _selectedPage;
   User? currentUser;
   final TextEditingController searchBarController = new TextEditingController();
   DataProvider dataProvider = DataProvider();
+  String? searchId;
 
   _BasePageState() {
-    _selectedPage = Dashboard(changeScreen, currentUser);
+    _selectedPage = LoginScreen(changeScreen);
     _selectedTitle = "Contracts Dashboard";
   }
 
@@ -38,7 +39,7 @@ class _BasePageState extends State<BasePage> {
         appBar: _selectedIndex == 5 ? null : AppBar(
           backgroundColor: Colors.blue,
           title: Center(child: Text(_selectedTitle)),
-          actions: [searchField(screenWidth), searchButton()],
+          actions: [inboxIcon(), searchField(screenWidth), searchButton()],
         ),
         drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: <Widget>[
@@ -62,7 +63,7 @@ class _BasePageState extends State<BasePage> {
             ),
           ]),
         ),
-        body: _selectedPage,
+        body: _selectedIndex == 0? Dashboard(changeScreen, currentUser, searchId) : _selectedPage,
         resizeToAvoidBottomInset: false,
       ),
     );
@@ -73,7 +74,7 @@ class _BasePageState extends State<BasePage> {
       _selectedIndex = x;
       switch (_selectedIndex) {
         case 0:
-          _selectedPage = Dashboard(changeScreen, currentUser);
+          //_selectedPage = Dashboard(changeScreen, currentUser, searchId);
           _selectedTitle = "Contracts Dashboard";
           break;
         case 1:
@@ -117,18 +118,60 @@ class _BasePageState extends State<BasePage> {
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 20),
         decoration: InputDecoration(hintText: "Search for a contract by ID"),
+        onChanged: (String value) {
+          setSearchId(value);
+        },
+        onFieldSubmitted: (String value) {
+          print("Enter pressed: $value");
+        },
       ),
+    );
+  }
+
+  void setSearchId(String value) {
+    setState(() {
+      searchId = value;
+    });
+  }
+
+  PopupMenuButton inboxIcon() {
+    return PopupMenuButton(
+      tooltip: "Show notifications",
+      child: Center(
+        child: Stack(
+          children: [
+            Icon(Icons.inbox, size: 40, color: Colors.white),
+            CircleAvatar(
+              radius: 7,
+              backgroundColor: Colors.red[400],
+            )
+          ],
+        ),
+      ),
+      onSelected: (value) { print("Selected value: $value"); },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<Object>>[
+        PopupMenuItem(child: Text("Example Notification 1")),
+        PopupMenuItem(child: Text("Example Notification 2")),
+        PopupMenuItem(child: Text("Example Notification 3")),
+        PopupMenuItem(child: Text("Example Notification 4")),
+        PopupMenuItem(child: Text("Example Notification 5"))
+      ],
     );
   }
 
   IconButton searchButton() {
     return IconButton(
       icon: Icon(Icons.search),
-      iconSize: 25,
+      iconSize: 30,
       onPressed: () {
         changeScreen(2, searchBarController.text);
       },
     );
+  }
+
+  //TODO: implement mail reader
+  bool existsUnreadMail() {
+    return true;
   }
 
   Column userInformation(double width) {
