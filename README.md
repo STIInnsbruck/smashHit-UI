@@ -19,7 +19,7 @@ Frontend Application for Contract Management (smashHit).
 - [ ] Change contractedEntities tile when checking on active contract
 - [ ] Add Scaler for data processing contract
 - [ ] Detailfy Data Processing Template
-- [ ] Add live dynamic contract search
+- [X] Add live dynamic contract search - 08.11.2021
 - [ ] add ENTER-Button listeners to textfields
 - [ ] add ENTER-Button listeners to creation steps to continue to next step
 
