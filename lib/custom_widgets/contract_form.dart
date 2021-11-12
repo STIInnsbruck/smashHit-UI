@@ -2035,8 +2035,8 @@ class _ContractFormState extends State<ContractForm> {
     tmpContract = new Contract(
       contractId: widget.titleController.text,
       description: widget.descriptionController.text,
-      contractee: widget.providerControllers[0].text,
-      contractor: widget.requesterControllers[0].text,
+      contracteeId: widget.providerControllers[0].text,
+      contractorId: widget.requesterControllers[0].text,
       contractType: 'Written',
       executionDate: startDate,
       expireDate: endDate
@@ -2049,9 +2049,9 @@ class _ContractFormState extends State<ContractForm> {
       widget.titleController.text = displayStringWithoutUri(widget.contract!.contractId!);
       _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
       //TODO: this only takes the first data controller, make it take all existing ones.
-      _fillRequesterForm(contractors.firstWhere((element) => element.name!.compareTo(displayStringWithoutUri(widget.contract!.contractor!)) == 0), 0);
+      _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractorId!)) == 0), 0);
       //TODO: this only takes the first data processor, make it take all existing ones.
-      //_fillProviderForm(contractors.firstWhere((element) => element.name!.compareTo(displayStringWithoutUri(widget.contract!.contractee!)) == 0), 0);
+      _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contracteeId!)) == 0), 0);
       widget.descriptionController.text = widget.contract!.description!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
