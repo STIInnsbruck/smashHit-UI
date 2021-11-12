@@ -375,6 +375,8 @@ class _ContractCreationState extends State<ViewContract> {
 
     if(elapsedTime >= totalTime) {
       return 100.0;
+    } else if (elapsedTime < 0){
+      return 0.0;
     } else {
       double progressPercentage = (elapsedTime / totalTime) * 100;
       return progressPercentage.roundToDouble();
