@@ -233,7 +233,6 @@ class _ContractFormState extends State<ContractForm> {
         ),
         onPressed: () async {
           setStepTwo();
-          contractors = await dataProvider.fetchAllUsers();
         });
   }
 
@@ -274,7 +273,6 @@ class _ContractFormState extends State<ContractForm> {
         ),
         onPressed: () async  {
           setStepThree();
-          contractors = await dataProvider.fetchAllUsers();
         });
   }
 
@@ -2073,7 +2071,8 @@ class _ContractFormState extends State<ContractForm> {
     });
   }
 
-  void setStepTwo() {
+  void setStepTwo() async {
+    contractors = await dataProvider.fetchAllUsers();
     validateStepOne();
     validateStepThree();
     validateStepFour();
@@ -2086,7 +2085,8 @@ class _ContractFormState extends State<ContractForm> {
     });
   }
 
-  void setStepThree() {
+  void setStepThree() async {
+    contractors = await dataProvider.fetchAllUsers();
     validateStepOne();
     validateStepTwo();
     validateStepFour();
