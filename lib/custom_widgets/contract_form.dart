@@ -527,62 +527,62 @@ class _ContractFormState extends State<ContractForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   checkBoxElement(
-                      'Amendment', 'Has an amendment', AMENDMENT, isAmendment, widget.termControllers[0]),
+                      'Amendment', 'Has an amendment', AMENDMENT, isAmendment, widget.termControllers[0], width / 4),
                   checkBoxElement(
                       'ConfidentialityObligation',
                       'Is there a confidentiality obligation?',
                       CONFIDENTIALITY_OBLIGATION,
-                      isConfidentialObligation, widget.termControllers[1]),
+                      isConfidentialObligation, widget.termControllers[1], width / 4),
                   checkBoxElement(
                       'DataController',
                       'Is there a data controller?',
                       DATA_CONTROLLER,
-                      isDataController, widget.termControllers[2]),
+                      isDataController, widget.termControllers[2], width / 4),
                   checkBoxElement(
                       'DataProtection',
                       'Does the contract contain data protection?',
                       DATA_PROTECTION,
-                      isDataProtection, widget.termControllers[3]),
+                      isDataProtection, widget.termControllers[3], width / 4),
                   checkBoxElement(
                       'LimitationOnUse',
                       'Is there a limitation on use?',
                       LIMITATION_ON_USE,
-                      isLimitationOnUse, widget.termControllers[4]),
+                      isLimitationOnUse, widget.termControllers[4], width / 4),
                   checkBoxElement('MethodOfNotice', 'Has method of notice?',
-                      METHOD_OF_NOTICE, isMethodOfNotice, widget.termControllers[5]),
+                      METHOD_OF_NOTICE, isMethodOfNotice, widget.termControllers[5], width / 4),
                   checkBoxElement(
                       'NoThirdPartyBeneficiaries',
                       'Are there third party beneficiaries?',
                       NO_THIRD_PARTY_BENEFICIARIES,
-                      isNoThirdPartyBeneficiaries, widget.termControllers[6]),
+                      isNoThirdPartyBeneficiaries, widget.termControllers[6], width / 4),
                   checkBoxElement(
                       'PermittedDisclosure',
                       'Is there a permitted disclosure?',
                       PERMITTED_DISCLOSURE,
-                      isPermittedDisclosure, widget.termControllers[7]),
+                      isPermittedDisclosure, widget.termControllers[7], width / 4),
                   checkBoxElement(
                       'ReceiptOfNotice',
                       'Is there a receipt of notice?',
                       RECEIPT_OF_NOTICE,
-                      isReceiptOfNotice, widget.termControllers[8]),
+                      isReceiptOfNotice, widget.termControllers[8], width / 4),
                   checkBoxElement('Severability', 'Is there a severability?',
-                      SEVERABILITY, isSeverability, widget.termControllers[9]),
+                      SEVERABILITY, isSeverability, widget.termControllers[9], width / 4),
                   checkBoxElement(
                       'TerminationForInsolvency',
                       'Is there a termination for insolvency?',
                       TERMINATION_FOR_INSOLVENCY,
-                      isTerminationForInsolvency, widget.termControllers[10]),
+                      isTerminationForInsolvency, widget.termControllers[10], width / 4),
                   checkBoxElement(
                       'TerminationForMaterialBreach',
                       'Is there a termination for material breach?',
                       TERMINATION_FOR_MATERIAL_BREACH,
-                      isTerminationForMaterialBreach, widget.termControllers[11]),
+                      isTerminationForMaterialBreach, widget.termControllers[11], width / 4),
                   checkBoxElement(
                       'TerminationOnNotice',
                       'Is there a termination on notice?',
                       TERMINATION_ON_NOTICE,
-                      isTerminationOnNotice, widget.termControllers[12]),
-                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13]),
+                      isTerminationOnNotice, widget.termControllers[12], width / 4),
+                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13], width / 4),
                 ],
               ),
               Container(height: 10),
@@ -593,30 +593,30 @@ class _ContractFormState extends State<ContractForm> {
                     children: [
                       startDate == null
                           ? Container()
-                          : Text("Chosen Start Date:"),
-                      startDateButton(),
+                          : Text("Chosen Start Date:", style: TextStyle(fontSize: width / 50)),
+                      startDateButton(width / 6),
                     ],
                   ),
                   Column(
                     children: [
                       effectiveDate == null
                           ? Container()
-                          : Text("Chosen Effective Date:"),
-                      effectiveDateButton(),
+                          : Text("Chosen Effective Date:", style: TextStyle(fontSize: width / 50)),
+                      effectiveDateButton(width / 6),
                     ],
                   ),
                   Column(
                     children: [
                       executionDate == null
                           ? Container()
-                          : Text("Chosen Execution Date:"),
-                      executionDateButton(),
+                          : Text("Chosen Execution Date:", style: TextStyle(fontSize: width / 50)),
+                      executionDateButton(width / 6),
                     ],
                   ),
                   Column(
                     children: [
-                      endDate == null ? Container() : Text("Chosen End Date:"),
-                      endDateButton(),
+                      endDate == null ? Container() : Text("Chosen End Date:", style: TextStyle(fontSize: width / 50)),
+                      endDateButton(width / 6),
                     ],
                   ),
                 ],
@@ -1375,7 +1375,7 @@ class _ContractFormState extends State<ContractForm> {
   /// [isChecked] is the boolean variable that is to be attached to this
   /// checkbox.
   Widget checkBoxElement(String contractElement, String checkBoxTitle,
-      String tooltipMessage, CheckBoxBoolean isChecked, TextEditingController textController) {
+      String tooltipMessage, CheckBoxBoolean isChecked, TextEditingController textController, double width) {
     return Container(
       child: Column(
         children: [
@@ -1390,7 +1390,7 @@ class _ContractFormState extends State<ContractForm> {
                     });
                   }),
               Container(width: 5),
-              Text(checkBoxTitle, style: TextStyle(fontSize: 20)),
+              Text(checkBoxTitle, style: TextStyle(fontSize: width / 10)),
               Container(width: 5),
               Tooltip(
                 textStyle: TextStyle(
@@ -1450,76 +1450,76 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget startDateButton() {
+  Widget startDateButton(double width) {
     return Container(
-      width: 160,
+      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: startDate == null
             ? Text("Pick a Start Date",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center)
             : Text(_formatDate(startDate),
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center),
         onPressed: () => chooseStartDate(),
       ),
     );
   }
 
-  Widget effectiveDateButton() {
+  Widget effectiveDateButton(double width) {
     return Container(
-      width: 160,
+      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: effectiveDate == null
             ? Text("Pick an Effective Date",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center)
             : Text(_formatDate(effectiveDate),
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEffectiveDate(),
       ),
     );
   }
 
-  Widget endDateButton() {
+  Widget endDateButton(double width) {
     return Container(
-      width: 160,
+      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: endDate == null
             ? Text("Pick an End Date",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center)
             : Text(_formatDate(endDate),
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEndDate(),
       ),
     );
   }
 
-  Widget executionDateButton() {
+  Widget executionDateButton(double width) {
     return Container(
-      width: 160,
+      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: executionDate == null
             ? Text("Pick an Execution Date",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center)
             : Text(_formatDate(executionDate),
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: width / 7),
                 textAlign: TextAlign.center),
         onPressed: () => chooseExecutionDate(),
       ),
