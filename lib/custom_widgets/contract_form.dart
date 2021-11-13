@@ -694,85 +694,85 @@ class _ContractFormState extends State<ContractForm> {
           Text('Amendment',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isAmendment, widget.termControllers[0]),
+          displayTermElementInfo(isAmendment, widget.termControllers[0]),
 
           Container(height: 20),
           Text('Confidentiality Obligation',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isConfidentialObligation, widget.termControllers[1]),
+          displayTermElementInfo(isConfidentialObligation, widget.termControllers[1]),
 
           Container(height: 20),
           Text('Data Controller',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isDataController, widget.termControllers[2]),
+          displayTermElementInfo(isDataController, widget.termControllers[2]),
 
           Container(height: 20),
           Text('Data Protection',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isDataProtection, widget.termControllers[3]),
+          displayTermElementInfo(isDataProtection, widget.termControllers[3]),
 
           Container(height: 20),
           Text('Limitation On Use',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isLimitationOnUse, widget.termControllers[4]),
+          displayTermElementInfo(isLimitationOnUse, widget.termControllers[4]),
 
           Container(height: 20),
           Text('Method Of Notice',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isMethodOfNotice, widget.termControllers[5]),
+          displayTermElementInfo(isMethodOfNotice, widget.termControllers[5]),
 
           Container(height: 20),
           Text('Third Party Beneficiaries',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isNoThirdPartyBeneficiaries, widget.termControllers[6]),
+          displayTermElementInfo(isNoThirdPartyBeneficiaries, widget.termControllers[6]),
 
           Container(height: 20),
           Text('Permitted Disclosure',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isPermittedDisclosure, widget.termControllers[7]),
+          displayTermElementInfo(isPermittedDisclosure, widget.termControllers[7]),
 
           Container(height: 20),
           Text('Receipt of Notice',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isConfidentialObligation, widget.termControllers[8]),
+          displayTermElementInfo(isConfidentialObligation, widget.termControllers[8]),
 
           Container(height: 20),
           Text('Severability',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isSeverability, widget.termControllers[9]),
+          displayTermElementInfo(isSeverability, widget.termControllers[9]),
 
           Container(height: 20),
           Text('Termination Of Insolvency',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isTerminationForInsolvency, widget.termControllers[10]),
+          displayTermElementInfo(isTerminationForInsolvency, widget.termControllers[10]),
 
           Container(height: 20),
           Text('Termination For Material Breach',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isTerminationForMaterialBreach, widget.termControllers[11]),
+          displayTermElementInfo(isTerminationForMaterialBreach, widget.termControllers[11]),
 
           Container(height: 20),
           Text('Termination On Notice',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isTerminationOnNotice, widget.termControllers[12]),
+          displayTermElementInfo(isTerminationOnNotice, widget.termControllers[12]),
 
           Container(height: 20),
           Text('Waiver',
               style: TextStyle(
                   fontSize: 15, decoration: TextDecoration.underline)),
-          checkTermElement(isWaiver, widget.termControllers[13]),
+          displayTermElementInfo(isWaiver, widget.termControllers[13]),
 
           Container(height: 40),
           Row(
@@ -2340,7 +2340,7 @@ class _ContractFormState extends State<ContractForm> {
     widget.endDate = endDate;
   }
 
-  Widget checkTermElement(CheckBoxBoolean isChecked, TextEditingController controller) {
+  Widget displayTermElementInfo(CheckBoxBoolean isChecked, TextEditingController controller) {
     if (controller.text.compareTo("") == 0 || isChecked.value == false) {
       return Text('None.', textAlign: TextAlign.justify);
     } else {
