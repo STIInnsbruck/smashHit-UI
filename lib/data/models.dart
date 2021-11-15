@@ -39,6 +39,20 @@ class Contract {
   DateTime? expireDate;
   String? contractStatus;
   IconData? iconData;
+  String? amendment;
+  String? confidentialityObligation;
+  String? existDataController;
+  String? existDataProtection;
+  String? limitation;
+  String? methodNotice;
+  String? thirdParties;
+  String? disclosure;
+  String? receiptNotice;
+  String? severability;
+  String? terminationInsolvency;
+  String? terminationMaterialBreach;
+  String? terminationNotice;
+  String? waiver;
 
   Contract({
     required this.contractId,
@@ -51,7 +65,21 @@ class Contract {
     this.expireDate,
     this.contractStatus,
     this.contractObject,
-    this.iconData
+    this.iconData,
+    this.amendment,
+    this.confidentialityObligation,
+    this.existDataController,
+    this.existDataProtection,
+    this.limitation,
+    this.methodNotice,
+    this.thirdParties,
+    this.disclosure,
+    this.receiptNotice,
+    this.severability,
+    this.terminationInsolvency,
+    this.terminationMaterialBreach,
+    this.terminationNotice,
+    this.waiver
   }) {
     this.title = title;
   }
