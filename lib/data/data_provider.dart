@@ -60,7 +60,11 @@ class DataProvider {
   }
 
   Future<bool> createContract(String title, String contractTerms, String contractType,
-      DateTime startDate, DateTime expireDate, String requester, String provider) async {
+      DateTime startDate, DateTime expireDate, String requester, String provider, String amendment,
+      String confidentiality, String existDataController, String existDataProtection,
+      String limitation, String methodNotice, String thirdParties, String disclosure, String receiptNotice,
+      String severability, String insolvency, String materialBreach, String terminationNotice,
+      String waiver) async {
 
     var body = {
       "ContractId": title.replaceAll(' ', ''),
@@ -74,19 +78,19 @@ class DataProvider {
       "EffectiveDate": _formatDate(startDate),
       "ExpireDate": _formatDate(expireDate),
       "Medium": "SmashHit Flutter Application",
-      "Waiver": "string",
-      "Amendment": "string",
-      "ConfidentialityObligation": "string",
-      "DataProtection": "string",
-      "LimitationOnUse": "string",
-      "MethodOfNotice": "string",
-      "NoThirdPartyBeneficiaries": "string",
-      "PermittedDisclosure": "string",
-      "ReceiptOfNotice": "string",
-      "Severability": "string",
-      "TerminationForInsolvency": "string",
-      "TerminationForMaterialBreach": "string",
-      "TerminationOnNotice": "string",
+      "Waiver": waiver,
+      "Amendment": amendment,
+      "ConfidentialityObligation": confidentiality,
+      "DataProtection": existDataProtection,
+      "LimitationOnUse": limitation,
+      "MethodOfNotice": methodNotice,
+      "NoThirdPartyBeneficiaries": thirdParties,
+      "PermittedDisclosure": disclosure,
+      "ReceiptOfNotice": receiptNotice,
+      "Severability": severability,
+      "TerminationForInsolvency": insolvency,
+      "TerminationForMaterialBreach": materialBreach,
+      "TerminationOnNotice": terminationNotice,
       "ContractStatus": "string"
     };
 

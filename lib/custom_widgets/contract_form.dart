@@ -1750,11 +1750,16 @@ class _ContractFormState extends State<ContractForm> {
               if (await dataProvider.createContract(
                   widget.titleController.text,
                   widget.descriptionController.text,
-                  "Written",
+                  _type.toString(),
                   startDate!,
                   endDate!,
                   widget.requesterControllers[0].text,
-                  widget.providerControllers[0].text)) {
+                  widget.providerControllers[0].text, widget.termControllers[0].text,
+                  widget.termControllers[1].text, widget.termControllers[2].text, widget.termControllers[3].text,
+                  widget.termControllers[4].text, widget.termControllers[5].text, widget.termControllers[6].text,
+                  widget.termControllers[7].text, widget.termControllers[8].text, widget.termControllers[9].text,
+                  widget.termControllers[10].text, widget.termControllers[11].text, widget.termControllers[12].text,
+                  widget.termControllers[13].text)) {
                 _showCreateSuccessDialog();
                 //TODO: change so that this navigation function is not in this widget but in a screen
                 widget.changeScreen(2, widget.titleController.text.replaceAll(' ', ''));
