@@ -151,6 +151,17 @@ class DataProvider {
     }
   }
 
+  Future<User> fetchUserById(String agentId) async {
+    final response = await http.get(kBaseUrl.replace(path: 'agent/by_agentId/SvenRasmusen'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseUser(data["bindings"]);
+    } else {
+      throw Exception('Failed to load agent by id: $agentId.');
+    }
+  }
+
   Future<bool> deleteContractById(String contractId) async {
     final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
 

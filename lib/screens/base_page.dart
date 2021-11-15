@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/screens/dashboard.dart';
 import 'package:smashhit_ui/screens/contract_creation.dart';
 import 'package:smashhit_ui/data/models.dart';
-import 'package:smashhit_ui/screens/view_contract.dart';
+import 'package:smashhit_ui/screens/contract_view.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/screens/template_selector.dart';
 import 'package:smashhit_ui/screens/contract_violation.dart';
@@ -58,6 +58,14 @@ class _BasePageState extends State<BasePage> {
               title: Text("Create a new contract"),
               onTap: () {
                 changeScreen(3);
+                Navigator.of(context).pop();
+              },
+            ),
+            //Spacer(),
+            ListTile(
+              title: Text("Logout"),
+              onTap: () {
+                changeScreen(5);
                 Navigator.of(context).pop();
               },
             ),

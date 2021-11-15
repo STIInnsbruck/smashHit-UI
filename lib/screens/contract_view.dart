@@ -24,6 +24,9 @@ class _ContractCreationState extends State<ViewContract> {
   Contract? contract;
   String? contractDropDownType;
   TextEditingController? reportViolationController;
+  double smallSide = 10;
+  double textSize = 0;
+
 
   @override
   void initState() {
@@ -38,9 +41,10 @@ class _ContractCreationState extends State<ViewContract> {
 
   @override
   Widget build(BuildContext context) {
-    //futureContract = dataProvider.fetchContractById(widget.contractId);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    getSmallerSide(screenHeight, screenWidth);
+    textSize = smallSide / 50;
 
     return Container(
       child: FutureBuilder<Contract>(
@@ -128,13 +132,13 @@ class _ContractCreationState extends State<ViewContract> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text("Involved Parties:"),
+          Text("Involved Parties:", style: TextStyle(fontSize: textSize)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //first 45 characters are the URI from the ontology
-              partyEntity(contract!.contractor!.substring(45, contract!.contractor!.length)),
-              partyEntity(contract!.contractee!.substring(45, contract!.contractee!.length)),
+              partyEntity(contract!.contractorId!.substring(45, contract!.contractorId!.length)),
+              partyEntity(contract!.contracteeId!.substring(45, contract!.contracteeId!.length)),
             ],
           )
         ],
@@ -147,14 +151,14 @@ class _ContractCreationState extends State<ViewContract> {
       child: Column(
         children: [
           CircleAvatar(
-            radius: 25,
+            radius: smallSide / 25,
             backgroundColor: Colors.white,
             child: CircleAvatar(
-              radius: 22,
+              radius: smallSide / 30,
               child: Icon(Icons.person),
             ),
           ),
-          Text(partyName),
+          Text(partyName, style: TextStyle(fontSize: textSize)),
           //Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
         ],
       ),
@@ -185,7 +189,7 @@ class _ContractCreationState extends State<ViewContract> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Text("Contract Purpose"),
+                child: Text("Contract Purpose", style: TextStyle(fontSize: textSize)),
               ),
               Container(
                 color: Colors.grey[300],
@@ -230,7 +234,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("Contract Status:"),
+                Text("Contract Status:", style: TextStyle(fontSize: textSize)),
                 statusIconByContractStatus(height)
               ],
             ),
@@ -246,7 +250,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget reportViolationButton() {
     return IconButton(
-      iconSize: 50,
+      iconSize: smallSide / 15,
       padding: EdgeInsets.zero,
       icon: Icon(Icons.report_problem, color: Colors.orange),
       tooltip: 'Report a contract violation.',
@@ -262,35 +266,35 @@ class _ContractCreationState extends State<ViewContract> {
       case 0:
         return Column(
           children: [
-            Icon(Icons.description, color: Colors.grey, size: height / 6),
+            Icon(Icons.description, color: Colors.grey, size: smallSide / 6),
             Text("The contract is still being created.")
           ],
         );
       case 1:
         return Column(
           children: [
-            Icon(Icons.work, color: Colors.grey, size: height / 6),
+            Icon(Icons.work, color: Colors.grey, size: smallSide / 6),
             Text("Contract is still under negotiation.")
           ],
         );
       case 2:
         return Column(
           children: [
-            Icon(Icons.check_circle, color: Colors.green, size: height / 6),
+            Icon(Icons.check_circle, color: Colors.green, size: smallSide / 6),
             Text("The contract is valid.")
           ],
         );
       case 5:
         return Column(
           children: [
-            Icon(Icons.report, color: Colors.red, size: height / 6),
+            Icon(Icons.report, color: Colors.red, size: smallSide / 6),
             Text("A violation has been reported.")
           ],
         );
     }
     return Column(
       children: [
-        Icon(Icons.check_circle, color: Colors.green, size: height / 6),
+        Icon(Icons.check_circle, color: Colors.green, size: smallSide / 6),
         Text("The contract is valid.")
       ],
     );
@@ -310,22 +314,22 @@ class _ContractCreationState extends State<ViewContract> {
                 spreadRadius: 2.5,
                 offset: Offset(2.5, 2.5))
           ]),
-      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+      //padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text("Contracted Entities"),
+          Text("Contracted Entities", style: TextStyle(fontSize: textSize)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CircleAvatar(
                 child: Icon(Icons.person),
-                radius: height / 17,
+                radius: smallSide / 18,
               ),
-              Icon(Icons.compare_arrows, color: Colors.grey, size: height / 8),
+              Icon(Icons.compare_arrows, color: Colors.grey, size: smallSide / 10),
               CircleAvatar(
                 child: Icon(Icons.person),
-                radius: height / 17,
+                radius: smallSide / 18,
               )
             ],
           )
@@ -339,16 +343,16 @@ class _ContractCreationState extends State<ViewContract> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Start Date: ${_formatDate(contract!.executionDate!)}"),
+          Text("Start Date: ${_formatDate(contract!.executionDate!)}", overflow: TextOverflow.ellipsis),
           Container(height: 20),
           RotatedBox(
             quarterTurns: 1,
             child: Container(
                 child: Column(children: [
-                  Text("Elapsed Contract Time:", style: TextStyle(fontSize: height / 30)),
+                  Text("Elapsed Contract Time:", style: TextStyle(fontSize: smallSide / 30)),
                   LinearPercentIndicator(
                     width: height / 1.4,
-                    lineHeight: width / 40,
+                    lineHeight: smallSide / 30,
                     percent: calculateElapsedContractTime() / 100,
                     backgroundColor: Colors.grey,
                     progressColor: Colors.blue,
@@ -358,7 +362,7 @@ class _ContractCreationState extends State<ViewContract> {
                 ])),
           ),
           Container(height: 20),
-          Text("End Date: ${_formatDate(contract!.expireDate!)}")
+          Text("End Date: ${_formatDate(contract!.expireDate!)}", overflow: TextOverflow.ellipsis)
         ],
       ),
     );
@@ -375,10 +379,22 @@ class _ContractCreationState extends State<ViewContract> {
 
     if(elapsedTime >= totalTime) {
       return 100.0;
+    } else if (elapsedTime < 0){
+      return 0.0;
     } else {
       double progressPercentage = (elapsedTime / totalTime) * 100;
       return progressPercentage.roundToDouble();
     }
+  }
+
+  void getSmallerSide(double height, double width) {
+    setState(() {
+      if (height >= width) {
+        smallSide = width;
+      } else {
+        smallSide = height;
+      }
+    });
   }
 
   void _showReportViolationDialog() {
