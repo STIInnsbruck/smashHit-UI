@@ -159,12 +159,27 @@ class _UpdateFormState extends State<UpdateForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Center(
               child: Text('Terms & Conditions', style: TextStyle(fontSize: 25)),
             ),
             Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
-            Container(height: 40),
+            Container(height: 20),
+            termElement('Amendment', widget.contract.amendment!),
+            termElement('Confidentiality Obligation', widget.contract.confidentialityObligation!),
+            termElement('Data Controller', widget.contract.existDataController!),
+            termElement('Data Protection', widget.contract.existDataProtection!),
+            termElement('Limitation On Use', widget.contract.limitation!),
+            termElement('Method Of notice', widget.contract.methodNotice!),
+            termElement('Third Party Beneficiaries', widget.contract.thirdParties!),
+            termElement('Permitted Disclosure', widget.contract.disclosure!),
+            termElement('Receipt Of Notice', widget.contract.receiptNotice!),
+            termElement('Severability', widget.contract.severability!),
+            termElement('Termination Of Insolvency', widget.contract.terminationInsolvency!),
+            termElement('Termination For Material Breach', widget.contract.terminationMaterialBreach!),
+            termElement('Termination On Notice', widget.contract.terminationNotice!),
+            termElement('Waiver', widget.contract.waiver!),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -174,6 +189,25 @@ class _UpdateFormState extends State<UpdateForm> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget termElement(String term, String termValue) {
+    if (termValue == "") {
+      setState(() {
+        termValue = "None";
+      });
+    }
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(child: Text(term, style: TextStyle(fontSize: 20))),
+          Text(termValue, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)
+        ],
       ),
     );
   }
