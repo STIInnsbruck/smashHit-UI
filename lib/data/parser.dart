@@ -27,8 +27,8 @@ class ResponseParser {
     return new Contract(
         contractId: jsonContract["bindings"][0]['Contract']['value'],
         contractType: jsonContract["bindings"][0]['ContractType']['value'],
-        contractor: jsonContract["bindings"][0]['ContractRequester']['value'],
-        contractee: jsonContract["bindings"][0]['ContractProvider']['value'],
+        contractorId: jsonContract["bindings"][0]['ContractRequester']['value'],
+        contracteeId: jsonContract["bindings"][0]['ContractProvider']['value'],
         title: "Contract Title (Hardcoded, not in ontology.)",
         description: jsonContract["bindings"][0]['Purpose']['value'],
         executionDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),

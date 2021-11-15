@@ -30,8 +30,8 @@ class User {
 class Contract {
   String? contractId;
   String? contractType;
-  String? contractor;
-  String? contractee;
+  String? contractorId;
+  String? contracteeId;
   ContractObject? contractObject;
   String? title;
   String? description;
@@ -43,8 +43,8 @@ class Contract {
   Contract({
     required this.contractId,
     this.contractType,
-    this.contractor,
-    this.contractee,
+    this.contractorId,
+    this.contracteeId,
     this.title,
     this.description,
     this.executionDate,
@@ -81,11 +81,11 @@ class Contract {
   }
 
   String formatContractor() {
-    return this.contractor!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.contractorId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String formatContractee() {
-    return this.contractee!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.contracteeId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String formatContractId() {
