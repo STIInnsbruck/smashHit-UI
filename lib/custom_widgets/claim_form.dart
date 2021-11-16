@@ -136,11 +136,23 @@ class _ClaimFormState extends State<ClaimForm> {
               Container(height: 20),
               Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
               Container(height: 10),
-              Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+              ReportableWidget(child: Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              ReportableWidget(child: displayTermElementInfo("Amendment", widget.contract.amendment!)),
+              ReportableWidget(child: displayTermElementInfo("Confidentiality Obligation", widget.contract.confidentialityObligation!)),
+              ReportableWidget(child: displayTermElementInfo("Data Controller", widget.contract.existDataController!)),
+              ReportableWidget(child: displayTermElementInfo("Data Protection", widget.contract.existDataProtection!)),
+              ReportableWidget(child: displayTermElementInfo("Limitation On Use", widget.contract.limitation!)),
+              ReportableWidget(child: displayTermElementInfo("Method Of Notice", widget.contract.methodNotice!)),
+              ReportableWidget(child: displayTermElementInfo("Third Party Beneficiaries", widget.contract.thirdParties!)),
+              ReportableWidget(child: displayTermElementInfo("Permitted Disclosure", widget.contract.disclosure!)),
+              ReportableWidget(child: displayTermElementInfo("Receipt Of Notice", widget.contract.receiptNotice!)),
+              ReportableWidget(child: displayTermElementInfo("Severability", widget.contract.severability!)),
+              ReportableWidget(child: displayTermElementInfo("Termination Of Insolvency", widget.contract.terminationInsolvency!)),
+              ReportableWidget(child: displayTermElementInfo("Termination For Material Breach", widget.contract.terminationMaterialBreach!)),
+              ReportableWidget(child: displayTermElementInfo("Termination On Notice", widget.contract.terminationNotice!)),
+              ReportableWidget(child: displayTermElementInfo("Waiver", widget.contract.waiver!)),
               Container(height: 20),
               Container(height: 50),
-              ReportableWidget(
-                  widget: Text("SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.")),
               Container(height: 50,
               child: TextFormField(
                 textAlign: TextAlign.justify,
@@ -159,6 +171,21 @@ class _ClaimFormState extends State<ClaimForm> {
           )
         )
       ),
+    );
+  }
+
+  Widget displayTermElementInfo(String termElementName, String text) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Center(child: Text(termElementName, style: TextStyle(fontSize: 20))),
+        text.compareTo("") == 0 ?
+          Text('None.', textAlign: TextAlign.justify) :
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Text('$text', textAlign: TextAlign.justify)
+          )
+      ],
     );
   }
 
