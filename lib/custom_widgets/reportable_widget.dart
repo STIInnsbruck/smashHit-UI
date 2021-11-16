@@ -26,24 +26,18 @@ class _ReportableWidgetState extends State<ReportableWidget> {
           FractionallySizedBox(
             widthFactor: 0.99,
             child: Container(
-              color: _backgroundColor,
+              color: _displayComment && _isAViolation ? Colors.black87 : _backgroundColor,
               margin: EdgeInsets.fromLTRB(0, 10, 10, 0),
               child: InkWell(
                   onTap: () => null,
                   onHover: (val) {
                     setState(() {
-                      print("Setting displayComment to $val");
                       _displayComment = !_displayComment;
                     });
                   },
                   child: Stack(
                     children: [
-                      Container(
-                        color: _displayComment && _isAViolation ?
-                            Colors.black87 :
-                            Colors.white12,
-                        child: widget.child,
-                      ),
+                      widget.child,
                       _displayComment && _isAViolation ?
                           Text(widget.comment!, style: TextStyle(color: Colors.white)) :
                           Container()
