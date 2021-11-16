@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class ReportableWidget extends StatefulWidget {
 
-  Widget widget;
+  Widget child;
   String? comment;
 
-  ReportableWidget({required this.widget});
+  ReportableWidget({required this.child});
 
   @override
   _ReportableWidgetState createState() => _ReportableWidgetState();
@@ -42,7 +42,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
                         color: _displayComment && _isAViolation ?
                             Colors.black87 :
                             Colors.white12,
-                        child: widget.widget,
+                        child: widget.child,
                       ),
                       _displayComment && _isAViolation ?
                           Text(widget.comment!, style: TextStyle(color: Colors.white)) :
@@ -113,18 +113,20 @@ class _ReportableWidgetState extends State<ReportableWidget> {
               decoration: InputDecoration(hintText: "Please enter and explain the violation."),
             ),
             actions: [
-              TextButton(
+              MaterialButton(
                   onPressed: () {
                     _dismissDialog();
                   },
+                  color: Colors.white,
                   child: Text('Cancel, no violation')
               ),
-              TextButton(
+              MaterialButton(
                   onPressed: () {
                     _setComment(reportViolationController.text);
                     _toggleViolation();
                     _dismissDialog();
                   },
+                  color: Colors.blue,
                   child: Text('Add violation')
               )
             ],
@@ -141,18 +143,20 @@ class _ReportableWidgetState extends State<ReportableWidget> {
             title: Text('Would you like to remove the entered violation below?'),
             content: Text(widget.comment!),
             actions: [
-              TextButton(
+              MaterialButton(
                   onPressed: () {
                     _dismissDialog();
                   },
+                  color: Colors.white,
                   child: Text('No, leave it')
               ),
-              TextButton(
+              MaterialButton(
                   onPressed: () {
                     _setComment("");
                     _toggleViolation();
                     _dismissDialog();
                   },
+                  color: Colors.red,
                   child: Text('Yes, delete')
               )
             ],
