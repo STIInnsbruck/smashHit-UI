@@ -25,7 +25,7 @@ class _BasePageState extends State<BasePage> {
 
   _BasePageState() {
     _selectedPage = LoginScreen(changeScreen);
-    _selectedTitle = "Contracts Dashboard";
+    _selectedTitle = "Login Screen";
   }
 
   @override
