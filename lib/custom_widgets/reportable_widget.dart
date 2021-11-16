@@ -20,7 +20,6 @@ class _ReportableWidgetState extends State<ReportableWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
       child: Stack(
         children: [
           FractionallySizedBox(
@@ -36,14 +35,25 @@ class _ReportableWidgetState extends State<ReportableWidget> {
                       _displayComment = !_displayComment;
                     });
                   },
-                  child: widget.widget
+                  child: Stack(
+                    children: [
+                      Container(
+                        color: _displayComment && _isAViolation ?
+                            Colors.black87 :
+                            Colors.white12,
+                        child: widget.widget,
+                      ),
+                      _displayComment && _isAViolation ?
+                          Text(widget.comment!, style: TextStyle(color: Colors.white)) :
+                          Container()
+                    ],
+                  )
               ),
             ),
           ),
           Align(
             alignment: Alignment.centerRight,
             child: Container(
-              color: Colors.blue,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
