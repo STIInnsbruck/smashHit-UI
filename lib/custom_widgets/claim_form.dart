@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/custom_widgets/reportable_widget.dart';
 
 
 class ClaimForm extends StatefulWidget {
@@ -137,51 +138,15 @@ class _ClaimFormState extends State<ClaimForm> {
               Container(height: 10),
               Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
               Container(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  checkBoxElement('Amendment', 'Has an amendment', AMENDMENT, isAmendment),
-                  checkBoxElement('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION, isConfidentialObligation),
-                  checkBoxElement('DataController', 'Is there a data controller?', DATA_CONTROLLER, isDataController),
-                  checkBoxElement('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION, isDataProtection),
-                  checkBoxElement('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE, isLimitationOnUse),
-                  checkBoxElement('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE, isMethodOfNotice),
-                  checkBoxElement('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES, isNoThirdPartyBeneficiaries),
-                  checkBoxElement('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE, isPermittedDisclosure),
-                  checkBoxElement('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE, isReceiptOfNotice),
-                  checkBoxElement('Severability', 'Is there a severability?', SEVERABILITY, isSeverability),
-                  checkBoxElement('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY, isTerminationForInsolvency),
-                  checkBoxElement('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH, isTerminationForMaterialBreach),
-                  checkBoxElement('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE, isTerminationOnNotice),
-                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver),
-                ],
-              ),
               Container(height: 50),
+              ReportableWidget(
+                  widget: Text("SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.SOOOOOOOOOOOOME TEEEEEEEEEERMS AND CONDITIONS.")),
               Container(height: 50,
               child: TextFormField(
                 textAlign: TextAlign.justify,
                 controller: conditionController,
               )),
               Container(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  checkBoxElementEdit('Amendment', 'Has an amendment', AMENDMENT, isAmendment2),
-                  checkBoxElementEdit('ConfidentialityObligation', 'Is there a confidentiality obligation?', CONFIDENTIALITY_OBLIGATION, isConfidentialObligation2),
-                  checkBoxElementEdit('DataController', 'Is there a data controller?', DATA_CONTROLLER, isDataController2),
-                  checkBoxElementEdit('DataProtection', 'Does the contract contain data protection?', DATA_PROTECTION, isDataProtection2),
-                  checkBoxElementEdit('LimitationOnUse', 'Is there a limitation on use?', LIMITATION_ON_USE, isLimitationOnUse2),
-                  checkBoxElementEdit('MethodOfNotice', 'Has method of notice?', METHOD_OF_NOTICE, isMethodOfNotice2),
-                  checkBoxElementEdit('NoThirdPartyBeneficiaries', 'Are there third party beneficiaries?', NO_THIRD_PARTY_BENEFICIARIES, isNoThirdPartyBeneficiaries2),
-                  checkBoxElementEdit('PermittedDisclosure', 'Is there a permitted disclosure?', PERMITTED_DISCLOSURE, isPermittedDisclosure2),
-                  checkBoxElementEdit('ReceiptOfNotice', 'Is there a receipt of notice?', RECEIPT_OF_NOTICE, isReceiptOfNotice2),
-                  checkBoxElementEdit('Severability', 'Is there a severability?', SEVERABILITY, isSeverability2),
-                  checkBoxElementEdit('TerminationForInsolvency', 'Is there a termination for insolvency?', TERMINATION_FOR_INSOLVENCY, isTerminationForInsolvency2),
-                  checkBoxElementEdit('TerminationForMaterialBreach', 'Is there a termination for material breach?', TERMINATION_FOR_MATERIAL_BREACH, isTerminationForMaterialBreach2),
-                  checkBoxElementEdit('TerminationOnNotice', 'Is there a termination on notice?', TERMINATION_ON_NOTICE, isTerminationOnNotice2),
-                  checkBoxElementEdit('Waiver', 'Waiver', WAIVER, isWaiver2),
-                ],
-              ),
               Container(height: 50),
               Row(
                 children: [
