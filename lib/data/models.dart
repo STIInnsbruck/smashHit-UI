@@ -88,17 +88,17 @@ class Contract {
   /// contract_status_bar as it takes in an int to track the process.
   int getContractStatusAsInt() {
     switch (contractStatus) {
-      case "Created":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Created":
         return 0;
-      case "Offer":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Offer":
         return 1;
-      case "Agreement":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Agreement":
         return 2;
-      case "Done":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Done":
         return 3;
       case "http://ontologies.atb-bremen.de/smashHitCore#Valid":
         return 4;
-      case "Violation":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Violation":
         return 5;
     }
     return -1;
@@ -128,6 +128,14 @@ class Contract {
     DateTime date = new DateTime(year, month, day);
 
     return date;
+  }
+
+  String displayDate(DateTime date) {
+    String year = date.year.toString();
+    String month = date.month.toString();
+    String day = date.day.toString();
+
+    return "$day.$month.$year";
   }
 
   /// Return an IconData depending on the contract type. This is used for the
