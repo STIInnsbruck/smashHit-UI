@@ -24,7 +24,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
       child: Stack(
         children: [
           FractionallySizedBox(
-            widthFactor: 0.99,
+            //widthFactor: 0.99,
             child: Container(
               color: _displayComment && _isAViolation ? Colors.black87 : _backgroundColor,
               margin: EdgeInsets.fromLTRB(0, 10, 10, 0),
@@ -121,7 +121,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
                     _dismissDialog();
                   },
                   color: Colors.blue,
-                  child: Text('Add violation')
+                  child: Text('Add violation', style: TextStyle(color: Colors.white))
               )
             ],
           );
@@ -151,7 +151,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
                     _dismissDialog();
                   },
                   color: Colors.red,
-                  child: Text('Yes, delete')
+                  child: Text('Yes, delete', style: TextStyle(color: Colors.white))
               )
             ],
           );
