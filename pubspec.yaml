@@ -32,6 +32,7 @@ dependencies:
   http: ^0.13.3
   connectivity: ^3.0.6
   percent_indicator: ^3.0.1
+  country_state_city_pro: ^0.0.3
 
 dev_dependencies:
   flutter_test:

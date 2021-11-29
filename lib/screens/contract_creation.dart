@@ -7,7 +7,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
-  final Function(int) changeScreen;
+  final Function(int, [String]) changeScreen;
   User? user;
 
   ContractCreation(this.changeScreen, this.user);
@@ -31,18 +31,20 @@ class _ContractCreationState extends State<ContractCreation> {
   Contract? contract;
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
-  static ContractForm contractForm = ContractForm();
+  static ContractForm? contractForm;
 
   //-------------------------------------------------- TextEditingControllers
-  final TextEditingController _titleController = contractForm.titleController;
-  final TextEditingController _descriptionController =
-      contractForm.descriptionController;
+  late final TextEditingController _titleController;
+  late final TextEditingController _descriptionController;
   List<TextEditingController> textControllers =
       []; //for dynamic amount of parties
 
   @override
   void initState() {
     super.initState();
+    contractForm  = ContractForm(widget.changeScreen, 1, null);
+    _titleController = contractForm!.titleController;
+    _descriptionController = contractForm!.descriptionController;
   }
 
   @override
@@ -64,7 +66,7 @@ class _ContractCreationState extends State<ContractCreation> {
                 height: 100,
                 child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
               ),
-              contractForm
+              contractForm!
             ],
           ),
         ),
@@ -127,7 +129,7 @@ class _ContractCreationState extends State<ContractCreation> {
             color: isFormComplete ? Colors.lightGreenAccent : Colors.grey[400],
             width: width,
             child: FittedBox(
-                fit: BoxFit.fitWidth, child: _confirmContractButton()),
+                fit: BoxFit.fitWidth, child: Container()),
           )
         ],
       ),
@@ -281,24 +283,6 @@ class _ContractCreationState extends State<ContractCreation> {
     );
   }
 
-  _confirmContractButton() {
-    return GestureDetector(
-      child: Text("Confirm & Send\nContract",
-          style: TextStyle(color: Colors.black, fontSize: 20),
-          textAlign: TextAlign.center),
-      onTap: () {
-        isFormComplete
-            ? dataProvider.createContract(
-                "SampleContract",
-                "This is a test of the smashHit flutter application. Insert Terms of Service here.",
-                "string",
-                DateTime.now(),
-                DateTime.now())
-            : dataProvider.fetchContractById("kg244565");
-      },
-    );
-  }
-
   _selectPartyRole() {
     showDialog(
         context: context,
@@ -327,7 +311,7 @@ class _ContractCreationState extends State<ContractCreation> {
                         _selectedRoleIndex == -1
                             ? null
                             : setState(() {
-                                users.add(new User(_selectedPartyRole));
+                                users.add(new User(role: _selectedPartyRole));
                                 textControllers
                                     .add(new TextEditingController());
                                 _incrementTextFieldCounter();
@@ -518,8 +502,8 @@ class _ContractCreationState extends State<ContractCreation> {
         if (element.text.isNotEmpty) {
           if (_titleController.text.isNotEmpty &&
               _descriptionController.text.isNotEmpty &&
-              contractForm.startDate != null &&
-              contractForm.endDate != null &&
+              contractForm!.startDate != null &&
+              contractForm!.endDate != null &&
               _selectedEntityLabel != "" &&
               contractDropDownType != null) {
             setState(() {

@@ -7,72 +7,108 @@ import 'package:smashhit_ui/data/models.dart';
 
 class DataProvider {
 
-  //TODO: change URL to the contract url. This is currently only used to ensure correct https requests.
-  static final String testUrl = "rickandmortyapi.com";
-  static final String testPath = "/";
-  Uri kTestUrl = new Uri.https(testUrl, testPath);
+  ResponseParser parser = ResponseParser();
+
+  //TODO: change dynamic model to the contract model.
+  dynamic model;
+
+
+  //----------------------ACT CONTRACT API--------------------------------------
 
   static final String kHost = 'actool.contract.sti2.at';
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
-  ResponseParser parser = ResponseParser();
-
   static final String token =
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjQwNDI3Mzc4fQ.aD7XNfGsCqgzshdiwcqWEc2srtd56TlNCtAm0o-fFLI";
 
   var headers = {
-    'accept': '*/*',
+    'accept': 'application/json',
+    'Content-Type': 'application/json',
     'Authorization': 'Bearer $token'
   };
 
-  //TODO: change dynamic model to the contract model.
-  dynamic model;
-
-  createContract(String title, String contractTerms, String contractType,
-      DateTime startDate, DateTime expireDate) async {
+  Future<bool> createAgent(String name, String agentId, String address, String city,
+      String country, String state, String phone, String agentType, String email) async {
 
     var body = {
-      "ContractId": "1337",
+      "Address": "16, Fuerstenweg",
+      "AgentId": "SvenR",
+      "AgentType": "Person",
+      "City": "Innsbruck",
+      "Country": "Austria",
+      "Email": "sven@home.lu",
+      "Name": "Sven",
+      "Phone": "69187542169",
+      "State": "Tyrol"
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/agent/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Message: \t $data");
+      return true;
+    } else {
+      print("Statuscode: ${response.statusCode}");
+      print("Response body: ${response.body}");
+      return false;
+    }
+  }
+
+  Future<bool> createContract(String title, String contractTerms, String contractType,
+      DateTime startDate, DateTime expireDate, String requester, String provider, String amendment,
+      String confidentiality, String existDataController, String existDataProtection,
+      String limitation, String methodNotice, String thirdParties, String disclosure, String receiptNotice,
+      String severability, String insolvency, String materialBreach, String terminationNotice,
+      String waiver) async {
+
+    var body = {
+      "ContractId": title.replaceAll(' ', ''),
       "ContractType": contractType,
-      "Purpose": "Testing the flutter application.",
-      "ContractRequester": "string",
-      "ContractProvider": "string",
-      "DataController": "string",
+      "Purpose": contractTerms.replaceAll('\n', ''),
+      "ContractRequester": requester.replaceAll(' ', ''),
+      "ContractProvider": provider.replaceAll(' ', ''),
+      "DataController": requester.replaceAll(' ', ''),
       "StartDate": _formatDate(startDate),
       "ExecutionDate": _formatDate(startDate),
       "EffectiveDate": _formatDate(startDate),
       "ExpireDate": _formatDate(expireDate),
-      "Medium": "SmashHitFlutterApp",
-      "Waiver": "string",
-      "Amendment": "string",
-      "ConfidentialityObligation": "string",
-      "DataProtection": "string",
-      "LimitationOnUse": "string",
-      "MethodOfNotice": "string",
-      "NoThirdPartyBeneficiaries": "string",
-      "PermittedDisclosure": "string",
-      "ReceiptOfNotice": "string",
-      "Severability": "string",
-      "TerminationForInsolvency": "string",
-      "TerminationForMaterialBreach": "string",
-      "TerminationOnNotice": "string",
+      "Medium": "SmashHit Flutter Application",
+      "Waiver": waiver,
+      "Amendment": amendment,
+      "ConfidentialityObligation": confidentiality,
+      "DataProtection": existDataProtection,
+      "LimitationOnUse": limitation,
+      "MethodOfNotice": methodNotice,
+      "NoThirdPartyBeneficiaries": thirdParties,
+      "PermittedDisclosure": disclosure,
+      "ReceiptOfNotice": receiptNotice,
+      "Severability": severability,
+      "TerminationForInsolvency": insolvency,
+      "TerminationForMaterialBreach": materialBreach,
+      "TerminationOnNotice": terminationNotice,
       "ContractStatus": "string"
     };
 
     var jsonBody = jsonEncode(body);
 
-    var response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
         headers: headers, body: jsonBody);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print("Data: \t $data");
       print("Contract Created.");
+      return true;
     } else {
       print("Error createContract()");
       print("${response.statusCode}");
       print("${response.body}");
+      return false;
     }
   }
 
@@ -108,29 +144,85 @@ class DataProvider {
     }
   }
 
-
-
-  /**getContracts() async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    var response = await http.get(
-        kBaseUrl.replace(path: "/contract/list_of_contracts/"),
-        headers: headers);
+  Future<List<User>> fetchAllUsers() async {
+    final response = await http.get(kBaseUrl.replace(path: 'contract/agents/'), headers: headers);
 
     if (response.statusCode == 200) {
-      var data = (response.body);
-      var jsonMap = json.decode(data);
-      var id = parser.parseAllContractIds(jsonMap["bindings"]);
-      print("id: $id");
-      return id;
+      Map data = jsonDecode(response.body);
+      return parser.parseAllUsers(data["bindings"]);
     } else {
-      print("Error getContracts()");
-      print("${response.statusCode}");
+      throw Exception('Failed to load all users.');
     }
-  }*/
+  }
+
+  Future<User> fetchUserById(String agentId) async {
+    final response = await http.get(kBaseUrl.replace(path: 'agent/by_agentId/SvenRasmusen'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseUser(data["bindings"]);
+    } else {
+      throw Exception('Failed to load agent by id: $agentId.');
+    }
+  }
+
+  Future<bool> deleteContractById(String contractId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete contract $contractId.\nBack-end response: ${response.reasonPhrase}.');
+    }
+  }
+
+  updateContract(String title, String contractTerms, String contractType,
+      DateTime startDate, DateTime expireDate, String requester, String provider) async {
+
+    var body = {
+      "ContractId": title.replaceAll(' ', ''),
+      "ContractType": contractType,
+      "Purpose": contractTerms.replaceAll('\n', ''),
+      "ContractRequester": requester.replaceAll(' ', ''),
+      "ContractProvider": provider.replaceAll(' ', ''),
+      "DataController": requester.replaceAll(' ', ''),
+      "StartDate": _formatDate(startDate),
+      "ExecutionDate": _formatDate(startDate),
+      "EffectiveDate": _formatDate(startDate),
+      "ExpireDate": _formatDate(expireDate),
+      "Medium": "SmashHit Flutter Application",
+      "Waiver": "string",
+      "Amendment": "string",
+      "ConfidentialityObligation": "string",
+      "DataProtection": "string",
+      "LimitationOnUse": "string",
+      "MethodOfNotice": "string",
+      "NoThirdPartyBeneficiaries": "string",
+      "PermittedDisclosure": "string",
+      "ReceiptOfNotice": "string",
+      "Severability": "string",
+      "TerminationForInsolvency": "string",
+      "TerminationForMaterialBreach": "string",
+      "TerminationOnNotice": "string",
+      "ContractStatus": "string"
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/contract/update/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Contract Updated.");
+      return true;
+    } else {
+      print("Error createContract()");
+      print("${response.statusCode}");
+      print("${response.body}");
+      return false;
+    }
+  }
 
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {
@@ -149,4 +241,6 @@ class DataProvider {
       return false;
     }
   }
+
 }
+

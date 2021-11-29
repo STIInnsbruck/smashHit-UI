@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 
 class User {
-  int? _id;
-  String? _name;
-  String? _email;
-  String? _streetAddress;
-  int? _telephoneNumber;
-  String? _role;
+  String? id;
+  String? name;
+  String? email;
+  String? streetAddress;
+  String? state;
+  String? country;
+  String? city;
+  String? telephoneNumber;
+  String? role;
 
-  User(this._role);
+  User({this.id, this.name, this.email, this.streetAddress, this.state, this.country, this.city, this.telephoneNumber, this.role});
 
-  int? get getId => _id;
-  String? get getName => _name;
-  String? get role => _role;
+  String? get getId => id;
+  String? get getName => name;
 
-  set setName(String value) {
-    _name = value;
+  @override
+  String toString() {
+    return '$name, $email';
   }
+
 }
 
 /// Contract model. There is always one party creating the contract (= contractor)
@@ -26,8 +30,8 @@ class User {
 class Contract {
   String? contractId;
   String? contractType;
-  String? contractor;
-  String? contractee;
+  String? contractorId;
+  String? contracteeId;
   ContractObject? contractObject;
   String? title;
   String? description;
@@ -35,19 +39,47 @@ class Contract {
   DateTime? expireDate;
   String? contractStatus;
   IconData? iconData;
+  String? amendment;
+  String? confidentialityObligation;
+  String? existDataController;
+  String? existDataProtection;
+  String? limitation;
+  String? methodNotice;
+  String? thirdParties;
+  String? disclosure;
+  String? receiptNotice;
+  String? severability;
+  String? terminationInsolvency;
+  String? terminationMaterialBreach;
+  String? terminationNotice;
+  String? waiver;
 
   Contract({
     required this.contractId,
     this.contractType,
-    this.contractor,
-    this.contractee,
+    this.contractorId,
+    this.contracteeId,
     this.title,
     this.description,
     this.executionDate,
     this.expireDate,
     this.contractStatus,
     this.contractObject,
-    this.iconData
+    this.iconData,
+    this.amendment,
+    this.confidentialityObligation,
+    this.existDataController,
+    this.existDataProtection,
+    this.limitation,
+    this.methodNotice,
+    this.thirdParties,
+    this.disclosure,
+    this.receiptNotice,
+    this.severability,
+    this.terminationInsolvency,
+    this.terminationMaterialBreach,
+    this.terminationNotice,
+    this.waiver
   }) {
     this.title = title;
   }
@@ -56,20 +88,36 @@ class Contract {
   /// contract_status_bar as it takes in an int to track the process.
   int getContractStatusAsInt() {
     switch (contractStatus) {
-      case "Created":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Created":
         return 0;
-      case "Offer":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Offer":
         return 1;
-      case "Agreement":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Agreement":
         return 2;
-      case "Done":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Done":
         return 3;
       case "http://ontologies.atb-bremen.de/smashHitCore#Valid":
         return 4;
-      case "Violation":
+      case "http://ontologies.atb-bremen.de/smashHitCore#Violation":
         return 5;
     }
     return -1;
+  }
+
+  String formatContractType() {
+    return this.contractType!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+  }
+
+  String formatContractor() {
+    return this.contractorId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+  }
+
+  String formatContractee() {
+    return this.contracteeId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+  }
+
+  String formatContractId() {
+    return this.contractId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   static DateTime formatDate(String dateString) {
@@ -80,6 +128,14 @@ class Contract {
     DateTime date = new DateTime(year, month, day);
 
     return date;
+  }
+
+  String displayDate(DateTime date) {
+    String year = date.year.toString();
+    String month = date.month.toString();
+    String day = date.day.toString();
+
+    return "$day.$month.$year";
   }
 
   /// Return an IconData depending on the contract type. This is used for the
