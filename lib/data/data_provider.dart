@@ -28,19 +28,19 @@ class DataProvider {
     'Authorization': 'Bearer $token'
   };
 
-  Future<bool> createAgent(String name, String agentId, String address, String city,
+  Future<int> createAgent(String name, String agentId, String address, String city,
       String country, String state, String phone, String agentType, String email) async {
 
     var body = {
-      "Address": "16, Fuerstenweg",
-      "AgentId": "SvenR",
+      "Address": address,
+      "AgentId": agentId,
       "AgentType": "Person",
-      "City": "Innsbruck",
-      "Country": "Austria",
-      "Email": "sven@home.lu",
-      "Name": "Sven",
-      "Phone": "69187542169",
-      "State": "Tyrol"
+      "City": city,
+      "Country": country,
+      "Email": email,
+      "Name": name,
+      "Phone": phone,
+      "State": state
     };
 
     var jsonBody = jsonEncode(body);
@@ -51,11 +51,17 @@ class DataProvider {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print("Message: \t $data");
-      return true;
+      if(data.toString().compareTo('{Error: Agent id already exist}') == 0 ) {
+        return -1;
+      } else if (data.toString().compareTo('{Success: Record inserted successfully.}') == 0 ){
+        return 1;
+      } else {
+        return 0;
+      }
     } else {
       print("Statuscode: ${response.statusCode}");
       print("Response body: ${response.body}");
-      return false;
+      return 0;
     }
   }
 

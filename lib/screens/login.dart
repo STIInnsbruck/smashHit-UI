@@ -39,102 +39,109 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             width: screenWidth * 0.7,
             height: screenHeight,
-            child: Column(
-      children: [
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
               children: [
-                Text("smash",style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
-                Text("Hit", style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blue))
+                Column(
+                  children: [
+                    Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("smash",style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                        Text("Hit", style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blue))
+                      ],
+                    ),
+                    Spacer(),
+                    CircleAvatar(
+                      radius: smallSide * 0.10,
+                      backgroundColor: Colors.grey,
+                      child: CircleAvatar(
+                          radius: smallSide * 0.098,
+                          backgroundColor: Colors.white,
+                          child: Container(
+                            width: smallSide * 0.192,
+                            height: smallSide * 0.192,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.bottomCenter,
+                            child: ClipOval(
+                              child: Icon(Icons.person, size: smallSide * 0.192, color: Colors.white),
+                            ),
+                          )
+                      ),
+                    ),
+                    _signUp?
+                    registrationForm(smallSide) : loginForm(smallSide),
+                    Spacer(flex: 2),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _signUp?
+                          Flexible(
+                            flex: 2,
+                            child: MaterialButton(
+                              onPressed: () {
+                                //_register();
+                                _registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                              },
+                              child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                              elevation: 10,
+                              color: Colors.grey,
+                              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            ),
+                          ) :
+                          Flexible(
+                            flex: 2,
+                            child: MaterialButton(
+                              onPressed: () {
+                                widget.changeScreen(0);
+                              },
+                              child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                              elevation: 10,
+                              color: Colors.grey,
+                              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            ),
+                          ),
+                          Spacer(),
+                          _signUp?
+                          Flexible(
+                            flex: 2,
+                            child: MaterialButton(
+                              onPressed: () {
+                                _toggleSignUp();
+                              },
+                              child: Text('Sign In', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                              elevation: 10,
+                              color: Colors.grey,
+                              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            ),
+                          ) :
+                          Flexible(
+                            flex: 2,
+                            child: MaterialButton(
+                              onPressed: () {
+                                _toggleSignUp();
+                              },
+                              child: Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
+                              elevation: 10,
+                              color: Colors.grey,
+                              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacer(flex: 4)
+                  ],
+                ),
+                loading? Center(
+                  child: CircularProgressIndicator()
+                ) : Container()
               ],
-            ),
-            Spacer(),
-        CircleAvatar(
-          radius: smallSide * 0.10,
-          backgroundColor: Colors.grey,
-          child: CircleAvatar(
-              radius: smallSide * 0.098,
-              backgroundColor: Colors.white,
-              child: Container(
-                width: smallSide * 0.192,
-                height: smallSide * 0.192,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.bottomCenter,
-                child: ClipOval(
-                  child: Icon(Icons.person, size: smallSide * 0.192, color: Colors.white),
-                ),
-              )
-          ),
-        ),
-            _signUp?
-            registrationForm(smallSide) : loginForm(smallSide),
-            Spacer(flex: 2),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _signUp?
-                  Flexible(
-                    flex: 2,
-                    child: MaterialButton(
-                      onPressed: () async {
-                        _register();
-                        //_registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
-                      },
-                      child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
-                      elevation: 10,
-                      color: Colors.grey,
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    ),
-                  ) :
-                  Flexible(
-                    flex: 2,
-                    child: MaterialButton(
-                      onPressed: () {
-                        widget.changeScreen(0);
-                      },
-                      child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
-                      elevation: 10,
-                      color: Colors.grey,
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    ),
-                  ),
-                  Spacer(),
-                  _signUp?
-                  Flexible(
-                    flex: 2,
-                    child: MaterialButton(
-                      onPressed: () {
-                        _toggleSignUp();
-                      },
-                      child: Text('Sign In', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
-                      elevation: 10,
-                      color: Colors.grey,
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    ),
-                  ) :
-                  Flexible(
-                    flex: 2,
-                    child: MaterialButton(
-                      onPressed: () {
-                        _toggleSignUp();
-                      },
-                      child: Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
-                      elevation: 10,
-                      color: Colors.grey,
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Spacer(flex: 4)
-      ],
-    ),
+            )
           ),
         ));
   }
@@ -269,19 +276,66 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _register() {
-    dataProvider.createAgent("null", "null", "null", "null", "null", "null", "null", "null", "null");
+    dataProvider.createAgent(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
   }
 
-  Future<bool> _registerUser(String name, String agentId, String address, String city,
+  _registerUser(String name, String agentId, String address, String city,
       String country, String state, String phone, String agentType, String email) async {
     _toggleLoading();
     var result = await dataProvider.createAgent(name, agentId, address, city, country, state, phone, agentType, email);
-    if (result) {
+    if (result == 1) {
       _toggleLoading();
-      return true;
+      widget.changeScreen(0);
+    } else if (result == -1){
+      _toggleLoading();
+      showUserAlreadyExistsDialog();
     } else {
-      _toggleLoading();
-      return false;
+    _toggleLoading();
+    showRegisterErrorDialog();
     }
   }
+
+  showUserAlreadyExistsDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Already have an account?', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Text('An account with that name already exists!', textAlign: TextAlign.center),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  showRegisterErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Oops!', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.error, color: Colors.orange, size: 100),
+              Text('An error occured while trying to register.', textAlign: TextAlign.center),
+              MaterialButton(
+                child: Text('Okay, try again!'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+    );
+  }
+
 }
