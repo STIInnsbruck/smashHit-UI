@@ -98,7 +98,7 @@ class _ContractTileState extends State<ContractTile> {
                 },
               ),
               MaterialButton(
-                  child: Text('Delete'),
+                  child: Text('Delete', style: TextStyle(color: Colors.white)),
                   color: Colors.red,
                   onPressed: () async {
                     if (await dataProvider.deleteContractById(contractId)) {
