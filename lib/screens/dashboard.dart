@@ -46,19 +46,38 @@ class _DashboardState extends State<Dashboard> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contractList = snapshot.data;
-            return ListView.builder(
-                itemCount: contractList!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (searchId == null) {
-                    return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
-                  } else {
-                    if (contractList![index].contractId!.contains(searchId!)) {
-                      return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
-                    } else {
-                      return Container();
-                    }
-                  }
-                });
+            return Column(
+              children: [
+                ListTile(
+                  title: Row(
+                    children: [
+                      Container(width: 75, child: Text("Type")),
+                      Text("ID"),
+                      Spacer(flex: 28),
+                      Text("Status"),
+                      Spacer(flex: 5),
+                      Text("Actions"),
+                      Spacer(flex: 2)
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: contractList!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (searchId == null) {
+                          return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+                        } else {
+                          if (contractList![index].contractId!.contains(searchId!)) {
+                            return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+                          } else {
+                            return Container();
+                          }
+                        }
+                      }),
+                )
+              ],
+            );
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
           }

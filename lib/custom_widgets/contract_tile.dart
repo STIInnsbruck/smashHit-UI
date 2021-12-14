@@ -39,8 +39,10 @@ class _ContractTileState extends State<ContractTile> {
             child: Row(
               children: [
                 Icon(Icons.folder_shared, size: 75),
-                Text('Contract ID: ${_formatContractUri(widget.contract!.contractId!)}'),
+                SizedBox(width: 100,child: Text('${_formatContractUri(widget.contract!.contractId!)}')),
                 Spacer(flex: 25),
+                statusIconByContractStatus(),
+                Spacer(flex: 4),
                 editContractButton(_formatContractUri(widget.contract!.contractId!)),
                 Spacer(),
                 deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
@@ -164,6 +166,20 @@ class _ContractTileState extends State<ContractTile> {
   String _formatContractUri(String contractUri) {
     int length = contractUri.length;
     return contractUri.substring(45, length);
+  }
+
+  Widget statusIconByContractStatus() {
+    switch (widget.contract!.getContractStatusAsInt()) {
+      case 0:
+        return Icon(Icons.description, color: Colors.grey, size: 30);
+      case 1:
+        return Icon(Icons.work, color: Colors.grey, size: 30);
+      case 2:
+        return Icon(Icons.check_circle, color: Colors.green, size: 30);
+      case 5:
+        return Icon(Icons.report, color: Colors.red, size: 30);
+    }
+    return Icon(Icons.check_circle, color: Colors.green, size: 30);
   }
 
 }
