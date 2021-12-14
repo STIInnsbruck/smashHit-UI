@@ -56,10 +56,13 @@ class _ContractTileState extends State<ContractTile> {
         child: Row(
           children: [
             Icon(Icons.folder_shared, size: 75),
-            SizedBox(width: 200,child: Text('${_formatContractUri(widget.contract!.contractId!)}', overflow: TextOverflow.ellipsis)),
-            Spacer(flex: 25),
+            Expanded(
+                flex: 24,
+                child: Text('${_formatContractUri(widget.contract!.contractId!)}', overflow: TextOverflow.ellipsis)
+            ),
+            //Spacer(flex: 25),
             statusIconByContractStatus(),
-            Spacer(flex: 4),
+            Spacer(flex: 3),
             editContractButton(_formatContractUri(widget.contract!.contractId!)),
             Spacer(),
             deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
