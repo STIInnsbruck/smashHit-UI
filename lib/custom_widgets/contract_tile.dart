@@ -19,41 +19,125 @@ class _ContractTileState extends State<ContractTile> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Material(
       child: InkWell(
         //TODO: fix splash effect, currently it is behind the container
         splashColor: Colors.white,
-        child: Container(
-          margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-          width: 125,
-          //height: height / 8,
-          height: 100,
-          decoration: BoxDecoration(color: Colors.grey[400], boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 2.0,
-                spreadRadius: 1.0,
-                offset: Offset(2.0, 2.0))
-          ]),
-          child: Center(
-            child: Row(
-              children: [
-                Icon(Icons.folder_shared, size: 75),
-                SizedBox(width: 100,child: Text('${_formatContractUri(widget.contract!.contractId!)}')),
-                Spacer(flex: 25),
-                statusIconByContractStatus(),
-                Spacer(flex: 4),
-                editContractButton(_formatContractUri(widget.contract!.contractId!)),
-                Spacer(),
-                deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
-                Spacer()
-              ],
-            ),
-          ),
-        ),
+        child: _isSmallScreen(screenWidth)? smallContractTile() : bigContractTile(),
         onTap: () {
           widget.changeScreen(2, '${_formatContractUri(widget.contract!.contractId!)}');
         },
+      ),
+    );
+  }
+
+  bool _isSmallScreen(double width) {
+    if (width <= 500.0) {
+      return true;
+    }
+    return false;
+  }
+
+  Container bigContractTile() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+      width: 125,
+      //height: height / 8,
+      height: 100,
+      decoration: BoxDecoration(color: Colors.grey[400], boxShadow: [
+        BoxShadow(
+            color: Colors.black45,
+            blurRadius: 2.0,
+            spreadRadius: 1.0,
+            offset: Offset(2.0, 2.0))
+      ]),
+      child: Center(
+        child: Row(
+          children: [
+            Icon(Icons.folder_shared, size: 75),
+            SizedBox(width: 200,child: Text('${_formatContractUri(widget.contract!.contractId!)}', overflow: TextOverflow.ellipsis)),
+            Spacer(flex: 25),
+            statusIconByContractStatus(),
+            Spacer(flex: 4),
+            editContractButton(_formatContractUri(widget.contract!.contractId!)),
+            Spacer(),
+            deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
+            Spacer()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container smallContractTile() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+      width: 125,
+      //height: height / 8,
+      height: 150,
+      decoration: BoxDecoration(color: Colors.grey[400], boxShadow: [
+        BoxShadow(
+            color: Colors.black45,
+            blurRadius: 2.0,
+            spreadRadius: 1.0,
+            offset: Offset(2.0, 2.0))
+      ]),
+      child: Center(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Icon(Icons.folder_shared, size: 75),
+                  SizedBox(width: 200,child: Text('${_formatContractUri(widget.contract!.contractId!)}', overflow: TextOverflow.ellipsis))
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(width: 1)
+                  )
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text("Status:"),
+                          statusIconByContractStatus(),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            left: BorderSide(width: 1),
+                          )
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text("Actions:"),
+                            editContractButton(_formatContractUri(widget.contract!.contractId!)),
+                            deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
