@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
-import 'package:smashhit_ui/custom_widgets/contract_partner_tile.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
 
 class Dashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
-  User? user;
-  String? searchId;
+  final User? user;
+  final String? searchId;
 
   Dashboard(this.changeScreen, this.user, this.searchId);
 

@@ -4,7 +4,7 @@ import 'package:smashhit_ui/data/models.dart';
 
 class TemplateSelector extends StatefulWidget {
   final Function(int) changeScreen;
-  User? user;
+  final User? user;
 
   TemplateSelector(this.changeScreen, this.user);
 
