@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/reportable_widget.dart';
 
 
 class ClaimForm extends StatefulWidget {
 
-  Function(int) changeScreen;
+  final Function(int) changeScreen;
   final Contract contract;
 
   ClaimForm(this.changeScreen, this.contract);
