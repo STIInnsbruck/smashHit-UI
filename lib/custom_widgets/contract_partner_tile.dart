@@ -2,15 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class ContractPartnerTile extends StatelessWidget {
-  User? partner;
+  final User? partner;
 
-
-  /**static List<Widget> contractList = [
-    contractTile(Icons.car_rental),
-    contractTile(Icons.home),
-    contractTile(Icons.person_search_rounded),
-    contractTile(Icons.work)
-  ];*/
+  ContractPartnerTile(this.partner);
 
   @override
   Widget build(BuildContext context) {
