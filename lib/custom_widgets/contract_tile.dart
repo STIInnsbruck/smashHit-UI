@@ -5,7 +5,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 class ContractTile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final Function() refresh;
-  Contract? contract;
+  final Contract? contract;
 
   ContractTile(this.changeScreen, this.refresh, this.contract);
 
