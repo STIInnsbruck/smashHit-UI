@@ -85,7 +85,4 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
     );
   }
 
-  Widget _personalDataValueBar(double width, double height, double min, double max) {
-    return Container();
-  }
 }
