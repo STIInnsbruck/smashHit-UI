@@ -5,9 +5,9 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 
 class UpdateScreen extends StatefulWidget {
-  Function(int, [String]) changeScreen;
+  final Function(int, [String]) changeScreen;
   final String contractId;
-  User? user;
+  final User? user;
 
   UpdateScreen(this.changeScreen, this.contractId, this.user);
 
