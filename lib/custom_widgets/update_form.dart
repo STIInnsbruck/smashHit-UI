@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class UpdateForm extends StatefulWidget {
-  Function (int) changeScreen;
-  Function(int) toggleEditing;
+  final Function (int) changeScreen;
+  final Function(int) toggleEditing;
   final Contract contract;
 
   UpdateForm(this.changeScreen, this.toggleEditing, this.contract);
