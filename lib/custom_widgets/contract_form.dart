@@ -112,8 +112,7 @@ class _ContractFormState extends State<ContractForm> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
+    double formWidth = MediaQuery.of(context).size.width * 0.7;
     return Stack(children: [
       Container(
           child: Scrollbar(
@@ -121,33 +120,34 @@ class _ContractFormState extends State<ContractForm> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-            contractStep1Header(screenWidth * 0.5),
+            contractStep1Header(formWidth),
             toggleStepOne == true
-                ? contractStep1(screenWidth * 0.5)
+                ? contractStep1(formWidth)
                 : Container(),
-            contractStep2Header(screenWidth * 0.5),
+            contractStep2Header(formWidth),
             toggleStepTwo == true
-                ? contractStep2(screenWidth * 0.5, currentRequesterIndex)
+                ? contractStep2(formWidth, currentRequesterIndex)
                 : Container(),
-            contractStep3Header(screenWidth * 0.5),
+            contractStep3Header(formWidth),
             toggleStepThree == true
-                ? contractStep3(screenWidth * 0.5, currentProviderIndex)
+                ? contractStep3(formWidth, currentProviderIndex)
                 : Container(),
-            contractStep4Header(screenWidth * 0.5),
+            contractStep4Header(formWidth),
             toggleStepFour == true
-                ? contractStep4(screenWidth * 0.5)
+                ? contractStep4(formWidth)
                 : Container(),
-            contractStepFinalHeader(screenWidth * 0.5),
+            contractStepFinalHeader(formWidth),
             toggleStepFinal == true
-                ? contractStepFinal(screenWidth * 0.5)
+                ? contractStepFinal(formWidth)
                 : Container(),
           ])))),
       Align(
-        alignment: Alignment.centerRight,
+        alignment: Alignment.bottomRight,
         child: widget.contract != null? Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             nextStepButton(),
+            SizedBox(height: 10),
             confirmEditButton()
           ],
         ) : nextStepButton(),

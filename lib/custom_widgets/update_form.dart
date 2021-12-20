@@ -39,7 +39,7 @@ class _UpdateFormState extends State<UpdateForm> {
           ),
           Align(
             child: submitChangesButton(),
-            alignment: Alignment.centerRight,
+            alignment: Alignment.bottomRight,
           )
         ]
     );
