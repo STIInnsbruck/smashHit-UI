@@ -231,7 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontSize: screenWidth / 45),
             )
         ),
-        CSCDropdownPicker(screenWidth * 0.30),
+        cscDropdownPicker(screenWidth * 0.30),
         Container(
             width: screenWidth * 0.30,
             height: screenWidth * 0.05,
@@ -249,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget CSCDropdownPicker(double width) {
+  Widget cscDropdownPicker(double width) {
     return Container(
       width: width,
       child: CountryStateCityPicker(
@@ -273,10 +273,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       loading = !loading;
     });
-  }
-
-  void _register() {
-    dataProvider.createAgent(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
   }
 
   _registerUser(String name, String agentId, String address, String city,

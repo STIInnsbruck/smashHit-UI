@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
-import 'package:smashhit_ui/custom_widgets/contract_partner_tile.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
 
 class Dashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
-  User? user;
-  String? searchId;
+  final User? user;
+  final String? searchId;
 
   Dashboard(this.changeScreen, this.user, this.searchId);
 
@@ -38,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    //double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
     searchId = widget.searchId;
     return Container(
       child: FutureBuilder<List<Contract>>(
@@ -48,19 +47,7 @@ class _DashboardState extends State<Dashboard> {
             contractList = snapshot.data;
             return Column(
               children: [
-                ListTile(
-                  title: Row(
-                    children: [
-                      Container(width: 75, child: Text("Type")),
-                      Text("ID"),
-                      Spacer(flex: 28),
-                      Text("Status"),
-                      Spacer(flex: 5),
-                      Text("Actions"),
-                      Spacer(flex: 2)
-                    ],
-                  ),
-                ),
+                _isSmallScreen(screenWidth)? Container() : listHeader(),
                 Expanded(
                   child: ListView.builder(
                       itemCount: contractList!.length,
@@ -85,6 +72,30 @@ class _DashboardState extends State<Dashboard> {
         }
       ),
     );
+  }
+
+  ListTile listHeader() {
+    return ListTile(
+      title: Row(
+        children: [
+          Container(width: 75, child: Text("Type")),
+          Text("ID"),
+          Spacer(flex: 28),
+          Text("Status"),
+          Spacer(flex: 5),
+          Text("Actions"),
+          Spacer(flex: 2)
+        ],
+      ),
+    );
+  }
+
+
+  bool _isSmallScreen(double width) {
+    if (width <= 500.0) {
+      return true;
+    }
+    return false;
   }
 
   void refreshContractList() {
