@@ -190,18 +190,17 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget registrationForm(double screenWidth) {
-    return Form(
-      key: _registrationFormKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-              width: screenWidth * 0.30,
-              height: screenWidth * 0.05,
-              child: TextFormField(
+    return SingleChildScrollView(
+      child: Form(
+        key: _registrationFormKey,
+        child: SizedBox(
+          width: 400,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
                 decoration: InputDecoration(
                     hintText: 'Name',
-                    hintStyle: TextStyle(fontSize: screenWidth / 45)
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -210,16 +209,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 controller: name,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: screenWidth / 45),
-              )
-          ),
-          Container(
-              width: screenWidth * 0.30,
-              height: screenWidth * 0.05,
-              child: TextFormField(
+              ),
+              TextFormField(
                 decoration: InputDecoration(
                     hintText: 'Surname',
-                    hintStyle: TextStyle(fontSize: screenWidth / 45)
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -228,16 +221,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 controller: surname,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: screenWidth / 45),
-              )
-          ),
-          Container(
-              width: screenWidth * 0.30,
-              height: screenWidth * 0.05,
-              child: TextFormField(
+              ),
+              TextFormField(
                 decoration: InputDecoration(
                     hintText: 'Email',
-                    hintStyle: TextStyle(fontSize: screenWidth / 45)
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -246,16 +233,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 controller: email,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: screenWidth / 45),
-              )
-          ),
-          Container(
-              width: screenWidth * 0.30,
-              height: screenWidth * 0.05,
-              child: TextFormField(
+              ),
+              TextFormField(
                 decoration: InputDecoration(
                     hintText: 'Phone Number',
-                    hintStyle: TextStyle(fontSize: screenWidth / 45)
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -264,17 +245,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 controller: phone,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: screenWidth / 45),
-              )
-          ),
-          cscDropdownPicker(screenWidth * 0.30),
-          Container(
-              width: screenWidth * 0.30,
-              height: screenWidth * 0.05,
-              child: TextFormField(
+              ),
+              cscDropdownPicker(screenWidth * 0.30),
+              TextFormField(
                 decoration: InputDecoration(
-                    hintText: 'Street Address',
-                    hintStyle: TextStyle(fontSize: screenWidth / 45)
+                    hintText: 'Street Address'
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -283,17 +258,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 controller: address,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: screenWidth / 45),
-              )
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget cscDropdownPicker(double width) {
-    return Container(
-      width: width,
+    return SizedBox(
+      width: 400,
       child: CountryStateCityPicker(
         city: city,
         country: country,
