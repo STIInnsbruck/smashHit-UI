@@ -8,7 +8,7 @@ import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
   final Function(int, [String]) changeScreen;
-  User? user;
+  final User? user;
 
   ContractCreation(this.changeScreen, this.user);
 
@@ -50,89 +50,20 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     _checkIfFormComplete();
 
     return Center(
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: screenWidth * 0.66,
-                height: 100,
-                child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
-              ),
-              contractForm!
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _sideBar(double width, double height) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-      width: width / 5,
-      color: Colors.blue,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: height * 0.45,
-              minHeight: height * 0.45,
-            ),
-            child: Scrollbar(
-              child: SingleChildScrollView(
-                  physics: ScrollPhysics(),
-                  child: Container(
-                    child: Column(
-                      children: [
-                        textFieldCount == 0
-                            ? Text("Currently No Parties Added",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                                textAlign: TextAlign.center)
-                            : Text("Parties",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
-                        ListView.builder(
-                          itemCount: textFieldCount,
-                          itemBuilder: (BuildContext context, int index) {
-                            return partyField(index, users[index].role);
-                          },
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                        ),
-                      ],
-                    ),
-                  )),
-            ),
+          SizedBox(
+            width: screenWidth * 0.66,
+            height: 100,
+            child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
           ),
-          Spacer(),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: _addPartyButton(),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: _addEntityButton(),
-          ),
-          contractTypeMenu(),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
-            color: isFormComplete ? Colors.lightGreenAccent : Colors.grey[400],
-            width: width,
-            child: FittedBox(
-                fit: BoxFit.fitWidth, child: Container()),
-          )
+          Expanded(child: contractForm!)
         ],
-      ),
+      )
     );
   }
 

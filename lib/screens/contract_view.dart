@@ -9,7 +9,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 class ViewContract extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String contractId;
-  User? user;
+  final User? user;
 
   ViewContract(this.changeScreen, this.contractId, this.user);
 
@@ -395,41 +395,6 @@ class _ContractCreationState extends State<ViewContract> {
         smallSide = height;
       }
     });
-  }
-
-  void _showReportViolationDialog() {
-    reportViolationController = new TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Reporting a contract violation'),
-          content: TextField(
-            controller: reportViolationController,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(hintText: "Please enter and explain the violation of the contract."),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                _dismissDialog();
-              },
-              child: Text('Cancel')
-            ),
-            TextButton(
-              onPressed: () {
-                print('sending report...');
-                setState(() {
-                  contract!.contractStatus = 'Violation';
-                });
-                _dismissDialog();
-              },
-              child: Text('Send Report')
-            )
-          ],
-        );
-      }
-    );
   }
 
   void _showContractPurposeDialog(double width) {

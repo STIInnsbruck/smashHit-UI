@@ -5,9 +5,9 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 
 class UpdateScreen extends StatefulWidget {
-  Function(int, [String]) changeScreen;
+  final Function(int, [String]) changeScreen;
   final String contractId;
-  User? user;
+  final User? user;
 
   UpdateScreen(this.changeScreen, this.contractId, this.user);
 
@@ -43,16 +43,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
         if (snapshot.hasData) {
           contract = snapshot.data;
           return Center(
-            child: Scrollbar(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    isEditing? ContractForm(widget.changeScreen, currentStep, contract!, toggleEditing) : UpdateForm(widget.changeScreen, toggleEditing, contract!)
-                  ],
-                ),
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                isEditing? Expanded(child: ContractForm(widget.changeScreen, currentStep, contract!, toggleEditing)) : Expanded(child: UpdateForm(widget.changeScreen, toggleEditing, contract!))
+              ],
             )
           );
         } else if (snapshot.hasError) {

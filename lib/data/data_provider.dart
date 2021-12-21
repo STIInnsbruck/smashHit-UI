@@ -133,7 +133,6 @@ class DataProvider {
       } catch (e) {
         throw Exception('Failed to load contract.');
       }
-      return parser.parseContractId(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load contract.');
     }
@@ -219,7 +218,6 @@ class DataProvider {
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
       print("Contract Updated.");
       return true;
     } else {

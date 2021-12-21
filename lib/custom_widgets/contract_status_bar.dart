@@ -10,7 +10,7 @@ const completeColor = Color(0xff5ec792);
 const todoColor = Color(0xffd1d2d7);
 
 class ContractStatusBar extends StatefulWidget {
-  int currentProcess = 0;
+  final int currentProcess;
 
   ContractStatusBar(this.currentProcess);
 

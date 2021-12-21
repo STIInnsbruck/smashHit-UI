@@ -8,6 +8,7 @@ import 'package:smashhit_ui/screens/template_selector.dart';
 import 'package:smashhit_ui/screens/contract_violation.dart';
 import 'package:smashhit_ui/screens/login.dart';
 import 'package:smashhit_ui/screens/contract_update.dart';
+import 'package:smashhit_ui/screens/data_profile_manager.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -51,6 +52,20 @@ class _BasePageState extends State<BasePage> {
               title: Text("Contracts Dashboard"),
               onTap: () {
                 changeScreen(0);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("View Data Requesters"),
+              onTap: () {
+                changeScreen(3);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("Manage Personal Data Profile"),
+              onTap: () {
+                changeScreen(7);
                 Navigator.of(context).pop();
               },
             ),
@@ -109,6 +124,10 @@ class _BasePageState extends State<BasePage> {
         case 6:
           _selectedPage = UpdateScreen(changeScreen, contractId!, currentUser);
           _selectedTitle = "Change & Update Your Contract";
+          break;
+        case 7:
+          _selectedPage = ProfileManagerPage();
+          _selectedTitle = "Data Sharing Profile";
       }
     });
   }
