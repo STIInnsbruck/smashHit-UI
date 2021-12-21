@@ -28,88 +28,90 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = new TextEditingController();
   TextEditingController phone = new TextEditingController();
 
+  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _registrationFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     getSmallerSide(screenHeight, screenWidth);
 
-    return Material(
-        child: Center(
-          child: Container(
-            width: screenWidth * 0.7,
-            height: screenHeight,
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("smash",style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
-                        Text("Hit", style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blue))
-                      ],
-                    ),
-                    Spacer(),
-                    CircleAvatar(
-                      radius: smallSide * 0.10,
-                      backgroundColor: Colors.grey,
-                      child: CircleAvatar(
-                          radius: smallSide * 0.098,
-                          backgroundColor: Colors.white,
-                          child: Container(
-                            width: smallSide * 0.192,
-                            height: smallSide * 0.192,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              shape: BoxShape.circle,
-                            ),
-                            alignment: Alignment.bottomCenter,
-                            child: ClipOval(
-                              child: Icon(Icons.person, size: smallSide * 0.192, color: Colors.white),
-                            ),
-                          )
-                      ),
-                    ),
-                    _signUp?
-                    registrationForm(smallSide) : loginForm(smallSide),
-                    Spacer(flex: 2),
-                    Container(
-                      child: Row(
+    return Center(
+      child: Container(
+          width: screenWidth * 0.7,
+          height: screenHeight,
+          child: Stack(
+            children: [
+              Scrollbar(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: screenHeight / (_signUp? 20 : 10)),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _signUp?
-                          Flexible(
-                            flex: 2,
-                            child: MaterialButton(
+                          Text("smash",style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                          Text("Hit", style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blue))
+                        ],
+                      ),
+                      SizedBox(height: (_signUp? 10 : 20)),
+                      CircleAvatar(
+                        radius: smallSide * 0.10,
+                        backgroundColor: Colors.grey,
+                        child: CircleAvatar(
+                            radius: smallSide * 0.098,
+                            backgroundColor: Colors.white,
+                            child: Container(
+                              width: smallSide * 0.192,
+                              height: smallSide * 0.192,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                shape: BoxShape.circle,
+                              ),
+                              alignment: Alignment.bottomCenter,
+                              child: ClipOval(
+                                child: Icon(Icons.person, size: smallSide * 0.192, color: Colors.white),
+                              ),
+                            )
+                        ),
+                      ),
+                      SizedBox(height: (_signUp? 20 : 40)),
+                      _signUp?
+                      registrationForm(smallSide) : loginForm(smallSide),
+                      SizedBox(height: 20),
+                      SizedBox(
+                        width: 400,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _signUp?
+                            MaterialButton(
                               onPressed: () {
-                                //_register();
-                                _registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                                if (_registrationFormKey.currentState!.validate()) {
+                                  _registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                                }
                               },
                               child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
                               elevation: 10,
                               color: Colors.grey,
                               padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                            ),
-                          ) :
-                          Flexible(
-                            flex: 2,
-                            child: MaterialButton(
+                            ) :
+                            MaterialButton(
                               onPressed: () {
-                                widget.changeScreen(0);
+                                if(_loginFormKey.currentState!.validate()) {
+                                  widget.changeScreen(0);
+                                }
                               },
                               child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
                               elevation: 10,
                               color: Colors.grey,
                               padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                             ),
-                          ),
-                          Spacer(),
-                          _signUp?
-                          Flexible(
-                            flex: 2,
-                            child: MaterialButton(
+                            Spacer(),
+                            _signUp?
+                            MaterialButton(
                               onPressed: () {
                                 _toggleSignUp();
                               },
@@ -117,11 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               elevation: 10,
                               color: Colors.grey,
                               padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                            ),
-                          ) :
-                          Flexible(
-                            flex: 2,
-                            child: MaterialButton(
+                            ) :
+                            MaterialButton(
                               onPressed: () {
                                 _toggleSignUp();
                               },
@@ -130,20 +129,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Colors.grey,
                               padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Spacer(flex: 4)
-                  ],
+                    ],
+                  ),
                 ),
-                loading? Center(
+              ),
+              loading? Center(
                   child: CircularProgressIndicator()
-                ) : Container()
-              ],
-            )
-          ),
-        ));
+              ) : Container()
+            ],
+          )
+      ),
+    );
   }
 
   void getSmallerSide(double height, double width) {
@@ -157,101 +156,108 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginForm(double screenWidth) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-            width: screenWidth * 0.30,
-            child: TextFormField(
+    return Form(
+      key: _loginFormKey,
+      child: SizedBox(
+        width: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
               decoration: InputDecoration(
                   hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: 20)
               ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            )
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your name.';
+                }
+              },
+              textAlign: TextAlign.left,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget registrationForm(double screenWidth) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
+    return Form(
+      key: _registrationFormKey,
+      child: SizedBox(
+        width: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
+                hintText: 'Name',
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your name.';
+                }
+              },
               controller: name,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
+            ),
+            TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Surname',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
+                hintText: 'Surname',
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your surname.';
+                }
+              },
               controller: surname,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
+            ),
+            TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Email',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
+                hintText: 'Email',
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your email.';
+                }
+              },
               controller: email,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
+            ),
+            TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Phone Number',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
+                hintText: 'Phone Number',
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your phone number.';
+                }
+              },
               controller: phone,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        cscDropdownPicker(screenWidth * 0.30),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
+            ),
+            cscDropdownPicker(screenWidth * 0.30),
+            TextFormField(
               decoration: InputDecoration(
-                  hintText: 'Street Address',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
+                  hintText: 'Street Address'
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your street address.';
+                }
+              },
               controller: address,
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget cscDropdownPicker(double width) {
-    return Container(
-      width: width,
+    return SizedBox(
+      width: 400,
       child: CountryStateCityPicker(
         city: city,
         country: country,
