@@ -48,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      SizedBox(height: screenHeight / (_signUp? 20 : 10)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -55,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text("Hit", style: TextStyle(fontSize: smallSide * 0.12, fontWeight: FontWeight.bold, color: Colors.blue))
                         ],
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: (_signUp? 10 : 20)),
                       CircleAvatar(
                         radius: smallSide * 0.10,
                         backgroundColor: Colors.grey,
@@ -76,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             )
                         ),
                       ),
-                      SizedBox(height: 40),
+                      SizedBox(height: (_signUp? 20 : 40)),
                       _signUp?
                       registrationForm(smallSide) : loginForm(smallSide),
                       SizedBox(height: 20),
@@ -165,7 +166,6 @@ class _LoginScreenState extends State<LoginScreen> {
             TextFormField(
               decoration: InputDecoration(
                   hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: 20)
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -173,7 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 20),
             ),
           ],
         ),
