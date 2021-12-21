@@ -28,6 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = new TextEditingController();
   TextEditingController phone = new TextEditingController();
 
+  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _registrationFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -84,8 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             flex: 2,
                             child: MaterialButton(
                               onPressed: () {
-                                //_register();
-                                _registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                                if (_registrationFormKey.currentState!.validate()) {
+                                  _registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                                }
                               },
                               child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
                               elevation: 10,
@@ -97,7 +101,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             flex: 2,
                             child: MaterialButton(
                               onPressed: () {
-                                widget.changeScreen(0);
+                                if(_loginFormKey.currentState!.validate()) {
+                                  widget.changeScreen(0);
+                                }
                               },
                               child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
                               elevation: 10,
@@ -157,95 +163,131 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginForm(double screenWidth) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-            width: screenWidth * 0.30,
-            child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: 20)
-              ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            )
-        ),
-      ],
+    return Form(
+      key: _loginFormKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+              width: screenWidth * 0.30,
+              child: TextFormField(
+                decoration: InputDecoration(
+                    hintText: 'Name',
+                    hintStyle: TextStyle(fontSize: 20)
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your name.';
+                  }
+                },
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20),
+              )
+          ),
+        ],
+      ),
     );
   }
 
   Widget registrationForm(double screenWidth) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'Name',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
-              ),
-              controller: name,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'Surname',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
-              ),
-              controller: surname,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'Email',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
-              ),
-              controller: email,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'Phone Number',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
-              ),
-              controller: phone,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-        cscDropdownPicker(screenWidth * 0.30),
-        Container(
-            width: screenWidth * 0.30,
-            height: screenWidth * 0.05,
-            child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'Street Address',
-                  hintStyle: TextStyle(fontSize: screenWidth / 45)
-              ),
-              controller: address,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: screenWidth / 45),
-            )
-        ),
-      ],
+    return Form(
+      key: _registrationFormKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+              width: screenWidth * 0.30,
+              height: screenWidth * 0.05,
+              child: TextFormField(
+                decoration: InputDecoration(
+                    hintText: 'Name',
+                    hintStyle: TextStyle(fontSize: screenWidth / 45)
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your name.';
+                  }
+                },
+                controller: name,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: screenWidth / 45),
+              )
+          ),
+          Container(
+              width: screenWidth * 0.30,
+              height: screenWidth * 0.05,
+              child: TextFormField(
+                decoration: InputDecoration(
+                    hintText: 'Surname',
+                    hintStyle: TextStyle(fontSize: screenWidth / 45)
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your surname.';
+                  }
+                },
+                controller: surname,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: screenWidth / 45),
+              )
+          ),
+          Container(
+              width: screenWidth * 0.30,
+              height: screenWidth * 0.05,
+              child: TextFormField(
+                decoration: InputDecoration(
+                    hintText: 'Email',
+                    hintStyle: TextStyle(fontSize: screenWidth / 45)
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your email.';
+                  }
+                },
+                controller: email,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: screenWidth / 45),
+              )
+          ),
+          Container(
+              width: screenWidth * 0.30,
+              height: screenWidth * 0.05,
+              child: TextFormField(
+                decoration: InputDecoration(
+                    hintText: 'Phone Number',
+                    hintStyle: TextStyle(fontSize: screenWidth / 45)
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your phone number.';
+                  }
+                },
+                controller: phone,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: screenWidth / 45),
+              )
+          ),
+          cscDropdownPicker(screenWidth * 0.30),
+          Container(
+              width: screenWidth * 0.30,
+              height: screenWidth * 0.05,
+              child: TextFormField(
+                decoration: InputDecoration(
+                    hintText: 'Street Address',
+                    hintStyle: TextStyle(fontSize: screenWidth / 45)
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your street address.';
+                  }
+                },
+                controller: address,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: screenWidth / 45),
+              )
+          ),
+        ],
+      ),
     );
   }
 
