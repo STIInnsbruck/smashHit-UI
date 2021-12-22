@@ -44,8 +44,8 @@ class _ContractTileState extends State<ContractTile> {
       margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
       width: 125,
       //height: height / 8,
-      height: 100,
-      decoration: BoxDecoration(color: Colors.grey[400], boxShadow: [
+      height: 75,
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(
             color: Colors.black45,
             blurRadius: 2.0,
@@ -55,9 +55,9 @@ class _ContractTileState extends State<ContractTile> {
       child: Center(
         child: Row(
           children: [
-            Icon(Icons.folder_shared, size: 75),
+            Expanded(flex: 2, child: Icon(Icons.folder_shared, size: 25)),
             Expanded(
-                flex: 24,
+                flex: 22,
                 child: Text('${_formatContractUri(widget.contract!.contractId!)}', overflow: TextOverflow.ellipsis)
             ),
             //Spacer(flex: 25),
@@ -79,7 +79,7 @@ class _ContractTileState extends State<ContractTile> {
       width: 125,
       //height: height / 8,
       height: 150,
-      decoration: BoxDecoration(color: Colors.grey[400], boxShadow: [
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(
             color: Colors.black45,
             blurRadius: 2.0,
