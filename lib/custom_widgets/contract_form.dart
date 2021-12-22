@@ -112,7 +112,10 @@ class _ContractFormState extends State<ContractForm> {
 
   @override
   Widget build(BuildContext context) {
-    double formWidth = MediaQuery.of(context).size.width * 0.7;
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double formWidth = screenWidth * (_isBigScreen(screenWidth)? 0.7 : 1);
+
     return Stack(children: [
       Container(
           child: Scrollbar(
@@ -2345,6 +2348,14 @@ class _ContractFormState extends State<ContractForm> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  bool _isBigScreen(double width) {
+    if (width < 500) {
+      return false;
+    } else {
+      return true;
     }
   }
 
