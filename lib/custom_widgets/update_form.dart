@@ -21,7 +21,8 @@ class _UpdateFormState extends State<UpdateForm> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double formWidth = screenWidth * (_isBigScreen(screenWidth)? 0.7 : 1);
+    double screenHeight = MediaQuery.of(context).size.height;
+    double formWidth = screenWidth * (_isWideScreen(screenWidth, screenHeight)? 0.7 : 1);
 
     return Stack(
         children: [
@@ -226,8 +227,8 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  bool _isBigScreen(double width) {
-    if (width < 500) {
+  bool _isWideScreen(double width, double height) {
+    if (width < height) {
       return false;
     } else {
       return true;
