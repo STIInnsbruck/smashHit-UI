@@ -21,6 +21,7 @@ class _UpdateFormState extends State<UpdateForm> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double formWidth = screenWidth * (_isBigScreen(screenWidth)? 0.7 : 1);
 
     return Stack(
         children: [
@@ -31,7 +32,7 @@ class _UpdateFormState extends State<UpdateForm> {
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            updateFormBody(screenWidth * 0.5)
+                            updateFormBody(formWidth)
                           ]
                       )
                   )
@@ -66,17 +67,15 @@ class _UpdateFormState extends State<UpdateForm> {
                   Center(
                       child: Text('Contract Update Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
                   ),
-                  Container(height: 20),
-                  Container(height: 20),
-                  Container(height: 20),
+                  SizedBox(height: 20),
                   contractInformationBlock(),
-                  Container(height: 5),
+                  SizedBox(height: 5),
                   contractRequesterBlock(),
-                  Container(height: 5),
+                  SizedBox(height: 5),
                   contractProviderBlock(),
-                  Container(height: 5),
+                  SizedBox(height: 5),
                   contractTACBlock(),
-                  Container(height: 20),
+                  SizedBox(height: 20),
                 ],
               )
           )
@@ -183,8 +182,8 @@ class _UpdateFormState extends State<UpdateForm> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('Start Date: ${widget.contract.executionDate}'),
-                Text('End Date: ${widget.contract.expireDate}')
+                Text('Start Date: ${_formatDate(widget.contract.executionDate!)}'),
+                Text('End Date: ${_formatDate(widget.contract.expireDate!)}')
               ],
             ),
           ],
@@ -219,11 +218,24 @@ class _UpdateFormState extends State<UpdateForm> {
         child: MaterialButton(
             color: Colors.grey,
             hoverColor: Colors.blueGrey,
-            child: Text("Submit Changes", style: TextStyle(color: Colors.white, fontSize: 20)),
+            child: Text("Submit Changes", style: TextStyle(color: Colors.white)),
             onPressed: () {
               print("not implemented yet.");
             }
         )
     );
+  }
+
+  bool _isBigScreen(double width) {
+    if (width < 500) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  String _formatDate(DateTime dateTime) {
+    String dateString = '${dateTime.day}.${dateTime.month}.${dateTime.year}';
+    return dateString;
   }
 }

@@ -1729,14 +1729,14 @@ class _ContractFormState extends State<ContractForm> {
           hoverColor: Colors.lightGreen,
           child: toggleStepFinal == true
               ? Text('Confirm & Submit',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.center)
               : toggleStepFour == true
                   ? Text("Go To Overview",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: Colors.white),
                       textAlign: TextAlign.center)
                   : Text("Next Step",
-                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                      style: TextStyle(color: Colors.white)),
           onPressed: () async {
             if (toggleStepOne == true) {
               setStepTwo();
@@ -1781,7 +1781,7 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         color: Colors.grey,
         hoverColor: Colors.blueGrey,
-        child: Text("Confirm Changes", style: TextStyle(color: Colors.white, fontSize: 20)),
+        child: Text("Confirm Changes", style: TextStyle(color: Colors.white)),
         onPressed: () {
           setContract();
           print("Original contract ID: ${widget.contract!.contractId!}");
@@ -1803,7 +1803,7 @@ class _ContractFormState extends State<ContractForm> {
           color: Colors.grey,
           hoverColor: Colors.blueGrey,
           child: Text("Previous Step",
-              style: TextStyle(color: Colors.white, fontSize: 20)),
+              style: TextStyle(color: Colors.white)),
           onPressed: () {
             setState(() {
               if (toggleStepOne == true) {
