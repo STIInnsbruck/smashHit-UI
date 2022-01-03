@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loading = false;
   double smallSide = 10;
 
+  //TextField CONTROLLERS
   TextEditingController city = new TextEditingController();
   TextEditingController state = new TextEditingController();
   TextEditingController country = new TextEditingController();
@@ -27,6 +28,14 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController surname = new TextEditingController();
   TextEditingController email = new TextEditingController();
   TextEditingController phone = new TextEditingController();
+
+  //TextField FOCUSNODES
+  final FocusNode _nameFocus = FocusNode();
+  final FocusNode _surnameFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _phoneFocus = FocusNode();
+  final FocusNode _addressFocus = FocusNode();
+
 
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _registrationFormKey = GlobalKey<FormState>();
@@ -199,6 +208,11 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               controller: name,
               textAlign: TextAlign.left,
+              textInputAction: TextInputAction.next,
+              focusNode: _nameFocus,
+              onFieldSubmitted: (v) {
+                _focusNextTextField(context, _nameFocus, _surnameFocus);
+              },
             ),
             TextFormField(
               decoration: InputDecoration(
@@ -211,6 +225,11 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               controller: surname,
               textAlign: TextAlign.left,
+              textInputAction: TextInputAction.next,
+                focusNode: _surnameFocus,
+                onFieldSubmitted: (v) {
+                  _focusNextTextField(context, _surnameFocus, _emailFocus);
+                }
             ),
             TextFormField(
               decoration: InputDecoration(
@@ -223,6 +242,11 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               controller: email,
               textAlign: TextAlign.left,
+              textInputAction: TextInputAction.next,
+                focusNode: _emailFocus,
+                onFieldSubmitted: (v) {
+                  _focusNextTextField(context, _emailFocus, _phoneFocus);
+                }
             ),
             TextFormField(
               decoration: InputDecoration(
@@ -235,6 +259,11 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               controller: phone,
               textAlign: TextAlign.left,
+              textInputAction: TextInputAction.next,
+                focusNode: _phoneFocus,
+                onFieldSubmitted: (v) {
+                  _focusNextTextField(context, _phoneFocus, _addressFocus);
+                }
             ),
             cscDropdownPicker(screenWidth * 0.30),
             TextFormField(
@@ -248,6 +277,11 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               controller: address,
               textAlign: TextAlign.left,
+              textInputAction: TextInputAction.done,
+                focusNode: _addressFocus,
+                onFieldSubmitted: (v) {
+                  _addressFocus.unfocus();
+                }
             ),
           ],
         ),
@@ -338,6 +372,11 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
     );
+  }
+
+  _focusNextTextField(BuildContext context, FocusNode currentNode, FocusNode nextNode) {
+    currentNode.unfocus();
+    FocusScope.of(context).requestFocus(nextNode);
   }
 
 }

@@ -21,6 +21,7 @@ class _BasePageState extends State<BasePage> {
   Widget? _selectedPage;
   User? currentUser;
   final TextEditingController searchBarController = new TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
   DataProvider dataProvider = DataProvider();
   String? searchId;
 
@@ -140,6 +141,7 @@ class _BasePageState extends State<BasePage> {
       ),
       width: width / 6,
       child: TextFormField(
+        focusNode: _searchFocus,
         controller: searchBarController,
         textAlignVertical: TextAlignVertical.center,
         textAlign: TextAlign.center,
@@ -150,6 +152,7 @@ class _BasePageState extends State<BasePage> {
         },
         onFieldSubmitted: (String value) {
           print("Enter pressed: $value");
+          _searchFocus.unfocus();
         },
       ),
     );
