@@ -14,10 +14,6 @@ class TemplateSelector extends StatefulWidget {
 
 class _TemplateSelectorState extends State<TemplateSelector> {
 
-  static const BIG_SCREEN = 0;
-  static const MEDIUM_SCREEN = 1;
-  static const SMALL_SCREEN = 2;
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
