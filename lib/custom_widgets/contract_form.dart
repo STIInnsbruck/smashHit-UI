@@ -119,32 +119,30 @@ class _ContractFormState extends State<ContractForm> {
 
     return Stack(children: [
       Container(
-          child: Scrollbar(
-              child: SingleChildScrollView(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-            contractStep1Header(formWidth),
-            toggleStepOne == true
-                ? contractStep1(formWidth)
-                : Container(),
-            contractStep2Header(formWidth),
-            toggleStepTwo == true
-                ? contractStep2(formWidth, currentRequesterIndex)
-                : Container(),
-            contractStep3Header(formWidth),
-            toggleStepThree == true
-                ? contractStep3(formWidth, currentProviderIndex)
-                : Container(),
-            contractStep4Header(formWidth),
-            toggleStepFour == true
-                ? contractStep4(formWidth)
-                : Container(),
-            contractStepFinalHeader(formWidth),
-            toggleStepFinal == true
-                ? contractStepFinal(formWidth)
-                : Container(),
-          ])))),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                contractStep1Header(formWidth),
+                toggleStepOne == true
+                    ? contractStep1(formWidth)
+                    : Container(),
+                contractStep2Header(formWidth),
+                toggleStepTwo == true
+                    ? contractStep2(formWidth, currentRequesterIndex)
+                    : Container(),
+                contractStep3Header(formWidth),
+                toggleStepThree == true
+                    ? contractStep3(formWidth, currentProviderIndex)
+                    : Container(),
+                contractStep4Header(formWidth),
+                toggleStepFour == true
+                    ? contractStep4(formWidth, screenHeight)
+                    : Container(),
+                contractStepFinalHeader(formWidth),
+                toggleStepFinal == true
+                    ? contractStepFinal(formWidth)
+                    : Container(),
+              ])),
       Align(
         alignment: Alignment.bottomRight,
         child: widget.contract != null? Column(
@@ -185,7 +183,7 @@ class _ContractFormState extends State<ContractForm> {
                 children: [
                   Expanded(
                       child: Text("Step 1. Contract Base Information",
-                          style: TextStyle(fontSize: 30, color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
                           maxLines: 1)),
@@ -203,7 +201,7 @@ class _ContractFormState extends State<ContractForm> {
   Widget contractStep2Header(double width) {
     return MaterialButton(
         child: Container(
-          width: width,
+          width:  width,
           height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(2)),
@@ -223,7 +221,7 @@ class _ContractFormState extends State<ContractForm> {
                 children: [
                   Expanded(
                       child: Text("Step 2. Data Controller(s) Details",
-                          style: TextStyle(fontSize: 30, color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
                           maxLines: 1)),
@@ -263,7 +261,7 @@ class _ContractFormState extends State<ContractForm> {
                 children: [
                   Expanded(
                       child: Text("Step 3. Data Processor(s) Details",
-                          style: TextStyle(fontSize: 30, color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
                           maxLines: 1)),
@@ -303,7 +301,7 @@ class _ContractFormState extends State<ContractForm> {
               children: [
                 Expanded(
                     child: Text("Step 4. Terms & Conditions of the Contract",
-                        style: TextStyle(fontSize: 30, color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                         overflow: TextOverflow.ellipsis,
                         softWrap: false,
                         maxLines: 1)),
@@ -340,7 +338,7 @@ class _ContractFormState extends State<ContractForm> {
               children: [
                 Expanded(
                     child: Text("Final Step - Overview",
-                        style: TextStyle(fontSize: 30, color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                         overflow: TextOverflow.ellipsis,
                         softWrap: false,
                         maxLines: 1)),
@@ -404,7 +402,7 @@ class _ContractFormState extends State<ContractForm> {
                 spreadRadius: 5.0,
                 offset: Offset(10.0, 10.0))
           ]),
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
       width: width,
       child: Scrollbar(
         child: SingleChildScrollView(
@@ -412,16 +410,17 @@ class _ContractFormState extends State<ContractForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Role: Data Controller ${index + 1}",
-                  style: TextStyle(fontSize: 25)),
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
               // Every Requester has 7 Fields. Assign each field the right controller.
               requesterFieldSuggestor((index * 7) + 0),
               requesterEmailField((index * 7) + 1),
               requesterAddressField((index * 7) + 2),
-              Container(height: 10),
+              SizedBox(height: 10),
               requesterCSCDropDownList((index * 7) + 3),
-              Container(height: 10),
+              SizedBox(height: 10),
               requesterPhoneField((index * 7) + 6),
-              Container(height: 10),
+              SizedBox(height: 10),
               /**Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -461,7 +460,7 @@ class _ContractFormState extends State<ContractForm> {
                 spreadRadius: 5.0,
                 offset: Offset(10.0, 10.0))
           ]),
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
       width: width,
       child: Scrollbar(
         child: SingleChildScrollView(
@@ -469,15 +468,16 @@ class _ContractFormState extends State<ContractForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Role: Data Processor ${index + 1}",
-                  style: TextStyle(fontSize: 25)),
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
               providerFieldSuggestor((index * 7) + 0),
               providerEmailField((index * 7) + 1),
               providerAddressField((index * 7) + 2),
-              Container(height: 10),
+              SizedBox(height: 10),
               providerCSCDropDownList((index * 7) + 3),
-              Container(height: 10),
+              SizedBox(height: 10),
               providerPhoneField((index * 7) + 6),
-              Container(height: 10),
+              SizedBox(height: 10),
               /**Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -504,7 +504,7 @@ class _ContractFormState extends State<ContractForm> {
   /// The contract creation is done primarily in 4 steps. This is the fourth
   /// step block. In the fourth step the user has to fill in the terms and
   /// conditions of the contract.
-  Widget contractStep4(double width) {
+  Widget contractStep4(double width, double height) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
@@ -524,7 +524,7 @@ class _ContractFormState extends State<ContractForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               descriptionField(),
-              Container(height: 10),
+              SizedBox(height: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -587,46 +587,100 @@ class _ContractFormState extends State<ContractForm> {
                   checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13], width / 4),
                 ],
               ),
-              Container(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      startDate == null
-                          ? Container()
-                          : Text("Chosen Start Date:", style: TextStyle(fontSize: width / 50)),
-                      startDateButton(width / 6),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      effectiveDate == null
-                          ? Container()
-                          : Text("Chosen Effective Date:", style: TextStyle(fontSize: width / 50)),
-                      effectiveDateButton(width / 6),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      executionDate == null
-                          ? Container()
-                          : Text("Chosen Execution Date:", style: TextStyle(fontSize: width / 50)),
-                      executionDateButton(width / 6),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      endDate == null ? Container() : Text("Chosen End Date:", style: TextStyle(fontSize: width / 50)),
-                      endDateButton(width / 6),
-                    ],
-                  ),
-                ],
-              ),
+              SizedBox(height: 10),
+              _isWideScreen(width, height)
+              ? _wideScreenDateButtonsLayout()
+                  : _slimScreenDateButtonsLayout()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _wideScreenDateButtonsLayout() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              startDate == null
+                  ? Container()
+                  : Text("Chosen Start Date:"),
+              startDateButton(),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              effectiveDate == null
+                  ? Container()
+                  : Text("Chosen Effective Date:"),
+              effectiveDateButton(),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              executionDate == null
+                  ? Container()
+                  : Text("Chosen Execution Date:"),
+              executionDateButton(),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              endDate == null ? Container() : Text("Chosen End Date:"),
+              endDateButton(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _slimScreenDateButtonsLayout() {
+    return Column(
+      children: [
+        Column(
+          children: [
+            startDate == null
+                ? Container()
+                : Text("Chosen Start Date:"),
+            startDateButton(),
+          ],
+        ),
+        SizedBox(height: 10),
+        Column(
+          children: [
+            effectiveDate == null
+                ? Container()
+                : Text("Chosen Effective Date:"),
+            effectiveDateButton(),
+          ],
+        ),
+        SizedBox(height: 10),
+        Column(
+          children: [
+            executionDate == null
+                ? Container()
+                : Text("Chosen Execution Date:"),
+            executionDateButton(),
+          ],
+        ),
+        SizedBox(height: 10),
+        Column(
+          children: [
+            endDate == null ? Container() : Text("Chosen End Date:"),
+            endDateButton(),
+          ],
+        ),
+      ],
     );
   }
 
@@ -1216,14 +1270,13 @@ class _ContractFormState extends State<ContractForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("What are the Terms & Conditions of the Contract?",
-              style: TextStyle(fontSize: 25)),
+              style: TextStyle(fontSize: 20)),
           Container(
-            height: 400,
+            height: 200,
             color: Colors.white54,
             child: TextFormField(
               controller: widget.descriptionController,
               maxLines: null,
-              style: TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 hintText: "Enter Contract details here...",
               ),
@@ -1287,7 +1340,7 @@ class _ContractFormState extends State<ContractForm> {
             style: TextStyle(fontSize: 20)),
         ListTile(
             title: Text("Written Contract",
-                style: TextStyle(fontSize: 15, color: Colors.black)),
+                style: TextStyle(color: Colors.black)),
             leading: Radio(
                 value: ContractType.Written,
                 groupValue: _type,
@@ -1298,7 +1351,7 @@ class _ContractFormState extends State<ContractForm> {
                 })),
         ListTile(
             title: Text("Verbal Contract",
-                style: TextStyle(fontSize: 15, color: Colors.black)),
+                style: TextStyle(color: Colors.black)),
             leading: Radio(
                 value: ContractType.Verbal,
                 groupValue: _type,
@@ -1309,7 +1362,7 @@ class _ContractFormState extends State<ContractForm> {
                 })),
         ListTile(
             title: Text("Mutual Contract",
-                style: TextStyle(fontSize: 15, color: Colors.black)),
+                style: TextStyle(color: Colors.black)),
             leading: Radio(
                 value: ContractType.Mutual,
                 groupValue: _type,
@@ -1320,7 +1373,7 @@ class _ContractFormState extends State<ContractForm> {
                 })),
         ListTile(
             title: Text("Transferable Contract",
-                style: TextStyle(fontSize: 15, color: Colors.black)),
+                style: TextStyle(color: Colors.black)),
             leading: Radio(
                 value: ContractType.Transferable,
                 groupValue: _type,
@@ -1342,7 +1395,7 @@ class _ContractFormState extends State<ContractForm> {
         children: [
           Text("What is the title of your contract?",
               style: TextStyle(fontSize: 20)),
-          Container(height: 5),
+          SizedBox(height: 5),
           TextFormField(
             decoration: InputDecoration(
               fillColor: Colors.white,
@@ -1353,7 +1406,6 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            style: TextStyle(fontSize: 20),
             controller: widget.titleController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -1391,9 +1443,9 @@ class _ContractFormState extends State<ContractForm> {
                       isChecked.value = value!;
                     });
                   }),
-              Container(width: 5),
-              Text(checkBoxTitle, style: TextStyle(fontSize: width / 10)),
-              Container(width: 5),
+              SizedBox(width: 5),
+              Expanded(child: Text(checkBoxTitle, overflow: TextOverflow.ellipsis, maxLines: 2)),
+              SizedBox(width: 5),
               Tooltip(
                 textStyle: TextStyle(
                     fontSize: 16,
@@ -1406,7 +1458,6 @@ class _ContractFormState extends State<ContractForm> {
                   radius: 10,
                 ),
               ),
-              Spacer()
             ],
           ),
           isChecked.value == true
@@ -1452,76 +1503,72 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget startDateButton(double width) {
+  Widget startDateButton() {
     return Container(
-      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: startDate == null
             ? Text("Pick a Start Date",
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
             : Text(_formatDate(startDate),
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseStartDate(),
       ),
     );
   }
 
-  Widget effectiveDateButton(double width) {
+  Widget effectiveDateButton() {
     return Container(
-      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: effectiveDate == null
             ? Text("Pick an Effective Date",
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
             : Text(_formatDate(effectiveDate),
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEffectiveDate(),
       ),
     );
   }
 
-  Widget endDateButton(double width) {
+  Widget endDateButton() {
     return Container(
-      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: endDate == null
             ? Text("Pick an End Date",
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
             : Text(_formatDate(endDate),
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEndDate(),
       ),
     );
   }
 
-  Widget executionDateButton(double width) {
+  Widget executionDateButton() {
     return Container(
-      width: width,
       height: 50,
       child: MaterialButton(
         color: Colors.blue,
         hoverColor: Colors.lightBlueAccent,
         child: executionDate == null
             ? Text("Pick an Execution Date",
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
             : Text(_formatDate(executionDate),
-                style: TextStyle(color: Colors.white, fontSize: width / 7),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseExecutionDate(),
       ),
@@ -1723,8 +1770,6 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget nextStepButton() {
     return Container(
-        width: 150,
-        height: 50,
         child: MaterialButton(
           color: Colors.green,
           hoverColor: Colors.lightGreen,
@@ -1777,8 +1822,6 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget confirmEditButton() {
     return Container(
-      width: 150,
-      height: 50,
       child: MaterialButton(
         color: Colors.grey,
         hoverColor: Colors.blueGrey,
@@ -1798,8 +1841,6 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget previousStepButton() {
     return Container(
-        width: 150,
-        height: 50,
         child: MaterialButton(
           color: Colors.grey,
           hoverColor: Colors.blueGrey,

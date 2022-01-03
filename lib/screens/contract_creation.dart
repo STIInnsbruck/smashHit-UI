@@ -53,16 +53,20 @@ class _ContractCreationState extends State<ContractCreation> {
     _checkIfFormComplete();
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: screenWidth * 0.66,
-            height: 100,
-            child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
+      child: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: screenWidth * 0.66,
+                height: 100,
+                child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
+              ),
+              contractForm!
+            ],
           ),
-          Expanded(child: contractForm!)
-        ],
+        ),
       )
     );
   }
