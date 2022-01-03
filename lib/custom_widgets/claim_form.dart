@@ -67,7 +67,7 @@ class _ClaimFormState extends State<ClaimForm> {
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            claimFormBody(screenWidth * 0.5)
+                            claimFormBody(screenWidth * (isBigScreen(screenWidth)? 0.8 : 1))
                           ]
                       )
                   )
@@ -171,6 +171,14 @@ class _ClaimFormState extends State<ClaimForm> {
         )
       ),
     );
+  }
+
+  bool isBigScreen(double width) {
+    if (width <= 500) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   Widget displayTermElementInfo(String termElementName, String text) {

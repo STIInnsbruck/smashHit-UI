@@ -112,7 +112,11 @@ class _ContractFormState extends State<ContractForm> {
 
   @override
   Widget build(BuildContext context) {
-    double formWidth = MediaQuery.of(context).size.width * 0.7;
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double formWidth = screenWidth * (_isWideScreen(screenWidth, screenHeight)? 0.7 : 1);
+
     return Stack(children: [
       Container(
           child: Scrollbar(
@@ -1726,14 +1730,14 @@ class _ContractFormState extends State<ContractForm> {
           hoverColor: Colors.lightGreen,
           child: toggleStepFinal == true
               ? Text('Confirm & Submit',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.center)
               : toggleStepFour == true
                   ? Text("Go To Overview",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: Colors.white),
                       textAlign: TextAlign.center)
                   : Text("Next Step",
-                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                      style: TextStyle(color: Colors.white)),
           onPressed: () async {
             if (toggleStepOne == true) {
               setStepTwo();
@@ -1778,7 +1782,7 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         color: Colors.grey,
         hoverColor: Colors.blueGrey,
-        child: Text("Confirm Changes", style: TextStyle(color: Colors.white, fontSize: 20)),
+        child: Text("Confirm Changes", style: TextStyle(color: Colors.white)),
         onPressed: () {
           setContract();
           print("Original contract ID: ${widget.contract!.contractId!}");
@@ -1800,7 +1804,7 @@ class _ContractFormState extends State<ContractForm> {
           color: Colors.grey,
           hoverColor: Colors.blueGrey,
           child: Text("Previous Step",
-              style: TextStyle(color: Colors.white, fontSize: 20)),
+              style: TextStyle(color: Colors.white)),
           onPressed: () {
             setState(() {
               if (toggleStepOne == true) {
@@ -2345,6 +2349,14 @@ class _ContractFormState extends State<ContractForm> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  bool _isWideScreen(double width, double height) {
+    if (width < height) {
+      return false;
+    } else {
+      return true;
     }
   }
 
