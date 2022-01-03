@@ -45,18 +45,18 @@ class _TemplateSelectorState extends State<TemplateSelector> {
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              templateTile('Generic Template', Icons.description, 'Generate a customizable generic contract.', Colors.white, widget.changeScreen),
-              templateTile('E-Commerce Template', Icons.attach_money, 'Generate a sales related contract for selling or buying.', Colors.grey),
-              templateTile('Games and Sports Template', Icons.sports_basketball, 'Generate a contract/clearance for players in a sports team.', Colors.grey)
+              templateTile('Generic Template', Icons.description, 'Generate a customizable generic contract.', Colors.white, screenWidth, widget.changeScreen),
+              templateTile('E-Commerce Template', Icons.attach_money, 'Generate a sales related contract for selling or buying.', Colors.grey, screenWidth),
+              templateTile('Games and Sports Template', Icons.sports_basketball, 'Generate a contract/clearance for players in a sports team.', Colors.grey, screenWidth)
             ]
         ),
         SizedBox(height: screenHeight / 15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            templateTile('Education Template', Icons.school, 'Generate an educational contract, e.g. a study admission contract.', Colors.grey),
-            templateTile('Government Template', Icons.account_balance_outlined, 'Generate a government related contract.', Colors.grey),
-            templateTile('Personal Data Processing', Icons.person_search, 'Generate a contract for personal data processing.', Colors.grey)
+            templateTile('Education Template', Icons.school, 'Generate an educational contract, e.g. a study admission contract.', Colors.grey, screenWidth),
+            templateTile('Government Template', Icons.account_balance_outlined, 'Generate a government related contract.', Colors.grey, screenWidth),
+            templateTile('Personal Data Processing', Icons.person_search, 'Generate a contract for personal data processing.', Colors.grey, screenWidth)
           ],
         ),
       ],
@@ -69,8 +69,8 @@ class _TemplateSelectorState extends State<TemplateSelector> {
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              templateTile('Generic Template', Icons.description, 'Generate a customizable generic contract.', Colors.white, widget.changeScreen),
-              templateTile('E-Commerce Template', Icons.attach_money, 'Generate a sales related contract for selling or buying.', Colors.grey),
+              templateTile('Generic Template', Icons.description, 'Generate a customizable generic contract.', Colors.white, screenWidth, widget.changeScreen),
+              templateTile('E-Commerce Template', Icons.attach_money, 'Generate a sales related contract for selling or buying.', Colors.grey, screenWidth),
 
             ]
         ),
@@ -78,16 +78,16 @@ class _TemplateSelectorState extends State<TemplateSelector> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            templateTile('Games and Sports Template', Icons.sports_basketball, 'Generate a contract/clearance for players in a sports team.', Colors.grey),
-            templateTile('Education Template', Icons.school, 'Generate an educational contract, e.g. a study admission contract.', Colors.grey),
+            templateTile('Games and Sports Template', Icons.sports_basketball, 'Generate a contract/clearance for players in a sports team.', Colors.grey, screenWidth),
+            templateTile('Education Template', Icons.school, 'Generate an educational contract, e.g. a study admission contract.', Colors.grey, screenWidth),
           ],
         ),
         SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            templateTile('Government Template', Icons.account_balance_outlined, 'Generate a government related contract.', Colors.grey),
-            templateTile('Personal Data Processing', Icons.person_search, 'Generate a contract for personal data processing.', Colors.grey)
+            templateTile('Government Template', Icons.account_balance_outlined, 'Generate a government related contract.', Colors.grey, screenWidth),
+            templateTile('Personal Data Processing', Icons.person_search, 'Generate a contract for personal data processing.', Colors.grey, screenWidth)
           ],
         ),
       ],
@@ -102,15 +102,16 @@ class _TemplateSelectorState extends State<TemplateSelector> {
     }
   }
 
-  Widget templateTile(String templateType, IconData icon, String tooltipMessage, Color color, [Function(int)? func]) {
+  Widget templateTile(String templateType, IconData icon, String tooltipMessage, Color color, double width, [Function(int)? func]) {
+    bool isWide = _isWideScreen(width);
     return Tooltip(
       message: tooltipMessage,
       child: MaterialButton(
         child: Expanded(
           child: Container(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            height: 150,
-            width: 150,
+            height: isWide? 150 : width / 3,
+            width: isWide? 150 : width / 3,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(2)),
                 color: color,
@@ -122,6 +123,7 @@ class _TemplateSelectorState extends State<TemplateSelector> {
                       offset: Offset(2.5, 2.5))
                 ]),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(templateType, textAlign: TextAlign.center),
