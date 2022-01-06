@@ -88,7 +88,7 @@ class _BasePageState extends State<BasePage> {
           ]),
         ),
         body: _selectedIndex == 0? Dashboard(changeScreen, currentUser, searchId) : _selectedPage,
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
       ),
     );
   }
