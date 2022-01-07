@@ -7,19 +7,23 @@ const RESOURCES = {
 "assets/assets/images/process_timeline/status1.png": "b03d6aff411ff53eadf87582709d9941",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
-"assets/NOTICES": "ada3522b52b7fddc9834273e7fa70af5",
+"assets/NOTICES": "20442c1ec4aa63fe0126ffdf537c739d",
 "assets/packages/country_state_city_pro/assets/city.json": "5b4561801e6ace0b0c6227e4c407335a",
 "assets/packages/country_state_city_pro/assets/country.json": "5ca87997912198c22eeb2e828d211220",
 "assets/packages/country_state_city_pro/assets/state.json": "ecd4ea833def1c6e3db7ee2f6a132dcb",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
+"canvaskit/canvaskit.js": "62b9906717d7215a6ff4cc24efbd1b5c",
+"canvaskit/canvaskit.wasm": "b179ba02b7a9f61ebc108f82c5a1ecdb",
+"canvaskit/profiling/canvaskit.js": "3783918f48ef691e230156c251169480",
+"canvaskit/profiling/canvaskit.wasm": "6d1b0fc1ec88c3110db88caa3393c580",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"index.html": "13727e0cf21c0722ec9485985f4df346",
-"/": "13727e0cf21c0722ec9485985f4df346",
-"main.dart.js": "23670110f649955b752ad849a1105944",
+"index.html": "8e37970fcf96d696816d9ec6fde640a2",
+"/": "8e37970fcf96d696816d9ec6fde640a2",
+"main.dart.js": "b6fdf18e514fcb221cfe4d98c2f35947",
 "manifest.json": "cfec03e163b7dee33052c1e3ad08d671",
-"version.json": "86e0beb60b1b72999178715f0d69ed97"
+"version.json": "889654efd90cc87fd49cb6e39cb54ba7"
 };
 
 // The application shell files that are downloaded before a service worker can
