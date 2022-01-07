@@ -161,13 +161,23 @@ class DataProvider {
   }
 
   Future<User> fetchUserById(String agentId) async {
-    final response = await http.get(kBaseUrl.replace(path: 'agent/by_agentId/SvenRasmusen'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: 'agent/by_agentId/$agentId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
-      return parser.parseUser(data["bindings"]);
+      return parser.parseAllUsersById(data["bindings"])[0];
     } else {
       throw Exception('Failed to load agent by id: $agentId.');
+    }
+  }
+
+  Future<bool> deleteUserById(String agentId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/agent/delete/$agentId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete account $agentId.\nBack-end response: ${response.reasonPhrase}.');
     }
   }
 
