@@ -64,22 +64,30 @@ class _BasePageState extends State<BasePage> {
               },
             ),
             ListTile(
-              title: Text("Manage Personal Data Profile"),
-              onTap: () {
-                changeScreen(7);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
               title: Text("Create a new contract"),
               onTap: () {
                 changeScreen(3);
                 Navigator.of(context).pop();
               },
             ),
+            ListTile(
+              title: Row(children: [
+                Icon(Icons.person),
+                SizedBox(width: 5),
+                Text("Profile")
+              ]),
+              onTap: () {
+                changeScreen(7);
+                Navigator.of(context).pop();
+              },
+            ),
             //Spacer(),
             ListTile(
-              title: Text("Logout"),
+              title: Row(children: [
+                Icon(Icons.logout),
+                SizedBox(width: 5),
+                Text("Logout")
+              ]),
               onTap: () {
                 changeScreen(5);
                 Navigator.of(context).pop();
@@ -128,7 +136,7 @@ class _BasePageState extends State<BasePage> {
           break;
         case 7:
           _selectedPage = ProfileManagerPage();
-          _selectedTitle = "Data Sharing Profile";
+          _selectedTitle = "Profile";
       }
     });
   }
