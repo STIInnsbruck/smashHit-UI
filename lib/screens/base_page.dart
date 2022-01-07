@@ -20,13 +20,14 @@ class _BasePageState extends State<BasePage> {
   String _selectedTitle = "";
   Widget? _selectedPage;
   User? currentUser;
+  String? userId;
   final TextEditingController searchBarController = new TextEditingController();
   final FocusNode _searchFocus = FocusNode();
   DataProvider dataProvider = DataProvider();
   String? searchId;
 
   _BasePageState() {
-    _selectedPage = LoginScreen(changeScreen);
+    _selectedPage = LoginScreen(changeScreen, setUserId);
     _selectedTitle = "Login Screen";
   }
 
@@ -64,22 +65,30 @@ class _BasePageState extends State<BasePage> {
               },
             ),
             ListTile(
-              title: Text("Manage Personal Data Profile"),
-              onTap: () {
-                changeScreen(7);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
               title: Text("Create a new contract"),
               onTap: () {
                 changeScreen(3);
                 Navigator.of(context).pop();
               },
             ),
+            ListTile(
+              title: Row(children: [
+                Icon(Icons.person),
+                SizedBox(width: 5),
+                Text("Profile")
+              ]),
+              onTap: () {
+                changeScreen(7);
+                Navigator.of(context).pop();
+              },
+            ),
             //Spacer(),
             ListTile(
-              title: Text("Logout"),
+              title: Row(children: [
+                Icon(Icons.logout),
+                SizedBox(width: 5),
+                Text("Logout")
+              ]),
               onTap: () {
                 changeScreen(5);
                 Navigator.of(context).pop();
@@ -87,8 +96,8 @@ class _BasePageState extends State<BasePage> {
             ),
           ]),
         ),
-        body: _selectedIndex == 0? Dashboard(changeScreen, currentUser, searchId) : _selectedPage,
-        resizeToAvoidBottomInset: false,
+        body: _selectedIndex == 0? Dashboard(changeScreen, userId, searchId) : _selectedPage,
+        resizeToAvoidBottomInset: true,
       ),
     );
   }
@@ -98,7 +107,7 @@ class _BasePageState extends State<BasePage> {
       _selectedIndex = x;
       switch (_selectedIndex) {
         case 0:
-          //_selectedPage = Dashboard(changeScreen, currentUser, searchId);
+          _selectedPage = Dashboard(changeScreen, userId, searchId);
           _selectedTitle = "Contracts Dashboard";
           break;
         case 1:
@@ -119,7 +128,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Violation Claim";
           break;
         case 5:
-          _selectedPage = LoginScreen(changeScreen);
+          _selectedPage = LoginScreen(changeScreen, setUserId);
           _selectedTitle = "Login Screen";
           break;
         case 6:
@@ -128,8 +137,14 @@ class _BasePageState extends State<BasePage> {
           break;
         case 7:
           _selectedPage = ProfileManagerPage();
-          _selectedTitle = "Data Sharing Profile";
+          _selectedTitle = "Profile";
       }
+    });
+  }
+
+  setUserId(String agentId) {
+    setState(() {
+      userId = agentId;
     });
   }
 

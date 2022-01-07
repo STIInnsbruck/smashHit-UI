@@ -181,6 +181,28 @@ class DataProvider {
     }
   }
 
+  Future<List<Contract>> fetchContractsByProviderId(String agentId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/by_provider/$agentId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseAllContracts(data["bindings"]);
+    } else {
+      throw Exception('Failed to load all contracts.');
+    }
+  }
+
+  Future<List<Contract>> fetchContractsByRequesterId(String agentId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/by_requester/$agentId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseAllContracts(data["bindings"]);
+    } else {
+      throw Exception('Failed to load all contracts.');
+    }
+  }
+
   updateContract(String title, String contractTerms, String contractType,
       DateTime startDate, DateTime expireDate, String requester, String provider) async {
 

@@ -5,8 +5,9 @@ import 'package:smashhit_ui/data/data_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
+  final Function(String) setUserId;
 
-  LoginScreen(this.changeScreen);
+  LoginScreen(this.changeScreen, this.setUserId);
 
   @override
   _LoginScreenState createState() => new _LoginScreenState();
@@ -19,7 +20,10 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loading = false;
   double smallSide = 10;
 
-  //TextField CONTROLLERS
+  //TextField CONTROLLERS for Login
+  TextEditingController _loginController = new TextEditingController();
+
+  //TextField CONTROLLERS for Registration
   TextEditingController city = new TextEditingController();
   TextEditingController state = new TextEditingController();
   TextEditingController country = new TextEditingController();
@@ -110,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialButton(
                               onPressed: () {
                                 if(_loginFormKey.currentState!.validate()) {
+                                  widget.setUserId(_loginController.text);
                                   widget.changeScreen(0);
                                 }
                               },
@@ -173,6 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              controller: _loginController,
               decoration: InputDecoration(
                   hintText: 'Name',
               ),
