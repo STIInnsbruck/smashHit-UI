@@ -161,7 +161,12 @@ class DataProvider {
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
-      return parser.parseAllUsersById(data["bindings"])[0];
+      try {
+        return parser.parseAllUsersById(data["bindings"])[0];
+      }catch (e) {
+        throw Exception('Failed to fetch agent by id: $agentId.');
+      }
+
     } else {
       throw Exception('Failed to load agent by id: $agentId.');
     }
