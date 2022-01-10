@@ -118,10 +118,6 @@ class DataProvider {
     }
   }
 
-  acceptContract(Uri path) async {}
-
-  rejectContract(Uri path) async {}
-
   Future<Contract> fetchContractById(String contractId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId/'), headers: headers);
 
