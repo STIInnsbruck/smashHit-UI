@@ -68,7 +68,7 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
                 ? Center(child: _wideScreenLayout())
                 : _slimScreenLayout();
           } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
+            return Center(child: Text('${snapshot.error}'));
           }
           return Center(child: CircularProgressIndicator());
         }
