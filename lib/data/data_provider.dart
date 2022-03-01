@@ -59,8 +59,6 @@ class DataProvider {
         return 0;
       }
     } else {
-      print("Statuscode: ${response.statusCode}");
-      print("Response body: ${response.body}");
       return 0;
     }
   }
