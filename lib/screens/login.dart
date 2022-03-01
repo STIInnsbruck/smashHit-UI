@@ -328,7 +328,8 @@ class _LoginScreenState extends State<LoginScreen> {
     var result = await dataProvider.createAgent(name, agentId, address, city, country, state, phone, agentType, email);
     if (result == 1) {
       _toggleLoading();
-      widget.changeScreen(0);
+      _loginUser(agentId);
+      //widget.changeScreen(0);
     } else if (result == -1){
       _toggleLoading();
       showUserAlreadyExistsDialog();
