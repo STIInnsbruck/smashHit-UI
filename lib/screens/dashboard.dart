@@ -49,21 +49,8 @@ class _DashboardState extends State<Dashboard> {
             return Column(
               children: [
                 _isSmallScreen(screenWidth)? Container() : listHeader(),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: contractList!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (searchId == null) {
-                          return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
-                        } else {
-                          if (contractList![index].contractId!.contains(searchId!)) {
-                            return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
-                          } else {
-                            return Container();
-                          }
-                        }
-                      }),
-                )
+                contractList!.isEmpty
+                  ? noContractsText() : contractListWidget()
               ],
             );
           } else if (snapshot.hasError) {
@@ -91,6 +78,27 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget noContractsText() {
+    return Expanded(child: Center(child: Text("You have no contracts. Create a contract in the drawer menu to the left.")));
+  }
+
+  Widget contractListWidget() {
+    return Expanded(
+      child: ListView.builder(
+          itemCount: contractList!.length,
+          itemBuilder: (BuildContext context, int index) {
+            if (searchId == null) {
+              return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+            } else {
+              if (contractList![index].contractId!.contains(searchId!)) {
+                return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+              } else {
+                return Container();
+              }
+            }
+          }),
+    );
+  }
 
   bool _isSmallScreen(double width) {
     if (width <= 500.0) {
