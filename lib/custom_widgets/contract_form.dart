@@ -1394,10 +1394,11 @@ class _ContractFormState extends State<ContractForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("What is the title of your contract?",
-              style: TextStyle(fontSize: 20)),
+              style: TextStyle(fontSize: 15)),
           SizedBox(height: 5),
           TextFormField(
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
               fillColor: Colors.white,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(2.0),
