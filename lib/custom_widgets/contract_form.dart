@@ -1337,7 +1337,7 @@ class _ContractFormState extends State<ContractForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("What type of contract is being formed?",
-            style: TextStyle(fontSize: 20)),
+            style: TextStyle(fontSize: 15)),
         ListTile(
             title: Text("Written Contract",
                 style: TextStyle(color: Colors.black)),
