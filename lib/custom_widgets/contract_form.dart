@@ -865,11 +865,11 @@ class _ContractFormState extends State<ContractForm> {
         children: [
           Text(
               "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
-              style: TextStyle(fontSize: 16)),
-          Container(height: 5),
+              style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
           TextFormField(
             decoration: InputDecoration(
-              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
               fillColor: Colors.white,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(2.0),
@@ -878,7 +878,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 15),
             controller: widget.requesterControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -901,8 +901,8 @@ class _ContractFormState extends State<ContractForm> {
         children: [
           Text(
               "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
-              style: TextStyle(fontSize: 16)),
-          Container(height: 5),
+              style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
           Autocomplete(
             displayStringForOption: _displayStringForOption,
             optionsBuilder: (TextEditingValue textEditingValue) {
@@ -927,7 +927,7 @@ class _ContractFormState extends State<ContractForm> {
                 controller: fieldTextEditingController,
                 focusNode: fieldFocusNode,
                 decoration: InputDecoration(
-                  isDense: true,
+                  contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(2.0),
@@ -936,7 +936,7 @@ class _ContractFormState extends State<ContractForm> {
                       borderRadius: BorderRadius.circular(2.0),
                       borderSide: BorderSide(color: Colors.black, width: 1.0)),
                 ),
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 15),
               );
             },
           )
@@ -954,11 +954,11 @@ class _ContractFormState extends State<ContractForm> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("E-mail:", style: TextStyle(fontSize: 16)),
-          Container(height: 5),
+          Text("E-mail:", style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
           TextFormField(
             decoration: InputDecoration(
-              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
               fillColor: Colors.white,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(2.0),
@@ -967,7 +967,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 15),
             controller: widget.requesterControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -988,11 +988,11 @@ class _ContractFormState extends State<ContractForm> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("House number and Street Name:", style: TextStyle(fontSize: 16)),
-          Container(height: 5),
+          Text("House number and Street Name:", style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
           TextFormField(
             decoration: InputDecoration(
-              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
               fillColor: Colors.white,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(2.0),
@@ -1001,7 +1001,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 15),
             controller: widget.requesterControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -1033,11 +1033,11 @@ class _ContractFormState extends State<ContractForm> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Phone number:", style: TextStyle(fontSize: 16)),
-          Container(height: 5),
+          Text("Phone number:", style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
           TextFormField(
             decoration: InputDecoration(
-              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
               fillColor: Colors.white,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(2.0),
@@ -1046,7 +1046,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 15),
             controller: widget.requesterControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -1061,19 +1061,19 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   //------------------- PROVIDER FIELDS ----------------------------------------
-  Widget providerField(int index) {
+  Form providerInfoFieldForm(int index, String fieldText, String fieldHint) {
     return Form(
       key: step3Keys[index],
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("What is the name of the data processor ${index + 1}?",
-              style: TextStyle(fontSize: 16)),
+          Text("$fieldText ${index + 1}?",
+              style: TextStyle(fontSize: 15)),
           Container(height: 5),
           TextFormField(
             decoration: InputDecoration(
-              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
               fillColor: Colors.white,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(2.0),
@@ -1082,11 +1082,11 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 15),
             controller: widget.providerControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter a name.';
+                return '$fieldHint';
               }
               return null;
             },
@@ -1097,124 +1097,15 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget providerFieldSuggestor(int index) {
-    return Form(
-      key: step3Keys[index],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-              "What is the name of the contract data processor ${currentProviderIndex + 1}?",
-              style: TextStyle(fontSize: 16)),
-          Container(height: 5),
-          Autocomplete(
-            displayStringForOption: _displayStringForOption,
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              if (textEditingValue.text == '') {
-                return const Iterable<User>.empty();
-              }
-              return contractors.where((User option) {
-                return option.toString().contains(textEditingValue.text.toLowerCase());
-              });
-            },
-            onSelected: (User selection) {
-              _fillProviderForm(selection, index);
-            },
-            fieldViewBuilder: (
-                BuildContext context,
-                TextEditingController fieldTextEditingController,
-                FocusNode fieldFocusNode,
-                VoidCallback onFieldSubmitted
-                ) {
-              fieldTextEditingController.text = widget.providerControllers[index].text;
-              return TextField(
-                controller: fieldTextEditingController,
-                focusNode: fieldFocusNode,
-                decoration: InputDecoration(
-                  isDense: true,
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(2.0),
-                      borderSide: BorderSide(color: Colors.blue)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(2.0),
-                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
-                ),
-                style: TextStyle(fontSize: 16),
-              );
-            },
-          )
-        ],
-      ),
-    );
+    return providerInfoFieldForm(index, "What is the name of the contract data processor", "Please enter a name.");
   }
 
   Widget providerEmailField(int index) {
-    return Form(
-      key: step3Keys[index],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("E-mail:", style: TextStyle(fontSize: 16)),
-          Container(height: 5),
-          TextFormField(
-            decoration: InputDecoration(
-              isDense: true,
-              fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.blue)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
-            ),
-            style: TextStyle(fontSize: 16),
-            controller: widget.providerControllers[index],
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter an email.';
-              }
-              return null;
-            },
-          )
-        ],
-      ),
-    );
+    return providerInfoFieldForm(index, "E-mail:", "Please enter an e-mail.");
   }
 
   Widget providerAddressField(int index) {
-    return Form(
-      key: step3Keys[index],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("House number and Street name:", style: TextStyle(fontSize: 16)),
-          Container(height: 5),
-          TextFormField(
-            decoration: InputDecoration(
-              isDense: true,
-              fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.blue)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
-            ),
-            style: TextStyle(fontSize: 16),
-            controller: widget.providerControllers[index],
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter an address.';
-              }
-              return null;
-            },
-          )
-        ],
-      ),
-    );
+    return providerInfoFieldForm(index, "House and Street name:", "Please enter an address.");
   }
 
   Widget providerCSCDropDownList(int index) {
@@ -1229,37 +1120,7 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget providerPhoneField(int index) {
-    return Form(
-      key: step3Keys[index - 3],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Phone number:", style: TextStyle(fontSize: 16)),
-          Container(height: 5),
-          TextFormField(
-            decoration: InputDecoration(
-              isDense: true,
-              fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.blue)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
-            ),
-            style: TextStyle(fontSize: 16),
-            controller: widget.providerControllers[index],
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a phone number.';
-              }
-              return null;
-            },
-          )
-        ],
-      ),
-    );
+    return providerInfoFieldForm(index - 3, "Phone number:", "Please enter a phone number.");
   }
 
   //------------------- CONTRACT FIELDS ----------------------------------------
