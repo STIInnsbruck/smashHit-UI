@@ -154,8 +154,9 @@ class _BasePageState extends State<BasePage> {
       decoration: BoxDecoration(
         color: Colors.white,
       ),
-      width: width / 6,
+      width: width / 4,
       child: TextFormField(
+        maxLines: 1,
         focusNode: _searchFocus,
         controller: searchBarController,
         textAlignVertical: TextAlignVertical.center,
