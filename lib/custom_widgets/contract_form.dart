@@ -1265,7 +1265,7 @@ class _ContractFormState extends State<ContractForm> {
               SizedBox(width: 5),
               Tooltip(
                 textStyle: TextStyle(
-                    fontSize: 16,
+                    fontSize: 12,
                     color: Colors.white,
                     fontStyle: FontStyle.italic),
                 message: tooltipMessage,
@@ -1278,26 +1278,23 @@ class _ContractFormState extends State<ContractForm> {
             ],
           ),
           isChecked.value == true
-              ? Container(
-                  height: 200,
-                  color: Colors.white54,
-                  child: TextField(
-                    controller: textController,
-                    maxLines: null,
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      hintText:
-                          ("Please enter the $checkBoxTitle details here..."),
-                      fillColor: Colors.white,
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(2.0),
-                          borderSide: BorderSide(color: Colors.blue)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(2.0),
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.0)),
-                    ),
-                  ))
+              ? TextField(
+            controller: textController,
+            maxLines: null,
+            style: TextStyle(fontSize: 15),
+            decoration: InputDecoration(
+              hintText:
+              ("Please enter the $checkBoxTitle details here..."),
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide:
+                  BorderSide(color: Colors.black, width: 1.0)),
+            ),
+          )
               : Container()
         ],
       ),
