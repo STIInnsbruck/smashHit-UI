@@ -345,7 +345,7 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
         Text("Profile Picture"),
         CircleAvatar(
           backgroundColor: Colors.blue,
-          child: Icon(Icons.person),
+          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
           radius: 75,
         )
       ],
