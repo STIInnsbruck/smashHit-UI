@@ -893,7 +893,56 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget requesterFieldSuggestor(int index) {
-    return requesterInfoFieldForm(index, "What is the name of the contract data controller ${currentRequesterIndex + 1}?", "Please enter a name.");
+    return Form(
+      key: step2Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
+              style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
+          Autocomplete(
+            displayStringForOption: _displayStringForOption,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<User>.empty();
+              }
+              return contractors.where((User option) {
+                return option.toString().contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (User selection) {
+              _fillRequesterForm(selection, index);
+            },
+            fieldViewBuilder: (
+                BuildContext context,
+                TextEditingController fieldTextEditingController,
+                FocusNode fieldFocusNode,
+                VoidCallback onFieldSubmitted
+                ) {
+              fieldTextEditingController.text = widget.requesterControllers[index].text;
+              return TextField(
+                controller: fieldTextEditingController,
+                focusNode: fieldFocusNode,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.blue)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                ),
+                style: TextStyle(fontSize: 15),
+              );
+            },
+          )
+        ],
+      ),
+    );
   }
 
   static String _displayStringForOption(User option) => option.name!;
@@ -958,7 +1007,56 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget providerFieldSuggestor(int index) {
-    return providerInfoFieldForm(index, "What is the name of the contract data processor ${index + 1}?", "Please enter a name.");
+    return Form(
+      key: step3Keys[index],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "What is the name of the contract data processor ${currentProviderIndex + 1}?",
+              style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
+          Autocomplete(
+            displayStringForOption: _displayStringForOption,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<User>.empty();
+              }
+              return contractors.where((User option) {
+                return option.toString().contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (User selection) {
+              _fillProviderForm(selection, index);
+            },
+            fieldViewBuilder: (
+                BuildContext context,
+                TextEditingController fieldTextEditingController,
+                FocusNode fieldFocusNode,
+                VoidCallback onFieldSubmitted
+                ) {
+              fieldTextEditingController.text = widget.providerControllers[index].text;
+              return TextField(
+                controller: fieldTextEditingController,
+                focusNode: fieldFocusNode,
+                decoration: InputDecoration(
+                  isDense: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.blue)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                ),
+                style: TextStyle(fontSize: 15),
+              );
+            },
+          )
+        ],
+      ),
+    );
   }
 
   Widget providerEmailField(int index) {
@@ -1519,19 +1617,8 @@ class _ContractFormState extends State<ContractForm> {
               setState(() {
                 toggleStepFinal = false;
               });
-              if (await dataProvider.createContract(
-                  widget.titleController.text,
-                  widget.descriptionController.text,
-                  _type.toString(),
-                  startDate!,
-                  endDate!,
-                  widget.requesterControllers[0].text,
-                  widget.providerControllers[0].text, widget.termControllers[0].text,
-                  widget.termControllers[1].text, widget.termControllers[2].text, widget.termControllers[3].text,
-                  widget.termControllers[4].text, widget.termControllers[5].text, widget.termControllers[6].text,
-                  widget.termControllers[7].text, widget.termControllers[8].text, widget.termControllers[9].text,
-                  widget.termControllers[10].text, widget.termControllers[11].text, widget.termControllers[12].text,
-                  widget.termControllers[13].text)) {
+              Contract createdContract = createContractObject();
+              if (await dataProvider.createContract(createdContract)) {
                 _showCreateSuccessDialog();
                 //TODO: change so that this navigation function is not in this widget but in a screen
                 widget.changeScreen(2, widget.titleController.text.replaceAll(' ', ''));
@@ -1541,6 +1628,32 @@ class _ContractFormState extends State<ContractForm> {
             }
           },
         ));
+  }
+
+  Contract createContractObject() {
+    return Contract(
+      contractId: widget.titleController.text,
+      description: widget.descriptionController.text,
+      contractType: _type.toString(),
+      executionDate: startDate!,
+      expireDate: endDate!,
+      contractorId: widget.requesterControllers[0].text,
+      contracteeId: widget.providerControllers[0].text,
+      amendment: widget.termControllers[0].text,
+      confidentialityObligation: widget.termControllers[1].text,
+      existDataController: widget.termControllers[2].text,
+      existDataProtection: widget.termControllers[3].text,
+      limitation: widget.termControllers[4].text,
+      methodNotice: widget.termControllers[5].text,
+      thirdParties: widget.termControllers[6].text,
+      disclosure: widget.termControllers[7].text,
+      receiptNotice: widget.termControllers[8].text,
+      severability: widget.termControllers[9].text,
+      terminationInsolvency: widget.termControllers[10].text,
+      terminationMaterialBreach: widget.termControllers[11].text,
+      terminationNotice: widget.termControllers[12].text,
+      waiver: widget.termControllers[13].text
+    );
   }
 
   Widget confirmEditButton() {
