@@ -1090,23 +1090,19 @@ class _ContractFormState extends State<ContractForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("What are the Terms & Conditions of the Contract?",
-              style: TextStyle(fontSize: 20)),
-          Container(
-            height: 200,
-            color: Colors.white54,
-            child: TextFormField(
-              controller: widget.descriptionController,
-              maxLines: null,
-              decoration: InputDecoration(
-                hintText: "Enter Contract details here...",
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the terms and conditions of the contract.';
-                }
-                return null;
-              },
+              style: TextStyle(fontSize: 15)),
+          TextFormField(
+            controller: widget.descriptionController,
+            maxLines: null,
+            decoration: InputDecoration(
+              hintText: "Enter Contract details here...",
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter the terms and conditions of the contract.';
+              }
+              return null;
+            },
           ),
         ],
       ),
