@@ -144,7 +144,7 @@ class _ContractFormState extends State<ContractForm> {
                     : Container(),
               ])),
       Align(
-        alignment: Alignment.centerRight,
+        alignment: Alignment.bottomRight,
         child: widget.contract != null? Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -155,7 +155,7 @@ class _ContractFormState extends State<ContractForm> {
         ) : nextStepButton(),
       ),
       Align(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.bottomLeft,
         child: previousStepButton(),
       )
     ]);
