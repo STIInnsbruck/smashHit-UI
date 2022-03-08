@@ -26,6 +26,7 @@ class _ContractCreationState extends State<ViewContract> {
   TextEditingController? reportViolationController;
   double smallSide = 10;
   double textSize = 0;
+  int screenSize = 0;
 
 
   @override
@@ -43,6 +44,8 @@ class _ContractCreationState extends State<ViewContract> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    screenSize = _screenSize(screenWidth);
+
     getSmallerSide(screenHeight, screenWidth);
     textSize = smallSide / 50;
 
@@ -64,7 +67,8 @@ class _ContractCreationState extends State<ViewContract> {
                     scrollDirection: Axis.vertical,
                     child: Column(
                         children: [
-                          Row(
+                          partyObligationCard(widget.user!)
+                          /**Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Column(
@@ -90,7 +94,7 @@ class _ContractCreationState extends State<ViewContract> {
                               ),
                               contractTimeProgressBar(screenWidth, screenHeight),
                             ],
-                          ),
+                          ),*/
                         ]),
                   ),
                 ),
@@ -111,6 +115,60 @@ class _ContractCreationState extends State<ViewContract> {
           // show loading indicator while fetching.
           return Center(child: CircularProgressIndicator());
         }
+      ),
+    );
+  }
+
+  Card partyObligationCard(User user) {
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+            child: Text('Obligation', style: TextStyle(fontSize: 20)),
+          ),
+          ListTile(
+              leading: CircleAvatar(child: Icon(Icons.person)),
+              title: Text(user.name!)
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Obligation Description: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text('Lorem ipsum dolor per malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.', overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Time Remaining: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text('23.10.2022')
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  width: 2,
+                  color: Colors.grey
+                )),
+              child: Center(
+                child: Text('Time Remaining'),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -426,6 +484,18 @@ class _ContractCreationState extends State<ViewContract> {
   String _formatDate(DateTime dateTime) {
     String dateString = '${dateTime.day}.${dateTime.month}.${dateTime.year}';
     return dateString;
+  }
+
+  ///Return and integer deciding if big, medium or small screen.
+  ///0 = Big. 1 = Medium. 2 = Small.
+  _screenSize(double width) {
+    if (width > 800) {
+      return 0;
+    } else if (width <= 800 && width > 500) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 
   _dismissDialog() {
