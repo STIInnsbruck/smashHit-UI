@@ -66,7 +66,7 @@ class DataProvider {
   Future<bool> createContract(Contract contract) async {
 
     var body = {
-      "ContractId": contract.title!.replaceAll(' ', ''),
+      "ContractId": contract.contractId!.replaceAll(' ', ''),
       "ContractType": contract.contractType,
       "Purpose": contract.description!.replaceAll('\n', ''),
       "ContractRequester": contract.contractorId!.replaceAll(' ', ''),
