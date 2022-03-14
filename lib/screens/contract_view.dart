@@ -20,7 +20,6 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
-  late Future<Contract> futureContract;
   Contract? contract;
   String? contractDropDownType;
   TextEditingController? reportViolationController;
@@ -32,7 +31,6 @@ class _ContractCreationState extends State<ViewContract> {
   @override
   void initState() {
     super.initState();
-    futureContract = dataProvider.fetchContractById(widget.contractId);
   }
 
   @override
@@ -51,7 +49,7 @@ class _ContractCreationState extends State<ViewContract> {
 
     return Container(
       child: FutureBuilder<Contract>(
-        future: futureContract,
+        future: dataProvider.fetchContractById(widget.contractId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contract = snapshot.data;
@@ -67,34 +65,8 @@ class _ContractCreationState extends State<ViewContract> {
                     scrollDirection: Axis.vertical,
                     child: Column(
                         children: [
-                          partyObligationCard(widget.user!)
-                          /**Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                children: [
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        partiesTile(screenWidth, screenHeight),
-                                        Container(width: screenWidth / 20),
-                                        TOSTile(screenWidth, screenHeight),
-                                      ]
-                                  ),
-                                  Container(height: screenHeight / 15),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      contractedEntitiesTile(screenWidth, screenHeight),
-                                      Container(width: screenWidth / 20),
-                                      statusTile(screenWidth, screenHeight),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              contractTimeProgressBar(screenWidth, screenHeight),
-                            ],
-                          ),*/
+                          partyObligationCard(snapshot.data!.formatContractor()),
+                          partyObligationCard(snapshot.data!.formatContractee())
                         ]),
                   ),
                 ),
@@ -119,8 +91,9 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Card partyObligationCard(User user) {
+  Card partyObligationCard(String userId) {
     return Card(
+      elevation: 5.0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +104,7 @@ class _ContractCreationState extends State<ViewContract> {
           ),
           ListTile(
               leading: CircleAvatar(child: Icon(Icons.person)),
-              title: Text(user.name!)
+              title: Text(userId)
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
@@ -144,29 +117,29 @@ class _ContractCreationState extends State<ViewContract> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Time Remaining: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                Text('23.10.2022')
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  width: 2,
-                  color: Colors.grey
-                )),
-              child: Center(
-                child: Text('Time Remaining'),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Time Remaining: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                    Text('23.10.2022')
+                  ],
+                ),
               ),
-            ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Status: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Icon(Icons.check_circle, color: Colors.green, size: 30)
+                    ],
+                  )
+              )
+            ],
           )
         ],
       ),
