@@ -354,28 +354,28 @@ class _ContractCreationState extends State<ViewContract> {
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Start Date: ${contract.executionDate}', style: TextStyle(fontSize: 15))
+                child: Text('Start Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
               )
           ),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Effective Date: ${contract.executionDate}', style: TextStyle(fontSize: 15))
+                  child: Text('Effective Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
               )
           ),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Execution Date: ${contract.executionDate}', style: TextStyle(fontSize: 15))
+                  child: Text('Execution Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
               )
           ),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('End Date: ${contract.expireDate}', style: TextStyle(fontSize: 15))
+                  child: Text('End Date: ${contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
               )
           ),
         ],
