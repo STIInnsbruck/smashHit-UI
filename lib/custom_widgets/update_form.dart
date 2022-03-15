@@ -118,7 +118,7 @@ class _UpdateFormState extends State<UpdateForm> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(widget.contract.formatContractor(), style: TextStyle(fontSize: 15))
+                Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15))
               ],
             )
           ],
@@ -140,7 +140,7 @@ class _UpdateFormState extends State<UpdateForm> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(widget.contract.formatContractee(), style: TextStyle(fontSize: 15))
+                Text(widget.contract.getContracteeName(), style: TextStyle(fontSize: 15))
               ],
             )
           ],

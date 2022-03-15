@@ -103,8 +103,8 @@ class _ContractCreationState extends State<ViewContract> {
         Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(child: partyObligationCard(contract.formatContractor())),
-              Expanded(child: partyObligationCard(contract.formatContractee()))
+              Expanded(child: partyObligationCard(contract.getContractorName())),
+              Expanded(child: partyObligationCard(contract.getContracteeName()))
             ]),
         contractDetailsCard(contract)
       ],
@@ -123,8 +123,8 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           ),
           contractTimeCard(contract),
-          partyObligationCard(contract.formatContractor()),
-          partyObligationCard(contract.formatContractee())
+          partyObligationCard(contract.getContractorName()),
+          partyObligationCard(contract.getContracteeName())
         ]);
   }
 
@@ -324,14 +324,14 @@ class _ContractCreationState extends State<ViewContract> {
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('Contract Requester: ${contract.formatContractor()}'),
+              child: Text('Contract Requester: ${contract.getContractorName()}'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('Contract Provider: ${contract.formatContractee()}'),
+              child: Text('Contract Provider: ${contract.getContracteeName()}'),
             ),
           ),
           Padding(

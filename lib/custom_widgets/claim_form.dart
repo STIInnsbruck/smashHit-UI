@@ -115,9 +115,9 @@ class _ClaimFormState extends State<ClaimForm> {
                 children: [
                   Text('Involved Parties:', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 2),
-                  Text(widget.contract.formatContractor(), style: TextStyle(fontSize: 15)),
+                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
-                  Text(widget.contract.formatContractee(), style: TextStyle(fontSize: 15)),
+                  Text(widget.contract.getContracteeName(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 2),
                 ],
               ),
