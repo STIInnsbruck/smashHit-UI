@@ -27,8 +27,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    //futureContractList = dataProvider.fetchAllContracts();
-    futureContractList = dataProvider.fetchContractsByProviderId(widget.user!.name!);
   }
 
   @override
@@ -42,7 +40,7 @@ class _DashboardState extends State<Dashboard> {
     searchId = widget.searchId;
     return Container(
       child: FutureBuilder<List<Contract>>(
-        future: futureContractList,
+        future: futureContractList = dataProvider.fetchContractsByProviderId(widget.user!.name!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contractList = snapshot.data;
