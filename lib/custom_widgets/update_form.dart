@@ -98,7 +98,7 @@ class _UpdateFormState extends State<UpdateForm> {
             Center(
                 child: Text('Contract Information', style: TextStyle(fontSize: 25)),
             ),
-            Text('Contract Type: ${widget.contract.formatContractType()}', style: TextStyle(fontSize: 15))
+            Text('Contract Type: ${widget.contract.getContractType()}', style: TextStyle(fontSize: 15))
           ],
         ),
       ),

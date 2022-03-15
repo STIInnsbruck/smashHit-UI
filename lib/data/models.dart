@@ -104,9 +104,11 @@ class Contract {
     return -1;
   }
 
-  String formatContractType() {
+  String getContractType() {
     return this.contractType!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
+
+
 
   String getContractorName() {
     return this.contractorId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
