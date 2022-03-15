@@ -54,7 +54,7 @@ class _ContractCreationState extends State<ViewContract> {
           if (snapshot.hasData) {
             contract = snapshot.data;
             return Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxHeight: screenHeight,
@@ -63,11 +63,9 @@ class _ContractCreationState extends State<ViewContract> {
                 child: Scrollbar(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
-                    child: Column(
-                        children: [
-                          partyObligationCard(snapshot.data!.formatContractor()),
-                          partyObligationCard(snapshot.data!.formatContractee())
-                        ]),
+                    child: screenSize == 2
+                      ? smallScreenBuild(contract!)
+                      : mediumScreenBuild(contract!)
                   ),
                 ),
               ),
@@ -91,16 +89,36 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
+  Widget mediumScreenBuild(Contract contract) {
+    return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(child: partyObligationCard(contract.formatContractor())),
+          Expanded(child: partyObligationCard(contract.formatContractee()))
+        ]);
+  }
+
+  Widget smallScreenBuild(Contract contract) {
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          partyObligationCard(contract.formatContractor()),
+          partyObligationCard(contract.formatContractee())
+        ]);
+  }
+
   Card partyObligationCard(String userId) {
     return Card(
-      elevation: 5.0,
+      elevation: 10.0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
-            child: Text('Obligation', style: TextStyle(fontSize: 20)),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Obligation', style: TextStyle(fontSize: 20))),
+            ),
           ),
           ListTile(
               leading: CircleAvatar(child: Icon(Icons.person)),
