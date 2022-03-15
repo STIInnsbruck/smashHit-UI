@@ -42,6 +42,8 @@ class _ContractCreationState extends State<ViewContract> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    Orientation orientation = MediaQuery.of(context).orientation;
+
     screenSize = _screenSize(screenWidth);
 
     getSmallerSide(screenHeight, screenWidth);
@@ -65,7 +67,7 @@ class _ContractCreationState extends State<ViewContract> {
                     scrollDirection: Axis.vertical,
                     child: screenSize == 2
                       ? smallScreenBuild(contract!)
-                      : mediumScreenBuild(contract!)
+                      : mediumScreenBuild(contract!, orientation)
                   ),
                 ),
               ),
@@ -88,25 +90,32 @@ class _ContractCreationState extends State<ViewContract> {
       ),
     );
   }
-
-  Widget mediumScreenBuild(Contract contract) {
+  
+  Widget mediumScreenBuild(Contract contract, Orientation orientation) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(child: contractStatusCard(contract)),
-            Expanded(flex: 2, child: contractTimeCard(contract)),
-            Expanded(child: reportIssueCard(contract))
-          ]
-        ),
         Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(child: partyObligationCard(contract.getContractorName())),
-              Expanded(child: partyObligationCard(contract.getContracteeName()))
-            ]),
-        contractDetailsCard(contract)
+              Expanded(child: contractStatusCard(contract)),
+              Expanded(flex: 2, child: contractTimeCard(contract)),
+              Expanded(child: reportIssueCard(contract))
+            ]
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          childAspectRatio: orientation == Orientation.portrait
+            ? 1.58
+            : 2.9,
+          children: [
+            partyObligationCard(contract.getContractorName()),
+            partyObligationCard(contract.getContracteeName()),
+          ],
+        ),
+        contractDetailsCard(contract),
       ],
     );
   }
@@ -124,7 +133,8 @@ class _ContractCreationState extends State<ViewContract> {
           ),
           contractTimeCard(contract),
           partyObligationCard(contract.getContractorName()),
-          partyObligationCard(contract.getContracteeName())
+          partyObligationCard(contract.getContracteeName()),
+          contractDetailsCard(contract),
         ]);
   }
 
@@ -345,6 +355,14 @@ class _ContractCreationState extends State<ViewContract> {
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text('Confidentiality Obligation', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
           ),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
