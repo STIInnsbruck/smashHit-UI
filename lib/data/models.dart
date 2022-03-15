@@ -108,6 +108,15 @@ class Contract {
     return this.contractType!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
+  String getFormattedStartDate() {
+    String dateString = "${this.executionDate!.day}.${this.executionDate!.month}.${this.executionDate!.year}";
+    return dateString;
+  }
+
+  String getFormattedEndDate() {
+    String dateString = "${this.expireDate!.day}.${this.expireDate!.month}.${this.expireDate!.year}";
+    return dateString;
+  }
 
 
   String getContractorName() {
