@@ -106,6 +106,7 @@ class _ContractCreationState extends State<ViewContract> {
               Expanded(child: partyObligationCard(contract.formatContractor())),
               Expanded(child: partyObligationCard(contract.formatContractee()))
             ]),
+        contractDetailsCard(contract)
       ],
     );
   }
@@ -251,8 +252,8 @@ class _ContractCreationState extends State<ViewContract> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Start: 23.10.2022'),
-                  Text('End: 30.12.2022')
+                  Text('Start: 23.10.2022', style: TextStyle(fontSize: 15)),
+                  Text('End: 30.12.2022', style: TextStyle(fontSize: 15))
                 ],
               )
             ),
@@ -282,7 +283,7 @@ class _ContractCreationState extends State<ViewContract> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           color: Colors.blue
                         ),
-                        child: Center(child: Text('80%')),
+                        child: Center(child: Text('80%', style: TextStyle(fontSize: 15))),
                       ),
                     ),
                   ),
@@ -292,6 +293,93 @@ class _ContractCreationState extends State<ViewContract> {
           ),
         ],
       )
+    );
+  }
+
+  Card contractDetailsCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Contract Details', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('${contract.contractId}', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Contract Type: ${contract.contractType}'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Contract Requester: ${contract.formatContractor()}'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Contract Provider: ${contract.formatContractee()}'),
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text('Terms and Conditions', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id velit ut tortor pretium viverra suspendisse. Ut placerat orci nulla pellentesque dignissim. Ut tortor pretium viverra suspendisse. Etiam sit amet nisl purus in mollis nunc. Tellus in hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Donec enim diam vulputate ut pharetra sit. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin. Sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc. Mi in nulla posuere sollicitudin aliquam ultrices sagittis. Elit ullamcorper dignissim cras tincidunt. Vestibulum lectus mauris ultrices eros. Facilisi etiam dignissim diam quis enim lobortis scelerisque. Justo laoreet sit amet cursus sit. Sed augue lacus viverra vitae congue eu. Enim nunc faucibus a pellentesque sit amet porttitor eget. Sed ullamcorper morbi tincidunt ornare massa eget. Et ligula ullamcorper malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Start Date: ${contract.executionDate}', style: TextStyle(fontSize: 15))
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Effective Date: ${contract.executionDate}', style: TextStyle(fontSize: 15))
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Execution Date: ${contract.executionDate}', style: TextStyle(fontSize: 15))
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('End Date: ${contract.expireDate}', style: TextStyle(fontSize: 15))
+              )
+          ),
+        ],
+      ),
     );
   }
 
