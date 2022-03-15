@@ -90,18 +90,38 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget mediumScreenBuild(Contract contract) {
-    return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(child: partyObligationCard(contract.formatContractor())),
-          Expanded(child: partyObligationCard(contract.formatContractee()))
-        ]);
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(child: contractStatusCard(contract)),
+            Expanded(flex: 2, child: contractTimeCard(contract)),
+            Expanded(child: reportIssueCard(contract))
+          ]
+        ),
+        Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(child: partyObligationCard(contract.formatContractor())),
+              Expanded(child: partyObligationCard(contract.formatContractee()))
+            ]),
+      ],
+    );
   }
 
   Widget smallScreenBuild(Contract contract) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(child: contractStatusCard(contract)),
+              Expanded(child: reportIssueCard(contract))
+            ],
+          ),
+          contractTimeCard(contract),
           partyObligationCard(contract.formatContractor()),
           partyObligationCard(contract.formatContractee())
         ]);
@@ -161,6 +181,117 @@ class _ContractCreationState extends State<ViewContract> {
           )
         ],
       ),
+    );
+  }
+
+  Card contractStatusCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Contract Status', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Icon(Icons.check_circle, size: 50, color: Colors.green)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Card reportIssueCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: InkWell(
+        splashColor: Colors.blue,
+        onTap: () {
+          print('report card tapped.');
+        },
+        child: Column(
+          children: [
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Center(child: Text('Report Issue', style: TextStyle(fontSize: 20))),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Center(child: Icon(Icons.report_problem, size: 50, color: Colors.yellow)),
+              ),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
+  Card contractTimeCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Contract Time', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Start: 23.10.2022'),
+                  Text('End: 30.12.2022')
+                ],
+              )
+            ),
+          ),
+          Container(
+            height: 40,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Center(
+                child: Container(
+                  width: double.infinity,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1
+                    )
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FractionallySizedBox(
+                      heightFactor: 1.0,
+                      widthFactor: 0.8,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.blue
+                        ),
+                        child: Center(child: Text('80%')),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      )
     );
   }
 
