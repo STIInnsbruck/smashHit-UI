@@ -223,7 +223,7 @@ class _ContractCreationState extends State<ViewContract> {
       child: InkWell(
         splashColor: Colors.blue,
         onTap: () {
-          print('report card tapped.');
+          widget.changeScreen(4, widget.contractId);
         },
         child: Column(
           children: [
