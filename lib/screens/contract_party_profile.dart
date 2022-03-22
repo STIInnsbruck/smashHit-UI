@@ -84,6 +84,26 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
     );
   }
 
+  Widget profileDetails(User user) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Profile Details"),
+        profileDetailElement("Name", user.name!)
+      ],
+    );
+  }
+
+  Widget profileDetailElement(String elementName, String elementData) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text("$elementName:", style: TextStyle(color: Colors.grey)),
+        Text("$elementData")
+      ],
+    );
+  }
+
   ///Return and integer deciding if big, medium or small screen.
   ///0 = Big. 1 = Medium. 2 = Small.
   _screenSize(double width) {
