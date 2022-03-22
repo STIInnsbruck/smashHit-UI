@@ -47,7 +47,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                     scrollDirection: Axis.vertical,
                     child: screenSize == 2
                       ? Container()
-                      : Container()
+                      : mediumScreenBuild(user!)
                   ),
                 ),
               )
@@ -67,6 +67,21 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
           return Center(child: CircularProgressIndicator());
         }
       )
+    );
+  }
+
+  Widget mediumScreenBuild(User user) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: profilePicture()),
+            Expanded(child: profileDetails(user))
+          ],
+        )
+      ],
     );
   }
 
