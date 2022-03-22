@@ -34,5 +34,26 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
     );
   }
 
+  Widget _wideScreenLayout() {
+    return Container();
+  }
+
+  Widget _slimScreenLayout() {
+    return Container();
+  }
+
+  Widget profilePicture() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Profile Picture"),
+        CircleAvatar(
+          backgroundColor: Colors.blue,
+          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
+          radius: 75,
+        )
+      ],
+    );
+  }
 
 }
