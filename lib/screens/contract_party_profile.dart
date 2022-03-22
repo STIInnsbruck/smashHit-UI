@@ -37,20 +37,9 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             user = snapshot.data;
             return Container(
               margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: screenHeight,
-                  minWidth: screenHeight,
-                ),
-                child: Scrollbar(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: screenSize == 2
-                      ? Container()
-                      : mediumScreenBuild(user!)
-                  ),
-                ),
-              )
+              child: screenSize == 2
+                  ? Container()
+                  : mediumScreenBuild(user!)
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -77,8 +66,10 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: profilePicture()),
-            Expanded(child: profileDetails(user))
+            Spacer(flex: 1),
+            Expanded(flex: 1, child: profilePicture()),
+            Expanded(flex: 1, child: profileDetails(user)),
+            Spacer(flex: 4)
           ],
         )
       ],
@@ -104,14 +95,27 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("Profile Details"),
-        profileDetailElement("Name", user.name!)
+        SizedBox(height: 5),
+        profileDetailElement("Name", user.name!),
+        SizedBox(height: 5),
+        profileDetailElement("Phone Number", user.telephoneNumber!),
+        SizedBox(height: 5),
+        profileDetailElement("Email", user.email!),
+        SizedBox(height: 5),
+        profileDetailElement("Country", user.country!),
+        SizedBox(height: 5),
+        profileDetailElement("State", user.state!),
+        SizedBox(height: 5),
+        profileDetailElement("City", user.city!),
+        SizedBox(height: 5),
+        profileDetailElement("Street Address", user.streetAddress!),
       ],
     );
   }
 
   Widget profileDetailElement(String elementName, String elementData) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("$elementName:", style: TextStyle(color: Colors.grey)),
         Text("$elementData")
