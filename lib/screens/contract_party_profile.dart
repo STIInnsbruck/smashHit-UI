@@ -17,12 +17,11 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
   DataProvider dataProvider = new DataProvider();
   late Future<User> futureUser = User() as Future<User>;
   User? user;
+  int screenSize = 0;
 
   @override
   void initState() {
     super.initState();
-
-    futureUser = dataProvider.fetchUserById(widget.userId);
   }
 
   @override
@@ -31,6 +30,43 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
+      child: FutureBuilder<User> (
+        future: dataProvider.fetchUserById(widget.userId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            user = snapshot.data;
+            return Container(
+              margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: screenHeight,
+                  minWidth: screenHeight,
+                ),
+                child: Scrollbar(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: screenSize == 2
+                      ? Container()
+                      : Container()
+                  ),
+                ),
+              )
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("The user's profile was not found.", style: TextStyle(fontSize: 32)),
+                  Text('${snapshot.error}')
+                ],
+              ),
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+      )
     );
   }
 
