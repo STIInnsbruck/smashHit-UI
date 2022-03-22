@@ -34,14 +34,6 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
     );
   }
 
-  Widget _wideScreenLayout() {
-    return Container();
-  }
-
-  Widget _slimScreenLayout() {
-    return Container();
-  }
-
   Widget profilePicture() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,6 +46,18 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         )
       ],
     );
+  }
+
+  ///Return and integer deciding if big, medium or small screen.
+  ///0 = Big. 1 = Medium. 2 = Small.
+  _screenSize(double width) {
+    if (width > 800) {
+      return 0;
+    } else if (width <= 800 && width > 500) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 
 }
