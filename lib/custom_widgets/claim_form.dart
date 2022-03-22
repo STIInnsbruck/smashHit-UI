@@ -124,8 +124,6 @@ class _ClaimFormState extends State<ClaimForm> {
               Container(height: 20),
               Row(
                 children: [
-                  Text('Contract Dates:', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 2),
                   Text('Start Date: ${widget.contract.displayDate(widget.contract.executionDate!)}', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
                   Text('End Date: ${widget.contract.displayDate(widget.contract.expireDate!)}', style: TextStyle(fontSize: 15)),
