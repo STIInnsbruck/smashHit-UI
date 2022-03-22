@@ -66,10 +66,11 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Spacer(flex: 4),
+            Expanded(flex: 4, child: profilePicture()),
             Spacer(flex: 1),
-            Expanded(flex: 1, child: profilePicture()),
-            Expanded(flex: 1, child: profileDetails(user)),
-            Spacer(flex: 4)
+            Expanded(flex: 8, child: profileDetails(user)),
+            Spacer(flex: 8)
           ],
         )
       ],
