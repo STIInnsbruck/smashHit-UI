@@ -153,8 +153,15 @@ class _ContractCreationState extends State<ViewContract> {
           ),
           ListTile(
               leading: CircleAvatar(child: Icon(Icons.person)),
-              title: Text(userId)
+              title: GestureDetector(
+                  onTap: () {
+                    print(userId);
+                    widget.changeScreen(8, "CompanyABC");
+                  },
+                  child: Text(userId)
+              ),
           ),
+
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
             child: Column(
