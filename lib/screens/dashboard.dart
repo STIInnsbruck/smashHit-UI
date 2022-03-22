@@ -6,10 +6,10 @@ import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
 
 class Dashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
-  final String? userId;
   final String? searchId;
+  final User? user;
 
-  Dashboard(this.changeScreen, this.userId, this.searchId);
+  Dashboard(this.changeScreen, this.user, this.searchId);
 
   @override
   _DashboardState createState() => new _DashboardState();
@@ -27,8 +27,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    //futureContractList = dataProvider.fetchAllContracts();
-    futureContractList = dataProvider.fetchContractsByProviderId(widget.userId!);
   }
 
   @override
@@ -42,7 +40,7 @@ class _DashboardState extends State<Dashboard> {
     searchId = widget.searchId;
     return Container(
       child: FutureBuilder<List<Contract>>(
-        future: futureContractList,
+        future: futureContractList = dataProvider.fetchContractsByProviderId(widget.user!.name!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contractList = snapshot.data;

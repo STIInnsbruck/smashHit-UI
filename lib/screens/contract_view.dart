@@ -20,18 +20,17 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
   DataProvider dataProvider = new DataProvider();
-  late Future<Contract> futureContract;
   Contract? contract;
   String? contractDropDownType;
   TextEditingController? reportViolationController;
   double smallSide = 10;
   double textSize = 0;
+  int screenSize = 0;
 
 
   @override
   void initState() {
     super.initState();
-    futureContract = dataProvider.fetchContractById(widget.contractId);
   }
 
   @override
@@ -43,17 +42,21 @@ class _ContractCreationState extends State<ViewContract> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    Orientation orientation = MediaQuery.of(context).orientation;
+
+    screenSize = _screenSize(screenWidth);
+
     getSmallerSide(screenHeight, screenWidth);
     textSize = smallSide / 50;
 
     return Container(
       child: FutureBuilder<Contract>(
-        future: futureContract,
+        future: dataProvider.fetchContractById(widget.contractId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contract = snapshot.data;
             return Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxHeight: screenHeight,
@@ -62,36 +65,9 @@ class _ContractCreationState extends State<ViewContract> {
                 child: Scrollbar(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
-                    child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                children: [
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        partiesTile(screenWidth, screenHeight),
-                                        Container(width: screenWidth / 20),
-                                        TOSTile(screenWidth, screenHeight),
-                                      ]
-                                  ),
-                                  Container(height: screenHeight / 15),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      contractedEntitiesTile(screenWidth, screenHeight),
-                                      Container(width: screenWidth / 20),
-                                      statusTile(screenWidth, screenHeight),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              contractTimeProgressBar(screenWidth, screenHeight),
-                            ],
-                          ),
-                        ]),
+                    child: screenSize == 2
+                      ? smallScreenBuild(contract!)
+                      : mediumScreenBuild(contract!, orientation)
                   ),
                 ),
               ),
@@ -111,6 +87,316 @@ class _ContractCreationState extends State<ViewContract> {
           // show loading indicator while fetching.
           return Center(child: CircularProgressIndicator());
         }
+      ),
+    );
+  }
+  
+  Widget mediumScreenBuild(Contract contract, Orientation orientation) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(child: contractStatusCard(contract)),
+              Expanded(flex: 2, child: contractTimeCard(contract)),
+              Expanded(child: reportIssueCard(contract))
+            ]
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          childAspectRatio: orientation == Orientation.portrait
+            ? 1.58
+            : 2.9,
+          children: [
+            partyObligationCard(contract.getContractorName()),
+            partyObligationCard(contract.getContracteeName()),
+          ],
+        ),
+        contractDetailsCard(contract),
+      ],
+    );
+  }
+
+  Widget smallScreenBuild(Contract contract) {
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(child: contractStatusCard(contract)),
+              Expanded(child: reportIssueCard(contract))
+            ],
+          ),
+          contractTimeCard(contract),
+          partyObligationCard(contract.getContractorName()),
+          partyObligationCard(contract.getContracteeName()),
+          contractDetailsCard(contract),
+        ]);
+  }
+
+  Card partyObligationCard(String userId) {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Obligation', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          ListTile(
+              leading: CircleAvatar(child: Icon(Icons.person)),
+              title: Text(userId)
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Obligation Description: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text('Lorem ipsum dolor per malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.', overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Time Remaining: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                    Text('23.10.2022')
+                  ],
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Status: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Icon(Icons.check_circle, color: Colors.green, size: 30)
+                    ],
+                  )
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Card contractStatusCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Contract Status', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Icon(Icons.check_circle, size: 50, color: Colors.green)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Card reportIssueCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: InkWell(
+        splashColor: Colors.blue,
+        onTap: () {
+          widget.changeScreen(4, widget.contractId);
+        },
+        child: Column(
+          children: [
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Center(child: Text('Report Issue', style: TextStyle(fontSize: 20))),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Center(child: Icon(Icons.report_problem, size: 50, color: Colors.yellow)),
+              ),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
+  Card contractTimeCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Contract Time', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Start: 23.10.2022', style: TextStyle(fontSize: 15)),
+                  Text('End: 30.12.2022', style: TextStyle(fontSize: 15))
+                ],
+              )
+            ),
+          ),
+          Container(
+            height: 40,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Center(
+                child: Container(
+                  width: double.infinity,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1
+                    )
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FractionallySizedBox(
+                      heightFactor: 1.0,
+                      widthFactor: 0.8,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.blue
+                        ),
+                        child: Center(child: Text('80%', style: TextStyle(fontSize: 15))),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      )
+    );
+  }
+
+  Card contractDetailsCard(Contract contract) {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('Contract Details', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: Center(child: Text('${contract.contractId}', style: TextStyle(fontSize: 20))),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Contract Type: ${contract.contractType}'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Contract Requester: ${contract.getContractorName()}'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Contract Provider: ${contract.getContracteeName()}'),
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text('Terms and Conditions', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id velit ut tortor pretium viverra suspendisse. Ut placerat orci nulla pellentesque dignissim. Ut tortor pretium viverra suspendisse. Etiam sit amet nisl purus in mollis nunc. Tellus in hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Donec enim diam vulputate ut pharetra sit. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin. Sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc. Mi in nulla posuere sollicitudin aliquam ultrices sagittis. Elit ullamcorper dignissim cras tincidunt. Vestibulum lectus mauris ultrices eros. Facilisi etiam dignissim diam quis enim lobortis scelerisque. Justo laoreet sit amet cursus sit. Sed augue lacus viverra vitae congue eu. Enim nunc faucibus a pellentesque sit amet porttitor eget. Sed ullamcorper morbi tincidunt ornare massa eget. Et ligula ullamcorper malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text('Confidentiality Obligation', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Start Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Effective Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Execution Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('End Date: ${contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
+              )
+          ),
+        ],
       ),
     );
   }
@@ -426,6 +712,18 @@ class _ContractCreationState extends State<ViewContract> {
   String _formatDate(DateTime dateTime) {
     String dateString = '${dateTime.day}.${dateTime.month}.${dateTime.year}';
     return dateString;
+  }
+
+  ///Return and integer deciding if big, medium or small screen.
+  ///0 = Big. 1 = Medium. 2 = Small.
+  _screenSize(double width) {
+    if (width > 800) {
+      return 0;
+    } else if (width <= 800 && width > 500) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 
   _dismissDialog() {

@@ -7,8 +7,9 @@ import 'package:smashhit_ui/data/models.dart';
 class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
   final Function(String) setUserId;
+  final Function(User) setUser;
 
-  LoginScreen(this.changeScreen, this.setUserId);
+  LoginScreen(this.changeScreen, this.setUserId, this.setUser);
 
   @override
   _LoginScreenState createState() => new _LoginScreenState();
@@ -345,6 +346,7 @@ class _LoginScreenState extends State<LoginScreen> {
       user = await dataProvider.fetchUserById(agentId);
       _toggleLoading();
       widget.setUserId(agentId);
+      widget.setUser(user!);
       widget.changeScreen(0);
     } catch (e) {
       _toggleLoading();

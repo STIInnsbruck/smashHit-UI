@@ -104,15 +104,26 @@ class Contract {
     return -1;
   }
 
-  String formatContractType() {
+  String getContractType() {
     return this.contractType!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
-  String formatContractor() {
+  String getFormattedStartDate() {
+    String dateString = "${this.executionDate!.day}.${this.executionDate!.month}.${this.executionDate!.year}";
+    return dateString;
+  }
+
+  String getFormattedEndDate() {
+    String dateString = "${this.expireDate!.day}.${this.expireDate!.month}.${this.expireDate!.year}";
+    return dateString;
+  }
+
+
+  String getContractorName() {
     return this.contractorId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
-  String formatContractee() {
+  String getContracteeName() {
     return this.contracteeId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
@@ -148,6 +159,40 @@ class Contract {
     //Default icon incase another type of Contract was given but is not listed here.
     return Icons.description;
   }
+}
+
+///Obligation model used in a Contract. Every party involved in a contract also
+///has an obligation which they must fulfill in order to maintain a valid
+///contract.
+///[description] is the actual task description of the obligation that is to be
+///fulfilled.
+///[type] is the obligation type. Example: Payment or Delivery as an obligation.
+///[userId] the ID of the user to whom this obligation applies.
+///[contractId] the ID of the contract to which this obligation applies.
+///[startDate] the start date of this obligation. Must be equal or later than
+///the start date AND equal or less than the end date of the contract.
+///[endDate] the end date of this obligation. Must be equal or greater than it's
+///own start date AND equal or less than the end date of the contract.
+///[status] the status of the obligation, stating it it has been fulfilled or
+///not.
+class Obligation {
+  String? description;
+  String? type;
+  String? userId;
+  String? contractId;
+  String? startDate;
+  String? endDate;
+  String? status;
+
+  Obligation({
+    this.description,
+    this.type,
+    this.userId,
+    this.contractId,
+    this.startDate,
+    this.endDate,
+    this.status
+  });
 }
 
 /// Object model to be used in a Contract. It describes the actual object
