@@ -83,6 +83,17 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Expanded(flex: 2, child: mostRecentFineTypeCard()),
             Spacer(),
           ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Expanded(flex: 2, child: obligationCompletionRateCard()),
+            Spacer(flex: 2),
+            Spacer(flex: 2),
+            Spacer(flex: 2),
+            Spacer(),
+          ],
         )
       ],
     );
@@ -235,6 +246,41 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
                   child: Text('Art. 28 (2) GDPR, Art. 32 GDPR', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis), maxLines: 1)
+              ),
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget obligationCompletionRateCard() {
+    return Card(
+        elevation: 10.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
+                    child: Text('Obligation Completion Rate'),
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: Tooltip(
+                      message: "The violation description of this user's most recently issued GDPR violation.",
+                      child: Icon(Icons.info, color: Colors.grey),
+                    )
+                )
+              ],
+            ),
+            Container(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
+                  child: Text('100%', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
               ),
             ),
           ],
