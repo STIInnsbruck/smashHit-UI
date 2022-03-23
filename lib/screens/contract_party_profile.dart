@@ -30,6 +30,8 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
     double screenHeight = MediaQuery.of(context).size.height;
     Orientation orientation = MediaQuery.of(context).orientation;
 
+    screenSize = _screenSize(screenWidth);
+
     return Container(
       child: FutureBuilder<User> (
         future: dataProvider.fetchUserById(widget.userId),
@@ -39,7 +41,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             return Container(
               margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
               child: screenSize == 2
-                  ? Container()
+                  ? smallScreenBuild(user!, orientation)
                   : mediumScreenBuild(user!, orientation)
             );
           } else if (snapshot.hasError) {
@@ -146,6 +148,63 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         Spacer()
       ],
     );
+  }
+
+  Widget smallScreenBuild(User user, Orientation orientation) {
+    return orientation == Orientation.portrait
+        ? smallPortrait(user)
+        : smallLandscape(user);
+  }
+
+  Widget smallPortrait(User user) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Spacer(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Spacer(flex: 4),
+            Expanded(flex: 4, child: profilePicture()),
+            Spacer(flex: 1),
+            Expanded(flex: 8, child: profileDetails(user)),
+            Spacer(flex: 8)
+          ],
+        ),
+        Spacer(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Expanded(flex: 5, child: gdprFineCountCard()),
+            Expanded(flex: 5, child: averageGdprFineCard()),
+            Spacer(),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Expanded(flex: 5, child: mostRecentFineDateCard()),
+            Expanded(flex: 5, child: mostRecentFineTypeCard()),
+            Spacer()
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Expanded(flex: 5, child: obligationCompletionRateCard()),
+            Spacer(),
+          ],
+        ),
+        Spacer()
+      ],
+    );
+  }
+
+  Widget smallLandscape(User user) {
+    return Container();
   }
 
   Widget profilePicture() {
