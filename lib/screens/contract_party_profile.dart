@@ -72,6 +72,17 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Expanded(flex: 8, child: profileDetails(user)),
             Spacer(flex: 8)
           ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Expanded(flex: 2, child: gdprFineCountCard()),
+            Expanded(flex: 2, child: averageGdprFineCard()),
+            Expanded(flex: 2, child: mostRecentFineDateCard()),
+            Expanded(flex: 2, child: mostRecentFineTypeCard()),
+            Spacer(),
+          ],
         )
       ],
     );
@@ -88,6 +99,146 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
           radius: 75,
         )
       ],
+    );
+  }
+
+  Widget gdprFineCountCard() {
+    return Card(
+      elevation: 10.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
+                  child: Text('Total GDPR Fines'),
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: Tooltip(
+                    message: 'The amount of publicly listed GDPR violations issued to this user.',
+                    child: Icon(Icons.info, color: Colors.grey),
+                  )
+              )
+            ],
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
+              child: Text('13', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+            ),
+          ),
+        ],
+      )
+    );
+  }
+
+  Widget averageGdprFineCard() {
+    return Card(
+        elevation: 10.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
+                    child: Text('Average Fine Amount'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: Tooltip(
+                    message: 'The overall average of all publicly available GDPR fines issued to this user.\n Higher fines are given depending on the severity of the violation.',
+                    child: Icon(Icons.info, color: Colors.grey),
+                  )
+                )
+              ],
+            ),
+            Container(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
+                  child: Text("€13'213,00", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+              ),
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget mostRecentFineDateCard() {
+    return Card(
+        elevation: 10.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
+                    child: Text('Most Recent Fine'),
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: Tooltip(
+                      message: 'The amount of days ago when the most recent publicly available GDPR fine was issued to this user.',
+                      child: Icon(Icons.info, color: Colors.grey),
+                    )
+                )
+              ],
+            ),
+            Container(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
+                  child: Text('29 Days ago', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+              ),
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget mostRecentFineTypeCard() {
+    return Card(
+        elevation: 10.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
+                    child: Text('Most Recent Violation Type'),
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: Tooltip(
+                      message: "The violation description of this user's most recently issued GDPR violation.",
+                      child: Icon(Icons.info, color: Colors.grey),
+                    )
+                )
+              ],
+            ),
+            Container(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
+                  child: Text('Art. 28 (2) GDPR, Art. 32 GDPR', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis), maxLines: 1)
+              ),
+            ),
+          ],
+        )
     );
   }
 
