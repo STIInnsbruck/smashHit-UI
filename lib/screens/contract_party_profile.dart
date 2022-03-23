@@ -28,6 +28,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    Orientation orientation = MediaQuery.of(context).orientation;
 
     return Container(
       child: FutureBuilder<User> (
@@ -39,7 +40,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
               margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
               child: screenSize == 2
                   ? Container()
-                  : mediumScreenBuild(user!)
+                  : mediumScreenBuild(user!, orientation)
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -59,10 +60,17 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
     );
   }
 
-  Widget mediumScreenBuild(User user) {
+  Widget mediumScreenBuild(User user, Orientation orientation) {
+    return orientation == Orientation.portrait
+        ? mediumPortrait(user)
+        : mediumLandscape(user);
+  }
+
+  Widget mediumLandscape(User user) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        Spacer(),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,14 +81,14 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Spacer(flex: 8)
           ],
         ),
+        Spacer(),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Spacer(),
-            Expanded(flex: 2, child: gdprFineCountCard()),
-            Expanded(flex: 2, child: averageGdprFineCard()),
-            Expanded(flex: 2, child: mostRecentFineDateCard()),
-            Expanded(flex: 2, child: mostRecentFineTypeCard()),
+            Expanded(flex: 1, child: gdprFineCountCard()),
+            Expanded(flex: 1, child: averageGdprFineCard()),
+            Expanded(flex: 1, child: mostRecentFineDateCard()),
             Spacer(),
           ],
         ),
@@ -88,13 +96,54 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Spacer(),
-            Expanded(flex: 2, child: obligationCompletionRateCard()),
-            Spacer(flex: 2),
-            Spacer(flex: 2),
-            Spacer(flex: 2),
+            Expanded(child: mostRecentFineTypeCard()),
+            Expanded( child: obligationCompletionRateCard()),
+            Spacer(),
             Spacer(),
           ],
-        )
+        ),
+        Spacer()
+      ],
+    );
+  }
+
+  Widget mediumPortrait(User user) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Spacer(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Spacer(flex: 4),
+            Expanded(flex: 4, child: profilePicture()),
+            Spacer(flex: 1),
+            Expanded(flex: 8, child: profileDetails(user)),
+            Spacer(flex: 8)
+          ],
+        ),
+        Spacer(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Expanded(flex: 3, child: gdprFineCountCard()),
+            Expanded(flex: 3, child: averageGdprFineCard()),
+            Expanded(flex: 3, child: mostRecentFineDateCard()),
+            Spacer(),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Expanded(flex: 3, child: mostRecentFineTypeCard()),
+            Expanded(flex: 3, child: obligationCompletionRateCard()),
+            Spacer(flex: 3),
+            Spacer(),
+          ],
+        ),
+        Spacer()
       ],
     );
   }
@@ -125,7 +174,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
               Container(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
-                  child: Text('Total GDPR Fines'),
+                  child: Text('Total GDPR\nFines'),
                 ),
               ),
               Padding(
@@ -140,7 +189,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-              child: Text('13', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+              child: Text('13', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ),
           ),
         ],
@@ -160,7 +209,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
-                    child: Text('Average Fine Amount'),
+                    child: Text('Average Fine\nAmount'),
                   ),
                 ),
                 Padding(
@@ -175,7 +224,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text("€13'213,00", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+                  child: Text("€13'213,00", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
               ),
             ),
           ],
@@ -195,7 +244,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
-                    child: Text('Most Recent Fine'),
+                    child: Text('Most Recent\nFine'),
                   ),
                 ),
                 Padding(
@@ -210,7 +259,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text('29 Days ago', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+                  child: Text('29 Days ago', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
               ),
             ),
           ],
@@ -230,7 +279,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
-                    child: Text('Most Recent Violation Type'),
+                    child: Text('Most Recent\nViolation Type'),
                   ),
                 ),
                 Padding(
@@ -245,7 +294,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text('Art. 28 (2) GDPR, Art. 32 GDPR', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis), maxLines: 1)
+                  child: Text('Art. 28 (2) GDPR, Art. 32 GDPR', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis), maxLines: 1)
               ),
             ),
           ],
@@ -265,7 +314,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
-                    child: Text('Obligation Completion Rate'),
+                    child: Text('Obligation\nCompletion Rate'),
                   ),
                 ),
                 Padding(
@@ -280,7 +329,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text('100%', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+                  child: Text('100%', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
               ),
             ),
           ],
