@@ -406,7 +406,6 @@ class _ContractCreationState extends State<ViewContract> {
   Widget contractTAC(Contract contract) {
     return contract.description!.isNotEmpty
         ? Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               contractTermTitle('Terms and Conditions'),
               contractTermText(contract.description!)
@@ -418,7 +417,6 @@ class _ContractCreationState extends State<ViewContract> {
   Widget contractAmendment(Contract contract) {
     return contract.amendment!.isNotEmpty
         ? Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               contractTermTitle('Amendment'),
               contractTermText(contract.amendment!)
@@ -430,7 +428,6 @@ class _ContractCreationState extends State<ViewContract> {
   Widget contractConfidentiality(Contract contract) {
     return contract.confidentialityObligation!.isNotEmpty
         ? Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         contractTermTitle('Confidentiality Obligation'),
         contractTermText(contract.confidentialityObligation!)
@@ -442,10 +439,130 @@ class _ContractCreationState extends State<ViewContract> {
   Widget contractDataController(Contract contract) {
     return contract.existDataController!.isNotEmpty
         ? Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         contractTermTitle('Data Controller'),
         contractTermText(contract.existDataController!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractDataProtection(Contract contract) {
+    return contract.existDataProtection!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Data Protection'),
+        contractTermText(contract.existDataProtection!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractLimitation(Contract contract) {
+    return contract.limitation!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Limitation'),
+        contractTermText(contract.limitation!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractMethodNotice(Contract contract) {
+    return contract.methodNotice!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Method of Notice'),
+        contractTermText(contract.methodNotice!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractThirdParties(Contract contract) {
+    return contract.thirdParties!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Third Parties'),
+        contractTermText(contract.thirdParties!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractDisclosure(Contract contract) {
+    return contract.disclosure!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Disclosure'),
+        contractTermText(contract.disclosure!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractReceiptNotice(Contract contract) {
+    return contract.receiptNotice!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Receipt Notice'),
+        contractTermText(contract.receiptNotice!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractSeverability(Contract contract) {
+    return contract.severability!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Severability'),
+        contractTermText(contract.severability!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractTerminationInsolvency(Contract contract) {
+    return contract.terminationInsolvency!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Termination Insolvency'),
+        contractTermText(contract.terminationInsolvency!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractTerminationMaterialBreach(Contract contract) {
+    return contract.terminationMaterialBreach!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Termination Material Breach'),
+        contractTermText(contract.terminationMaterialBreach!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractTerminationNotice(Contract contract) {
+    return contract.terminationNotice!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Termination Notice'),
+        contractTermText(contract.terminationNotice!)
+      ],
+    )
+        : Container();
+  }
+
+  Widget contractWaiver(Contract contract) {
+    return contract.waiver!.isNotEmpty
+        ? Column(
+      children: [
+        contractTermTitle('Waiver'),
+        contractTermText(contract.waiver!)
       ],
     )
         : Container();
