@@ -90,7 +90,7 @@ class _ContractCreationState extends State<ViewContract> {
       ),
     );
   }
-  
+
   Widget mediumScreenBuild(Contract contract, Orientation orientation) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -439,6 +439,18 @@ class _ContractCreationState extends State<ViewContract> {
         : Container();
   }
 
+  Widget contractDataController(Contract contract) {
+    return contract.existDataController!.isNotEmpty
+        ? Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        contractTermTitle('Data Controller'),
+        contractTermText(contract.existDataController!)
+      ],
+    )
+        : Container();
+  }
+
   Widget contractTermTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -760,7 +772,7 @@ class _ContractCreationState extends State<ViewContract> {
       }
     );
   }
-  
+
   String _formatDate(DateTime dateTime) {
     String dateString = '${dateTime.day}.${dateTime.month}.${dateTime.year}';
     return dateString;
