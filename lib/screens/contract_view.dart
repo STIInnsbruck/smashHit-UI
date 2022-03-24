@@ -815,39 +815,6 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Widget contractTimeProgressBar(double width, double height) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Start Date: ${_formatDate(contract!.executionDate!)}",
-              overflow: TextOverflow.ellipsis),
-          Container(height: 20),
-          RotatedBox(
-            quarterTurns: 1,
-            child: Container(
-                child: Column(children: [
-              Text("Elapsed Contract Time:",
-                  style: TextStyle(fontSize: smallSide / 30)),
-              LinearPercentIndicator(
-                width: height / 1.4,
-                lineHeight: smallSide / 30,
-                percent: calculateElapsedContractTime() / 100,
-                backgroundColor: Colors.grey,
-                progressColor: Colors.blue,
-                center: Text("${calculateElapsedContractTime()}%",
-                    style: TextStyle(fontSize: width / 60)),
-              ),
-            ])),
-          ),
-          Container(height: 20),
-          Text("End Date: ${_formatDate(contract!.expireDate!)}",
-              overflow: TextOverflow.ellipsis)
-        ],
-      ),
-    );
-  }
-
   /// This function returns the calculated elapsed time of the contract towards the
   /// current day. Return value must be between 0.0 and 1.0 inclusive. If the contract
   /// lies in the past, return 1.0 to represent 100% completion of the contract.
