@@ -406,14 +406,8 @@ class _ContractCreationState extends State<ViewContract> {
         ? Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                  child: Center(child: Text('Terms and Conditions', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-              ),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                  child: Center(child: Text(contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-              ),
+              contractTermTitle('Terms and Conditions'),
+              contractTermText(contract.description!)
             ],
           )
         : Container();
