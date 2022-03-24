@@ -419,6 +419,20 @@ class _ContractCreationState extends State<ViewContract> {
         : Container();
   }
 
+  Widget contractTermTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+      child: Center(child: Text(title, style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+    );
+  }
+
+  Widget contractTermText(String text) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+      child: Center(child: Text(text, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+    );
+  }
+
   Widget partiesTile(double width, double height) {
     return Container(
       height: height / 3,
