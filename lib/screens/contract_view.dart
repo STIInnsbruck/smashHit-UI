@@ -421,8 +421,8 @@ class _ContractCreationState extends State<ViewContract> {
             children: [
               contractTermTitle('Amendment'),
               contractTermText(contract.amendment!)
-      ],
-    )
+            ],
+          )
         : Container();
   }
 
