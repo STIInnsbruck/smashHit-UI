@@ -351,14 +351,7 @@ class _ContractCreationState extends State<ViewContract> {
               child: Text('Contract Provider: ${contract.getContracteeName()}'),
             ),
           ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text('Terms and Conditions', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id velit ut tortor pretium viverra suspendisse. Ut placerat orci nulla pellentesque dignissim. Ut tortor pretium viverra suspendisse. Etiam sit amet nisl purus in mollis nunc. Tellus in hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Donec enim diam vulputate ut pharetra sit. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin. Sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc. Mi in nulla posuere sollicitudin aliquam ultrices sagittis. Elit ullamcorper dignissim cras tincidunt. Vestibulum lectus mauris ultrices eros. Facilisi etiam dignissim diam quis enim lobortis scelerisque. Justo laoreet sit amet cursus sit. Sed augue lacus viverra vitae congue eu. Enim nunc faucibus a pellentesque sit amet porttitor eget. Sed ullamcorper morbi tincidunt ornare massa eget. Et ligula ullamcorper malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-          ),
+          contractTAC(contract),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
@@ -406,6 +399,24 @@ class _ContractCreationState extends State<ViewContract> {
         ],
       ),
     );
+  }
+
+  Widget contractTAC(Contract contract) {
+    return contract.description != null
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+                  child: Center(child: Text('Terms and Conditions', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
+              ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+                  child: Center(child: Text(contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
+              ),
+            ],
+          )
+        : Container();
   }
 
   Widget partiesTile(double width, double height) {
