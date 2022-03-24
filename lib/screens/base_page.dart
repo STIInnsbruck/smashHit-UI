@@ -235,11 +235,11 @@ class _BasePageState extends State<BasePage> {
     return Column(
       children: [
         CircleAvatar(
-          backgroundColor: Colors.lightGreen,
-          child: Icon(Icons.person),
+          backgroundColor: Colors.blue,
+          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
           radius: 50,
         ),
-        Text("Name Surname")
+        Text(user!.name!)
       ],
     );
   }
