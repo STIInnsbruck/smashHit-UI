@@ -137,7 +137,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Change & Update Your Contract";
           break;
         case 7:
-          _selectedPage = ProfileManagerPage(changeScreen, userId!);
+          _selectedPage = ProfileEditorPage(changeScreen, userId!);
           _selectedTitle = "Profile";
           break;
         case 8:

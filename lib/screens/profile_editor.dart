@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 
-class ProfileManagerPage extends StatefulWidget {
+class ProfileEditorPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String userId;
 
-  ProfileManagerPage(this.changeScreen, this.userId);
+  ProfileEditorPage(this.changeScreen, this.userId);
 
   @override
-  _ProfileManagerPage createState() => _ProfileManagerPage();
+  _ProfileEditorPage createState() => _ProfileEditorPage();
 }
 
-class _ProfileManagerPage extends State<ProfileManagerPage> {
+class _ProfileEditorPage extends State<ProfileEditorPage> {
 
   //CONTROLLERS
   TextEditingController nameController = new TextEditingController();
