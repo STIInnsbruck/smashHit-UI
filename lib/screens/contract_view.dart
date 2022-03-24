@@ -352,6 +352,7 @@ class _ContractCreationState extends State<ViewContract> {
             ),
           ),
           contractTAC(contract),
+          contractAmendment(contract),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
@@ -402,7 +403,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget contractTAC(Contract contract) {
-    return contract.description != null
+    return contract.description!.isNotEmpty
         ? Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -410,6 +411,18 @@ class _ContractCreationState extends State<ViewContract> {
               contractTermText(contract.description!)
             ],
           )
+        : Container();
+  }
+
+  Widget contractAmendment(Contract contract) {
+    return contract.amendment!.isNotEmpty
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              contractTermTitle('Amendment'),
+              contractTermText(contract.amendment!)
+      ],
+    )
         : Container();
   }
 
