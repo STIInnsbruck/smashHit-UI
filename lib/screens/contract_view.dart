@@ -354,6 +354,18 @@ class _ContractCreationState extends State<ViewContract> {
           contractTAC(contract),
           contractAmendment(contract),
           contractConfidentiality(contract),
+          contractDataController(contract),
+          contractDataProtection(contract),
+          contractLimitation(contract),
+          contractMethodNotice(contract),
+          contractThirdParties(contract),
+          contractDisclosure(contract),
+          contractReceiptNotice(contract),
+          contractSeverability(contract),
+          contractTerminationInsolvency(contract),
+          contractTerminationMaterialBreach(contract),
+          contractTerminationNotice(contract),
+          contractWaiver(contract),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
