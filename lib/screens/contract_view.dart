@@ -101,7 +101,7 @@ class _ContractCreationState extends State<ViewContract> {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           crossAxisCount: 2,
-          childAspectRatio: orientation == Orientation.portrait ? 1.58 : 2.9,
+          childAspectRatio: orientation == Orientation.portrait ? 1.55 : 2.70,
           children: [
             partyObligationCard(contract.getContractorName()),
             partyObligationCard(contract.getContracteeName()),
@@ -137,7 +137,7 @@ class _ContractCreationState extends State<ViewContract> {
         children: [
           Container(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
               child: Center(
                   child: Text('Obligation', style: TextStyle(fontSize: 20))),
             ),
@@ -152,7 +152,7 @@ class _ContractCreationState extends State<ViewContract> {
                 child: Text(userId)),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -171,7 +171,7 @@ class _ContractCreationState extends State<ViewContract> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -183,18 +183,45 @@ class _ContractCreationState extends State<ViewContract> {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Status: ',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      Icon(Icons.check_circle, color: Colors.green, size: 30)
-                    ],
-                  ))
+                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Status: ',
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                    Icon(Icons.check_circle, color: Colors.green, size: 30)
+                  ],
+                ),
+              ),
             ],
-          )
+          ),
+          userId.compareTo(widget.user!.name!) == 0
+              ? Center(
+                  child: MaterialButton(
+                    onPressed: () {
+                      print("confirming obligation");
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Text('Tap to complete',
+                        style: TextStyle(color: Colors.white)),
+                    color: Colors.blue,
+                  ),
+                )
+              : Center(
+                  child: MaterialButton(
+                    elevation: 0,
+                    onPressed: null,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text('$userId must complete',
+                        style: TextStyle(color: Colors.grey)),
+                    color: Colors.white,
+                  ),
+                )
         ],
       ),
     );
