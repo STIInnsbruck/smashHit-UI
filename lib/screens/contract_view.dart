@@ -5,7 +5,6 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-
 class ViewContract extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String contractId;
@@ -26,7 +25,6 @@ class _ContractCreationState extends State<ViewContract> {
   double smallSide = 10;
   double textSize = 0;
   int screenSize = 0;
-
 
   @override
   void initState() {
@@ -51,43 +49,42 @@ class _ContractCreationState extends State<ViewContract> {
 
     return Container(
       child: FutureBuilder<Contract>(
-        future: dataProvider.fetchContractById(widget.contractId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            contract = snapshot.data;
-            return Container(
-              margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: screenHeight,
-                  minHeight: screenHeight,
-                ),
-                child: Scrollbar(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: screenSize == 2
-                      ? smallScreenBuild(contract!)
-                      : mediumScreenBuild(contract!, orientation)
+          future: dataProvider.fetchContractById(widget.contractId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              contract = snapshot.data;
+              return Container(
+                margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: screenHeight,
+                    minHeight: screenHeight,
+                  ),
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: screenSize == 2
+                            ? smallScreenBuild(contract!)
+                            : mediumScreenBuild(contract!, orientation)),
                   ),
                 ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("The contract ID you entered was not found.", style: TextStyle(fontSize: 32)),
-                  Text('${snapshot.error}')
-                ],
-              ),
-            );
-          }
-          // show loading indicator while fetching.
-          return Center(child: CircularProgressIndicator());
-        }
-      ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("The contract ID you entered was not found.",
+                        style: TextStyle(fontSize: 32)),
+                    Text('${snapshot.error}')
+                  ],
+                ),
+              );
+            }
+            // show loading indicator while fetching.
+            return Center(child: CircularProgressIndicator());
+          }),
     );
   }
 
@@ -95,21 +92,16 @@ class _ContractCreationState extends State<ViewContract> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(child: contractStatusCard(contract)),
-              Expanded(flex: 2, child: contractTimeCard(contract)),
-              Expanded(child: reportIssueCard(contract))
-            ]
-        ),
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          Expanded(child: contractStatusCard(contract)),
+          Expanded(flex: 2, child: contractTimeCard(contract)),
+          Expanded(child: reportIssueCard(contract))
+        ]),
         GridView.count(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           crossAxisCount: 2,
-          childAspectRatio: orientation == Orientation.portrait
-            ? 1.58
-            : 2.9,
+          childAspectRatio: orientation == Orientation.portrait ? 1.58 : 2.9,
           children: [
             partyObligationCard(contract.getContractorName()),
             partyObligationCard(contract.getContracteeName()),
@@ -121,21 +113,19 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget smallScreenBuild(Contract contract) {
-    return Column(
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(child: contractStatusCard(contract)),
-              Expanded(child: reportIssueCard(contract))
-            ],
-          ),
-          contractTimeCard(contract),
-          partyObligationCard(contract.getContractorName()),
-          partyObligationCard(contract.getContracteeName()),
-          contractDetailsCard(contract),
-        ]);
+          Expanded(child: contractStatusCard(contract)),
+          Expanded(child: reportIssueCard(contract))
+        ],
+      ),
+      contractTimeCard(contract),
+      partyObligationCard(contract.getContractorName()),
+      partyObligationCard(contract.getContracteeName()),
+      contractDetailsCard(contract),
+    ]);
   }
 
   Card partyObligationCard(String userId) {
@@ -148,28 +138,33 @@ class _ContractCreationState extends State<ViewContract> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Obligation', style: TextStyle(fontSize: 20))),
+              child: Center(
+                  child: Text('Obligation', style: TextStyle(fontSize: 20))),
             ),
           ),
           ListTile(
-              leading: CircleAvatar(child: Icon(Icons.person)),
-              title: GestureDetector(
-                  onTap: () {
-                    print(userId);
-                    widget.changeScreen(8, "CompanyABC");
-                  },
-                  child: Text(userId)
-              ),
+            leading: CircleAvatar(child: Icon(Icons.person)),
+            title: GestureDetector(
+                onTap: () {
+                  print(userId);
+                  widget.changeScreen(8, "CompanyABC");
+                },
+                child: Text(userId)),
           ),
-
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Obligation Description: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                Text('Lorem ipsum dolor per malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.', overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
+                Text('Obligation Description: ',
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text(
+                  'Lorem ipsum dolor per malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.',
+                  overflow: TextOverflow.visible,
+                  textAlign: TextAlign.justify,
+                )
               ],
             ),
           ),
@@ -180,7 +175,9 @@ class _ContractCreationState extends State<ViewContract> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Time Remaining: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                    Text('Time Remaining: ',
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
                     Text('23.10.2022')
                   ],
                 ),
@@ -190,11 +187,12 @@ class _ContractCreationState extends State<ViewContract> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Status: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Text('Status: ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold)),
                       Icon(Icons.check_circle, color: Colors.green, size: 30)
                     ],
-                  )
-              )
+                  ))
             ],
           )
         ],
@@ -210,13 +208,17 @@ class _ContractCreationState extends State<ViewContract> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Contract Status', style: TextStyle(fontSize: 20))),
+              child: Center(
+                  child:
+                      Text('Contract Status', style: TextStyle(fontSize: 20))),
             ),
           ),
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Icon(Icons.check_circle, size: 50, color: Colors.green)),
+              child: Center(
+                  child:
+                      Icon(Icons.check_circle, size: 50, color: Colors.green)),
             ),
           ),
         ],
@@ -228,89 +230,90 @@ class _ContractCreationState extends State<ViewContract> {
     return Card(
       elevation: 10.0,
       child: InkWell(
-        splashColor: Colors.blue,
-        onTap: () {
-          widget.changeScreen(4, widget.contractId);
-        },
-        child: Column(
-          children: [
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Center(child: Text('Report Issue', style: TextStyle(fontSize: 20))),
+          splashColor: Colors.blue,
+          onTap: () {
+            widget.changeScreen(4, widget.contractId);
+          },
+          child: Column(
+            children: [
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Center(
+                      child:
+                          Text('Report Issue', style: TextStyle(fontSize: 20))),
+                ),
               ),
-            ),
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Center(child: Icon(Icons.report_problem, size: 50, color: Colors.yellow)),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Center(
+                      child: Icon(Icons.report_problem,
+                          size: 50, color: Colors.yellow)),
+                ),
               ),
-            ),
-          ],
-        )
-      ),
+            ],
+          )),
     );
   }
 
   Card contractTimeCard(Contract contract) {
     return Card(
-      elevation: 10.0,
-      child: Column(
-        children: [
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Contract Time', style: TextStyle(fontSize: 20))),
+        elevation: 10.0,
+        child: Column(
+          children: [
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Center(
+                    child:
+                        Text('Contract Time', style: TextStyle(fontSize: 20))),
+              ),
             ),
-          ),
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Start: 23.10.2022', style: TextStyle(fontSize: 15)),
-                  Text('End: 30.12.2022', style: TextStyle(fontSize: 15))
-                ],
-              )
+            Container(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Start: 23.10.2022', style: TextStyle(fontSize: 15)),
+                      Text('End: 30.12.2022', style: TextStyle(fontSize: 15))
+                    ],
+                  )),
             ),
-          ),
-          Container(
-            height: 40,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Center(
-                child: Container(
-                  width: double.infinity,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1
-                    )
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: FractionallySizedBox(
-                      heightFactor: 1.0,
-                      widthFactor: 0.8,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.blue
+            Container(
+              height: 40,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Center(
+                  child: Container(
+                    width: double.infinity,
+                    height: 20,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.black, width: 1)),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: FractionallySizedBox(
+                        heightFactor: 1.0,
+                        widthFactor: 0.8,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              color: Colors.blue),
+                          child: Center(
+                              child:
+                                  Text('80%', style: TextStyle(fontSize: 15))),
                         ),
-                        child: Center(child: Text('80%', style: TextStyle(fontSize: 15))),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      )
-    );
+          ],
+        ));
   }
 
   Card contractDetailsCard(Contract contract) {
@@ -321,13 +324,17 @@ class _ContractCreationState extends State<ViewContract> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Contract Details', style: TextStyle(fontSize: 20))),
+              child: Center(
+                  child:
+                      Text('Contract Details', style: TextStyle(fontSize: 20))),
             ),
           ),
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('${contract.contractId}', style: TextStyle(fontSize: 20))),
+              child: Center(
+                  child: Text('${contract.contractId}',
+                      style: TextStyle(fontSize: 20))),
             ),
           ),
           Padding(
@@ -341,7 +348,8 @@ class _ContractCreationState extends State<ViewContract> {
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('Contract Requester: ${contract.getContractorName()}'),
+              child:
+                  Text('Contract Requester: ${contract.getContractorName()}'),
             ),
           ),
           Padding(
@@ -369,31 +377,29 @@ class _ContractCreationState extends State<ViewContract> {
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Start Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
-              )
-          ),
+                  alignment: Alignment.centerLeft,
+                  child: Text('Start Date: ${contract.getFormattedStartDate()}',
+                      style: TextStyle(fontSize: 15)))),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Effective Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
-              )
-          ),
+                  child: Text(
+                      'Effective Date: ${contract.getFormattedStartDate()}',
+                      style: TextStyle(fontSize: 15)))),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Execution Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
-              )
-          ),
+                  child: Text(
+                      'Execution Date: ${contract.getFormattedStartDate()}',
+                      style: TextStyle(fontSize: 15)))),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('End Date: ${contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
-              )
-          ),
+                  child: Text('End Date: ${contract.getFormattedEndDate()}',
+                      style: TextStyle(fontSize: 15)))),
         ],
       ),
     );
@@ -424,158 +430,161 @@ class _ContractCreationState extends State<ViewContract> {
   Widget contractConfidentiality(Contract contract) {
     return contract.confidentialityObligation!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Confidentiality Obligation'),
-        contractTermText(contract.confidentialityObligation!)
-      ],
-    )
+            children: [
+              contractTermTitle('Confidentiality Obligation'),
+              contractTermText(contract.confidentialityObligation!)
+            ],
+          )
         : Container();
   }
 
   Widget contractDataController(Contract contract) {
     return contract.existDataController!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Data Controller'),
-        contractTermText(contract.existDataController!)
-      ],
-    )
+            children: [
+              contractTermTitle('Data Controller'),
+              contractTermText(contract.existDataController!)
+            ],
+          )
         : Container();
   }
 
   Widget contractDataProtection(Contract contract) {
     return contract.existDataProtection!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Data Protection'),
-        contractTermText(contract.existDataProtection!)
-      ],
-    )
+            children: [
+              contractTermTitle('Data Protection'),
+              contractTermText(contract.existDataProtection!)
+            ],
+          )
         : Container();
   }
 
   Widget contractLimitation(Contract contract) {
     return contract.limitation!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Limitation'),
-        contractTermText(contract.limitation!)
-      ],
-    )
+            children: [
+              contractTermTitle('Limitation'),
+              contractTermText(contract.limitation!)
+            ],
+          )
         : Container();
   }
 
   Widget contractMethodNotice(Contract contract) {
     return contract.methodNotice!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Method of Notice'),
-        contractTermText(contract.methodNotice!)
-      ],
-    )
+            children: [
+              contractTermTitle('Method of Notice'),
+              contractTermText(contract.methodNotice!)
+            ],
+          )
         : Container();
   }
 
   Widget contractThirdParties(Contract contract) {
     return contract.thirdParties!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Third Parties'),
-        contractTermText(contract.thirdParties!)
-      ],
-    )
+            children: [
+              contractTermTitle('Third Parties'),
+              contractTermText(contract.thirdParties!)
+            ],
+          )
         : Container();
   }
 
   Widget contractDisclosure(Contract contract) {
     return contract.disclosure!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Disclosure'),
-        contractTermText(contract.disclosure!)
-      ],
-    )
+            children: [
+              contractTermTitle('Disclosure'),
+              contractTermText(contract.disclosure!)
+            ],
+          )
         : Container();
   }
 
   Widget contractReceiptNotice(Contract contract) {
     return contract.receiptNotice!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Receipt Notice'),
-        contractTermText(contract.receiptNotice!)
-      ],
-    )
+            children: [
+              contractTermTitle('Receipt Notice'),
+              contractTermText(contract.receiptNotice!)
+            ],
+          )
         : Container();
   }
 
   Widget contractSeverability(Contract contract) {
     return contract.severability!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Severability'),
-        contractTermText(contract.severability!)
-      ],
-    )
+            children: [
+              contractTermTitle('Severability'),
+              contractTermText(contract.severability!)
+            ],
+          )
         : Container();
   }
 
   Widget contractTerminationInsolvency(Contract contract) {
     return contract.terminationInsolvency!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Termination Insolvency'),
-        contractTermText(contract.terminationInsolvency!)
-      ],
-    )
+            children: [
+              contractTermTitle('Termination Insolvency'),
+              contractTermText(contract.terminationInsolvency!)
+            ],
+          )
         : Container();
   }
 
   Widget contractTerminationMaterialBreach(Contract contract) {
     return contract.terminationMaterialBreach!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Termination Material Breach'),
-        contractTermText(contract.terminationMaterialBreach!)
-      ],
-    )
+            children: [
+              contractTermTitle('Termination Material Breach'),
+              contractTermText(contract.terminationMaterialBreach!)
+            ],
+          )
         : Container();
   }
 
   Widget contractTerminationNotice(Contract contract) {
     return contract.terminationNotice!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Termination Notice'),
-        contractTermText(contract.terminationNotice!)
-      ],
-    )
+            children: [
+              contractTermTitle('Termination Notice'),
+              contractTermText(contract.terminationNotice!)
+            ],
+          )
         : Container();
   }
 
   Widget contractWaiver(Contract contract) {
     return contract.waiver!.isNotEmpty
         ? Column(
-      children: [
-        contractTermTitle('Waiver'),
-        contractTermText(contract.waiver!)
-      ],
-    )
+            children: [
+              contractTermTitle('Waiver'),
+              contractTermText(contract.waiver!)
+            ],
+          )
         : Container();
   }
 
   Widget contractTermTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-      child: Center(child: Text(title, style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-    );
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        child: Center(
+            child: Text(title,
+                style: TextStyle(
+                    fontSize: 20, decoration: TextDecoration.underline))));
   }
 
   Widget contractTermText(String text) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-      child: Center(child: Text(text, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-    );
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        child: Center(
+            child: Text(text,
+                style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)));
   }
 
   Widget partiesTile(double width, double height) {
@@ -600,8 +609,10 @@ class _ContractCreationState extends State<ViewContract> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //first 45 characters are the URI from the ontology
-              partyEntity(contract!.contractorId!.substring(45, contract!.contractorId!.length)),
-              partyEntity(contract!.contracteeId!.substring(45, contract!.contracteeId!.length)),
+              partyEntity(contract!.contractorId!
+                  .substring(45, contract!.contractorId!.length)),
+              partyEntity(contract!.contracteeId!
+                  .substring(45, contract!.contracteeId!.length)),
             ],
           )
         ],
@@ -633,47 +644,49 @@ class _ContractCreationState extends State<ViewContract> {
     return Tooltip(
       message: 'Click to view contract details.',
       child: MaterialButton(
-        child: Container(
-          height: height / 3,
-          width: width / 3,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(2)),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black45,
-                    blurRadius: 5,
-                    spreadRadius: 2.5,
-                    offset: Offset(2.5, 2.5))
-              ]),
-          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text("Contract Purpose", style: TextStyle(fontSize: textSize)),
-              ),
-              Container(
-                color: Colors.grey[300],
-                height: height / 40,
-                width: width / 5,
-              ),
-              Container(
-                color: Colors.grey[300],
-                height: height / 40,
-                width: width / 10,
-              ),
-              Container(
-                color: Colors.grey[300],
-                height: height / 40,
-                width: width / 8,
-              ),
-            ],
+          child: Container(
+            height: height / 3,
+            width: width / 3,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(2)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black45,
+                      blurRadius: 5,
+                      spreadRadius: 2.5,
+                      offset: Offset(2.5, 2.5))
+                ]),
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text("Contract Purpose",
+                      style: TextStyle(fontSize: textSize)),
+                ),
+                Container(
+                  color: Colors.grey[300],
+                  height: height / 40,
+                  width: width / 5,
+                ),
+                Container(
+                  color: Colors.grey[300],
+                  height: height / 40,
+                  width: width / 10,
+                ),
+                Container(
+                  color: Colors.grey[300],
+                  height: height / 40,
+                  width: width / 8,
+                ),
+              ],
+            ),
           ),
-        ),
-        onPressed: () { _showContractPurposeDialog(width); }
-      ),
+          onPressed: () {
+            _showContractPurposeDialog(width);
+          }),
     );
   }
 
@@ -789,7 +802,8 @@ class _ContractCreationState extends State<ViewContract> {
                 child: Icon(Icons.person),
                 radius: smallSide / 18,
               ),
-              Icon(Icons.compare_arrows, color: Colors.grey, size: smallSide / 10),
+              Icon(Icons.compare_arrows,
+                  color: Colors.grey, size: smallSide / 10),
               CircleAvatar(
                 child: Icon(Icons.person),
                 radius: smallSide / 18,
@@ -806,26 +820,29 @@ class _ContractCreationState extends State<ViewContract> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Start Date: ${_formatDate(contract!.executionDate!)}", overflow: TextOverflow.ellipsis),
+          Text("Start Date: ${_formatDate(contract!.executionDate!)}",
+              overflow: TextOverflow.ellipsis),
           Container(height: 20),
           RotatedBox(
             quarterTurns: 1,
             child: Container(
                 child: Column(children: [
-                  Text("Elapsed Contract Time:", style: TextStyle(fontSize: smallSide / 30)),
-                  LinearPercentIndicator(
-                    width: height / 1.4,
-                    lineHeight: smallSide / 30,
-                    percent: calculateElapsedContractTime() / 100,
-                    backgroundColor: Colors.grey,
-                    progressColor: Colors.blue,
-                    center: Text("${calculateElapsedContractTime()}%",
-                        style: TextStyle(fontSize: width / 60)),
-                  ),
-                ])),
+              Text("Elapsed Contract Time:",
+                  style: TextStyle(fontSize: smallSide / 30)),
+              LinearPercentIndicator(
+                width: height / 1.4,
+                lineHeight: smallSide / 30,
+                percent: calculateElapsedContractTime() / 100,
+                backgroundColor: Colors.grey,
+                progressColor: Colors.blue,
+                center: Text("${calculateElapsedContractTime()}%",
+                    style: TextStyle(fontSize: width / 60)),
+              ),
+            ])),
           ),
           Container(height: 20),
-          Text("End Date: ${_formatDate(contract!.expireDate!)}", overflow: TextOverflow.ellipsis)
+          Text("End Date: ${_formatDate(contract!.expireDate!)}",
+              overflow: TextOverflow.ellipsis)
         ],
       ),
     );
@@ -840,9 +857,9 @@ class _ContractCreationState extends State<ViewContract> {
         contract!.expireDate!.difference(contract!.executionDate!).inDays;
     var elapsedTime = today.difference(contract!.executionDate!).inDays;
 
-    if(elapsedTime >= totalTime) {
+    if (elapsedTime >= totalTime) {
       return 100.0;
-    } else if (elapsedTime < 0){
+    } else if (elapsedTime < 0) {
       return 0.0;
     } else {
       double progressPercentage = (elapsedTime / totalTime) * 100;
@@ -862,28 +879,26 @@ class _ContractCreationState extends State<ViewContract> {
 
   void _showContractPurposeDialog(double width) {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Contract Purpose'),
-          content: Scrollbar(
-            child: SingleChildScrollView(
-              child: Container(
-                  width: width / 2,
-                  child: Text(contract!.description!)),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Contract Purpose'),
+            content: Scrollbar(
+              child: SingleChildScrollView(
+                child: Container(
+                    width: width / 2, child: Text(contract!.description!)),
+              ),
             ),
-          ),
-          actions: <Widget> [
-            TextButton(
-              onPressed: () {
-                _dismissDialog();
-              },
-              child: Text('Close'),
-            )
-          ],
-        );
-      }
-    );
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  _dismissDialog();
+                },
+                child: Text('Close'),
+              )
+            ],
+          );
+        });
   }
 
   String _formatDate(DateTime dateTime) {
