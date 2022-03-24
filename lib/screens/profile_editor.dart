@@ -85,9 +85,8 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Spacer(flex: 3),
+                Spacer(flex: 4),
                 Expanded(flex: 3, child: profilePicture()),
-                Spacer(),
                 Expanded(flex: 10,child: profileDetails()),
                 Spacer(flex: 3)
               ],
@@ -138,10 +137,12 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Profile Details"),
+          Center(child: Text("Profile Details")),
           Row(
             children: [
+              Spacer(),
               Flexible(
+                flex: 3,
                 child: TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
@@ -161,12 +162,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                 onPressed: () { setState(() {
                   nameEnabled = !nameEnabled;
                 }); },
-              )
+              ),
+              Spacer(),
             ],
           ),
           Row(
             children: [
+              Spacer(),
               Flexible(
+                flex: 3,
                 child: TextFormField(
                   controller: phoneController,
                   decoration: InputDecoration(
@@ -186,12 +190,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                 onPressed: () { setState(() {
                   phoneEnabled = !phoneEnabled;
                 }); },
-              )
+              ),
+              Spacer(),
             ],
           ),
           Row(
             children: [
+              Spacer(),
               Flexible(
+                flex: 3,
                 child: TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -211,12 +218,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                 onPressed: () { setState(() {
                   emailEnabled = !emailEnabled;
                 }); },
-              )
+              ),
+              Spacer(),
             ],
           ),
           Row(
             children: [
+              Spacer(),
               Flexible(
+                flex: 3,
                 child: TextFormField(
                   controller: countryController,
                   decoration: InputDecoration(
@@ -236,12 +246,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                 onPressed: () { setState(() {
                   countryEnabled = !countryEnabled;
                 }); },
-              )
+              ),
+              Spacer(),
             ],
           ),
           Row(
             children: [
+              Spacer(),
               Flexible(
+                flex: 3,
                 child: TextFormField(
                   controller: stateController,
                   decoration: InputDecoration(
@@ -261,12 +274,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                 onPressed: () { setState(() {
                   stateEnabled = !stateEnabled;
                 }); },
-              )
+              ),
+              Spacer(),
             ],
           ),
           Row(
             children: [
+              Spacer(),
               Flexible(
+                flex: 3,
                 child: TextFormField(
                   controller: cityController,
                   decoration: InputDecoration(
@@ -286,12 +302,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                 onPressed: () { setState(() {
                   cityEnabled = !cityEnabled;
                 }); },
-              )
+              ),
+              Spacer(),
             ],
           ),
           Row(
             children: [
+              Spacer(),
               Flexible(
+                flex: 3,
                 child: TextFormField(
                   controller: addressController,
                   decoration: InputDecoration(
@@ -311,7 +330,8 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                 onPressed: () { setState(() {
                   addressEnabled = !addressEnabled;
                 }); },
-              )
+              ),
+              Spacer(),
             ],
           ),
         ]
@@ -342,11 +362,13 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Profile Picture"),
-        CircleAvatar(
-          backgroundColor: Colors.blue,
-          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
-          radius: 75,
+        Center(child: Text("Profile Picture")),
+        Center(
+          child: CircleAvatar(
+            backgroundColor: Colors.blue,
+            backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
+            radius: 75,
+          ),
         )
       ],
     );
