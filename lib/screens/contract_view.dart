@@ -368,22 +368,6 @@ class _ContractCreationState extends State<ViewContract> {
           contractWaiver(contract),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text('Confidentiality Obligation', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text('Start Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
