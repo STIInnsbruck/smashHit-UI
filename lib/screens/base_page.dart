@@ -8,7 +8,7 @@ import 'package:smashhit_ui/screens/template_selector.dart';
 import 'package:smashhit_ui/screens/contract_violation.dart';
 import 'package:smashhit_ui/screens/login.dart';
 import 'package:smashhit_ui/screens/contract_update.dart';
-import 'package:smashhit_ui/screens/profile_manager.dart';
+import 'package:smashhit_ui/screens/profile_editor.dart';
 import 'package:smashhit_ui/screens/contract_party_profile.dart';
 
 class BasePage extends StatefulWidget {
