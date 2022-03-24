@@ -138,11 +138,11 @@ class _BasePageState extends State<BasePage> {
           break;
         case 7:
           _selectedPage = ProfileEditorPage(changeScreen, userId!);
-          _selectedTitle = "Profile";
+          _selectedTitle = "Profile Editor";
           break;
         case 8:
           _selectedPage = ContractPartyProfile(changeScreen, id!);
-          _selectedTitle = "Party Profile";
+          _selectedTitle = "Profile";
       }
     });
   }
@@ -239,7 +239,7 @@ class _BasePageState extends State<BasePage> {
           backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
           radius: 50,
         ),
-        Text(user!.name!)
+        Text("username")
       ],
     );
   }
