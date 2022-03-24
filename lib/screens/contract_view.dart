@@ -897,34 +897,34 @@ class _ContractCreationState extends State<ViewContract> {
 
   void _showObligationCompletionDialog() {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Completing Your Obligation'),
-          content: Text('You are about to state that you have completed your selected obligation.\nTo finalise the completion of your obligation, a confirmation of the other parties will be required.'),
-          actions: <Widget> [
-            MaterialButton(
-              onPressed: () {
-                _dismissDialog();
-              },
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.grey),
-                borderRadius: BorderRadius.circular(20),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Completing Your Obligation'),
+            content: Text(
+                'You are about to state that you have completed your selected obligation.\nTo finalise the completion of your obligation, a confirmation of the other parties will be required.'),
+            actions: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  _dismissDialog();
+                },
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text('Cancel'),
               ),
-              child: Text('Cancel'),
-            ),
-            MaterialButton(
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: Text('Complete & await confirmation',
-                  style: TextStyle(color: Colors.white)),
-              color: Colors.blue,
-            )
-          ],
-        );
-      }
-    );
+              MaterialButton(
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Text('Complete & await confirmation',
+                    style: TextStyle(color: Colors.white)),
+                color: Colors.blue,
+              )
+            ],
+          );
+        });
   }
 
   String _formatDate(DateTime dateTime) {
