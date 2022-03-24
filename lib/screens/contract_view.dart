@@ -353,6 +353,7 @@ class _ContractCreationState extends State<ViewContract> {
           ),
           contractTAC(contract),
           contractAmendment(contract),
+          contractConfidentiality(contract),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
@@ -423,6 +424,18 @@ class _ContractCreationState extends State<ViewContract> {
               contractTermText(contract.amendment!)
             ],
           )
+        : Container();
+  }
+
+  Widget contractConfidentiality(Contract contract) {
+    return contract.confidentialityObligation!.isNotEmpty
+        ? Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        contractTermTitle('Confidentiality Obligation'),
+        contractTermText(contract.confidentialityObligation!)
+      ],
+    )
         : Container();
   }
 
