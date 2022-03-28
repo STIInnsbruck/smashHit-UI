@@ -623,10 +623,10 @@ class _ContractCreationState extends State<ViewContract> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //first 45 characters are the URI from the ontology
-              partyEntity(contract!.contractors[0].id!
-                  .substring(45, contract!.contractors[0].id!.length)),
-              partyEntity(contract!.contractors[0].id!
-                  .substring(45, contract!.contractors[0].id!.length)),
+              partyEntity(contract!.contractors[0]
+                  .substring(45, contract!.contractors[0].length)),
+              partyEntity(contract!.contractors[0]
+                  .substring(45, contract!.contractors[0].length)),
             ],
           )
         ],

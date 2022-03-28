@@ -42,6 +42,7 @@ class ResponseParser {
 
   Contract parseContractId(Map jsonContract) {
     List contractContent = jsonContract["bindings"];
+    //initiate contract with its foundational data.
     Contract contract = new Contract(
         contractId: contractContent[0]['Contract']['value'],
         contractStatus: contractContent[0]['ContractStatus']['value'],
@@ -52,13 +53,13 @@ class ResponseParser {
         medium: contractContent[0]["Medium"]["value"],
         purpose: contractContent[0]['Purpose']['value'],
         //TODO: add consideration
-        //TODO: add obligations
-        //TODO: add terms
     );
+    //insert first contractor, obligation, and term.
     contract.contractors.add(contractContent[0]["contractors"]["value"]);
     contract.obligations.add(contractContent[0]["obligations"]["value"]);
     contract.terms.add(contractContent[0]["terms"]["value"]);
 
+    //check if there are any other contractors, obligations, or terms.
     for(int i = 1; i < contractContent.length; i++) {
       //First check if we're still in the same contract, otherwise break.
       if(contract.contractId!.compareTo(contractContent[i]["Contract"]["value"]) == 0) {
