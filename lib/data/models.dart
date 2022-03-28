@@ -176,23 +176,33 @@ class Contract {
 ///[status] the status of the obligation, stating it it has been fulfilled or
 ///not.
 class Obligation {
-  String? description;
-  String? type;
-  String? userId;
+  String? id;
   String? contractId;
-  String? startDate;
+  String? contractorId;
+  String? termId;
+  String? description;
   String? endDate;
-  String? status;
+  String? executionDate;
+  String? state;
 
   Obligation({
-    this.description,
-    this.type,
-    this.userId,
+    this.id,
     this.contractId,
-    this.startDate,
+    this.contractorId,
+    this.termId,
+    this.description,
     this.endDate,
-    this.status
+    this.executionDate,
+    this.state
   });
+}
+
+class Term {
+  String? id;
+  String? name;
+  String? description;
+
+  Term({this.id, this.name, this.description});
 }
 
 /// Object model to be used in a Contract. It describes the actual object
