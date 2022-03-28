@@ -88,6 +88,35 @@ class ResponseParser {
     return jsonList.map((jsonContract) => parseContract(jsonContract)).toList();
   }
 
+  Obligation parseObligation(Map jsonObligation) {
+    return Obligation(id: jsonObligation['Obligation']['value']);
+  }
+
+  Obligation parseObligationId(Map jsonObligation) {
+    List obligationContent = jsonObligation["bindings"];
+    //initiate obligation with its foundational data.
+    Obligation obligation = new Obligation(
+      id: obligationContent[0]["Obligation"]["value"],
+      description: obligationContent[0]["description"]["value"],
+      executionDate: obligationContent[0]["executiondate"]["value"],
+      endDate: obligationContent[0]["enddate"]["value"],
+      state: obligationContent[0]["state"]["value"],
+      //the first json has contractorId
+      contractorId: obligationContent[0]["identifier"]["value"],
+      //the second json has termId
+      termId: obligationContent[1]["identifier"]["value"],
+      //the third json has contractId
+      contractId: obligationContent[2]["identifier"]["value"],
+    );
+
+    return obligation;
+
+  }
+
+  List<Obligation> parseAllObligations(List jsonList) {
+    return jsonList.map((jsonObligation) => parseObligation(jsonObligation)).toList();
+  }
+
   DateTime formatDate(String dateString) {
     dateString = dateString.substring(45);
     return DateTime.parse(dateString);
