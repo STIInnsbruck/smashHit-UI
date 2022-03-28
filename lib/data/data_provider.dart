@@ -104,6 +104,22 @@ class DataProvider {
     }
   }
 
+  Future<Obligation> fetchObligationById(String oblidationId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/obligation/$oblidationId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Obligation obligation;
+      try {
+        obligation = parser.parseObligationId(jsonDecode(response.body));
+        return obligation;
+      } catch (e) {
+        throw Exception('Failed to load obligation $oblidationId.');
+      }
+    } else {
+      throw Exception('Failed to load obligation $oblidationId.');
+    }
+  }
+
   Future<List<Contract>> fetchAllContracts() async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
 
