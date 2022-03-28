@@ -153,7 +153,7 @@ class _ContractCreationState extends State<ViewContract> {
                   leading: CircleAvatar(child: Icon(Icons.person)),
                   title: GestureDetector(
                       onTap: () {
-                        widget.changeScreen(8, "C001");
+                        widget.changeScreen(8, "${snapshot.data!.contractorId}");
                       },
                       child: Text(snapshot.data!.contractorId!)),
                 ),
