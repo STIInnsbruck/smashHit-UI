@@ -104,8 +104,8 @@ class DataProvider {
     }
   }
 
-  Future<Obligation> fetchObligationById(String oblidationId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/obligation/$oblidationId/'), headers: headers);
+  Future<Obligation> fetchObligationById(String obligationId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/obligation/$obligationId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Obligation obligation;
@@ -113,10 +113,10 @@ class DataProvider {
         obligation = parser.parseObligationId(jsonDecode(response.body));
         return obligation;
       } catch (e) {
-        throw Exception('Failed to load obligation $oblidationId.');
+        throw Exception('Failed to load obligation $obligationId.');
       }
     } else {
-      throw Exception('Failed to load obligation $oblidationId.');
+      throw Exception('Failed to load obligation $obligationId.');
     }
   }
 
