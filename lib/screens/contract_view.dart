@@ -97,15 +97,16 @@ class _ContractCreationState extends State<ViewContract> {
           Expanded(flex: 2, child: contractTimeCard(contract)),
           Expanded(child: reportIssueCard(contract))
         ]),
-        GridView.count(
+        GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: orientation == Orientation.portrait ? 1.55 : 2.70,
+          ),
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          childAspectRatio: orientation == Orientation.portrait ? 1.55 : 2.70,
-          children: [
-            partyObligationCard(contract.getContractorName()),
-            partyObligationCard(contract.getContracteeName()),
-          ],
+          itemCount: contract.obligations.length,
+          itemBuilder: (BuildContext context, index) {
+            return partyObligationCard(contract.obligations[index]);
+          }
         ),
         contractDetailsCard(contract),
       ],
@@ -128,7 +129,7 @@ class _ContractCreationState extends State<ViewContract> {
     ]);
   }
 
-  Card partyObligationCard(String userId) {
+  Card partyObligationCard(String obligationId) {
     return Card(
       elevation: 10.0,
       child: Column(
@@ -146,10 +147,10 @@ class _ContractCreationState extends State<ViewContract> {
             leading: CircleAvatar(child: Icon(Icons.person)),
             title: GestureDetector(
                 onTap: () {
-                  print(userId);
-                  widget.changeScreen(8, "CompanyABC");
+                  print(obligationId);
+                  widget.changeScreen(8, "C001");
                 },
-                child: Text(userId)),
+                child: Text(obligationId)),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -196,7 +197,7 @@ class _ContractCreationState extends State<ViewContract> {
               ),
             ],
           ),
-          userId.compareTo(widget.user!.name!) == 0
+          obligationId.compareTo(widget.user!.name!) == 0
               ? Center(
                   child: MaterialButton(
                     onPressed: () {
@@ -217,7 +218,7 @@ class _ContractCreationState extends State<ViewContract> {
                       side: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text('$userId must complete',
+                    child: Text('$obligationId must complete',
                         style: TextStyle(color: Colors.grey)),
                     color: Colors.white,
                   ),
@@ -400,13 +401,6 @@ class _ContractCreationState extends State<ViewContract> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                       'Effective Date: ${contract.getFormattedStartDate()}',
-                      style: TextStyle(fontSize: 15)))),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                      'Execution Date: ${contract.getFormattedStartDate()}',
                       style: TextStyle(fontSize: 15)))),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
