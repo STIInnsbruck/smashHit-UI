@@ -2,6 +2,7 @@ import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
 
+  //USER PARSERS
   User parseUser(Map jsonUser) {
     return User(
       id: jsonUser['Contractor']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
@@ -36,6 +37,7 @@ class ResponseParser {
     return jsonList.map((jsonUser) => parseUserById(jsonUser)).toList();
   }
 
+  //CONTRACT PARSERS
   Contract parseContract(Map jsonContract) {
     return Contract(contractId: jsonContract['Contract']['value']);
   }
@@ -88,6 +90,7 @@ class ResponseParser {
     return jsonList.map((jsonContract) => parseContract(jsonContract)).toList();
   }
 
+  //OBLIGATION PARSERS
   Obligation parseObligation(Map jsonObligation) {
     return Obligation(id: jsonObligation['Obligation']['value']);
   }
