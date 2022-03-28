@@ -41,15 +41,16 @@ class ResponseParser {
   }
 
   Contract parseContractId(Map jsonContract) {
+    List contractContent = jsonContract["bindings"];
     Contract contract = new Contract(
-        contractId: jsonContract["bindings"][0]['Contract']['value'],
-        contractStatus: jsonContract["bindings"][0]['ContractStatus']['value'],
-        contractType: jsonContract["bindings"][0]['ContractType']['value'],
-        effectiveDate: formatDate(jsonContract["bindings"][0]["EffectiveDate"]["value"]),
-        executionDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
-        endDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
-        medium: jsonContract["bindings"][0]["Medium"]["value"],
-        purpose: jsonContract["bindings"][0]['Purpose']['value'],
+        contractId: contractContent[0]['Contract']['value'],
+        contractStatus: contractContent[0]['ContractStatus']['value'],
+        contractType: contractContent[0]['ContractType']['value'],
+        effectiveDate: formatDate(contractContent[0]["EffectiveDate"]["value"]),
+        executionDate: formatDate(contractContent[0]["ExecutionDate"]["value"]),
+        endDate: formatDate(contractContent[0]["ExecutionDate"]["value"]),
+        medium: contractContent[0]["Medium"]["value"],
+        purpose: contractContent[0]['Purpose']['value'],
         //TODO: add consideration
         //TODO: add obligations
         //TODO: add terms
@@ -67,22 +68,5 @@ class ResponseParser {
     dateString = dateString.substring(45);
     print("formatDateString = $dateString");
     return DateTime.parse(dateString);
-    if(dateString.length > 12) {
-      var length = dateString.length;
-      int year = int.parse(dateString.substring(length - 4, length));
-      int month = int.parse(dateString.substring(length - 7, length - 5));
-      int day = int.parse(dateString.substring(length - 10, length - 8));
-      DateTime date = new DateTime(year, month, day);
-
-      return date;
-    } else {
-      int year = int.parse(dateString.substring(0, 4));
-      int month = int.parse(dateString.substring(5, 7));
-      int day = int.parse(dateString.substring(8, 10));
-      DateTime date = new DateTime(year, month, day);
-
-      return date;
-    }
-
   }
 }
