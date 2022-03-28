@@ -44,36 +44,36 @@ class ResponseParser {
     List contractContent = jsonContract["bindings"];
     //initiate contract with its foundational data.
     Contract contract = new Contract(
-        contractId: contractContent[0]['Contract']['value'],
-        contractStatus: contractContent[0]['ContractStatus']['value'],
-        contractType: contractContent[0]['ContractType']['value'],
-        effectiveDate: formatDate(contractContent[0]["EffectiveDate"]["value"]),
-        executionDate: formatDate(contractContent[0]["ExecutionDate"]["value"]),
-        endDate: formatDate(contractContent[0]["ExecutionDate"]["value"]),
+        contractId: contractContent[0]['Contract']['value'].substring(45),
+        contractStatus: contractContent[0]['ContractStatus']['value'].substring(45),
+        contractType: contractContent[0]['ContractType']['value'].substring(45),
+        effectiveDate: formatDate(contractContent[0]["EffectiveDate"]["value"].substring(45)),
+        executionDate: formatDate(contractContent[0]["ExecutionDate"]["value"].substring(45)),
+        endDate: formatDate(contractContent[0]["ExecutionDate"]["value"].substring(45)),
         medium: contractContent[0]["Medium"]["value"],
         purpose: contractContent[0]['Purpose']['value'],
         //TODO: add consideration
     );
     //insert first contractor, obligation, and term.
-    contract.contractors.add(contractContent[0]["contractors"]["value"]);
-    contract.obligations.add(contractContent[0]["obligations"]["value"]);
-    contract.terms.add(contractContent[0]["terms"]["value"]);
+    contract.contractors.add(contractContent[0]["contractors"]["value"].substring(45));
+    contract.obligations.add(contractContent[0]["obligations"]["value"].substring(45));
+    contract.terms.add(contractContent[0]["terms"]["value"].substring(45));
 
     //check if there are any other contractors, obligations, or terms.
     for(int i = 1; i < contractContent.length; i++) {
       //First check if we're still in the same contract, otherwise break.
-      if(contract.contractId!.compareTo(contractContent[i]["Contract"]["value"]) == 0) {
+      if(contract.contractId!.compareTo(contractContent[i]["Contract"]["value"].substring(45)) == 0) {
         //Check if the termId is already inserted, otherwise insert.
-        if(!contract.terms.contains(contractContent[i]["terms"]["value"])) {
-          contract.terms.add(contractContent[i]["terms"]["value"]);
+        if(!contract.terms.contains(contractContent[i]["terms"]["value"].substring(45))) {
+          contract.terms.add(contractContent[i]["terms"]["value"].substring(45));
         }
         //check if obligationId is already inserted, otherwise insert.
-        if(!contract.obligations.contains(contractContent[i]["obligations"]["value"])) {
-          contract.obligations.add(contractContent[i]["obligations"]["value"]);
+        if(!contract.obligations.contains(contractContent[i]["obligations"]["value"].substring(45))) {
+          contract.obligations.add(contractContent[i]["obligations"]["value"].substring(45));
         }
         //check if userId is already inserted, otherwise insert.
-        if(!contract.contractors.contains(contractContent[i]["contractors"]["value"])) {
-          contract.contractors.add(contractContent[i]["contractors"]["value"]);
+        if(!contract.contractors.contains(contractContent[i]["contractors"]["value"].substring(45))) {
+          contract.contractors.add(contractContent[i]["contractors"]["value"].substring(45));
         }
       } else {
         break;
@@ -96,17 +96,17 @@ class ResponseParser {
     List obligationContent = jsonObligation["bindings"];
     //initiate obligation with its foundational data.
     Obligation obligation = new Obligation(
-      id: obligationContent[0]["Obligation"]["value"],
+      id: obligationContent[0]["Obligation"]["value"].substring(45),
       description: obligationContent[0]["description"]["value"],
       executionDate: obligationContent[0]["executiondate"]["value"],
       endDate: obligationContent[0]["enddate"]["value"],
-      state: obligationContent[0]["state"]["value"],
+      state: obligationContent[0]["state"]["value"].substring(45),
       //the first json has contractorId
-      contractorId: obligationContent[0]["identifier"]["value"],
+      contractorId: obligationContent[0]["identifier"]["value"].substring(45),
       //the second json has termId
-      termId: obligationContent[1]["identifier"]["value"],
+      termId: obligationContent[1]["identifier"]["value"].substring(45),
       //the third json has contractId
-      contractId: obligationContent[2]["identifier"]["value"],
+      contractId: obligationContent[2]["identifier"]["value"].substring(45),
     );
 
     return obligation;
@@ -118,7 +118,6 @@ class ResponseParser {
   }
 
   DateTime formatDate(String dateString) {
-    dateString = dateString.substring(45);
     return DateTime.parse(dateString);
   }
 }
