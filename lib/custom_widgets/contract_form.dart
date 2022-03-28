@@ -1864,10 +1864,10 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  List<User> setContractors() {
-    List<User> contractors = [];
-    contractors.add(User(id: widget.providerControllers[0].text));
-    contractors.add(User(id: widget.requesterControllers[0].text));
+  List<String> setContractors() {
+    List<String> contractors = [];
+    contractors.add(widget.providerControllers[0].text);
+    contractors.add(widget.providerControllers[0].text);
     return contractors;
   }
 
@@ -1888,9 +1888,9 @@ class _ContractFormState extends State<ContractForm> {
       widget.titleController.text = displayStringWithoutUri(widget.contract!.contractId!);
       _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
       //TODO: this only takes the first data controller, make it take all existing ones.
-      _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[0].name!)) == 0), 0);
+      _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[0])) == 0), 0);
       //TODO: this only takes the first data processor, make it take all existing ones.
-      _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[1].name!)) == 0), 0);
+      _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[1])) == 0), 0);
       widget.descriptionController.text = widget.contract!.purpose!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
