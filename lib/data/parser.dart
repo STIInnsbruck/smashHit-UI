@@ -22,14 +22,14 @@ class ResponseParser {
 
   User parseUserById(Map jsonUser) {
     return User(
-      id: jsonUser['Contractor']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      name: jsonUser['name']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      streetAddress: jsonUser['address'] == null ? null : jsonUser['address']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      //state: jsonUser['state']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      city: jsonUser['territory']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      country: jsonUser['country']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      email: jsonUser['email'] == null ? null : jsonUser['email']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      telephoneNumber: jsonUser['phone'] == null ? null : jsonUser['phone']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      id: jsonUser['Contractor']['value'].substring(45),
+      name: jsonUser['name']['value'].substring(45),
+      streetAddress: jsonUser['address'] == null ? null : jsonUser['address']['value'].substring(45),
+      //state: jsonUser['state']['value'].substring(45),
+      city: jsonUser['territory']['value'].substring(45),
+      country: jsonUser['country']['value'].substring(45),
+      email: jsonUser['email'] == null ? null : jsonUser['email']['value'].substring(45),
+      telephoneNumber: jsonUser['phone'] == null ? null : jsonUser['phone']['value'].substring(45),
     );
   }
 
