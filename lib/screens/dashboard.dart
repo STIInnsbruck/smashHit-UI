@@ -40,7 +40,9 @@ class _DashboardState extends State<Dashboard> {
     searchId = widget.searchId;
     return Container(
       child: FutureBuilder<List<Contract>>(
-        future: futureContractList = dataProvider.fetchContractsByProviderId(widget.user!.name!),
+        //TODO: ask for a user specific contract listing endpoint.
+        //future: futureContractList = dataProvider.fetchContractsByProviderId(widget.user!.name!),
+        future: futureContractList = dataProvider.fetchAllContracts(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contractList = snapshot.data;
