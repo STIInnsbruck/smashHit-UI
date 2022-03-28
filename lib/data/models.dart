@@ -33,14 +33,14 @@ class Contract {
   String? contractId;
   String? contractStatus;
   String? contractType;
-  List<User> contractors = [];
+  List<String> contractors = [];
   DateTime? effectiveDate;
   DateTime? endDate;
   DateTime? executionDate;
   String? medium;
-  List<Obligation> obligations = [];
+  List<String> obligations = [];
   String? purpose;
-  List<Term>? terms;
+  List<String> terms = [];
 
 
   Contract({
@@ -53,8 +53,7 @@ class Contract {
     this.contractStatus,
     this.medium,
     this.considerationValue,
-    this.considerationDescription,
-    this.terms
+    this.considerationDescription
   });
 
   /// Returns an int given the contract's status. The int is needed for the
@@ -93,11 +92,11 @@ class Contract {
 
 
   String getContractorName() {
-    return this.contractors[0].id!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.contractors[0].replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String getContracteeName() {
-    return this.contractors[0].id!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.contractors[0].replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String formatContractId() {
