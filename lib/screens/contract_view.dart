@@ -130,75 +130,81 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Card partyObligationCard(String obligationId) {
+    Obligation? obligation;
     return Card(
       elevation: 10.0,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-              child: Center(
-                  child: Text('Obligation', style: TextStyle(fontSize: 20))),
-            ),
-          ),
-          ListTile(
-            leading: CircleAvatar(child: Icon(Icons.person)),
-            title: GestureDetector(
-                onTap: () {
-                  print(obligationId);
-                  widget.changeScreen(8, "C001");
-                },
-                child: Text(obligationId)),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: FutureBuilder<Obligation>(
+        future: dataProvider.fetchObligationById(obligationId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            obligation = snapshot.data;
+            return Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Obligation Description: ',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                Text(
-                  'Lorem ipsum dolor per malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.',
-                  overflow: TextOverflow.visible,
-                  textAlign: TextAlign.justify,
-                )
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                    child: Center(
+                        child: Text('Obligation', style: TextStyle(fontSize: 20))),
+                  ),
+                ),
+                ListTile(
+                  leading: CircleAvatar(child: Icon(Icons.person)),
+                  title: GestureDetector(
+                      onTap: () {
+                        print(obligationId);
+                        widget.changeScreen(8, "C001");
+                      },
+                      child: Text(obligationId)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Obligation Description: ',
+                          style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Text(
+                        '${snapshot.data!.description}',
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.justify,
+                      )
+                    ],
+                  ),
+                ),
+                Row(
                   children: [
-                    Text('Time Remaining: ',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold)),
-                    Text('23.10.2022')
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Time Remaining: ',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                          Text('23.10.2022')
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Status: ',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                          Icon(Icons.check_circle, color: Colors.green, size: 30)
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Status: ',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold)),
-                    Icon(Icons.check_circle, color: Colors.green, size: 30)
-                  ],
-                ),
-              ),
-            ],
-          ),
-          obligationId.compareTo(widget.user!.name!) == 0
-              ? Center(
+                obligationId.compareTo(widget.user!.name!) == 0
+                    ? Center(
                   child: MaterialButton(
                     onPressed: () {
                       _showObligationCompletionDialog();
@@ -210,7 +216,7 @@ class _ContractCreationState extends State<ViewContract> {
                     color: Colors.blue,
                   ),
                 )
-              : Center(
+                    : Center(
                   child: MaterialButton(
                     elevation: 0,
                     onPressed: null,
@@ -223,8 +229,16 @@ class _ContractCreationState extends State<ViewContract> {
                     color: Colors.white,
                   ),
                 )
-        ],
-      ),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('${snapshot.error}')
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+      )
     );
   }
 
