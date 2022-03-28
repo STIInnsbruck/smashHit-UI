@@ -433,11 +433,11 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget contractTAC(Contract contract) {
-    return contract.description!.isNotEmpty
+    return contract.purpose!.isNotEmpty
         ? Column(
             children: [
               contractTermTitle('Terms and Conditions'),
-              contractTermText(contract.description!)
+              contractTermText(contract.purpose!)
             ],
           )
         : Container();
@@ -880,7 +880,7 @@ class _ContractCreationState extends State<ViewContract> {
             content: Scrollbar(
               child: SingleChildScrollView(
                 child: Container(
-                    width: width / 2, child: Text(contract!.description!)),
+                    width: width / 2, child: Text(contract!.purpose!)),
               ),
             ),
             actions: <Widget>[

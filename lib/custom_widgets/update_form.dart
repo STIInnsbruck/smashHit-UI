@@ -164,7 +164,7 @@ class _UpdateFormState extends State<UpdateForm> {
             Center(
               child: Text('Terms & Conditions', style: TextStyle(fontSize: 25)),
             ),
-            Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+            Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
             Container(height: 20),
             termElement('Amendment', widget.contract.amendment!),
             termElement('Confidentiality Obligation', widget.contract.confidentialityObligation!),

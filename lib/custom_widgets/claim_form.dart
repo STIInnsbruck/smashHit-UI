@@ -52,7 +52,7 @@ class _ClaimFormState extends State<ClaimForm> {
   @override
   void initState() {
     super.initState();
-    conditionController.text = widget.contract.description!;
+    conditionController.text = widget.contract.purpose!;
   }
 
   @override
@@ -133,7 +133,7 @@ class _ClaimFormState extends State<ClaimForm> {
               Container(height: 20),
               Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
               Container(height: 10),
-              ReportableWidget(child: Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
               ReportableWidget(child: displayTermElementInfo("Amendment", widget.contract.amendment!)),
               ReportableWidget(child: displayTermElementInfo("Confidentiality Obligation", widget.contract.confidentialityObligation!)),
               ReportableWidget(child: displayTermElementInfo("Data Controller", widget.contract.existDataController!)),

@@ -68,7 +68,7 @@ class DataProvider {
     var body = {
       "ContractId": contract.contractId!.replaceAll(' ', ''),
       "ContractType": contract.contractType,
-      "Purpose": contract.description!.replaceAll('\n', ''),
+      "Purpose": contract.purpose!.replaceAll('\n', ''),
       "ContractRequester": contract.contractorId!.replaceAll(' ', ''),
       "ContractProvider": contract.contracteeId!.replaceAll(' ', ''),
       "DataController": contract.contractorId!.replaceAll(' ', ''),
@@ -112,7 +112,7 @@ class DataProvider {
   }
 
   Future<Contract> fetchContractById(String contractId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/$contractId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Contract contract;

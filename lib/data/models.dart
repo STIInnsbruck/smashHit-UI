@@ -34,7 +34,7 @@ class Contract {
   String? contracteeId;
   ContractObject? contractObject;
   String? title;
-  String? description;
+  String? purpose;
   DateTime? executionDate;
   DateTime? expireDate;
   String? contractStatus;
@@ -60,7 +60,7 @@ class Contract {
     this.contractorId,
     this.contracteeId,
     this.title,
-    this.description,
+    this.purpose,
     this.executionDate,
     this.expireDate,
     this.contractStatus,

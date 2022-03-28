@@ -1626,7 +1626,7 @@ class _ContractFormState extends State<ContractForm> {
   Contract createContractObject() {
     return Contract(
       contractId: widget.titleController.text,
-      description: widget.descriptionController.text,
+      purpose: widget.descriptionController.text,
       contractType: _type.toString(),
       executionDate: startDate!,
       expireDate: endDate!,
@@ -1883,7 +1883,7 @@ class _ContractFormState extends State<ContractForm> {
   void setContract() {
     tmpContract = new Contract(
       contractId: widget.titleController.text,
-      description: widget.descriptionController.text,
+      purpose: widget.descriptionController.text,
       contracteeId: widget.providerControllers[0].text,
       contractorId: widget.requesterControllers[0].text,
       contractType: 'Written',
@@ -1901,7 +1901,7 @@ class _ContractFormState extends State<ContractForm> {
       _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractorId!)) == 0), 0);
       //TODO: this only takes the first data processor, make it take all existing ones.
       _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contracteeId!)) == 0), 0);
-      widget.descriptionController.text = widget.contract!.description!;
+      widget.descriptionController.text = widget.contract!.purpose!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
       executionDate = widget.contract!.executionDate;
