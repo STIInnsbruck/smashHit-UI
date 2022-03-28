@@ -55,7 +55,30 @@ class ResponseParser {
         //TODO: add obligations
         //TODO: add terms
     );
-    contract.contractors.add(User(id: jsonContract["bindings"][0]["contractors"]["value"]));
+    contract.contractors.add(contractContent[0]["contractors"]["value"]);
+    contract.obligations.add(contractContent[0]["obligations"]["value"]);
+    contract.terms.add(contractContent[0]["terms"]["value"]);
+
+    for(int i = 1; i < contractContent.length; i++) {
+      //First check if we're still in the same contract, otherwise break.
+      if(contract.contractId!.compareTo(contractContent[i]["Contract"]["value"]) == 0) {
+        //Check if the termId is already inserted, otherwise insert.
+        if(!contract.terms.contains(contractContent[i]["terms"]["value"])) {
+          contract.terms.add(contractContent[i]["terms"]["value"]);
+        }
+        //check if obligationId is already inserted, otherwise insert.
+        if(!contract.obligations.contains(contractContent[i]["obligations"]["value"])) {
+          contract.obligations.add(contractContent[i]["obligations"]["value"]);
+        }
+        //check if userId is already inserted, otherwise insert.
+        if(!contract.contractors.contains(contractContent[i]["contractors"]["value"])) {
+          contract.contractors.add(contractContent[i]["contractors"]["value"]);
+        }
+      } else {
+        break;
+      }
+
+    }
 
     return contract;
   }
@@ -66,7 +89,6 @@ class ResponseParser {
 
   DateTime formatDate(String dateString) {
     dateString = dateString.substring(45);
-    print("formatDateString = $dateString");
     return DateTime.parse(dateString);
   }
 }
