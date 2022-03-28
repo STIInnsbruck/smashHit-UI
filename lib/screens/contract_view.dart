@@ -153,10 +153,9 @@ class _ContractCreationState extends State<ViewContract> {
                   leading: CircleAvatar(child: Icon(Icons.person)),
                   title: GestureDetector(
                       onTap: () {
-                        print(obligationId);
                         widget.changeScreen(8, "C001");
                       },
-                      child: Text(obligationId)),
+                      child: Text(snapshot.data!.contractorId!)),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -185,7 +184,7 @@ class _ContractCreationState extends State<ViewContract> {
                           Text('Time Remaining: ',
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.bold)),
-                          Text('23.10.2022')
+                          Text('${snapshot.data!.endDate}')
                         ],
                       ),
                     ),
