@@ -142,19 +142,19 @@ class DataProvider {
     }
   }
 
-  Future<User> fetchUserById(String agentId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contractor/$agentId/'), headers: headers);
+  Future<User> fetchUserById(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
       try {
         return parser.parseAllUsersById(data["bindings"])[0];
       }catch (e) {
-        throw Exception('Failed to fetch agent by id: $agentId.');
+        throw Exception('Failed to fetch agent by id: $contractorId.');
       }
 
     } else {
-      throw Exception('Failed to load agent by id: $agentId.');
+      throw Exception('Failed to load agent by id: $contractorId.');
     }
   }
 
