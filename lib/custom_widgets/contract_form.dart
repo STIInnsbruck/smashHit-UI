@@ -1629,23 +1629,7 @@ class _ContractFormState extends State<ContractForm> {
       purpose: widget.descriptionController.text,
       contractType: _type.toString(),
       executionDate: startDate!,
-      expireDate: endDate!,
-      contractorId: widget.requesterControllers[0].text,
-      contracteeId: widget.providerControllers[0].text,
-      amendment: widget.termControllers[0].text,
-      confidentialityObligation: widget.termControllers[1].text,
-      existDataController: widget.termControllers[2].text,
-      existDataProtection: widget.termControllers[3].text,
-      limitation: widget.termControllers[4].text,
-      methodNotice: widget.termControllers[5].text,
-      thirdParties: widget.termControllers[6].text,
-      disclosure: widget.termControllers[7].text,
-      receiptNotice: widget.termControllers[8].text,
-      severability: widget.termControllers[9].text,
-      terminationInsolvency: widget.termControllers[10].text,
-      terminationMaterialBreach: widget.termControllers[11].text,
-      terminationNotice: widget.termControllers[12].text,
-      waiver: widget.termControllers[13].text
+      endDate: endDate!
     );
   }
 
@@ -1880,16 +1864,22 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  List<User> setContractors() {
+    List<User> contractors = [];
+    contractors.add(User(id: widget.providerControllers[0].text));
+    contractors.add(User(id: widget.requesterControllers[0].text));
+    return contractors;
+  }
+
   void setContract() {
     tmpContract = new Contract(
       contractId: widget.titleController.text,
       purpose: widget.descriptionController.text,
-      contracteeId: widget.providerControllers[0].text,
-      contractorId: widget.requesterControllers[0].text,
       contractType: 'Written',
       executionDate: startDate,
-      expireDate: endDate
+      endDate: endDate,
     );
+    tmpContract!.contractors= setContractors();
   }
 
   void setFormFields() async {
@@ -1898,15 +1888,16 @@ class _ContractFormState extends State<ContractForm> {
       widget.titleController.text = displayStringWithoutUri(widget.contract!.contractId!);
       _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
       //TODO: this only takes the first data controller, make it take all existing ones.
-      _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractorId!)) == 0), 0);
+      _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[0].name!)) == 0), 0);
       //TODO: this only takes the first data processor, make it take all existing ones.
-      _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contracteeId!)) == 0), 0);
+      _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[1].name!)) == 0), 0);
       widget.descriptionController.text = widget.contract!.purpose!;
       startDate = widget.contract!.executionDate;
       effectiveDate = widget.contract!.executionDate;
       executionDate = widget.contract!.executionDate;
-      endDate = widget.contract!.expireDate;
-      setTermElement(isAmendment, widget.termControllers[0], widget.contract!.amendment!);
+      endDate = widget.contract!.endDate;
+      //TODO: adjust to new contract form.
+      /**setTermElement(isAmendment, widget.termControllers[0], widget.contract!.amendment!);
       setTermElement(isConfidentialObligation, widget.termControllers[1], widget.contract!.confidentialityObligation!);
       setTermElement(isDataController, widget.termControllers[2], widget.contract!.existDataController!);
       setTermElement(isDataProtection, widget.termControllers[3], widget.contract!.existDataProtection!);
@@ -1919,7 +1910,7 @@ class _ContractFormState extends State<ContractForm> {
       setTermElement(isTerminationForInsolvency, widget.termControllers[10], widget.contract!.terminationInsolvency!);
       setTermElement(isTerminationForMaterialBreach, widget.termControllers[11], widget.contract!.terminationMaterialBreach!);
       setTermElement(isTerminationOnNotice, widget.termControllers[12], widget.contract!.terminationNotice!);
-      setTermElement(isWaiver, widget.termControllers[13], widget.contract!.waiver!);
+      setTermElement(isWaiver, widget.termControllers[13], widget.contract!.waiver!);*/
     });
   }
 

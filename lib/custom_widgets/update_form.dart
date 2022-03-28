@@ -166,7 +166,8 @@ class _UpdateFormState extends State<UpdateForm> {
             ),
             Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
             Container(height: 20),
-            termElement('Amendment', widget.contract.amendment!),
+            //TODO: adjust to new contract form.
+            /**termElement('Amendment', widget.contract.amendment!),
             termElement('Confidentiality Obligation', widget.contract.confidentialityObligation!),
             termElement('Data Controller', widget.contract.existDataController!),
             termElement('Data Protection', widget.contract.existDataProtection!),
@@ -179,12 +180,12 @@ class _UpdateFormState extends State<UpdateForm> {
             termElement('Termination Of Insolvency', widget.contract.terminationInsolvency!),
             termElement('Termination For Material Breach', widget.contract.terminationMaterialBreach!),
             termElement('Termination On Notice', widget.contract.terminationNotice!),
-            termElement('Waiver', widget.contract.waiver!),
+            termElement('Waiver', widget.contract.waiver!)*/
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text('Start Date: ${_formatDate(widget.contract.executionDate!)}'),
-                Text('End Date: ${_formatDate(widget.contract.expireDate!)}')
+                Text('End Date: ${_formatDate(widget.contract.endDate!)}')
               ],
             ),
           ],

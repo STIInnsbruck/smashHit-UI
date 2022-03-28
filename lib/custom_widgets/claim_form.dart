@@ -124,16 +124,17 @@ class _ClaimFormState extends State<ClaimForm> {
               Container(height: 20),
               Row(
                 children: [
-                  Text('Start Date: ${widget.contract.displayDate(widget.contract.executionDate!)}', style: TextStyle(fontSize: 15)),
+                  Text('Start Date: ${widget.contract.executionDate!}', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
-                  Text('End Date: ${widget.contract.displayDate(widget.contract.expireDate!)}', style: TextStyle(fontSize: 15)),
+                  Text('End Date: ${widget.contract.endDate!}', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1)
                 ],
               ),
               Container(height: 20),
               Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
               Container(height: 10),
-              ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              //TODO: adjust to new contract form.
+              /**ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
               ReportableWidget(child: displayTermElementInfo("Amendment", widget.contract.amendment!)),
               ReportableWidget(child: displayTermElementInfo("Confidentiality Obligation", widget.contract.confidentialityObligation!)),
               ReportableWidget(child: displayTermElementInfo("Data Controller", widget.contract.existDataController!)),
@@ -147,7 +148,7 @@ class _ClaimFormState extends State<ClaimForm> {
               ReportableWidget(child: displayTermElementInfo("Termination Of Insolvency", widget.contract.terminationInsolvency!)),
               ReportableWidget(child: displayTermElementInfo("Termination For Material Breach", widget.contract.terminationMaterialBreach!)),
               ReportableWidget(child: displayTermElementInfo("Termination On Notice", widget.contract.terminationNotice!)),
-              ReportableWidget(child: displayTermElementInfo("Waiver", widget.contract.waiver!)),
+              ReportableWidget(child: displayTermElementInfo("Waiver", widget.contract.waiver!)),*/
               Container(height: 20),
               Container(height: 50),
               Container(height: 50,

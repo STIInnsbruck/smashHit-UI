@@ -67,29 +67,6 @@ class DataProvider {
 
     var body = {
       "ContractId": contract.contractId!.replaceAll(' ', ''),
-      "ContractType": contract.contractType,
-      "Purpose": contract.purpose!.replaceAll('\n', ''),
-      "ContractRequester": contract.contractorId!.replaceAll(' ', ''),
-      "ContractProvider": contract.contracteeId!.replaceAll(' ', ''),
-      "DataController": contract.contractorId!.replaceAll(' ', ''),
-      "StartDate": _formatDate(contract.executionDate),
-      "ExecutionDate": _formatDate(contract.executionDate),
-      "EffectiveDate": _formatDate(contract.executionDate),
-      "ExpireDate": _formatDate(contract.expireDate),
-      "Medium": "SmashHit Flutter Application",
-      "Waiver": contract.waiver,
-      "Amendment": contract.amendment,
-      "ConfidentialityObligation": contract.confidentialityObligation,
-      "DataProtection": contract.existDataProtection,
-      "LimitationOnUse": contract.limitation,
-      "MethodOfNotice": contract.methodNotice,
-      "NoThirdPartyBeneficiaries": contract.thirdParties,
-      "PermittedDisclosure": contract.disclosure,
-      "ReceiptOfNotice": contract.receiptNotice,
-      "Severability": contract.severability,
-      "TerminationForInsolvency": contract.terminationInsolvency,
-      "TerminationForMaterialBreach": contract.terminationMaterialBreach,
-      "TerminationOnNotice": contract.terminationNotice,
       "ContractStatus": "string"
     };
 

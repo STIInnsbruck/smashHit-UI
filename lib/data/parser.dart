@@ -41,31 +41,22 @@ class ResponseParser {
   }
 
   Contract parseContractId(Map jsonContract) {
-    return new Contract(
+    Contract contract = new Contract(
         contractId: jsonContract["bindings"][0]['Contract']['value'],
-        contractType: jsonContract["bindings"][0]['ContractType']['value'],
-        //contractorId: jsonContract["bindings"][0]['ContractRequester']['value'],
-        //contracteeId: jsonContract["bindings"][0]['ContractProvider']['value'],
-        title: "Contract Title (Hardcoded, not in ontology.)",
-        purpose: jsonContract["bindings"][0]['Purpose']['value'],
-        executionDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
-        //expireDate: formatDate(jsonContract["bindings"][0]["EndingDate"]["value"]),
         contractStatus: jsonContract["bindings"][0]['ContractStatus']['value'],
-        //amendment: jsonContract["bindings"][0]['Amendment']['value'],
-        //confidentialityObligation: jsonContract["bindings"][0]['ConfidentialityObligation']['value'],
-        //existDataController: jsonContract["bindings"][0]['DataController']['value'],
-        //existDataProtection: jsonContract["bindings"][0]['DataProtection']['value'],
-        //limitation: jsonContract["bindings"][0]['LimitationOnUse']['value'],
-        //methodNotice: jsonContract["bindings"][0]['MethodOfNotice']['value'],
-        //thirdParties: jsonContract["bindings"][0]['NoThirdPartyBeneficiaries']['value'],
-        //disclosure: jsonContract["bindings"][0]['PermittedDisclosure']['value'],
-        //receiptNotice: jsonContract["bindings"][0]['ReceiptOfNotice']['value'],
-        //severability: jsonContract["bindings"][0]['Severability']['value'],
-        //terminationInsolvency: jsonContract["bindings"][0]['TerminationForInsolvency']['value'],
-        //terminationMaterialBreach: jsonContract["bindings"][0]['TerminationForMaterialBreach']['value'],
-        //terminationNotice: jsonContract["bindings"][0]['TerminationOnNotice']['value'],
-        //waiver: jsonContract["bindings"][0]['Waiver']['value']
+        contractType: jsonContract["bindings"][0]['ContractType']['value'],
+        effectiveDate: formatDate(jsonContract["bindings"][0]["EffectiveDate"]["value"]),
+        executionDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
+        endDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
+        medium: jsonContract["bindings"][0]["Medium"]["value"],
+        purpose: jsonContract["bindings"][0]['Purpose']['value'],
+        //TODO: add consideration
+        //TODO: add obligations
+        //TODO: add terms
     );
+    contract.contractors.add(User(id: jsonContract["bindings"][0]["contractors"]["value"]));
+
+    return contract;
   }
 
   List<Contract> parseAllContracts(List jsonList) {
@@ -73,6 +64,9 @@ class ResponseParser {
   }
 
   DateTime formatDate(String dateString) {
+    dateString = dateString.substring(45);
+    print("formatDateString = $dateString");
+    return DateTime.parse(dateString);
     if(dateString.length > 12) {
       var length = dateString.length;
       int year = int.parse(dateString.substring(length - 4, length));

@@ -28,61 +28,34 @@ class User {
 /// If the contract is supposed to only be an instant contract lasting for a day,
 /// then make the startDate and endDate the same date.
 class Contract {
+  String? considerationDescription;
+  String? considerationValue;
   String? contractId;
-  String? contractType;
-  String? contractorId;
-  String? contracteeId;
-  ContractObject? contractObject;
-  String? title;
-  String? purpose;
-  DateTime? executionDate;
-  DateTime? expireDate;
   String? contractStatus;
-  IconData? iconData;
-  String? amendment;
-  String? confidentialityObligation;
-  String? existDataController;
-  String? existDataProtection;
-  String? limitation;
-  String? methodNotice;
-  String? thirdParties;
-  String? disclosure;
-  String? receiptNotice;
-  String? severability;
-  String? terminationInsolvency;
-  String? terminationMaterialBreach;
-  String? terminationNotice;
-  String? waiver;
+  String? contractType;
+  List<User> contractors = [];
+  DateTime? effectiveDate;
+  DateTime? endDate;
+  DateTime? executionDate;
+  String? medium;
+  List<Obligation> obligations = [];
+  String? purpose;
+  List<Term>? terms;
+
 
   Contract({
     required this.contractId,
     this.contractType,
-    this.contractorId,
-    this.contracteeId,
-    this.title,
     this.purpose,
     this.executionDate,
-    this.expireDate,
+    this.endDate,
+    this.effectiveDate,
     this.contractStatus,
-    this.contractObject,
-    this.iconData,
-    this.amendment,
-    this.confidentialityObligation,
-    this.existDataController,
-    this.existDataProtection,
-    this.limitation,
-    this.methodNotice,
-    this.thirdParties,
-    this.disclosure,
-    this.receiptNotice,
-    this.severability,
-    this.terminationInsolvency,
-    this.terminationMaterialBreach,
-    this.terminationNotice,
-    this.waiver
-  }) {
-    this.title = title;
-  }
+    this.medium,
+    this.considerationValue,
+    this.considerationDescription,
+    this.terms
+  });
 
   /// Returns an int given the contract's status. The int is needed for the
   /// contract_status_bar as it takes in an int to track the process.
@@ -114,17 +87,17 @@ class Contract {
   }
 
   String getFormattedEndDate() {
-    String dateString = "${this.expireDate!.day}.${this.expireDate!.month}.${this.expireDate!.year}";
+    String dateString = "${this.endDate!.day}.${this.endDate!.month}.${this.endDate!.year}";
     return dateString;
   }
 
 
   String getContractorName() {
-    return this.contractorId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.contractors[0].id!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String getContracteeName() {
-    return this.contracteeId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.contractors[0].id!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String formatContractId() {

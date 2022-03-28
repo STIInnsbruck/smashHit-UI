@@ -387,20 +387,7 @@ class _ContractCreationState extends State<ViewContract> {
             ),
           ),
           contractTAC(contract),
-          contractAmendment(contract),
-          contractConfidentiality(contract),
-          contractDataController(contract),
-          contractDataProtection(contract),
-          contractLimitation(contract),
-          contractMethodNotice(contract),
-          contractThirdParties(contract),
-          contractDisclosure(contract),
-          contractReceiptNotice(contract),
-          contractSeverability(contract),
-          contractTerminationInsolvency(contract),
-          contractTerminationMaterialBreach(contract),
-          contractTerminationNotice(contract),
-          contractWaiver(contract),
+          //TODO: adjust to new contract form.
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
@@ -443,7 +430,7 @@ class _ContractCreationState extends State<ViewContract> {
         : Container();
   }
 
-  Widget contractAmendment(Contract contract) {
+  /**Widget contractAmendment(Contract contract) {
     return contract.amendment!.isNotEmpty
         ? Column(
             children: [
@@ -529,9 +516,9 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
-  }
+  */
 
-  Widget contractReceiptNotice(Contract contract) {
+  /**Widget contractReceiptNotice(Contract contract) {
     return contract.receiptNotice!.isNotEmpty
         ? Column(
             children: [
@@ -540,9 +527,9 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
-  }
+  }*/
 
-  Widget contractSeverability(Contract contract) {
+  /**Widget contractSeverability(Contract contract) {
     return contract.severability!.isNotEmpty
         ? Column(
             children: [
@@ -551,9 +538,9 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
-  }
+  }*/
 
-  Widget contractTerminationInsolvency(Contract contract) {
+  /**Widget contractTerminationInsolvency(Contract contract) {
     return contract.terminationInsolvency!.isNotEmpty
         ? Column(
             children: [
@@ -562,9 +549,9 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
-  }
+  }*/
 
-  Widget contractTerminationMaterialBreach(Contract contract) {
+  /**Widget contractTerminationMaterialBreach(Contract contract) {
     return contract.terminationMaterialBreach!.isNotEmpty
         ? Column(
             children: [
@@ -573,9 +560,9 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
-  }
+  }*/
 
-  Widget contractTerminationNotice(Contract contract) {
+  /**Widget contractTerminationNotice(Contract contract) {
     return contract.terminationNotice!.isNotEmpty
         ? Column(
             children: [
@@ -584,9 +571,9 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
-  }
+  }*/
 
-  Widget contractWaiver(Contract contract) {
+  /**Widget contractWaiver(Contract contract) {
     return contract.waiver!.isNotEmpty
         ? Column(
             children: [
@@ -595,7 +582,7 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
-  }
+  }*/
 
   Widget contractTermTitle(String title) {
     return Padding(
@@ -636,10 +623,10 @@ class _ContractCreationState extends State<ViewContract> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //first 45 characters are the URI from the ontology
-              partyEntity(contract!.contractorId!
-                  .substring(45, contract!.contractorId!.length)),
-              partyEntity(contract!.contracteeId!
-                  .substring(45, contract!.contracteeId!.length)),
+              partyEntity(contract!.contractors[0].id!
+                  .substring(45, contract!.contractors[0].id!.length)),
+              partyEntity(contract!.contractors[0].id!
+                  .substring(45, contract!.contractors[0].id!.length)),
             ],
           )
         ],
@@ -848,7 +835,7 @@ class _ContractCreationState extends State<ViewContract> {
   double calculateElapsedContractTime() {
     DateTime today = DateTime.now();
     var totalTime =
-        contract!.expireDate!.difference(contract!.executionDate!).inDays;
+        contract!.endDate!.difference(contract!.executionDate!).inDays;
     var elapsedTime = today.difference(contract!.executionDate!).inDays;
 
     if (elapsedTime >= totalTime) {
