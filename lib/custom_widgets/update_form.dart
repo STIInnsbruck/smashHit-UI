@@ -87,7 +87,7 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractDetailsBlock() {
+  Widget contractDetailsBlock() {
     return Tooltip(
       message: 'Tap to edit contract details.',
       child: MaterialButton(
@@ -109,7 +109,7 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractRequesterBlock() {
+  Widget contractRequesterBlock() {
     return Tooltip(
       message: 'Tap to edit data controller information',
       child: MaterialButton(
@@ -131,7 +131,7 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractProviderBlock() {
+  Widget contractProviderBlock() {
     return Tooltip(
       message: 'Tap to edit data processor information',
       child: MaterialButton(
@@ -153,7 +153,7 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractTACBlock() {
+  Widget contractTACBlock() {
     buildContractTerms();
     return Tooltip(
       message: 'Tap to edit the terms & conditions',
