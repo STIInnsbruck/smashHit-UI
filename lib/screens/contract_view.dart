@@ -387,17 +387,17 @@ class _ContractCreationState extends State<ViewContract> {
           ),
           Container(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(
-                  child: Text('${contract.contractId}',
-                      style: TextStyle(fontSize: 20))),
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 1),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: contractDetailText("Contract ID: ", "${contract.contractId}")),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 5),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('Contract Type: ${contract.contractType}'),
+              child: contractDetailText("Contract Type: ", "${contract.contractType}"),
             ),
           ),
           Column(
