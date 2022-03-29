@@ -120,6 +120,22 @@ class DataProvider {
     }
   }
 
+  Future<Term> fetchTermById(String termId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/term/$termId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Term term;
+      try {
+        term = parser.parseTermId(jsonDecode(response.body));
+        return term;
+      } catch (e) {
+        throw Exception('Failed to parse response for term $termId.');
+      }
+    } else {
+      throw Exception('Failed to load term $termId.');
+    }
+  }
+
   Future<List<Contract>> fetchAllContracts() async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
 
