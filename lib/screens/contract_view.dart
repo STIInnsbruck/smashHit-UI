@@ -399,6 +399,7 @@ class _ContractCreationState extends State<ViewContract> {
               child: Text('Contract Type: ${contract.contractType}'),
             ),
           ),
+          contractorDetails("C001"),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
             child: Align(
@@ -450,6 +451,46 @@ class _ContractCreationState extends State<ViewContract> {
                       style: TextStyle(fontSize: 15)))),
         ],
       ),
+    );
+  }
+
+  Widget contractorDetails(String contractorId) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+      child: FutureBuilder<User>(
+        future: dataProvider.fetchUserById(contractorId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: [
+                contractDetailText("Contractor: ", "${snapshot.data!.name}"),
+                SizedBox(height: 2),
+                contractDetailText("Email: ", "${snapshot.data!.email}"),
+                SizedBox(height: 2),
+                contractDetailText("Phone: ", "${snapshot.data!.telephoneNumber}"),
+                SizedBox(height: 2),
+                contractDetailText("Country: ", "${snapshot.data!.country}"),
+                SizedBox(height: 2),
+                contractDetailText("City: ", "${snapshot.data!.city}"),
+                SizedBox(height: 2),
+                contractDetailText("Address: ", "${snapshot.data!.streetAddress}")
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        }
+      )
+    );
+  }
+
+  Widget contractDetailText(String type, String content) {
+    return Row(
+      children: [
+        Text("$type", style: TextStyle(fontWeight: FontWeight.bold)),
+        Text("$content")
+      ],
     );
   }
 
