@@ -136,113 +136,113 @@ class _ContractCreationState extends State<ViewContract> {
       elevation: 10.0,
       child: FutureBuilder<Obligation>(
         future: dataProvider.fetchObligationById(obligationId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: Center(
-                        child: Text('Obligation', style: TextStyle(fontSize: 20))),
-                  ),
-                ),
-                ListTile(
-                  leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: GestureDetector(
-                      onTap: () {
-                        widget.changeScreen(8, "${snapshot.data!.contractorId}");
-                      },
-                      child: FutureBuilder<User>(
-                        future: dataProvider.fetchUserById(snapshot.data!.contractorId!),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(snapshot.data!.name!);
-                          } else if (snapshot.hasError) {
-                            return Text('${snapshot.error}');
-                          }
-                          return Center(child: CircularProgressIndicator());
-                        },
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        builder: (context, obligationSnapshot) {
+          if (obligationSnapshot.hasData) {
+            return FutureBuilder<User>(
+              future: dataProvider.fetchUserById(obligationSnapshot.data!.contractorId!),
+              builder: (context, userSnapshot) {
+                if (userSnapshot.hasData) {
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Obligation Description: ',
-                          style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                      Text(
-                        '${snapshot.data!.description}',
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.justify,
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                          child: Center(
+                              child: Text('Obligation', style: TextStyle(fontSize: 20))),
+                        ),
+                      ),
+                      ListTile(
+                        leading: CircleAvatar(child: Icon(Icons.person)),
+                        title: GestureDetector(
+                            onTap: () {
+                              widget.changeScreen(8, "${obligationSnapshot.data!.contractorId}");
+                            },
+                            child: Text('${userSnapshot.data!.name}')),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Obligation Description: ',
+                                style:
+                                TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                            Text(
+                              '${obligationSnapshot.data!.description}',
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.justify,
+                            )
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Time Remaining: ',
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.bold)),
+                                Text('${obligationSnapshot.data!.endDate}')
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Status: ',
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.bold)),
+                                Icon(Icons.check_circle, color: Colors.green, size: 30)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      userSnapshot.data!.name!.compareTo(widget.user!.name!) == 0
+                          ? Center(
+                        child: MaterialButton(
+                          onPressed: () {
+                            _showObligationCompletionDialog();
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text('Tap to complete',
+                              style: TextStyle(color: Colors.white)),
+                          color: Colors.blue,
+                        ),
+                      )
+                          : Center(
+                        child: MaterialButton(
+                          elevation: 0,
+                          onPressed: null,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text('$obligationId must complete',
+                              style: TextStyle(color: Colors.grey)),
+                          color: Colors.white,
+                        ),
                       )
                     ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Time Remaining: ',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
-                          Text('${snapshot.data!.endDate}')
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Status: ',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
-                          Icon(Icons.check_circle, color: Colors.green, size: 30)
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                obligationId.compareTo(widget.user!.name!) == 0
-                    ? Center(
-                  child: MaterialButton(
-                    onPressed: () {
-                      _showObligationCompletionDialog();
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text('Tap to complete',
-                        style: TextStyle(color: Colors.white)),
-                    color: Colors.blue,
-                  ),
-                )
-                    : Center(
-                  child: MaterialButton(
-                    elevation: 0,
-                    onPressed: null,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text('$obligationId must complete',
-                        style: TextStyle(color: Colors.grey)),
-                    color: Colors.white,
-                  ),
-                )
-              ],
+                  );
+                } else if (userSnapshot.hasError) {
+                  return Text('${userSnapshot.error}');
+                }
+                return Center(child: CircularProgressIndicator());
+              },
             );
-          } else if (snapshot.hasError) {
+          } else if (obligationSnapshot.hasError) {
             return Center(
-              child: Text('${snapshot.error}')
+              child: Text('${obligationSnapshot.error}')
             );
           }
           return Center(child: CircularProgressIndicator());
