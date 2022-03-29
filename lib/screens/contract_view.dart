@@ -132,14 +132,12 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Card partyObligationCard(String obligationId) {
-    Obligation? obligation;
     return Card(
       elevation: 10.0,
       child: FutureBuilder<Obligation>(
         future: dataProvider.fetchObligationById(obligationId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            obligation = snapshot.data;
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
