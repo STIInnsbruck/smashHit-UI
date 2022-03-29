@@ -70,7 +70,7 @@ class _UpdateFormState extends State<UpdateForm> {
               child: Column(
                 children: [
                   Center(
-                      child: Text('Contract Update Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
+                      child: Text('Contract Update Form', style: TextStyle(fontSize: 25, decoration: TextDecoration.underline))
                   ),
                   SizedBox(height: 10),
                   contractDetailsBlock(),
@@ -170,6 +170,7 @@ class _UpdateFormState extends State<UpdateForm> {
     return Tooltip(
       message: 'Tap to edit the terms & conditions',
       child: MaterialButton(
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         color: Colors.white,
         hoverColor: Colors.blue,
         onPressed: () { widget.toggleEditing(4); },
@@ -179,7 +180,7 @@ class _UpdateFormState extends State<UpdateForm> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Center(
-              child: Text('Terms & Conditions', style: TextStyle(fontSize: 25)),
+              child: Text('Terms & Conditions', style: TextStyle(fontSize: 20)),
             ),
             Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
             Container(height: 20),
