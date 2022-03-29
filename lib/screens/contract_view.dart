@@ -486,6 +486,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   void buildContractTerms(Contract contract) {
+    termWidgets.clear();
     contract.terms.forEach((termId) {
       termWidgets.add(contractTerm(termId));
     });
