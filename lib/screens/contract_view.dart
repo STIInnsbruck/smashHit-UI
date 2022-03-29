@@ -155,7 +155,17 @@ class _ContractCreationState extends State<ViewContract> {
                       onTap: () {
                         widget.changeScreen(8, "${snapshot.data!.contractorId}");
                       },
-                      child: Text(snapshot.data!.contractorId!)),
+                      child: FutureBuilder<User>(
+                        future: dataProvider.fetchUserById(snapshot.data!.contractorId!),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(snapshot.data!.name!);
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          }
+                          return Center(child: CircularProgressIndicator());
+                        },
+                      )),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
