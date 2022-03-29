@@ -407,7 +407,6 @@ class _ContractCreationState extends State<ViewContract> {
           Column(
             children: termWidgets,
           ),
-          //TODO: adjust to new contract form.
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               child: Align(
