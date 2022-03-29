@@ -71,7 +71,7 @@ class _UpdateFormState extends State<UpdateForm> {
                   Center(
                       child: Text('Contract Update Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   contractInformationBlock(),
                   SizedBox(height: 5),
                   contractRequesterBlock(),
@@ -187,6 +187,7 @@ class _UpdateFormState extends State<UpdateForm> {
   }
 
   void buildContractTerms() {
+    termWidgets.clear();
     widget.contract.terms.forEach((termId) {
       termWidgets.add(Container(
         child: FutureBuilder<Term>(
