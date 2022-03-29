@@ -74,9 +74,9 @@ class _UpdateFormState extends State<UpdateForm> {
                   ),
                   SizedBox(height: 10),
                   contractDetailsBlock(),
-                  SizedBox(height: 5),
-                  contractContractorBlock("C001"),
-                  SizedBox(height: 5),
+                  SizedBox(height: 10),
+                  contractContractorBlock(),
+                  SizedBox(height: 10),
                   contractTACBlock(),
                   SizedBox(height: 20),
                 ],
@@ -98,17 +98,23 @@ class _UpdateFormState extends State<UpdateForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-                child: Text('Contract Details', style: TextStyle(fontSize: 20)),
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
+                    child: Text('Contract Details', style: TextStyle(fontSize: 20))),
             ),
-            Text('Contract ID: ${widget.contract.contractId}'),
-            Text('Contract Type: ${widget.contract.getContractType()}')
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                child: Text('Contract ID: ${widget.contract.contractId}')),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5 , 15),
+                child: Text('Contract Type: ${widget.contract.getContractType()}'))
           ],
         ),
       ),
     );
   }
 
-  Widget contractContractorBlock(String contractorId) {
+  Widget contractContractorBlock() {
     buildContractContractors();
     return Column(
       children: contractorWidgets,
@@ -197,6 +203,7 @@ class _UpdateFormState extends State<UpdateForm> {
     contractorWidgets.clear();
     widget.contract.contractors.forEach((contractorId) {
       contractorWidgets.add(Container(
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
         child: FutureBuilder<User> (
           future: dataProvider.fetchUserById(contractorId),
           builder: (context, snapshot) {
