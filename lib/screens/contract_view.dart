@@ -229,7 +229,7 @@ class _ContractCreationState extends State<ViewContract> {
                             side: BorderSide(color: Colors.grey),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text('$obligationId must complete',
+                          child: Text('${userSnapshot.data!.name!} must complete',
                               style: TextStyle(color: Colors.grey)),
                           color: Colors.white,
                         ),
@@ -408,24 +408,20 @@ class _ContractCreationState extends State<ViewContract> {
             children: termWidgets,
           ),
           Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 1),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Start Date: ${contract.getFormattedStartDate()}',
-                      style: TextStyle(fontSize: 15)))),
+                  child: contractDetailText("Start Date: ", "${contract.getFormattedStartDate()}"))),
           Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                      'Effective Date: ${contract.getFormattedStartDate()}',
-                      style: TextStyle(fontSize: 15)))),
+                  child: contractDetailText("Effective Date: ", "${contract.getFormattedStartDate()}"))),
           Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              padding: const EdgeInsets.fromLTRB(15, 1, 15, 5),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('End Date: ${contract.getFormattedEndDate()}',
-                      style: TextStyle(fontSize: 15)))),
+                  child: contractDetailText("End Date: ", "${contract.getFormattedEndDate()}"))),
         ],
       ),
     );
@@ -489,7 +485,7 @@ class _ContractCreationState extends State<ViewContract> {
         : Container();
   }
 
-  Widget contractTerm(String termId) {
+  Widget contractTerm(String termId, int index) {
     return Container(
       child: FutureBuilder<Term>(
           future: dataProvider.fetchTermById(termId),
@@ -497,7 +493,7 @@ class _ContractCreationState extends State<ViewContract> {
             if (snapshot.hasData) {
               return Column(
                 children: [
-                  contractTermTitle(snapshot.data!.name!),
+                  contractTermTitle("$index. ${snapshot.data!.name!}"),
                   contractTermText(snapshot.data!.description!)
                 ],
               );
@@ -512,8 +508,10 @@ class _ContractCreationState extends State<ViewContract> {
 
   void buildContractTerms(Contract contract) {
     termWidgets.clear();
+    int index = 1;
     contract.terms.forEach((termId) {
-      termWidgets.add(contractTerm(termId));
+      termWidgets.add(contractTerm(termId, index));
+      index++;
     });
   }
 
