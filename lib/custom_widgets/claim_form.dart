@@ -138,7 +138,6 @@ class _ClaimFormState extends State<ClaimForm> {
               Container(height: 20),
               Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
               Container(height: 10),
-              //TODO: adjust to new contract form.
               ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
               Column(
                 children: termWidgets,

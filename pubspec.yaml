@@ -51,6 +51,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/process_timeline/
+    - assets/images/placeholders/example_profile_pic.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

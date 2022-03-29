@@ -178,6 +178,7 @@ class _ContractCreationState extends State<ViewContract> {
                           ],
                         ),
                       ),
+                      Spacer(),
                       Row(
                         children: [
                           Padding(
@@ -206,6 +207,7 @@ class _ContractCreationState extends State<ViewContract> {
                           ),
                         ],
                       ),
+                      Spacer(),
                       userSnapshot.data!.name!.compareTo(widget.user!.name!) == 0
                           ? Center(
                         child: MaterialButton(
