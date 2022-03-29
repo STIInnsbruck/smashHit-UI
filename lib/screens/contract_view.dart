@@ -403,31 +403,6 @@ class _ContractCreationState extends State<ViewContract> {
           Column(
             children: contractorWidgets,
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child:
-                  FutureBuilder<User> (
-                    future: dataProvider.fetchUserById(contract.contractors[0]),
-                    builder: (context, userSnapshot) {
-                      if (userSnapshot.hasData) {
-                        return Text('Contractor: ${userSnapshot.data!.name}');
-                      } else if (userSnapshot.hasError) {
-                        return Text('${userSnapshot.error}');
-                      }
-                      return CircularProgressIndicator();
-                    },
-                  ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Contract Provider: ${contract.getContracteeName()}'),
-            ),
-          ),
           contractTAC(contract),
           Column(
             children: termWidgets,
