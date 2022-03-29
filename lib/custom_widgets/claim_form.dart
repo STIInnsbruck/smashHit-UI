@@ -117,16 +117,16 @@ class _ClaimFormState extends State<ClaimForm> {
                   Spacer(flex: 2),
                   Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
-                  Text(widget.contract.getContracteeName(), style: TextStyle(fontSize: 15)),
+                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 2),
                 ],
               ),
               Container(height: 20),
               Row(
                 children: [
-                  Text('Start Date: ${widget.contract.executionDate!}', style: TextStyle(fontSize: 15)),
+                  Text('Start Date: ${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
-                  Text('End Date: ${widget.contract.endDate!}', style: TextStyle(fontSize: 15)),
+                  Text('End Date: ${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1)
                 ],
               ),
@@ -134,8 +134,8 @@ class _ClaimFormState extends State<ClaimForm> {
               Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
               Container(height: 10),
               //TODO: adjust to new contract form.
-              /**ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
-              ReportableWidget(child: displayTermElementInfo("Amendment", widget.contract.amendment!)),
+              ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              /**ReportableWidget(child: displayTermElementInfo("Amendment", widget.contract.amendment!)),
               ReportableWidget(child: displayTermElementInfo("Confidentiality Obligation", widget.contract.confidentialityObligation!)),
               ReportableWidget(child: displayTermElementInfo("Data Controller", widget.contract.existDataController!)),
               ReportableWidget(child: displayTermElementInfo("Data Protection", widget.contract.existDataProtection!)),
@@ -180,16 +180,16 @@ class _ClaimFormState extends State<ClaimForm> {
     }
   }
 
-  Widget displayTermElementInfo(String termElementName, String text) {
+  Widget displayTermElementInfo(String name, String description) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Center(child: Text(termElementName, style: TextStyle(fontSize: 20))),
-        text.compareTo("") == 0 ?
+        Center(child: Text(name, style: TextStyle(fontSize: 20))),
+        description.compareTo("") == 0 ?
           Text('None.', textAlign: TextAlign.justify) :
           Align(
               alignment: Alignment.centerLeft,
-              child: Text('$text', textAlign: TextAlign.justify)
+              child: Text('$description', textAlign: TextAlign.justify)
           )
       ],
     );
