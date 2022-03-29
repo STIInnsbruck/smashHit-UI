@@ -120,6 +120,25 @@ class ResponseParser {
     return jsonList.map((jsonObligation) => parseObligation(jsonObligation)).toList();
   }
 
+  //TERM PARSERS
+  Term parseTerm(Map jsonTerm) {
+    return Term(id: jsonTerm['Term']['value']);
+  }
+
+  Term parseTermId(Map jsonTerm) {
+    Term term = new Term(
+      id: jsonTerm["bindings"][0]["Term"]["value"],
+      description: jsonTerm["bindings"][0]["description"]["value"],
+      name: jsonTerm["bindings"][0]["name"]["value"]
+    );
+
+    return term;
+  }
+
+  List<Term> parseAllTerm(List jsonList) {
+    return jsonList.map((jsonTerm) => parseTerm(jsonTerm)).toList();
+  }
+
   DateTime formatDate(String dateString) {
     return DateTime.parse(dateString);
   }
