@@ -300,6 +300,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Card contractTimeCard(Contract contract) {
+    double percentageCompleted = calculateElapsedContractTime();
     return Card(
         elevation: 10.0,
         child: Column(
@@ -318,8 +319,8 @@ class _ContractCreationState extends State<ViewContract> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Start: 23.10.2022', style: TextStyle(fontSize: 15)),
-                      Text('End: 30.12.2022', style: TextStyle(fontSize: 15))
+                      Text('Start: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
+                      Text('End: ${contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
                     ],
                   )),
             ),
@@ -338,7 +339,7 @@ class _ContractCreationState extends State<ViewContract> {
                       alignment: Alignment.centerLeft,
                       child: FractionallySizedBox(
                         heightFactor: 1.0,
-                        widthFactor: 0.8,
+                        widthFactor: percentageCompleted / 100,
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius:
@@ -346,7 +347,7 @@ class _ContractCreationState extends State<ViewContract> {
                               color: Colors.blue),
                           child: Center(
                               child:
-                                  Text('80%', style: TextStyle(fontSize: 15))),
+                                  Text('${percentageCompleted.toInt()}%', style: TextStyle(fontSize: 15))),
                         ),
                       ),
                     ),
