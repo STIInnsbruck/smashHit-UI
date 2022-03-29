@@ -18,6 +18,7 @@ class ViewContract extends StatefulWidget {
 
 class _ContractCreationState extends State<ViewContract> {
   List<User> users = [];
+  List<Widget> termWidgets = [];
   DataProvider dataProvider = new DataProvider();
   Contract? contract;
   String? contractDropDownType;
@@ -358,6 +359,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Card contractDetailsCard(Contract contract) {
+    buildContractTerms(contract);
     return Card(
       elevation: 10.0,
       child: Column(
@@ -401,6 +403,9 @@ class _ContractCreationState extends State<ViewContract> {
             ),
           ),
           contractTAC(contract),
+          Column(
+            children: termWidgets,
+          ),
           //TODO: adjust to new contract form.
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -435,6 +440,33 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           )
         : Container();
+  }
+
+  Widget contractTerm(String termId) {
+    return Container(
+      child: FutureBuilder<Term>(
+          future: dataProvider.fetchTermById(termId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                children: [
+                  contractTermTitle(snapshot.data!.name!),
+                  contractTermText(snapshot.data!.description!)
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('${snapshot.error}'));
+            }
+            return Center(child: CircularProgressIndicator());
+          }
+      )
+    );
+  }
+
+  void buildContractTerms(Contract contract) {
+    contract.terms.forEach((termId) {
+      termWidgets.add(contractTerm(termId));
+    });
   }
 
   Widget contractTermTitle(String title) {
