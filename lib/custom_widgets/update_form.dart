@@ -19,6 +19,7 @@ class UpdateForm extends StatefulWidget {
 class _UpdateFormState extends State<UpdateForm> {
 
   List<Widget> termWidgets = [];
+  List<Widget> contractorWidgets = [];
   DataProvider dataProvider = new DataProvider();
 
   @override
@@ -74,9 +75,7 @@ class _UpdateFormState extends State<UpdateForm> {
                   SizedBox(height: 10),
                   contractDetailsBlock(),
                   SizedBox(height: 5),
-                  contractRequesterBlock(),
-                  SizedBox(height: 5),
-                  contractProviderBlock(),
+                  contractContractorBlock("C001"),
                   SizedBox(height: 5),
                   contractTACBlock(),
                   SizedBox(height: 20),
@@ -106,6 +105,13 @@ class _UpdateFormState extends State<UpdateForm> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget contractContractorBlock(String contractorId) {
+    buildContractContractors();
+    return Column(
+      children: contractorWidgets,
     );
   }
 
@@ -185,6 +191,38 @@ class _UpdateFormState extends State<UpdateForm> {
         ),
       ),
     );
+  }
+
+  void buildContractContractors() {
+    contractorWidgets.clear();
+    widget.contract.contractors.forEach((contractorId) {
+      contractorWidgets.add(Container(
+        child: FutureBuilder<User> (
+          future: dataProvider.fetchUserById(contractorId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Tooltip(
+                message: 'Tap to edit contractor information',
+                child: MaterialButton(
+                    color: Colors.white,
+                    hoverColor: Colors.blue,
+                    onPressed: () { widget.toggleEditing(2); },
+                    child: Center(
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Contractor: ${snapshot.data!.name!}')
+                        )
+                    )
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        )
+      ));
+    });
   }
 
   void buildContractTerms() {
