@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class UpdateForm extends StatefulWidget {
@@ -17,6 +18,8 @@ class UpdateForm extends StatefulWidget {
 
 class _UpdateFormState extends State<UpdateForm> {
 
+  List<Widget> termWidgets = [];
+  DataProvider dataProvider = new DataProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +153,7 @@ class _UpdateFormState extends State<UpdateForm> {
   }
 
   Tooltip contractTACBlock() {
+    buildContractTerms();
     return Tooltip(
       message: 'Tap to edit the terms & conditions',
       child: MaterialButton(
@@ -166,21 +170,9 @@ class _UpdateFormState extends State<UpdateForm> {
             ),
             Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
             Container(height: 20),
-            //TODO: adjust to new contract form.
-            /**termElement('Amendment', widget.contract.amendment!),
-            termElement('Confidentiality Obligation', widget.contract.confidentialityObligation!),
-            termElement('Data Controller', widget.contract.existDataController!),
-            termElement('Data Protection', widget.contract.existDataProtection!),
-            termElement('Limitation On Use', widget.contract.limitation!),
-            termElement('Method Of notice', widget.contract.methodNotice!),
-            termElement('Third Party Beneficiaries', widget.contract.thirdParties!),
-            termElement('Permitted Disclosure', widget.contract.disclosure!),
-            termElement('Receipt Of Notice', widget.contract.receiptNotice!),
-            termElement('Severability', widget.contract.severability!),
-            termElement('Termination Of Insolvency', widget.contract.terminationInsolvency!),
-            termElement('Termination For Material Breach', widget.contract.terminationMaterialBreach!),
-            termElement('Termination On Notice', widget.contract.terminationNotice!),
-            termElement('Waiver', widget.contract.waiver!)*/
+            Column(
+              children: termWidgets
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -192,6 +184,24 @@ class _UpdateFormState extends State<UpdateForm> {
         ),
       ),
     );
+  }
+
+  void buildContractTerms() {
+    widget.contract.terms.forEach((termId) {
+      termWidgets.add(Container(
+        child: FutureBuilder<Term>(
+            future: dataProvider.fetchTermById(termId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return termElement(snapshot.data!.name!, snapshot.data!.description!);
+              } else if (snapshot.hasError) {
+                return Center(child: Text('${snapshot.error}'));
+              }
+              return Center(child: CircularProgressIndicator());
+            }
+        )
+      ));
+    });
   }
 
   Widget termElement(String term, String termValue) {
