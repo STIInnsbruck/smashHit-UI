@@ -675,45 +675,6 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Widget contractedEntitiesTile(double width, double height) {
-    return Container(
-      height: height / 3,
-      width: width / 3,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 5,
-                spreadRadius: 2.5,
-                offset: Offset(2.5, 2.5))
-          ]),
-      //padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text("Contracted Entities", style: TextStyle(fontSize: textSize)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CircleAvatar(
-                child: Icon(Icons.person),
-                radius: smallSide / 18,
-              ),
-              Icon(Icons.compare_arrows,
-                  color: Colors.grey, size: smallSide / 10),
-              CircleAvatar(
-                child: Icon(Icons.person),
-                radius: smallSide / 18,
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
   /// This function returns the calculated elapsed time of the contract towards the
   /// current day. Return value must be between 0.0 and 1.0 inclusive. If the contract
   /// lies in the past, return 1.0 to represent 100% completion of the contract.
