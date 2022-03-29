@@ -17,7 +17,7 @@ class ViewContract extends StatefulWidget {
 }
 
 class _ContractCreationState extends State<ViewContract> {
-  List<User> users = [];
+  List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
   DataProvider dataProvider = new DataProvider();
   Contract? contract;
@@ -371,6 +371,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Card contractDetailsCard(Contract contract) {
+    buildContractUsers(contract);
     buildContractTerms(contract);
     return Card(
       elevation: 10.0,
@@ -399,7 +400,9 @@ class _ContractCreationState extends State<ViewContract> {
               child: Text('Contract Type: ${contract.contractType}'),
             ),
           ),
-          contractorDetails("C001"),
+          Column(
+            children: contractorWidgets,
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
             child: Align(
@@ -452,6 +455,13 @@ class _ContractCreationState extends State<ViewContract> {
         ],
       ),
     );
+  }
+
+  void buildContractUsers(Contract contract) {
+    contractorWidgets.clear();
+    contract.contractors.forEach((contractorId) {
+      contractorWidgets.add(contractorDetails(contractorId));
+    });
   }
 
   Widget contractorDetails(String contractorId) {
