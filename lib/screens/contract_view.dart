@@ -103,6 +103,7 @@ class _ContractCreationState extends State<ViewContract> {
               crossAxisCount: 2,
               childAspectRatio: orientation == Orientation.portrait ? 1.55 : 2.70,
           ),
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: contract.obligations.length,
           itemBuilder: (BuildContext context, index) {
