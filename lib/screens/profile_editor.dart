@@ -256,34 +256,6 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
               Flexible(
                 flex: 3,
                 child: TextFormField(
-                  controller: stateController,
-                  decoration: InputDecoration(
-                    hintText: "State",
-                    border: InputBorder.none,
-                  ),
-                  enabled: stateEnabled,
-                  focusNode: _stateFocus,
-                  onFieldSubmitted: (val) {
-                    stateEnabled = false;
-                    _focusNextTextField(context, _stateFocus, _cityFocus);
-                    },
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () { setState(() {
-                  stateEnabled = !stateEnabled;
-                }); },
-              ),
-              Spacer(),
-            ],
-          ),
-          Row(
-            children: [
-              Spacer(),
-              Flexible(
-                flex: 3,
-                child: TextFormField(
                   controller: cityController,
                   decoration: InputDecoration(
                     hintText: "City",
@@ -379,7 +351,6 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     phoneController.text = user!.telephoneNumber!;
     emailController.text = user!.email!;
     countryController.text = user!.country!;
-    stateController.text = user!.state!;
     cityController.text = user!.city!;
     addressController.text = user!.streetAddress!;
   }
