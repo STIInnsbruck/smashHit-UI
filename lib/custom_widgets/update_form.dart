@@ -72,7 +72,7 @@ class _UpdateFormState extends State<UpdateForm> {
                       child: Text('Contract Update Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
                   ),
                   SizedBox(height: 10),
-                  contractInformationBlock(),
+                  contractDetailsBlock(),
                   SizedBox(height: 5),
                   contractRequesterBlock(),
                   SizedBox(height: 5),
@@ -87,9 +87,9 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractInformationBlock() {
+  Tooltip contractDetailsBlock() {
     return Tooltip(
-      message: 'Tap to edit contract information.',
+      message: 'Tap to edit contract details.',
       child: MaterialButton(
         color: Colors.white,
         hoverColor: Colors.blue,
@@ -99,9 +99,10 @@ class _UpdateFormState extends State<UpdateForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-                child: Text('Contract Information', style: TextStyle(fontSize: 25)),
+                child: Text('Contract Details', style: TextStyle(fontSize: 20)),
             ),
-            Text('Contract Type: ${widget.contract.getContractType()}', style: TextStyle(fontSize: 15))
+            Text('Contract ID: ${widget.contract.contractId}'),
+            Text('Contract Type: ${widget.contract.getContractType()}')
           ],
         ),
       ),
