@@ -653,30 +653,6 @@ class _ContractCreationState extends State<ViewContract> {
     });
   }
 
-  void _showContractPurposeDialog(double width) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Contract Purpose'),
-            content: Scrollbar(
-              child: SingleChildScrollView(
-                child: Container(
-                    width: width / 2, child: Text(contract!.purpose!)),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  _dismissDialog();
-                },
-                child: Text('Close'),
-              )
-            ],
-          );
-        });
-  }
-
   void _showObligationCompletionDialog() {
     showDialog(
         context: context,
