@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/reportable_widget.dart';
 
@@ -49,6 +50,9 @@ class _ClaimFormState extends State<ClaimForm> {
   CheckBoxBooleanEdit isTerminationOnNotice2 = CheckBoxBooleanEdit();
   CheckBoxBooleanEdit isWaiver2 = CheckBoxBooleanEdit();
 
+  List<Widget> termWidgets = [];
+  DataProvider dataProvider = new DataProvider();
+
   @override
   void initState() {
     super.initState();
@@ -78,6 +82,7 @@ class _ClaimFormState extends State<ClaimForm> {
   }
 
   Widget claimFormBody(double width) {
+    buildContractTerms();
     return Container(
       width: width,
       decoration: BoxDecoration(
@@ -135,20 +140,9 @@ class _ClaimFormState extends State<ClaimForm> {
               Container(height: 10),
               //TODO: adjust to new contract form.
               ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
-              /**ReportableWidget(child: displayTermElementInfo("Amendment", widget.contract.amendment!)),
-              ReportableWidget(child: displayTermElementInfo("Confidentiality Obligation", widget.contract.confidentialityObligation!)),
-              ReportableWidget(child: displayTermElementInfo("Data Controller", widget.contract.existDataController!)),
-              ReportableWidget(child: displayTermElementInfo("Data Protection", widget.contract.existDataProtection!)),
-              ReportableWidget(child: displayTermElementInfo("Limitation On Use", widget.contract.limitation!)),
-              ReportableWidget(child: displayTermElementInfo("Method Of Notice", widget.contract.methodNotice!)),
-              ReportableWidget(child: displayTermElementInfo("Third Party Beneficiaries", widget.contract.thirdParties!)),
-              ReportableWidget(child: displayTermElementInfo("Permitted Disclosure", widget.contract.disclosure!)),
-              ReportableWidget(child: displayTermElementInfo("Receipt Of Notice", widget.contract.receiptNotice!)),
-              ReportableWidget(child: displayTermElementInfo("Severability", widget.contract.severability!)),
-              ReportableWidget(child: displayTermElementInfo("Termination Of Insolvency", widget.contract.terminationInsolvency!)),
-              ReportableWidget(child: displayTermElementInfo("Termination For Material Breach", widget.contract.terminationMaterialBreach!)),
-              ReportableWidget(child: displayTermElementInfo("Termination On Notice", widget.contract.terminationNotice!)),
-              ReportableWidget(child: displayTermElementInfo("Waiver", widget.contract.waiver!)),*/
+              Column(
+                children: termWidgets,
+              ),
               Container(height: 20),
               Container(height: 50),
               Container(height: 50,
@@ -170,6 +164,24 @@ class _ClaimFormState extends State<ClaimForm> {
         )
       ),
     );
+  }
+
+  void buildContractTerms() {
+    widget.contract.terms.forEach((termId) {
+      termWidgets.add(ReportableWidget(
+        child: FutureBuilder<Term>(
+            future: dataProvider.fetchTermById(termId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return displayTermElementInfo(snapshot.data!.name!, snapshot.data!.description!);
+              } else if (snapshot.hasError) {
+                return Center(child: Text('${snapshot.error}'));
+              }
+              return Center(child: CircularProgressIndicator());
+            }
+        )
+      ));
+    });
   }
 
   bool isBigScreen(double width) {
