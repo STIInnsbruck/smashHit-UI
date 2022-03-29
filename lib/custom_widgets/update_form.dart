@@ -210,7 +210,24 @@ class _UpdateFormState extends State<UpdateForm> {
                     child: Center(
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('Contractor: ${snapshot.data!.name!}')
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 15, 5, 15),
+                              child: Column(
+                                children: [
+                                  contractDetailText("Contractor: ", "${snapshot.data!.name}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Email: ", "${snapshot.data!.email}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Phone: ", "${snapshot.data!.telephoneNumber}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Country: ", "${snapshot.data!.country}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("City: ", "${snapshot.data!.city}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Address: ", "${snapshot.data!.streetAddress}")
+                                ],
+                              ),
+                            )
                         )
                     )
                 ),
@@ -223,6 +240,15 @@ class _UpdateFormState extends State<UpdateForm> {
         )
       ));
     });
+  }
+
+  Widget contractDetailText(String type, String content) {
+    return Row(
+      children: [
+        Text("$type", style: TextStyle(fontWeight: FontWeight.bold)),
+        Text("$content")
+      ],
+    );
   }
 
   void buildContractTerms() {
