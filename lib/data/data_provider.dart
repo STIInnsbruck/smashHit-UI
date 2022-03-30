@@ -148,7 +148,7 @@ class DataProvider {
   }
 
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: 'contract/agents/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: 'contractors/'), headers: headers);
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
