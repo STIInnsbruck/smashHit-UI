@@ -496,14 +496,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget contractTAC(Contract contract) {
-    return contract.purpose!.isNotEmpty
-        ? Column(
-            children: [
-              contractTermTitle('Terms and Conditions'),
-              contractTermText(contract.purpose!)
-            ],
-          )
-        : Container();
+    return contractTermTitle('Terms and Conditions');
   }
 
   Widget contractTerm(String termId, int index) {
@@ -512,11 +505,21 @@ class _ContractCreationState extends State<ViewContract> {
           future: dataProvider.fetchTermById(termId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Column(
-                children: [
-                  contractTermTitle("$index. ${snapshot.data!.name!}"),
-                  contractTermText(snapshot.data!.description!)
-                ],
+              return FutureBuilder<TermType>(
+                future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                builder: (context, typeSnapshot) {
+                  if (typeSnapshot.hasData) {
+                    return Column(
+                      children: [
+                        contractTermTitle("$index. ${typeSnapshot.data!.name!}"),
+                        contractTermText(snapshot.data!.description!)
+                      ],
+                    );
+                  } else if (typeSnapshot.hasError) {
+                    return Center(child: Text('${snapshot.error}'));
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }
               );
             } else if (snapshot.hasError) {
               return Center(child: Text('${snapshot.error}'));
