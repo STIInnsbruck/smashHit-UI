@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialButton(
                               onPressed: () {
                                 if (_registrationFormKey.currentState!.validate()) {
-                                  _registerUser(name.text, (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                                  _registerUser((name.text + " " + surname.text), (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
                                 }
                               },
                               child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),

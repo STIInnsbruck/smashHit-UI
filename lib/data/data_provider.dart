@@ -33,25 +33,24 @@ class DataProvider {
 
     var body = {
       "Address": address,
-      "AgentId": agentId,
-      "AgentType": "Person",
-      "City": city,
+      "ContractorId": agentId,
+      "Role": "Person",
       "Country": country,
       "Email": email,
       "Name": name,
       "Phone": phone,
-      "State": state
+      "Territory": state
     };
 
     var jsonBody = jsonEncode(body);
 
-    final response = await http.post(kBaseUrl.replace(path: "/agent/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contractor/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print("Message: \t $data");
-      if(data.toString().compareTo('{Error: Agent id already exist}') == 0 ) {
+      if(data.toString().compareTo('{Error: Contractor id already exist}') == 0 ) {
         return -1;
       } else if (data.toString().compareTo('{Success: Record inserted successfully.}') == 0 ){
         return 1;
@@ -164,7 +163,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
       try {
-        return parser.parseAllUsersById(data["bindings"])[0];
+        return parser.parseUserById(jsonDecode(response.body));
       }catch (e) {
         throw Exception('Failed to fetch agent by id: $contractorId.');
       }
@@ -191,6 +190,17 @@ class DataProvider {
       return true;
     } else {
       throw Exception('Failed to delete contract $contractId.\nBack-end response: ${response.reasonPhrase}.');
+    }
+  }
+
+  Future<List<Contract>> fetchContractByContractorId(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return parser.parseAllContracts(data[""]);
+    } else {
+      throw Exception('Failed to load all contracts.');
     }
   }
 

@@ -22,14 +22,13 @@ class ResponseParser {
 
   User parseUserById(Map jsonUser) {
     return User(
-      id: jsonUser['Contractor']['value'].substring(45),
-      name: jsonUser['name']['value'],
-      streetAddress: jsonUser['address'] == null ? null : jsonUser['address']['value'],
-      //state: jsonUser['state']['value'],
-      city: jsonUser['territory']['value'],
-      country: jsonUser['country']['value'],
-      email: jsonUser['email'] == null ? null : jsonUser['email']['value'],
-      telephoneNumber: jsonUser['phone'] == null ? null : jsonUser['phone']['value'],
+      id: jsonUser['ContractorID'],
+      streetAddress: jsonUser['address'],
+      country: jsonUser['country'],
+      email: jsonUser['email'],
+      name: jsonUser['name'],
+      telephoneNumber: jsonUser['phone'],
+      city: jsonUser['territory'],
     );
   }
 
