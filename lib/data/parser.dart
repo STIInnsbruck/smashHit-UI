@@ -42,45 +42,24 @@ class ResponseParser {
   }
 
   Contract parseContractId(Map jsonContract) {
-    List contractContent = jsonContract["bindings"];
     //initiate contract with its foundational data.
     Contract contract = new Contract(
-        contractId: contractContent[0]['Contract']['value'].substring(45),
-        contractStatus: contractContent[0]['ContractStatus']['value'].substring(45),
-        contractType: contractContent[0]['ContractType']['value'].substring(45),
-        effectiveDate: formatDate(contractContent[0]["EffectiveDate"]["value"].substring(45)),
-        executionDate: formatDate(contractContent[0]["ExecutionDate"]["value"].substring(45)),
-        endDate: formatDate(contractContent[0]["ExecutionDate"]["value"].substring(45)),
-        medium: contractContent[0]["Medium"]["value"],
-        purpose: contractContent[0]['Purpose']['value'],
-        //TODO: add consideration
+        contractId: jsonContract['Contract'],
+        contractStatus: jsonContract['ContractStatus'],
+        contractType: jsonContract['ContractType'],
+        effectiveDate: formatDate(jsonContract["EffectiveDate"]),
+        executionDate: formatDate(jsonContract["ExecutionDate"]),
+        endDate: formatDate(jsonContract["ExecutionDate"]),
+        medium: jsonContract["Medium"],
+        purpose: jsonContract['Purpose'],
+        consentId: jsonContract['ConsentId'],
+        consideration: jsonContract['consideration'],
+        contractCategory: jsonContract['ContractCategory']
     );
-    //insert first contractor, obligation, and term.
-    contract.contractors.add(contractContent[0]["contractors"]["value"].substring(45));
-    contract.obligations.add(contractContent[0]["obligations"]["value"].substring(45));
-    contract.terms.add(contractContent[0]["terms"]["value"].substring(45));
 
-    //check if there are any other contractors, obligations, or terms.
-    for(int i = 1; i < contractContent.length; i++) {
-      //First check if we're still in the same contract, otherwise break.
-      if(contract.contractId!.compareTo(contractContent[i]["Contract"]["value"].substring(45)) == 0) {
-        //Check if the termId is already inserted, otherwise insert.
-        if(!contract.terms.contains(contractContent[i]["terms"]["value"].substring(45))) {
-          contract.terms.add(contractContent[i]["terms"]["value"].substring(45));
-        }
-        //check if obligationId is already inserted, otherwise insert.
-        if(!contract.obligations.contains(contractContent[i]["obligations"]["value"].substring(45))) {
-          contract.obligations.add(contractContent[i]["obligations"]["value"].substring(45));
-        }
-        //check if userId is already inserted, otherwise insert.
-        if(!contract.contractors.contains(contractContent[i]["contractors"]["value"].substring(45))) {
-          contract.contractors.add(contractContent[i]["contractors"]["value"].substring(45));
-        }
-      } else {
-        break;
-      }
-
-    }
+    contract.contractors = jsonContract['identifiers']['contractors'];
+    contract.obligations = jsonContract['identifiers']['obligations'];
+    contract.terms = jsonContract['identifiers']['terms'];
 
     return contract;
   }

@@ -39,9 +39,9 @@ class Contract {
   String? medium;
   String? purpose;
   String? consideration;
-  List<String> contractors = [];
-  List<String> obligations = [];
-  List<String> terms = [];
+  List contractors = [];
+  List obligations = [];
+  List terms = [];
 
 
   Contract({

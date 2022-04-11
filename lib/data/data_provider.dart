@@ -88,7 +88,7 @@ class DataProvider {
   }
 
   Future<Contract> fetchContractById(String contractId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/$contractId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContract/$contractId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Contract contract;
