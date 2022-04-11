@@ -201,7 +201,7 @@ class _ContractCreationState extends State<ViewContract> {
                                 Text('Status: ',
                                     style: TextStyle(
                                         fontSize: 15, fontWeight: FontWeight.bold)),
-                                Icon(Icons.check_circle, color: Colors.green, size: 30)
+                                getIconByStatus(obligationSnapshot.data!.state!)
                               ],
                             ),
                           ),
@@ -394,14 +394,35 @@ class _ContractCreationState extends State<ViewContract> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 1, 15, 5),
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
             child: Align(
               alignment: Alignment.centerLeft,
               child: contractDetailText("Contract Type: ", "${contract.contractType}"),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Contract Medium: ", "${contract.medium}"),
+            ),
+          ),
           Column(
             children: contractorWidgets,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Purpose: ", "${contract.purpose}"),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Consideration: ", "${contract.consideration}"),
+            ),
           ),
           contractTAC(contract),
           Column(
@@ -418,7 +439,7 @@ class _ContractCreationState extends State<ViewContract> {
                   alignment: Alignment.centerLeft,
                   child: contractDetailText("Effective Date: ", "${contract.getFormattedStartDate()}"))),
           Padding(
-              padding: const EdgeInsets.fromLTRB(15, 1, 15, 5),
+              padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: contractDetailText("End Date: ", "${contract.getFormattedEndDate()}"))),
@@ -436,7 +457,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget contractorDetails(String contractorId) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
       child: FutureBuilder<User>(
         future: dataProvider.fetchUserById(contractorId),
         builder: (context, snapshot) {
@@ -631,6 +652,18 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           );
         });
+  }
+
+  Tooltip getIconByStatus(String status) {
+    if (status.compareTo("hasPendingState") == 0) {
+      return Tooltip(
+        message: "Obligation is pending.",
+          child: Icon(Icons.pending, color: Colors.grey, size: 30));
+    } else {
+      return Tooltip(
+        message: "Obligation is completed.",
+          child: Icon(Icons.check_circle, color: Colors.green, size: 30));
+    }
   }
 
   String _formatDate(DateTime dateTime) {
