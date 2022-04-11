@@ -173,10 +173,19 @@ class Obligation {
 
 class Term {
   String? id;
-  String? name;
+  String? termTypeId;
+  String? contractId;
   String? description;
 
-  Term({this.id, this.name, this.description});
+  Term({this.id, this.termTypeId, this.contractId, this.description});
+}
+
+class TermType {
+  String? id;
+  String? description;
+  String? name;
+
+  TermType({this.id, this.description, this.name});
 }
 
 /// Object model to be used in a Contract. It describes the actual object
