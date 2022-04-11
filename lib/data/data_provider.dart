@@ -194,7 +194,7 @@ class DataProvider {
   }
 
   Future<List<Contract>> fetchContractsByContractorId(String contractorId) async {
-    final response = await http.get(  kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
