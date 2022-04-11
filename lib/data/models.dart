@@ -28,32 +28,34 @@ class User {
 /// If the contract is supposed to only be an instant contract lasting for a day,
 /// then make the startDate and endDate the same date.
 class Contract {
-  String? considerationDescription;
-  String? considerationValue;
+  String? consentId;
   String? contractId;
+  String? contractCategory;
   String? contractStatus;
   String? contractType;
-  List<String> contractors = [];
   DateTime? effectiveDate;
   DateTime? endDate;
   DateTime? executionDate;
   String? medium;
-  List<String> obligations = [];
   String? purpose;
+  String? consideration;
+  List<String> contractors = [];
+  List<String> obligations = [];
   List<String> terms = [];
 
 
   Contract({
     required this.contractId,
+    this.consentId,
+    this.contractCategory,
+    this.contractStatus,
     this.contractType,
-    this.purpose,
     this.executionDate,
     this.endDate,
     this.effectiveDate,
-    this.contractStatus,
     this.medium,
-    this.considerationValue,
-    this.considerationDescription
+    this.purpose,
+    this.consideration,
   });
 
   /// Returns an int given the contract's status. The int is needed for the
