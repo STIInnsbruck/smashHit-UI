@@ -109,7 +109,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       Obligation obligation;
       try {
-        obligation = parser.parseObligationId(jsonDecode(response.body));
+        obligation = parser.parseObligationId(jsonDecode(response.body)[0]);
         return obligation;
       } catch (e) {
         throw Exception('Failed to load obligation $obligationId.');

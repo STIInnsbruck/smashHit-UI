@@ -74,20 +74,19 @@ class ResponseParser {
   }
 
   Obligation parseObligationId(Map jsonObligation) {
-    List obligationContent = jsonObligation["bindings"];
     //initiate obligation with its foundational data.
     Obligation obligation = new Obligation(
-      id: obligationContent[0]["Obligation"]["value"].substring(45),
-      description: obligationContent[0]["description"]["value"],
-      executionDate: obligationContent[0]["executiondate"]["value"],
-      endDate: obligationContent[0]["enddate"]["value"],
-      state: obligationContent[0]["state"]["value"].substring(45),
+      id: jsonObligation["obligationID"],
+      description: jsonObligation["description"],
+      executionDate: jsonObligation["execution_date"],
+      endDate: jsonObligation["end_date"],
+      state: jsonObligation["state"],
       //the first json has contractorId
-      contractorId: obligationContent[0]["identifier"]["value"].substring(45),
-      //the second json has termId
-      termId: obligationContent[1]["identifier"]["value"].substring(45),
-      //the third json has contractId
-      contractId: obligationContent[2]["identifier"]["value"].substring(45),
+      contractorId: jsonObligation["identifier"][0],
+      //the second json has obligationId
+      contractId: jsonObligation["identifier"][1],
+      //the third json has termiId
+      termId: jsonObligation["identifier"][2],
     );
 
     return obligation;
