@@ -172,7 +172,17 @@ class _ClaimFormState extends State<ClaimForm> {
             future: dataProvider.fetchTermById(termId),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return displayTermElementInfo(snapshot.data!.name!, snapshot.data!.description!);
+                FutureBuilder<TermType>(
+                    future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                    builder: (context, typeSnapshot) {
+                      if (typeSnapshot.hasData) {
+                        return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
+                      } else if (typeSnapshot.hasError) {
+                        return Center(child: Text('${snapshot.error}'));
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }
+                );
               } else if (snapshot.hasError) {
                 return Center(child: Text('${snapshot.error}'));
               }
