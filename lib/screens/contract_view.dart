@@ -425,9 +425,11 @@ class _ContractCreationState extends State<ViewContract> {
             ),
           ),
           contractTAC(contract),
-          Column(
+          termWidgets.isNotEmpty
+            ? Column(
             children: termWidgets,
-          ),
+          )
+            : Center(child: Text("No Terms were found in the contract.")),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 1),
               child: Align(
@@ -531,12 +533,14 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   void buildContractTerms(Contract contract) {
-    termWidgets.clear();
-    int index = 1;
-    contract.terms.forEach((termId) {
-      termWidgets.add(contractTerm(termId, index));
-      index++;
-    });
+    if (contract.terms.isNotEmpty) {
+      termWidgets.clear();
+      int index = 1;
+      contract.terms.forEach((termId) {
+        termWidgets.add(contractTerm(termId, index));
+        index++;
+      });
+    }
   }
 
   Widget contractTermTitle(String title) {
