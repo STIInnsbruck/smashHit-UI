@@ -26,7 +26,7 @@ class _ContractTileState extends State<ContractTile> {
         splashColor: Colors.white,
         child: _isSmallScreen(screenWidth)? smallContractTile() : bigContractTile(),
         onTap: () {
-          widget.changeScreen(2, '${_formatContractUri(widget.contract!.contractId!)}');
+          widget.changeScreen(2, '${widget.contract!.contractId!}');
         },
       ),
     );
@@ -58,14 +58,14 @@ class _ContractTileState extends State<ContractTile> {
             Expanded(flex: 2, child: Icon(Icons.folder_shared, size: 25)),
             Expanded(
                 flex: 22,
-                child: Text('${_formatContractUri(widget.contract!.contractId!)}', overflow: TextOverflow.ellipsis)
+                child: Text('${widget.contract!.contractId!}', overflow: TextOverflow.ellipsis)
             ),
             //Spacer(flex: 25),
             statusIconByContractStatus(),
             Spacer(flex: 3),
-            editContractButton(_formatContractUri(widget.contract!.contractId!)),
+            editContractButton(widget.contract!.contractId!),
             Spacer(),
-            deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
+            deleteContractButton(widget.contract!.contractId!),
             Spacer()
           ],
         ),
@@ -94,7 +94,7 @@ class _ContractTileState extends State<ContractTile> {
               child: Row(
                 children: [
                   Icon(Icons.folder_shared, size: 75),
-                  SizedBox(width: 200,child: Text('${_formatContractUri(widget.contract!.contractId!)}', overflow: TextOverflow.ellipsis))
+                  SizedBox(width: 200,child: Text('${widget.contract!.contractId!}', overflow: TextOverflow.ellipsis))
                 ],
               ),
             ),
@@ -129,8 +129,8 @@ class _ContractTileState extends State<ContractTile> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text("Actions:"),
-                            editContractButton(_formatContractUri(widget.contract!.contractId!)),
-                            deleteContractButton(_formatContractUri(widget.contract!.contractId!)),
+                            editContractButton(widget.contract!.contractId!),
+                            deleteContractButton(widget.contract!.contractId!),
                           ],
                         ),
                       ),
