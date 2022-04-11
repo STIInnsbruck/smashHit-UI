@@ -25,7 +25,6 @@ class DataProvider {
   var headers = {
     'accept': 'application/json',
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer $token'
   };
 
   Future<int> createAgent(String name, String agentId, String address, String city,
@@ -120,7 +119,7 @@ class DataProvider {
   }
 
   Future<Term> fetchTermById(String termId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/term/$termId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/term/$termId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Term term;
@@ -132,6 +131,22 @@ class DataProvider {
       }
     } else {
       throw Exception('Failed to load term $termId.');
+    }
+  }
+
+  Future<TermType> fetchTermTypeById(String termTypeId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/termType/$termTypeId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      TermType termType;
+      try {
+        termType = parser.parseTermTypeId(jsonDecode(response.body));
+        return termType;
+      } catch (e) {
+        throw Exception('Failed to parse response for termType $termTypeId.');
+      }
+    } else {
+      throw Exception('Failed to load termType $termTypeId.');
     }
   }
 
