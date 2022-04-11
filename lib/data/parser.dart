@@ -99,14 +99,15 @@ class ResponseParser {
 
   //TERM PARSERS
   Term parseTerm(Map jsonTerm) {
-    return Term(id: jsonTerm['Term']['value']);
+    return Term(id: jsonTerm['Term']);
   }
 
   Term parseTermId(Map jsonTerm) {
     Term term = new Term(
-      id: jsonTerm["bindings"][0]["Term"]["value"],
-      description: jsonTerm["bindings"][0]["description"]["value"],
-      name: jsonTerm["bindings"][0]["name"]["value"]
+      id: jsonTerm["TermId"],
+      description: jsonTerm["description"],
+      contractId: jsonTerm["ContractId"],
+      termTypeId: jsonTerm["TermTypeId"]
     );
 
     return term;
@@ -114,6 +115,25 @@ class ResponseParser {
 
   List<Term> parseAllTerm(List jsonList) {
     return jsonList.map((jsonTerm) => parseTerm(jsonTerm)).toList();
+  }
+
+  //TERMTYPE PARSERS
+  TermType parseTermType(Map jsonTermType) {
+    return TermType(id: jsonTermType["TermTypeId"]);
+  }
+
+  TermType parseTermTypeId(Map jsonTermType) {
+    TermType termType = new TermType(
+      id: jsonTermType["TermTypeId"],
+      description: jsonTermType["description"],
+      name: jsonTermType["name"]
+    );
+
+    return termType;
+  }
+
+  List<TermType> parseAllTermTypes(List jsonList) {
+    return jsonList.map((jsonTermType) => parseTermType(jsonTermType)).toList();
   }
 
   DateTime formatDate(String dateString) {
