@@ -193,12 +193,12 @@ class DataProvider {
     }
   }
 
-  Future<List<Contract>> fetchContractByContractorId(String contractorId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
+  Future<List<Contract>> fetchContractsByContractorId(String contractorId) async {
+    final response = await http.get(  kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      return parser.parseAllContracts(data[""]);
+      return parser.parseAllContracts(data);
     } else {
       throw Exception('Failed to load all contracts.');
     }
