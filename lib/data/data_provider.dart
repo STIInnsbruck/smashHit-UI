@@ -164,8 +164,8 @@ class DataProvider {
     final response = await http.get(kBaseUrl.replace(path: 'contractors/'), headers: headers);
 
     if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      return parser.parseAllUsers(data["bindings"]);
+      var data = jsonDecode(response.body);
+      return parser.parseAllUsers(data);
     } else {
       throw Exception('Failed to load all users.');
     }
