@@ -326,7 +326,7 @@ class _LoginScreenState extends State<LoginScreen> {
   _registerUser(String name, String agentId, String address, String city,
       String country, String state, String phone, String agentType, String email) async {
     _toggleLoading();
-    var result = await dataProvider.createAgent(name, agentId, address, city, country, state, phone, agentType, email);
+    var result = await dataProvider.createAgent(name, address, city, country, state, phone, email);
     if (result == 1) {
       _toggleLoading();
       _loginUser(agentId);

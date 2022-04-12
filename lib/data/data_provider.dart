@@ -211,8 +211,13 @@ class DataProvider {
     final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      return parser.parseAllContracts(data);
+      List<Contract> contracts = [];
+      try {
+        contracts = parser.parseAllContracts(jsonDecode(response.body));
+        return contracts;
+      } catch (e) {
+        return contracts;
+      }
     } else {
       throw Exception('Failed to load all contracts.');
     }
