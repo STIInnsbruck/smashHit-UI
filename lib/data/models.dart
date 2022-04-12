@@ -5,13 +5,12 @@ class User {
   String? name;
   String? email;
   String? streetAddress;
-  String? state;
   String? country;
   String? city;
   String? telephoneNumber;
   String? role;
 
-  User({this.id, this.name, this.email, this.streetAddress, this.state, this.country, this.city, this.telephoneNumber, this.role});
+  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.telephoneNumber, this.role});
 
   String? get getId => id;
   String? get getName => name;
