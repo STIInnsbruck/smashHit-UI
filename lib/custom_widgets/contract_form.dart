@@ -16,6 +16,9 @@ class ContractForm extends StatefulWidget {
   DateTime? executionDate;
   DateTime? endDate;
   TextEditingController titleController = TextEditingController();
+  TextEditingController considerationDescController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController considerationValController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
@@ -124,7 +127,7 @@ class _ContractFormState extends State<ContractForm> {
               children: [
                 contractStep1Header(formWidth),
                 toggleStepOne == true
-                    ? contractStep1(formWidth)
+                    ? contractStep1(formWidth, screenHeight)
                     : Container(),
                 contractStep2Header(formWidth),
                 toggleStepTwo == true
@@ -355,7 +358,7 @@ class _ContractFormState extends State<ContractForm> {
   /// The contract creation is done primarily in 4 steps. This is the first step
   /// block. In the first step only the title, date and medium and contract
   /// type are required to be entered by the user.
-  Widget contractStep1(double width) {
+  Widget contractStep1(double width, double height) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
@@ -375,10 +378,12 @@ class _ContractFormState extends State<ContractForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               titleField(),
-              Container(height: 10),
-              //contractTypeMenu(),
+              SizedBox(height: 10),
               contractTypeRadioMenu(),
-              Container(height: 10),
+              SizedBox(height: 10),
+              _isWideScreen(width, height)
+                  ? _wideScreenDateButtonsLayout()
+                  : _slimScreenDateButtonsLayout()
             ],
           ),
         ),
@@ -587,10 +592,6 @@ class _ContractFormState extends State<ContractForm> {
                   checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13], width / 4),
                 ],
               ),
-              SizedBox(height: 10),
-              _isWideScreen(width, height)
-              ? _wideScreenDateButtonsLayout()
-                  : _slimScreenDateButtonsLayout()
             ],
           ),
         ),
@@ -602,16 +603,6 @@ class _ContractFormState extends State<ContractForm> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
-          child: Column(
-            children: [
-              startDate == null
-                  ? Container()
-                  : Text("Chosen Start Date:"),
-              startDateButton(),
-            ],
-          ),
-        ),
         Expanded(
           child: Column(
             children: [
@@ -647,15 +638,6 @@ class _ContractFormState extends State<ContractForm> {
   Widget _slimScreenDateButtonsLayout() {
     return Column(
       children: [
-        Column(
-          children: [
-            startDate == null
-                ? Container()
-                : Text("Chosen Start Date:"),
-            startDateButton(),
-          ],
-        ),
-        SizedBox(height: 10),
         Column(
           children: [
             effectiveDate == null
@@ -1230,6 +1212,75 @@ class _ContractFormState extends State<ContractForm> {
               }
               return null;
             },
+          ),
+          SizedBox(height: 10),
+          Text("What is the consideration of your contract?",
+              style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            controller: widget.considerationDescController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a consideration for your contract.';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 10),
+          Text("What is the value of your contract?",
+              style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            controller: widget.considerationValController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a value for your contract.';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 10),
+          Text("What is the category of your contract?",
+              style: TextStyle(fontSize: 15)),
+          SizedBox(height: 5),
+          TextFormField(
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.blue)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
+            ),
+            controller: widget.categoryController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a category for your contract.';
+              }
+              return null;
+            },
           )
         ],
       ),
@@ -1517,8 +1568,8 @@ class _ContractFormState extends State<ContractForm> {
       lastDate: DateTime(2050, 1, 1),
     );
     if (pickedDate != null &&
-        startDate != null &&
-        pickedDate.isAfter(startDate!)) {
+        effectiveDate != null &&
+        pickedDate.isAfter(effectiveDate!)) {
       setState(() {
         endDate = pickedDate;
         setWidgetEndDate();
