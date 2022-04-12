@@ -2112,7 +2112,6 @@ class _ContractFormState extends State<ContractForm> {
     widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
     widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
     widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.providerControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
     widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
     widget.providerControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
   }
@@ -2122,7 +2121,6 @@ class _ContractFormState extends State<ContractForm> {
     widget.requesterControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
     widget.requesterControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
     widget.requesterControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.requesterControllers[index+4].text = selected.state == null ? 'No state found' : selected.state!;
     widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
     widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
   }
