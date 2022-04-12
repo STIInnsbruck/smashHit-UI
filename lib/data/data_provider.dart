@@ -27,18 +27,17 @@ class DataProvider {
     'Content-Type': 'application/json',
   };
 
-  Future<int> createAgent(String name, String agentId, String address, String city,
-      String country, String state, String phone, String agentType, String email) async {
+  Future<int> createAgent(String name, String address, String city,
+      String country, String phone, String role, String email) async {
 
     var body = {
       "Address": address,
-      "ContractorId": agentId,
-      "Role": "Person",
       "Country": country,
       "Email": email,
       "Name": name,
       "Phone": phone,
-      "Territory": state
+      "Role": role,
+      "Territory": city
     };
 
     var jsonBody = jsonEncode(body);
