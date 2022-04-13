@@ -11,13 +11,13 @@ import 'package:flutter/material.dart';
 class ContractStepHeader extends StatelessWidget {
   final double width;
   final String name;
-  final bool stepComplete;
+  final bool? stepComplete;
   final Function() onPressed;
 
   ContractStepHeader(
       {required this.width,
       required this.name,
-      required this.stepComplete,
+      this.stepComplete,
       required this.onPressed});
 
   @override
