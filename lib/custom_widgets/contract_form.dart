@@ -127,78 +127,9 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                /**contractStep1Header(formWidth),
-                toggleStepOne == true
-                    ? contractStep1(formWidth, screenHeight)
-                    : Container(),*/
-                ContractStepHeader(
-                  width: formWidth,
-                  name: "Step 1. Contract Base Information",
-                  stepComplete: stepOneComplete,
-                  onPressed: () => setStepOne(),
-                ),
-                toggleStepOne == true
-                    ? ContractStepBody(
-                        width: formWidth,
-                        children: [
-                          titleField(),
-                          SizedBox(height: 10),
-                          contractTypeRadioMenu(),
-                          SizedBox(height: 10),
-                          _wideScreenDateButtonsLayout()
-                        ])
-                    : Container(),
-                ContractStepHeader(
-                    width: formWidth,
-                    name: "Step 2. Data Controller Details",
-                    stepComplete: stepTwoComplete,
-                    onPressed: () async {
-                      setStepTwo();
-                    }),
-                toggleStepTwo == true
-                    ? ContractStepBody(
-                      width: formWidth,
-                      children: [
-                        Text("Role: Data Controller ${currentRequesterIndex + 1}",
-                            style: TextStyle(fontSize: 20)),
-                        SizedBox(height: 10),
-                        // Every Requester has 7 Fields. Assign each field the right controller.
-                        requesterFieldSuggestor((currentRequesterIndex * 7) + 0),
-                        requesterEmailField((currentRequesterIndex * 7) + 1),
-                        requesterAddressField((currentRequesterIndex * 7) + 2),
-                        SizedBox(height: 10),
-                        requesterCSCDropDownList((currentRequesterIndex * 7) + 3),
-                        SizedBox(height: 10),
-                        requesterPhoneField((currentRequesterIndex * 7) + 6),
-                        SizedBox(height: 20),
-                    ])
-                    : Container(),
-                ContractStepHeader(
-                  width: formWidth,
-                  name: "Step 3. Data Subject Details",
-                  stepComplete: stepThreeComplete,
-                  onPressed:  () async  {
-                    setStepThree();
-                  }
-                ),
-                toggleStepThree == true
-                    ? ContractStepBody(
-                        width: formWidth,
-                        children: [
-                          Text("Role: Data Processor ${currentProviderIndex + 1}",
-                              style: TextStyle(fontSize: 20)),
-                          SizedBox(height: 10),
-                          providerFieldSuggestor((currentProviderIndex * 7) + 0),
-                          providerEmailField((currentProviderIndex * 7) + 1),
-                          providerAddressField((currentProviderIndex * 7) + 2),
-                          SizedBox(height: 10),
-                          providerCSCDropDownList((currentProviderIndex * 7) + 3),
-                          SizedBox(height: 10),
-                          providerPhoneField((currentProviderIndex * 7) + 6),
-                          SizedBox(height: 20),
-                        ]
-                    )
-                    : Container(),
+                contractStepOne(formWidth),
+                contractStepTwo(formWidth),
+                contractStepThree(formWidth),
                 contractStep4Header(formWidth),
                 toggleStepFour == true
                     ? contractStep4(formWidth)
@@ -300,7 +231,94 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   //------------------ STEP BLOCKS ---------------------------------------------
+  Widget contractStepOne(double width) {
+    return Column(
+      children: [
+        ContractStepHeader(
+          width: width,
+          name: "Step 1. Contract Base Information",
+          stepComplete: stepOneComplete,
+          onPressed: () => setStepOne(),
+        ),
+        toggleStepOne == true
+            ? ContractStepBody(
+            width: width,
+            children: [
+              titleField(),
+              SizedBox(height: 10),
+              contractTypeRadioMenu(),
+              SizedBox(height: 10),
+              _wideScreenDateButtonsLayout()
+            ])
+            : Container(),
+      ],
+    );
+  }
 
+  Widget contractStepTwo(double width) {
+    return Column(
+      children: [
+        ContractStepHeader(
+            width: width,
+            name: "Step 2. Data Controller Details",
+            stepComplete: stepTwoComplete,
+            onPressed: () async {
+              setStepTwo();
+            }),
+        toggleStepTwo == true
+            ? ContractStepBody(
+            width: width,
+            children: [
+              Text("Role: Data Controller ${currentRequesterIndex + 1}",
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
+              // Every Requester has 7 Fields. Assign each field the right controller.
+              requesterFieldSuggestor((currentRequesterIndex * 7) + 0),
+              requesterEmailField((currentRequesterIndex * 7) + 1),
+              requesterAddressField((currentRequesterIndex * 7) + 2),
+              SizedBox(height: 10),
+              requesterCSCDropDownList((currentRequesterIndex * 7) + 3),
+              SizedBox(height: 10),
+              requesterPhoneField((currentRequesterIndex * 7) + 6),
+              SizedBox(height: 20),
+            ])
+            : Container()
+      ],
+    );
+  }
+
+  Widget contractStepThree(double width) {
+    return Column(
+      children: [
+        ContractStepHeader(
+            width: width,
+            name: "Step 3. Data Subject Details",
+            stepComplete: stepThreeComplete,
+            onPressed:  () async  {
+              setStepThree();
+            }
+        ),
+        toggleStepThree == true
+            ? ContractStepBody(
+            width: width,
+            children: [
+              Text("Role: Data Processor ${currentProviderIndex + 1}",
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
+              providerFieldSuggestor((currentProviderIndex * 7) + 0),
+              providerEmailField((currentProviderIndex * 7) + 1),
+              providerAddressField((currentProviderIndex * 7) + 2),
+              SizedBox(height: 10),
+              providerCSCDropDownList((currentProviderIndex * 7) + 3),
+              SizedBox(height: 10),
+              providerPhoneField((currentProviderIndex * 7) + 6),
+              SizedBox(height: 20),
+            ]
+        )
+            : Container()
+      ],
+    );
+  }
   /// The contract creation is done primarily in 4 steps. This is the fourth
   /// step block. In the fourth step the user has to fill in the terms and
   /// conditions of the contract.
