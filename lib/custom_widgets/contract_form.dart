@@ -3,6 +3,8 @@ import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
+import 'package:smashhit_ui/custom_widgets/contract_step_header.dart';
+import 'package:smashhit_ui/custom_widgets/contract_step_body.dart';
 
 enum ContractType { Written, Mutual, Verbal, Transferable }
 
@@ -125,9 +127,26 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                contractStep1Header(formWidth),
+                /**contractStep1Header(formWidth),
                 toggleStepOne == true
                     ? contractStep1(formWidth, screenHeight)
+                    : Container(),*/
+                ContractStepHeader(
+                  width: formWidth,
+                  name: "Step 1. Contract Base Information",
+                  stepComplete: stepOneComplete,
+                  onPressed: () => setStepOne(),
+                ),
+                toggleStepOne == true
+                    ? ContractStepBody(
+                        width: formWidth,
+                        children: [
+                          titleField(),
+                          SizedBox(height: 10),
+                          contractTypeRadioMenu(),
+                          SizedBox(height: 10),
+                          _wideScreenDateButtonsLayout()
+                        ])
                     : Container(),
                 contractStep2Header(formWidth),
                 toggleStepTwo == true
