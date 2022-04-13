@@ -148,13 +148,56 @@ class _ContractFormState extends State<ContractForm> {
                           _wideScreenDateButtonsLayout()
                         ])
                     : Container(),
-                contractStep2Header(formWidth),
+                ContractStepHeader(
+                    width: formWidth,
+                    name: "Step 2. Data Controller Details",
+                    stepComplete: stepTwoComplete,
+                    onPressed: () async {
+                      setStepTwo();
+                    }),
                 toggleStepTwo == true
-                    ? contractStep2(formWidth, currentRequesterIndex)
+                    ? ContractStepBody(
+                      width: formWidth,
+                      children: [
+                        Text("Role: Data Controller ${currentRequesterIndex + 1}",
+                            style: TextStyle(fontSize: 20)),
+                        SizedBox(height: 10),
+                        // Every Requester has 7 Fields. Assign each field the right controller.
+                        requesterFieldSuggestor((currentRequesterIndex * 7) + 0),
+                        requesterEmailField((currentRequesterIndex * 7) + 1),
+                        requesterAddressField((currentRequesterIndex * 7) + 2),
+                        SizedBox(height: 10),
+                        requesterCSCDropDownList((currentRequesterIndex * 7) + 3),
+                        SizedBox(height: 10),
+                        requesterPhoneField((currentRequesterIndex * 7) + 6),
+                        SizedBox(height: 20),
+                    ])
                     : Container(),
-                contractStep3Header(formWidth),
+                ContractStepHeader(
+                  width: formWidth,
+                  name: "Step 3. Data Subject Details",
+                  stepComplete: stepThreeComplete,
+                  onPressed:  () async  {
+                    setStepThree();
+                  }
+                ),
                 toggleStepThree == true
-                    ? contractStep3(formWidth, currentProviderIndex)
+                    ? ContractStepBody(
+                        width: formWidth,
+                        children: [
+                          Text("Role: Data Processor ${currentProviderIndex + 1}",
+                              style: TextStyle(fontSize: 20)),
+                          SizedBox(height: 10),
+                          providerFieldSuggestor((currentProviderIndex * 7) + 0),
+                          providerEmailField((currentProviderIndex * 7) + 1),
+                          providerAddressField((currentProviderIndex * 7) + 2),
+                          SizedBox(height: 10),
+                          providerCSCDropDownList((currentProviderIndex * 7) + 3),
+                          SizedBox(height: 10),
+                          providerPhoneField((currentProviderIndex * 7) + 6),
+                          SizedBox(height: 20),
+                        ]
+                    )
                     : Container(),
                 contractStep4Header(formWidth),
                 toggleStepFour == true
@@ -373,157 +416,6 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   //------------------ STEP BLOCKS ---------------------------------------------
-
-  /// The contract creation is done primarily in 4 steps. This is the first step
-  /// block. In the first step only the title, date and medium and contract
-  /// type are required to be entered by the user.
-  Widget contractStep1(double width, double height) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-      width: width,
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              titleField(),
-              SizedBox(height: 10),
-              contractTypeRadioMenu(),
-              SizedBox(height: 10),
-              _isWideScreen(width, height)
-                  ? _wideScreenDateButtonsLayout()
-                  : _slimScreenDateButtonsLayout()
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// The contract creation is done primarily in 4 steps. This is the second
-  /// step block. In the second step the user has to fill in the details about
-  /// all requester actors in the contract.
-  /// [index] is the requester in the list of requesters.
-  Widget contractStep2(double width, int index) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-      width: width,
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Role: Data Controller ${index + 1}",
-                  style: TextStyle(fontSize: 20)),
-              SizedBox(height: 10),
-              // Every Requester has 7 Fields. Assign each field the right controller.
-              requesterFieldSuggestor((index * 7) + 0),
-              requesterEmailField((index * 7) + 1),
-              requesterAddressField((index * 7) + 2),
-              SizedBox(height: 10),
-              requesterCSCDropDownList((index * 7) + 3),
-              SizedBox(height: 10),
-              requesterPhoneField((index * 7) + 6),
-              SizedBox(height: 10),
-              /**Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  currentRequesterIndex - 1 >= 0
-                      ? previousRequesterButton()
-                      : Container(width: 40),
-                  addRequesterButton(),
-                  currentRequesterIndex > 0
-                      ? removeRequesterButton()
-                      : Container(),
-                  currentRequesterIndex + 1 < requesters.length
-                      ? nextRequesterButton()
-                      : Container(width: 40),
-                ],
-              ),*/
-              Container(height: 10),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// The contract creation is done primarily in 4 steps. This is the third step
-  /// block. In the third step the user has to fill in the details about all
-  /// provider actors in the contract.
-  /// [index] is the provider in the list of providers.
-  Widget contractStep3(double width, int index) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-      width: width,
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Role: Data Processor ${index + 1}",
-                  style: TextStyle(fontSize: 20)),
-              SizedBox(height: 10),
-              providerFieldSuggestor((index * 7) + 0),
-              providerEmailField((index * 7) + 1),
-              providerAddressField((index * 7) + 2),
-              SizedBox(height: 10),
-              providerCSCDropDownList((index * 7) + 3),
-              SizedBox(height: 10),
-              providerPhoneField((index * 7) + 6),
-              SizedBox(height: 10),
-              /**Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  currentProviderIndex - 1 >= 0
-                      ? previousProviderButton()
-                      : Container(width: 40),
-                  addProviderButton(),
-                  currentProviderIndex > 0
-                      ? removeProviderButton()
-                      : Container(),
-                  currentProviderIndex + 1 < providers.length
-                      ? nextProviderButton()
-                      : Container(width: 40),
-                ],
-              ),*/
-              Container(height: 10),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   /// The contract creation is done primarily in 4 steps. This is the fourth
   /// step block. In the fourth step the user has to fill in the terms and
