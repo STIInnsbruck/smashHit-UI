@@ -256,6 +256,8 @@ class _ContractFormState extends State<ContractForm> {
           ? ContractStepBody(
             width: width,
             children: [
+              addTermButton(),
+              /**
               descriptionField(),
               SizedBox(height: 10),
               Column(
@@ -319,7 +321,7 @@ class _ContractFormState extends State<ContractForm> {
                       isTerminationOnNotice, widget.termControllers[12], width / 4),
                   checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13], width / 4),
                 ],
-              ),
+              ),*/
             ]
         )
             : Container()
@@ -1603,6 +1605,23 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  Widget addTermButton() {
+    return MaterialButton(
+      onPressed: () => _showTermSelectionDialog(),
+      child: Container(
+          height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            color: Colors.blue,
+          ),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+          child: Center(
+            child: Text("TAP TO ADD A TERM", style: TextStyle(color: Colors.white)),
+          )
+      ),
+    );
+  }
+
   /// Widget to form a signature line with [name] of the corresponding person
   /// displayed under the signature line.
   Widget signatureField(String name) {
@@ -1877,6 +1896,18 @@ class _ContractFormState extends State<ContractForm> {
 
           );
         }
+    );
+  }
+
+  _showTermSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Center(child: Text("Select A Term")),
+
+        );
+      }
     );
   }
 
