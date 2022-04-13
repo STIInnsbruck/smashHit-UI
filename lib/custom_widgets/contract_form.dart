@@ -131,11 +131,7 @@ class _ContractFormState extends State<ContractForm> {
                 contractStepTwo(formWidth),
                 contractStepThree(formWidth),
                 contractStepFour(formWidth),
-                contractStep4Header(formWidth),
-                contractStepFinalHeader(formWidth),
-                toggleStepFinal == true
-                    ? contractStepFinal(formWidth)
-                    : Container(),
+                contractStepFinal(formWidth),
               ])),
       Align(
         alignment: Alignment.bottomRight,
@@ -153,79 +149,6 @@ class _ContractFormState extends State<ContractForm> {
         child: previousStepButton(),
       )
     ]);
-  }
-
-  //------------------ STEP HEADERS --------------------------------------------
-  Widget contractStep4Header(double width) {
-    return MaterialButton(
-      child: Container(
-        width: width,
-        height: 50,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: stepFourComplete == true
-                ? Colors.green
-                : Colors.grey,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 25.0,
-                  spreadRadius: 5.0,
-                  offset: Offset(10.0, 10.0))
-            ]),
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Align(
-            child: Row(
-              children: [
-                Expanded(
-                    child: Text("Step 4. Terms & Conditions of the Contract",
-                        style: TextStyle(color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        maxLines: 1)),
-                Container(width: 10),
-                stepFourComplete == true
-                    ? Icon(Icons.check, color: Colors.white, size: 30)
-                    : Container(),
-              ],
-            ),
-            alignment: Alignment.centerLeft),
-      ),
-      onPressed: () => setStepFour(),
-    );
-  }
-
-  Widget contractStepFinalHeader(double width) {
-    return MaterialButton(
-      child: Container(
-        width: width,
-        height: 50,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: Colors.grey,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 25.0,
-                  spreadRadius: 5.0,
-                  offset: Offset(10.0, 10.0))
-            ]),
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Align(
-            child: Row(
-              children: [
-                Expanded(
-                    child: Text("Final Step - Overview",
-                        style: TextStyle(color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        maxLines: 1)),
-              ],
-            ),
-            alignment: Alignment.centerLeft),
-      ),
-      onPressed: () => setStepFinal(),
-    );
   }
 
   //------------------ STEP BLOCKS ---------------------------------------------
@@ -404,96 +327,168 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  /// The contract creation is done primarily in 4 steps. This is the fourth
-  /// step block. In the fourth step the user has to fill in the terms and
-  /// conditions of the contract.
-  Widget contractStep4(double width) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-      width: width,
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget contractStepFinal(double width) {
+    return Column(
+      children: [
+        ContractStepHeader(
+            width: width,
+            name: "Final Step - Overview",
+            onPressed: () => setStepFinal()
+        ),
+        toggleStepFinal == true
+            ? ContractStepBody(
+            width: width,
             children: [
-              descriptionField(),
-              SizedBox(height: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Text('${widget.titleController.text}',
+                  style: TextStyle(
+                      fontSize: 25, decoration: TextDecoration.underline),
+                  textAlign: TextAlign.center),
+              Container(height: 20),
+              Align(
+                child: Text('Contract Type: $_type',
+                    style: TextStyle(fontSize: 15)),
+                alignment: Alignment.centerLeft,
+              ),
+              Container(height: 10),
+              Row(
                 children: [
-                  checkBoxElement(
-                      'Amendment', 'Has an amendment', AMENDMENT, isAmendment, widget.termControllers[0], width / 4),
-                  checkBoxElement(
-                      'ConfidentialityObligation',
-                      'Is there a confidentiality obligation?',
-                      CONFIDENTIALITY_OBLIGATION,
-                      isConfidentialObligation, widget.termControllers[1], width / 4),
-                  checkBoxElement(
-                      'DataController',
-                      'Is there a data controller?',
-                      DATA_CONTROLLER,
-                      isDataController, widget.termControllers[2], width / 4),
-                  checkBoxElement(
-                      'DataProtection',
-                      'Does the contract contain data protection?',
-                      DATA_PROTECTION,
-                      isDataProtection, widget.termControllers[3], width / 4),
-                  checkBoxElement(
-                      'LimitationOnUse',
-                      'Is there a limitation on use?',
-                      LIMITATION_ON_USE,
-                      isLimitationOnUse, widget.termControllers[4], width / 4),
-                  checkBoxElement('MethodOfNotice', 'Has method of notice?',
-                      METHOD_OF_NOTICE, isMethodOfNotice, widget.termControllers[5], width / 4),
-                  checkBoxElement(
-                      'NoThirdPartyBeneficiaries',
-                      'Are there third party beneficiaries?',
-                      NO_THIRD_PARTY_BENEFICIARIES,
-                      isNoThirdPartyBeneficiaries, widget.termControllers[6], width / 4),
-                  checkBoxElement(
-                      'PermittedDisclosure',
-                      'Is there a permitted disclosure?',
-                      PERMITTED_DISCLOSURE,
-                      isPermittedDisclosure, widget.termControllers[7], width / 4),
-                  checkBoxElement(
-                      'ReceiptOfNotice',
-                      'Is there a receipt of notice?',
-                      RECEIPT_OF_NOTICE,
-                      isReceiptOfNotice, widget.termControllers[8], width / 4),
-                  checkBoxElement('Severability', 'Is there a severability?',
-                      SEVERABILITY, isSeverability, widget.termControllers[9], width / 4),
-                  checkBoxElement(
-                      'TerminationForInsolvency',
-                      'Is there a termination for insolvency?',
-                      TERMINATION_FOR_INSOLVENCY,
-                      isTerminationForInsolvency, widget.termControllers[10], width / 4),
-                  checkBoxElement(
-                      'TerminationForMaterialBreach',
-                      'Is there a termination for material breach?',
-                      TERMINATION_FOR_MATERIAL_BREACH,
-                      isTerminationForMaterialBreach, widget.termControllers[11], width / 4),
-                  checkBoxElement(
-                      'TerminationOnNotice',
-                      'Is there a termination on notice?',
-                      TERMINATION_ON_NOTICE,
-                      isTerminationOnNotice, widget.termControllers[12], width / 4),
-                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13], width / 4),
+                  Text('Data Controller(s):', style: TextStyle(fontSize: 15)),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('${widget.requesterControllers[0].text}')
+                    ],
+                  )
                 ],
               ),
-            ],
-          ),
-        ),
-      ),
+              Container(height: 10),
+              Row(
+                children: [
+                  Text('Data Processor(s):', style: TextStyle(fontSize: 15)),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('${widget.providerControllers[0].text}')
+                    ],
+                  )
+                ],
+              ),
+              Container(height: 20),
+              Text('Terms & Conditions',
+                  style: TextStyle(
+                      fontSize: 20, decoration: TextDecoration.underline)),
+              Container(height: 20),
+              Container(
+                //padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: Text('${widget.descriptionController.text}',
+                      textAlign: TextAlign.justify)),
+              Container(height: 20),
+              Text('Amendment',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isAmendment, widget.termControllers[0]),
+
+              Container(height: 20),
+              Text('Confidentiality Obligation',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isConfidentialObligation, widget.termControllers[1]),
+
+              Container(height: 20),
+              Text('Data Controller',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isDataController, widget.termControllers[2]),
+
+              Container(height: 20),
+              Text('Data Protection',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isDataProtection, widget.termControllers[3]),
+
+              Container(height: 20),
+              Text('Limitation On Use',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isLimitationOnUse, widget.termControllers[4]),
+
+              Container(height: 20),
+              Text('Method Of Notice',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isMethodOfNotice, widget.termControllers[5]),
+
+              Container(height: 20),
+              Text('Third Party Beneficiaries',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isNoThirdPartyBeneficiaries, widget.termControllers[6]),
+
+              Container(height: 20),
+              Text('Permitted Disclosure',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isPermittedDisclosure, widget.termControllers[7]),
+
+              Container(height: 20),
+              Text('Receipt of Notice',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isConfidentialObligation, widget.termControllers[8]),
+
+              Container(height: 20),
+              Text('Severability',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isSeverability, widget.termControllers[9]),
+
+              Container(height: 20),
+              Text('Termination Of Insolvency',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isTerminationForInsolvency, widget.termControllers[10]),
+
+              Container(height: 20),
+              Text('Termination For Material Breach',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isTerminationForMaterialBreach, widget.termControllers[11]),
+
+              Container(height: 20),
+              Text('Termination On Notice',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isTerminationOnNotice, widget.termControllers[12]),
+
+              Container(height: 20),
+              Text('Waiver',
+                  style: TextStyle(
+                      fontSize: 15, decoration: TextDecoration.underline)),
+              displayTermElementInfo(isWaiver, widget.termControllers[13]),
+
+              Container(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('Effective Date: ${_formatDate(effectiveDate)}'),
+                  Text('Execution Date: ${_formatDate(executionDate)}'),
+                  Text('End Date: ${_formatDate(endDate)}'),
+                ],
+              ),
+              Container(height: 40),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    displaySignatureFields(widget.requesterControllers),
+                    displaySignatureFields(widget.providerControllers)
+                  ],
+                ),
+              )
+            ]
+        )
+            : Container()
+      ],
     );
   }
 
@@ -561,177 +556,6 @@ class _ContractFormState extends State<ContractForm> {
           ],
         ),
       ],
-    );
-  }
-
-  /// The contract creation has a final step for the user to overview their
-  /// created contract and confirm their input.
-  Widget contractStepFinal(double width) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 25.0,
-                spreadRadius: 5.0,
-                offset: Offset(10.0, 10.0))
-          ]),
-      padding: EdgeInsets.fromLTRB(60, 20, 60, 20),
-      width: width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('${widget.titleController.text}',
-              style: TextStyle(
-                  fontSize: 25, decoration: TextDecoration.underline),
-              textAlign: TextAlign.center),
-          Container(height: 20),
-          Align(
-            child: Text('Contract Type: $_type',
-                style: TextStyle(fontSize: 15)),
-            alignment: Alignment.centerLeft,
-          ),
-          Container(height: 10),
-          Row(
-            children: [
-              Text('Data Controller(s):', style: TextStyle(fontSize: 15)),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('${widget.requesterControllers[0].text}')
-                ],
-              )
-            ],
-          ),
-          Container(height: 10),
-          Row(
-            children: [
-              Text('Data Processor(s):', style: TextStyle(fontSize: 15)),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('${widget.providerControllers[0].text}')
-                ],
-              )
-            ],
-          ),
-          Container(height: 20),
-          Text('Terms & Conditions',
-              style: TextStyle(
-                  fontSize: 20, decoration: TextDecoration.underline)),
-          Container(height: 20),
-          Container(
-            //padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-              child: Text('${widget.descriptionController.text}',
-                  textAlign: TextAlign.justify)),
-          Container(height: 20),
-          Text('Amendment',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isAmendment, widget.termControllers[0]),
-
-          Container(height: 20),
-          Text('Confidentiality Obligation',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isConfidentialObligation, widget.termControllers[1]),
-
-          Container(height: 20),
-          Text('Data Controller',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isDataController, widget.termControllers[2]),
-
-          Container(height: 20),
-          Text('Data Protection',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isDataProtection, widget.termControllers[3]),
-
-          Container(height: 20),
-          Text('Limitation On Use',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isLimitationOnUse, widget.termControllers[4]),
-
-          Container(height: 20),
-          Text('Method Of Notice',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isMethodOfNotice, widget.termControllers[5]),
-
-          Container(height: 20),
-          Text('Third Party Beneficiaries',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isNoThirdPartyBeneficiaries, widget.termControllers[6]),
-
-          Container(height: 20),
-          Text('Permitted Disclosure',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isPermittedDisclosure, widget.termControllers[7]),
-
-          Container(height: 20),
-          Text('Receipt of Notice',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isConfidentialObligation, widget.termControllers[8]),
-
-          Container(height: 20),
-          Text('Severability',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isSeverability, widget.termControllers[9]),
-
-          Container(height: 20),
-          Text('Termination Of Insolvency',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isTerminationForInsolvency, widget.termControllers[10]),
-
-          Container(height: 20),
-          Text('Termination For Material Breach',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isTerminationForMaterialBreach, widget.termControllers[11]),
-
-          Container(height: 20),
-          Text('Termination On Notice',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isTerminationOnNotice, widget.termControllers[12]),
-
-          Container(height: 20),
-          Text('Waiver',
-              style: TextStyle(
-                  fontSize: 15, decoration: TextDecoration.underline)),
-          displayTermElementInfo(isWaiver, widget.termControllers[13]),
-
-          Container(height: 40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text('Start Date: ${_formatDate(startDate)}'),
-              Text('Effective Date: ${_formatDate(effectiveDate)}'),
-              Text('Execution Date: ${_formatDate(executionDate)}'),
-              Text('End Date: ${_formatDate(endDate)}'),
-            ],
-          ),
-          Container(height: 40),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                displaySignatureFields(widget.requesterControllers),
-                displaySignatureFields(widget.providerControllers)
-              ],
-            ),
-          )
-        ],
-      ),
     );
   }
 
@@ -2137,8 +1961,7 @@ class _ContractFormState extends State<ContractForm> {
   ///   - End Date
   void validateStepFour() {
     if (toggleStepFour == true) {
-      if (_step4Key.currentState!.validate() == true && startDate != null &&
-          effectiveDate != null && executionDate != null && endDate != null) {
+      if (_step4Key.currentState!.validate() == true && effectiveDate != null && executionDate != null && endDate != null) {
         setState(() {
           stepFourComplete = true;
         });
