@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// Bool [stepComplete] is the boolean state for a current step. If this is set
 /// to true, then the header will change to green, otherwise grey.
 /// Function [onPressed] is the callback function needed to change update
-/// [stepComplete] and collapse/expand the current contract step.
+/// [stepComplete] and trigger the collapse/expand of a current contract step.
 
 Widget contractStepHeader(double width, bool stepComplete, Function onPressed) {
   return MaterialButton(
