@@ -1973,8 +1973,10 @@ class _ContractFormState extends State<ContractForm> {
 
   void validateStepOne() {
     // step1Key.currentState is null when we edit the contract in a step greater than 1.
-    if (toggleStepOne == true && step1Key.currentState != null) {
-      if (step1Key.currentState!.validate() == true) {
+    if (toggleStepOne == true) {
+      var flag = step1Key.currentState!.validate() == true;
+
+      if (flag) {
         setState(() {
           stepOneComplete = true;
         });
@@ -1983,10 +1985,6 @@ class _ContractFormState extends State<ContractForm> {
           stepOneComplete = false;
         });
       }
-    } else { //TODO: this is a temp work-around. This case only comes up during an edit attempt.
-      setState(() {
-        stepOneComplete = true;
-      });
     }
   }
 
