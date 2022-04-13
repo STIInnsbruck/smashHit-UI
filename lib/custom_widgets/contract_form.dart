@@ -139,7 +139,7 @@ class _ContractFormState extends State<ContractForm> {
                     : Container(),
                 contractStep4Header(formWidth),
                 toggleStepFour == true
-                    ? contractStep4(formWidth, screenHeight)
+                    ? contractStep4(formWidth)
                     : Container(),
                 contractStepFinalHeader(formWidth),
                 toggleStepFinal == true
@@ -509,7 +509,7 @@ class _ContractFormState extends State<ContractForm> {
   /// The contract creation is done primarily in 4 steps. This is the fourth
   /// step block. In the fourth step the user has to fill in the terms and
   /// conditions of the contract.
-  Widget contractStep4(double width, double height) {
+  Widget contractStep4(double width) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(2)),
