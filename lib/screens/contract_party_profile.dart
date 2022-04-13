@@ -404,7 +404,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         SizedBox(height: 5),
         profileDetailElement("Name", user.name!),
         SizedBox(height: 5),
-        profileDetailElement("Phone Number", user.telephoneNumber!),
+        profileDetailElement("Phone Number", user.phone!),
         SizedBox(height: 5),
         profileDetailElement("Email", user.email!),
         SizedBox(height: 5),

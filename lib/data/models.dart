@@ -7,10 +7,10 @@ class User {
   String? streetAddress;
   String? country;
   String? city;
-  String? telephoneNumber;
+  String? phone;
   String? role;
 
-  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.telephoneNumber, this.role});
+  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role});
 
   String? get getId => id;
   String? get getName => name;

@@ -348,7 +348,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
 
   void insertUserData() {
     nameController.text = user!.name!;
-    phoneController.text = user!.telephoneNumber!;
+    phoneController.text = user!.phone!;
     emailController.text = user!.email!;
     countryController.text = user!.country!;
     cityController.text = user!.city!;

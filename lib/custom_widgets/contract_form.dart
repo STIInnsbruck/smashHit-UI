@@ -2164,7 +2164,7 @@ class _ContractFormState extends State<ContractForm> {
     widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
     widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
     widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.providerControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
+    widget.providerControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
   void _fillRequesterForm(User selected, int index) {
@@ -2173,7 +2173,7 @@ class _ContractFormState extends State<ContractForm> {
     widget.requesterControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
     widget.requesterControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
     widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.requesterControllers[index+6].text = selected.telephoneNumber == null ? 'No phone number found' : selected.telephoneNumber!;
+    widget.requesterControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
   void validateStepOne() {

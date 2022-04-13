@@ -226,7 +226,7 @@ class _UpdateFormState extends State<UpdateForm> {
                                   SizedBox(height: 2),
                                   contractDetailText("Email: ", "${snapshot.data!.email}"),
                                   SizedBox(height: 2),
-                                  contractDetailText("Phone: ", "${snapshot.data!.telephoneNumber}"),
+                                  contractDetailText("Phone: ", "${snapshot.data!.phone}"),
                                   SizedBox(height: 2),
                                   contractDetailText("Country: ", "${snapshot.data!.country}"),
                                   SizedBox(height: 2),

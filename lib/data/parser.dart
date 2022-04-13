@@ -11,7 +11,7 @@ class ResponseParser {
       city: jsonUser['territory'],
       country: jsonUser['country'],
       email: jsonUser['email'],
-      telephoneNumber: jsonUser['phone'],
+      phone: jsonUser['phone'],
     );
   }
 
@@ -26,7 +26,7 @@ class ResponseParser {
       country: jsonUser['country'],
       email: jsonUser['email'],
       name: jsonUser['name'],
-      telephoneNumber: jsonUser['phone'],
+      phone: jsonUser['phone'],
       city: jsonUser['territory'],
     );
   }
