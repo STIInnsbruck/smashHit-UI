@@ -130,10 +130,8 @@ class _ContractFormState extends State<ContractForm> {
                 contractStepOne(formWidth),
                 contractStepTwo(formWidth),
                 contractStepThree(formWidth),
+                contractStepFour(formWidth),
                 contractStep4Header(formWidth),
-                toggleStepFour == true
-                    ? contractStep4(formWidth)
-                    : Container(),
                 contractStepFinalHeader(formWidth),
                 toggleStepFinal == true
                     ? contractStepFinal(formWidth)
@@ -319,6 +317,93 @@ class _ContractFormState extends State<ContractForm> {
       ],
     );
   }
+
+  Widget contractStepFour(double width) {
+    return Column(
+      children: [
+        ContractStepHeader(
+            width: width,
+            name: "Step 4. Terms & Conditions of the Contract",
+            stepComplete: stepFourComplete,
+            onPressed:  () async  {
+              setStepFour();
+            }
+        ),
+        toggleStepFour == true
+          ? ContractStepBody(
+            width: width,
+            children: [
+              descriptionField(),
+              SizedBox(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  checkBoxElement(
+                      'Amendment', 'Has an amendment', AMENDMENT, isAmendment, widget.termControllers[0], width / 4),
+                  checkBoxElement(
+                      'ConfidentialityObligation',
+                      'Is there a confidentiality obligation?',
+                      CONFIDENTIALITY_OBLIGATION,
+                      isConfidentialObligation, widget.termControllers[1], width / 4),
+                  checkBoxElement(
+                      'DataController',
+                      'Is there a data controller?',
+                      DATA_CONTROLLER,
+                      isDataController, widget.termControllers[2], width / 4),
+                  checkBoxElement(
+                      'DataProtection',
+                      'Does the contract contain data protection?',
+                      DATA_PROTECTION,
+                      isDataProtection, widget.termControllers[3], width / 4),
+                  checkBoxElement(
+                      'LimitationOnUse',
+                      'Is there a limitation on use?',
+                      LIMITATION_ON_USE,
+                      isLimitationOnUse, widget.termControllers[4], width / 4),
+                  checkBoxElement('MethodOfNotice', 'Has method of notice?',
+                      METHOD_OF_NOTICE, isMethodOfNotice, widget.termControllers[5], width / 4),
+                  checkBoxElement(
+                      'NoThirdPartyBeneficiaries',
+                      'Are there third party beneficiaries?',
+                      NO_THIRD_PARTY_BENEFICIARIES,
+                      isNoThirdPartyBeneficiaries, widget.termControllers[6], width / 4),
+                  checkBoxElement(
+                      'PermittedDisclosure',
+                      'Is there a permitted disclosure?',
+                      PERMITTED_DISCLOSURE,
+                      isPermittedDisclosure, widget.termControllers[7], width / 4),
+                  checkBoxElement(
+                      'ReceiptOfNotice',
+                      'Is there a receipt of notice?',
+                      RECEIPT_OF_NOTICE,
+                      isReceiptOfNotice, widget.termControllers[8], width / 4),
+                  checkBoxElement('Severability', 'Is there a severability?',
+                      SEVERABILITY, isSeverability, widget.termControllers[9], width / 4),
+                  checkBoxElement(
+                      'TerminationForInsolvency',
+                      'Is there a termination for insolvency?',
+                      TERMINATION_FOR_INSOLVENCY,
+                      isTerminationForInsolvency, widget.termControllers[10], width / 4),
+                  checkBoxElement(
+                      'TerminationForMaterialBreach',
+                      'Is there a termination for material breach?',
+                      TERMINATION_FOR_MATERIAL_BREACH,
+                      isTerminationForMaterialBreach, widget.termControllers[11], width / 4),
+                  checkBoxElement(
+                      'TerminationOnNotice',
+                      'Is there a termination on notice?',
+                      TERMINATION_ON_NOTICE,
+                      isTerminationOnNotice, widget.termControllers[12], width / 4),
+                  checkBoxElement('Waiver', 'Waiver', WAIVER, isWaiver, widget.termControllers[13], width / 4),
+                ],
+              ),
+            ]
+        )
+            : Container()
+      ]
+    );
+  }
+
   /// The contract creation is done primarily in 4 steps. This is the fourth
   /// step block. In the fourth step the user has to fill in the terms and
   /// conditions of the contract.
