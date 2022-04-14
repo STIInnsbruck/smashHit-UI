@@ -1601,21 +1601,6 @@ class _ContractFormState extends State<ContractForm> {
       effectiveDate = widget.contract!.executionDate;
       executionDate = widget.contract!.executionDate;
       endDate = widget.contract!.endDate;
-      //TODO: adjust to new contract form.
-      /**setTermElement(isAmendment, widget.termControllers[0], widget.contract!.amendment!);
-      setTermElement(isConfidentialObligation, widget.termControllers[1], widget.contract!.confidentialityObligation!);
-      setTermElement(isDataController, widget.termControllers[2], widget.contract!.existDataController!);
-      setTermElement(isDataProtection, widget.termControllers[3], widget.contract!.existDataProtection!);
-      setTermElement(isLimitationOnUse, widget.termControllers[4], widget.contract!.limitation!);
-      setTermElement(isMethodOfNotice, widget.termControllers[5], widget.contract!.methodNotice!);
-      setTermElement(isNoThirdPartyBeneficiaries, widget.termControllers[6], widget.contract!.thirdParties!);
-      setTermElement(isPermittedDisclosure, widget.termControllers[7], widget.contract!.disclosure!);
-      setTermElement(isReceiptOfNotice, widget.termControllers[8], widget.contract!.receiptNotice!);
-      setTermElement(isSeverability, widget.termControllers[9], widget.contract!.severability!);
-      setTermElement(isTerminationForInsolvency, widget.termControllers[10], widget.contract!.terminationInsolvency!);
-      setTermElement(isTerminationForMaterialBreach, widget.termControllers[11], widget.contract!.terminationMaterialBreach!);
-      setTermElement(isTerminationOnNotice, widget.termControllers[12], widget.contract!.terminationNotice!);
-      setTermElement(isWaiver, widget.termControllers[13], widget.contract!.waiver!);*/
     });
   }
 
