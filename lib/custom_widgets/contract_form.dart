@@ -1029,56 +1029,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget termWidget(Term term, String id) {
-    TextEditingController textController = new TextEditingController();
-    textController.text = term.description!;
-    bool expand = true;
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-      color: Colors.grey[300],
-      child: Column(
-        children: [
-          Container(
-            child: Row(
-              children: [
-                Expanded(
-                  child: MaterialButton(
-                    onPressed: () => {
-                      setState(() {
-                        expand =  !expand;
-                        print("Expand is: $expand");
-                      })
-                    },
-                    child: Row(
-                      children: [
-                        Icon(Icons.unfold_less, color: Colors.black),
-                        Text("${term.id}", style: TextStyle(color: Colors.black)),
-                      ]
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => {
-                    removeTermWidget(id)
-                  },
-                  icon: Icon(Icons.delete_forever, color: Colors.red),
-                )
-              ],
-            ),
-          ),
-          !expand
-              ? Container(
-                  height: 200,
-                  child: TextField(
-                    controller: textController,
-                  ),
-                )
-              : Container()
-        ]
-      ),
-    );
-  }
-
   removeTermWidget(String index) {
     setState(() {
       _termList.remove(index);
