@@ -45,7 +45,7 @@ class _TermWidgetState extends State<TermWidget> {
                             expand
                                 ? Icon(Icons.unfold_less, color: Colors.black)
                                 : Icon(Icons.unfold_more, color: Colors.black),
-                            Text("${widget.term.id}", style: TextStyle(color: Colors.black)),
+                            Text("${widget.term.name}", style: TextStyle(color: Colors.black)),
                           ]
                       ),
                     ),
