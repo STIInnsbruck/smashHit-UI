@@ -94,7 +94,7 @@ class _ContractFormState extends State<ContractForm> {
   int currentProviderIndex = 0;
   Contract? tmpContract;
   List<TermType> _termTypeList = [];
-  List<Widget> _termList = [];
+  Map<String, Widget> _termList = {};
 
 
   @override
@@ -264,7 +264,14 @@ class _ContractFormState extends State<ContractForm> {
           ? ContractStepBody(
             width: width,
             children: [
-              Column(children: _termList),
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _termList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    String key = _termList.keys.elementAt(index);
+                    return _termList[key]!;
+                  }
+              ),
               Text("Add a term to the contract"),
               addTermButton(),
               /**
@@ -1019,6 +1026,50 @@ class _ContractFormState extends State<ContractForm> {
         ],
       ),
     );
+  }
+
+  Widget termWidget(Term term, String id) {
+    bool expand = true;
+    return Container(
+      color: Colors.grey[300],
+      child: Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () => {
+                      setState(() {
+                        expand =  !expand;
+                      })
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.unfold_less, color: Colors.black),
+                        Text("${term.id}", style: TextStyle(color: Colors.black)),
+                      ]
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => {
+                    removeTermWidget(id)
+                  },
+                  icon: Icon(Icons.delete_forever, color: Colors.red),
+                )
+              ],
+            ),
+          )
+        ]
+      ),
+    );
+  }
+
+  removeTermWidget(String index) {
+    setState(() {
+      _termList.remove(index);
+    });
   }
 
   /// Check Box for the contractForm. If checked then the value is TRUE.
@@ -1881,7 +1932,11 @@ class _ContractFormState extends State<ContractForm> {
     tempTerms.forEach((element) {
       if(element.termTypeId == termTypeId) {
         setState(() {
-          _termList.add(Container(child: Text(element.description!)));
+          //_termList.add(termWidget(element));
+          String id = UniqueKey().toString();
+          _termList.putIfAbsent(id, () =>
+              termWidget(element, id)
+          );
         });
       }
     });
