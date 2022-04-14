@@ -7,6 +7,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:smashhit_ui/custom_widgets/contract_step_header.dart';
 import 'package:smashhit_ui/custom_widgets/contract_step_body.dart';
+import 'package:smashhit_ui/custom_widgets/term_widget.dart';
 
 enum ContractType { Written, Mutual, Verbal, Transferable }
 
@@ -1029,8 +1030,11 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget termWidget(Term term, String id) {
+    TextEditingController textController = new TextEditingController();
+    textController.text = term.description!;
     bool expand = true;
     return Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
       color: Colors.grey[300],
       child: Column(
         children: [
@@ -1042,6 +1046,7 @@ class _ContractFormState extends State<ContractForm> {
                     onPressed: () => {
                       setState(() {
                         expand =  !expand;
+                        print("Expand is: $expand");
                       })
                     },
                     child: Row(
@@ -1060,7 +1065,15 @@ class _ContractFormState extends State<ContractForm> {
                 )
               ],
             ),
-          )
+          ),
+          !expand
+              ? Container(
+                  height: 200,
+                  child: TextField(
+                    controller: textController,
+                  ),
+                )
+              : Container()
         ]
       ),
     );
@@ -1935,7 +1948,8 @@ class _ContractFormState extends State<ContractForm> {
           //_termList.add(termWidget(element));
           String id = UniqueKey().toString();
           _termList.putIfAbsent(id, () =>
-              termWidget(element, id)
+              //termWidget(element, id)
+              TermWidget(element, removeTermWidget, id)
           );
         });
       }
