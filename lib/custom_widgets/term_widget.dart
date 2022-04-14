@@ -27,10 +27,10 @@ class _TermWidgetState extends State<TermWidget> {
 
     return Container(
       margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-      color: Colors.grey[300],
       child: Column(
           children: [
             Container(
+              color: Colors.grey[300],
               child: Row(
                 children: [
                   Expanded(
@@ -63,6 +63,22 @@ class _TermWidgetState extends State<TermWidget> {
                 ? Container(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     height: 200,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: Colors.grey[300]!,
+                            width: 4
+                        ),
+                        bottom: BorderSide(
+                            color: Colors.grey[300]!,
+                            width: 4
+                        ),
+                        right: BorderSide(
+                            color: Colors.grey[300]!,
+                            width: 4
+                        ),
+                      )
+                    ),
                     child: TextField(
                       expands: true,
                       minLines: null,
