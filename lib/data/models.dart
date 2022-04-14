@@ -177,6 +177,14 @@ class Term {
   String? description;
 
   Term({this.id, this.termTypeId, this.contractId, this.description});
+
+  factory Term.fromJson(Map<String, dynamic> json) {
+    return Term(
+      id: json['id'],
+      description: json['description'],
+      termTypeId: json['termTypeId']
+    );
+  }
 }
 
 class TermType {
@@ -185,6 +193,14 @@ class TermType {
   String? name;
 
   TermType({this.id, this.description, this.name});
+
+  factory TermType.fromJson(Map<String, dynamic> json) {
+    return TermType(
+      id: json['id'],
+      description: json['description'],
+      name: json['name']
+    );
+  }
 }
 
 /// Object model to be used in a Contract. It describes the actual object

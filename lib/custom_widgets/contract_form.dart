@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
@@ -86,15 +88,21 @@ class _ContractFormState extends State<ContractForm> {
 
   //------------------- Other Variables ----------------------------------------
   List<User> requesters = [];
-  int currentRequesterIndex = 0;
   List<User> providers = [];
-  int currentProviderIndex = 0;
   static List<User> contractors = [];
+  int currentRequesterIndex = 0;
+  int currentProviderIndex = 0;
   Contract? tmpContract;
+  List<TermType> _termTypeList = [];
+  List<Widget> _termList = [];
+
 
   @override
   void initState() {
     super.initState();
+
+    //get existing termTypes
+    getTermType();
 
     // Add at least one contract requester & one provider.
     addRequester();
@@ -256,6 +264,8 @@ class _ContractFormState extends State<ContractForm> {
           ? ContractStepBody(
             width: width,
             children: [
+              Column(children: _termList),
+              Text("Add a term to the contract"),
               addTermButton(),
               /**
               descriptionField(),
@@ -1606,19 +1616,20 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget addTermButton() {
-    return MaterialButton(
-      onPressed: () => _showTermSelectionDialog(),
-      child: Container(
-          height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            color: Colors.blue,
-          ),
-          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          child: Center(
-            child: Text("TAP TO ADD A TERM", style: TextStyle(color: Colors.white)),
-          )
-      ),
+    return PopupMenuButton(
+        tooltip: "Add a term",
+        child: Icon(Icons.add),
+        onSelected: (termTypeId) {
+          getTerm(termTypeId.toString());
+        },
+        itemBuilder: (BuildContext context) {
+          return _termTypeList.map((element) {
+            return PopupMenuItem<Object>(
+              value: element.id,
+              child: Text(element.name!)
+            );
+          }).toList();
+        },
     );
   }
 
@@ -1852,6 +1863,30 @@ class _ContractFormState extends State<ContractForm> {
         });
   }
 
+  Future<void> getTermType() async {
+    _termTypeList.clear();
+    var jsonString = await rootBundle.loadString('assets/term_type.json');
+    List<dynamic> body = jsonDecode(jsonString);
+    setState(() {
+      _termTypeList = body.map((dynamic e) => TermType.fromJson(e)).toList();
+    });
+  }
+
+  Future<void> getTerm(String termTypeId) async {
+    List<Term> tempTerms = [];
+    var jsonString = await rootBundle.loadString('assets/term.json');
+    List<dynamic> body = jsonDecode(jsonString);
+
+    tempTerms = body.map((dynamic e) => Term.fromJson(e)).toList();
+    tempTerms.forEach((element) {
+      if(element.termTypeId == termTypeId) {
+        setState(() {
+          _termList.add(Container(child: Text(element.description!)));
+        });
+      }
+    });
+  }
+
   _showCreateSuccessDialog() {
     showDialog(
         context: context,
@@ -1896,18 +1931,6 @@ class _ContractFormState extends State<ContractForm> {
 
           );
         }
-    );
-  }
-
-  _showTermSelectionDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: Center(child: Text("Select A Term")),
-
-        );
-      }
     );
   }
 
@@ -1992,7 +2015,11 @@ class _ContractFormState extends State<ContractForm> {
   ///   - End Date
   void validateStepFour() {
     if (toggleStepFour == true) {
-      if (_step4Key.currentState!.validate() == true && effectiveDate != null && executionDate != null && endDate != null) {
+      setState(() {
+        stepFourComplete = true;
+      });
+    }
+      /**if (_step4Key.currentState!.validate() == true && effectiveDate != null && executionDate != null && endDate != null) {
         setState(() {
           stepFourComplete = true;
         });
@@ -2001,7 +2028,7 @@ class _ContractFormState extends State<ContractForm> {
           stepFourComplete = false;
         });
       }
-    }
+    }*/
   }
 
   bool validateAllPreviousSteps() {
