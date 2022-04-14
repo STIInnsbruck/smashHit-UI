@@ -1895,7 +1895,6 @@ class _ContractFormState extends State<ContractForm> {
     tempTerms.forEach((element) {
       if(element.termTypeId == termTypeId) {
         setState(() {
-          //_termList.add(termWidget(element));
           String id = UniqueKey().toString();
           _termList.putIfAbsent(id, () =>
               //termWidget(element, id)
