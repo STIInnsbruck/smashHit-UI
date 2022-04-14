@@ -1891,7 +1891,7 @@ class _ContractFormState extends State<ContractForm> {
     var jsonString = await rootBundle.loadString('assets/term.json');
     List<dynamic> body = jsonDecode(jsonString);
 
-    tempTerms = body.map((dynamic e) => Term.fromJson(e)).toList();
+    tempTerms = body.map((dynamic e) => Term.fromTemplateJson(e)).toList();
     tempTerms.forEach((element) {
       if(element.termTypeId == termTypeId) {
         setState(() {

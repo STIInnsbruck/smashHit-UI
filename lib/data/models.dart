@@ -175,14 +175,16 @@ class Term {
   String? termTypeId;
   String? contractId;
   String? description;
+  String? name;
 
-  Term({this.id, this.termTypeId, this.contractId, this.description});
+  Term({this.id, this.termTypeId, this.contractId, this.description, this.name});
 
-  factory Term.fromJson(Map<String, dynamic> json) {
+  factory Term.fromTemplateJson(Map<String, dynamic> json) {
     return Term(
       id: json['id'],
       description: json['description'],
-      termTypeId: json['termTypeId']
+      termTypeId: json['termTypeId'],
+      name: json['name']
     );
   }
 }
