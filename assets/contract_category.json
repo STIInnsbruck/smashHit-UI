@@ -1,0 +1,9 @@
+[{
+  "id": "1",
+  "name": "Business To Consumer",
+  "description": "A category for contracts made between a business (e.g., data controller) and a consumer (e.g., data subject)."
+}, {
+  "id": "2",
+  "name": "Business To Business",
+  "description": "A category for contracts made between a business (e.g., data controller) and another business (e.g., third party)."
+}]
