@@ -8,6 +8,8 @@ import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:smashhit_ui/custom_widgets/contract_step_header.dart';
 import 'package:smashhit_ui/custom_widgets/contract_step_body.dart';
 import 'package:smashhit_ui/custom_widgets/term_widget.dart';
+import 'package:smashhit_ui/misc/contract_categories.dart';
+import 'package:smashhit_ui/misc/contract_types.dart';
 
 enum ContractType { Written, Mutual, Verbal, Transferable }
 
@@ -46,6 +48,8 @@ class _ContractFormState extends State<ContractForm> {
   DateTime? executionDate;
 
   ContractType? _type;
+  String? contractType;
+  String? contractCategory;
 
   DataProvider dataProvider = DataProvider();
 
@@ -160,7 +164,13 @@ class _ContractFormState extends State<ContractForm> {
             children: [
               titleField(),
               SizedBox(height: 10),
-              contractTypeRadioMenu(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  contractTypeDropDown(),
+                  contractCategoryDropDown(),
+                ],
+              ),
               SizedBox(height: 10),
               _wideScreenDateButtonsLayout()
             ])
@@ -873,36 +883,45 @@ class _ContractFormState extends State<ContractForm> {
               return null;
             },
           ),
-          SizedBox(height: 10),
-          Text("What is the category of your contract?",
-              style: TextStyle(fontSize: 15)),
-          SizedBox(height: 5),
-          TextFormField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.blue)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
-            ),
-            controller: widget.categoryController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a category for your contract.';
-              }
-              return null;
-            },
-          )
         ],
       ),
     );
   }
 
   Widget contractTypeDropDown() {
-    return Container();
+    return Column(
+      children: [
+        Text("What type of contract is being formed?", style: TextStyle(fontSize: 15)),
+        DropdownButton(
+            items: contractTypes,
+            hint: Text("Select a type"),
+            value: contractType,
+            onChanged: (String? value) {
+              setState(() {
+                contractType = value!;
+              });
+            }
+        )
+      ],
+    );
+  }
+
+  Widget contractCategoryDropDown() {
+    return Column(
+      children: [
+        Text("What is the category of your contract?", style: TextStyle(fontSize: 15)),
+        DropdownButton(
+            items: contractCategories,
+            hint: Text("Select a category"),
+            value: contractCategory,
+            onChanged: (String? value) {
+              setState(() {
+                contractCategory = value!;
+              });
+            }
+        )
+      ],
+    );
   }
 
   removeTermWidget(String index) {
@@ -1244,6 +1263,7 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget confirmEditButton() {
+    //TODO: adjust to new api
     return Container(
       child: MaterialButton(
         color: Colors.grey,
@@ -1759,7 +1779,7 @@ class _ContractFormState extends State<ContractForm> {
     // step1Key.currentState is null when we edit the contract in a step greater than 1.
     if (toggleStepOne == true) {
       var flag = step1Key.currentState!.validate() == true;
-      if (flag) {
+      if (flag && contractCategory != null && contractType != null) {
         setState(() {
           stepOneComplete = true;
         });
@@ -1774,7 +1794,8 @@ class _ContractFormState extends State<ContractForm> {
   void setBaseContractDetails() {
     contract.considerationDescription = widget.considerationDescController.text;
     contract.considerationValue = widget.considerationValController.text;
-    contract.contractCategory = widget.categoryController.text;
+    contract.contractCategory = contractCategory;
+    contract.contractType = contractType;
     contract.contractors.add(widget.user.id);
     contract.effectiveDate = effectiveDate;
     contract.endDate = endDate;

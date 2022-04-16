@@ -142,7 +142,7 @@ class DataProvider {
       "ConsiderationValue": contract.considerationValue,
       "ContractCategory": contract.contractCategory,
       "ContractStatus": "hasCreated",
-      "ContractType": "Written",
+      "ContractType": contract.contractType,
       "Contractors": [
         contract.contractors[0]
       ],
