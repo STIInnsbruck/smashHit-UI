@@ -49,24 +49,6 @@ class _ContractFormState extends State<ContractForm> {
 
   DataProvider dataProvider = DataProvider();
 
-  //------------------- CheckBox Booleans --------------------------------------
-  CheckBoxBoolean isAmendment = CheckBoxBoolean();
-  CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
-  CheckBoxBoolean isDataController = CheckBoxBoolean();
-  CheckBoxBoolean isDataProtection = CheckBoxBoolean();
-  CheckBoxBoolean isLimitationOnUse = CheckBoxBoolean();
-  CheckBoxBoolean isMethodOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isNoThirdPartyBeneficiaries = CheckBoxBoolean();
-  CheckBoxBoolean isPermittedDisclosure = CheckBoxBoolean();
-  CheckBoxBoolean isReceiptOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isSeverability = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForInsolvency = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForMaterialBreach = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
-  CheckBoxBoolean isWaiver = CheckBoxBoolean();
-
-
-
   //------------------- StepNavigation Booleans --------------------------------
   bool toggleStepOne = true;
   bool toggleStepTwo = false;
@@ -1547,17 +1529,6 @@ class _ContractFormState extends State<ContractForm> {
     return s.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
-  setTermElement(CheckBoxBoolean termElement, TextEditingController controller, String termValue) {
-    setState(() {
-      if (termValue != "") {
-        termElement.value = true;
-        controller.text = termValue;
-      } else {
-        termElement.value = false;
-      }
-    });
-  }
-
   void setFields() {}
 
   void setStep() {
@@ -1914,14 +1885,6 @@ class _ContractFormState extends State<ContractForm> {
     widget.endDate = endDate;
   }
 
-  Widget displayTermElementInfo(CheckBoxBoolean isChecked, TextEditingController controller) {
-    if (controller.text.compareTo("") == 0 || isChecked.value == false) {
-      return Text('None.', textAlign: TextAlign.justify);
-    } else {
-      return Text('${controller.text}', textAlign: TextAlign.justify);
-    }
-  }
-
   /// Helper function to add a new requester into the form. Each requester has
   /// 7 TextFields. That is why we add 7 TextEditingController, one for each
   /// field.
@@ -1999,8 +1962,4 @@ class _ContractFormState extends State<ContractForm> {
       }
     });
   }
-}
-
-class CheckBoxBoolean {
-  bool value = false;
 }
