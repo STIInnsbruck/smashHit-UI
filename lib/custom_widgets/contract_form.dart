@@ -47,7 +47,6 @@ class _ContractFormState extends State<ContractForm> {
   DateTime? endDate;
   DateTime? executionDate;
 
-  ContractType? _type;
   String? contractType;
   String? contractCategory;
 
@@ -359,7 +358,7 @@ class _ContractFormState extends State<ContractForm> {
                   textAlign: TextAlign.center),
               Container(height: 20),
               Align(
-                child: Text('Contract Type: $_type',
+                child: Text('Contract Type: $contractType',
                     style: TextStyle(fontSize: 15)),
                 alignment: Alignment.centerLeft,
               ),
@@ -750,60 +749,6 @@ class _ContractFormState extends State<ContractForm> {
           }).toList(),
         ),
         Spacer(flex: 3)
-      ],
-    );
-  }
-
-  Widget contractTypeRadioMenu() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("What type of contract is being formed?",
-            style: TextStyle(fontSize: 15)),
-        ListTile(
-            title: Text("Written Contract",
-                style: TextStyle(color: Colors.black)),
-            leading: Radio(
-                value: ContractType.Written,
-                groupValue: _type,
-                onChanged: (ContractType? value) {
-                  setState(() {
-                    _type = value;
-                  });
-                })),
-        ListTile(
-            title: Text("Verbal Contract",
-                style: TextStyle(color: Colors.black)),
-            leading: Radio(
-                value: ContractType.Verbal,
-                groupValue: _type,
-                onChanged: (ContractType? value) {
-                  setState(() {
-                    _type = value;
-                  });
-                })),
-        ListTile(
-            title: Text("Mutual Contract",
-                style: TextStyle(color: Colors.black)),
-            leading: Radio(
-                value: ContractType.Mutual,
-                groupValue: _type,
-                onChanged: (ContractType? value) {
-                  setState(() {
-                    _type = value;
-                  });
-                })),
-        ListTile(
-            title: Text("Transferable Contract",
-                style: TextStyle(color: Colors.black)),
-            leading: Radio(
-                value: ContractType.Transferable,
-                groupValue: _type,
-                onChanged: (ContractType? value) {
-                  setState(() {
-                    _type = value;
-                  });
-                })),
       ],
     );
   }
@@ -1256,7 +1201,7 @@ class _ContractFormState extends State<ContractForm> {
     return Contract(
       contractId: widget.titleController.text,
       purpose: widget.descriptionController.text,
-      contractType: _type.toString(),
+      contractType: contractType,
       executionDate: startDate!,
       endDate: endDate!
     );
@@ -1534,7 +1479,7 @@ class _ContractFormState extends State<ContractForm> {
     contractors = await dataProvider.fetchAllUsers();
     setState(() {
       widget.titleController.text = displayStringWithoutUri(widget.contract!.contractId!);
-      _type = ContractType.Written; //TODO: make this use real type -> this is hardcode!
+      contractType = contractTypes[0].value; //TODO: make this use real type -> this is hardcode!
       //TODO: this only takes the first data controller, make it take all existing ones.
       _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[0])) == 0), 0);
       //TODO: this only takes the first data processor, make it take all existing ones.
