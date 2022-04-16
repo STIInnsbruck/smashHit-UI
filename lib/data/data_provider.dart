@@ -85,6 +85,60 @@ class DataProvider {
     }
   }
 
+  Future<bool> createBaseContract(Contract contract) async {
+    var body = {
+      "ConsentId": "string",
+      "ConsiderationDescription": contract.considerationDescription,
+      "ConsiderationValue": contract.considerationValue,
+      "ContractCategory": contract.contractCategory,
+      "ContractStatus": "hasCreated",
+      "ContractType": "Written",
+      "Contractors": [
+        contract.contractors[0]
+      ],
+      "EffectiveDate": _formatDate(contract.effectiveDate),
+      "EndDate": _formatDate(contract.endDate),
+      "ExecutionDate": _formatDate(contract.executionDate),
+      "Medium": "App Based",
+      "Obligations": [
+        "string"
+      ],
+      "Purpose": contract.purpose,
+      "Signatures": [
+        "string"
+      ],
+      "Terms": [
+        "string"
+      ]
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data.toString().compareTo('{"Success": "Record inserted successfully."}') == 0 ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<String> fetchContractIdByContractorId(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return parser.parseFetchContractId(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to find contract id.');
+    }
+  }
+
   Future<Contract> fetchContractById(String contractId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/byContract/$contractId/'), headers: headers);
 

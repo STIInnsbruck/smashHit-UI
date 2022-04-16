@@ -29,8 +29,9 @@ class ContractForm extends StatefulWidget {
   List<TextEditingController> providerControllers = [];
   List<TextEditingController> termControllers = [];
   String? contractDropDownType;
+  User user;
 
-  ContractForm(this.changeScreen, this.step, this.contract, [this.toggleEditing]);
+  ContractForm(this.changeScreen, this.step, this.contract, this.user, [this.toggleEditing]);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -96,6 +97,7 @@ class _ContractFormState extends State<ContractForm> {
   Contract? tmpContract;
   List<TermType> _termTypeList = [];
   Map<String, Widget> _termList = {};
+  Contract contract = new Contract();
 
 
   @override
@@ -1843,21 +1845,38 @@ class _ContractFormState extends State<ContractForm> {
     widget.requesterControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
-  void validateStepOne() {
+  void validateStepOne() async {
     // step1Key.currentState is null when we edit the contract in a step greater than 1.
     if (toggleStepOne == true) {
       var flag = step1Key.currentState!.validate() == true;
 
+
       if (flag) {
-        setState(() {
-          stepOneComplete = true;
-        });
-      } else {
-        setState(() {
-          stepOneComplete = false;
-        });
-      }
+        setBaseContractDetails();
+        bool success = await dataProvider.createBaseContract(contract);
+        if (success) {
+          contract.contractId = await dataProvider.fetchContractIdByContractorId(widget.user.id!);
+          setState(() {
+            stepOneComplete = true;
+          });
+        } else {
+          setState(() {
+            stepOneComplete = false;
+          });
+        }
+        }
     }
+  }
+
+  void setBaseContractDetails() {
+    contract.considerationDescription = widget.considerationDescController.text;
+    contract.considerationValue = widget.considerationValController.text;
+    contract.contractCategory = widget.categoryController.text;
+    contract.contractors.add(widget.user.id);
+    contract.effectiveDate = effectiveDate;
+    contract.endDate = endDate;
+    contract.executionDate = executionDate;
+    contract.purpose = widget.titleController.text;
   }
 
   /// Function that checks every textFormField in the second step of the

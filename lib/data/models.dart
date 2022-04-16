@@ -37,14 +37,15 @@ class Contract {
   DateTime? executionDate;
   String? medium;
   String? purpose;
-  String? consideration;
+  String? considerationDescription;
+  String? considerationValue;
   List contractors = [];
   List obligations = [];
   List terms = [];
 
 
   Contract({
-    required this.contractId,
+    this.contractId,
     this.consentId,
     this.contractCategory,
     this.contractStatus,
@@ -54,7 +55,8 @@ class Contract {
     this.effectiveDate,
     this.medium,
     this.purpose,
-    this.consideration,
+    this.considerationDescription,
+    this.considerationValue
   });
 
   /// Returns an int given the contract's status. The int is needed for the
