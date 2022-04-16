@@ -27,6 +27,7 @@ class DataProvider {
     'Content-Type': 'application/json',
   };
 
+  //---------------------------- CONTRACTORS -----------------------------------
   Future<int> createAgent(String name, String address, String city,
       String country, String phone, String role, String email) async {
 
@@ -57,6 +58,55 @@ class DataProvider {
       }
     } else {
       return 0;
+    }
+  }
+
+  Future<List<User>> fetchAllUsers() async {
+    final response = await http.get(kBaseUrl.replace(path: 'contractors/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return parser.parseAllUsers(data);
+    } else {
+      throw Exception('Failed to load all users.');
+    }
+  }
+
+  Future<User> fetchUserById(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contractor/$contractorId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      try {
+        return parser.parseUserById(jsonDecode(response.body));
+      }catch (e) {
+        throw Exception('Failed to fetch agent by id: $contractorId.');
+      }
+
+    } else {
+      throw Exception('Failed to load agent by id: $contractorId.');
+    }
+  }
+
+  Future<bool> deleteUserById(String agentId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/agent/delete/$agentId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete account $agentId.\nBack-end response: ${response.reasonPhrase}.');
+    }
+  }
+
+  //---------------------------- Contract --------------------------------------
+  Future<List<Contract>> fetchAllContracts() async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseAllContracts(data["bindings"]);
+    } else {
+      throw Exception('Failed to load all contracts.');
     }
   }
 
@@ -155,102 +205,6 @@ class DataProvider {
     }
   }
 
-  Future<Obligation> fetchObligationById(String obligationId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/obligation/$obligationId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Obligation obligation;
-      try {
-        obligation = parser.parseObligationId(jsonDecode(response.body)[0]);
-        return obligation;
-      } catch (e) {
-        throw Exception('Failed to load obligation $obligationId.');
-      }
-    } else {
-      throw Exception('Failed to load obligation $obligationId.');
-    }
-  }
-
-  Future<Term> fetchTermById(String termId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/term/$termId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Term term;
-      try {
-        term = parser.parseTermId(jsonDecode(response.body));
-        return term;
-      } catch (e) {
-        throw Exception('Failed to parse response for term $termId.');
-      }
-    } else {
-      throw Exception('Failed to load term $termId.');
-    }
-  }
-
-  Future<TermType> fetchTermTypeById(String termTypeId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/termType/$termTypeId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      TermType termType;
-      try {
-        termType = parser.parseTermTypeId(jsonDecode(response.body));
-        return termType;
-      } catch (e) {
-        throw Exception('Failed to parse response for termType $termTypeId.');
-      }
-    } else {
-      throw Exception('Failed to load termType $termTypeId.');
-    }
-  }
-
-  Future<List<Contract>> fetchAllContracts() async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      return parser.parseAllContracts(data["bindings"]);
-    } else {
-      throw Exception('Failed to load all contracts.');
-    }
-  }
-
-  Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: 'contractors/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      return parser.parseAllUsers(data);
-    } else {
-      throw Exception('Failed to load all users.');
-    }
-  }
-
-  Future<User> fetchUserById(String contractorId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contractor/$contractorId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      try {
-        return parser.parseUserById(jsonDecode(response.body));
-      }catch (e) {
-        throw Exception('Failed to fetch agent by id: $contractorId.');
-      }
-
-    } else {
-      throw Exception('Failed to load agent by id: $contractorId.');
-    }
-  }
-
-  Future<bool> deleteUserById(String agentId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/agent/delete/$agentId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to delete account $agentId.\nBack-end response: ${response.reasonPhrase}.');
-    }
-  }
-
   Future<bool> deleteContractById(String contractId) async {
     final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
 
@@ -321,6 +275,56 @@ class DataProvider {
       print("${response.statusCode}");
       print("${response.body}");
       return false;
+    }
+  }
+
+  //---------------------------- Obligation -------------------------------------
+  Future<Obligation> fetchObligationById(String obligationId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/obligation/$obligationId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Obligation obligation;
+      try {
+        obligation = parser.parseObligationId(jsonDecode(response.body)[0]);
+        return obligation;
+      } catch (e) {
+        throw Exception('Failed to load obligation $obligationId.');
+      }
+    } else {
+      throw Exception('Failed to load obligation $obligationId.');
+    }
+  }
+
+  //---------------------------- Term ------------------------------------------
+  Future<Term> fetchTermById(String termId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/term/$termId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Term term;
+      try {
+        term = parser.parseTermId(jsonDecode(response.body));
+        return term;
+      } catch (e) {
+        throw Exception('Failed to parse response for term $termId.');
+      }
+    } else {
+      throw Exception('Failed to load term $termId.');
+    }
+  }
+
+  Future<TermType> fetchTermTypeById(String termTypeId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/termType/$termTypeId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      TermType termType;
+      try {
+        termType = parser.parseTermTypeId(jsonDecode(response.body));
+        return termType;
+      } catch (e) {
+        throw Exception('Failed to parse response for termType $termTypeId.');
+      }
+    } else {
+      throw Exception('Failed to load termType $termTypeId.');
     }
   }
 
