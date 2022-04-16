@@ -1755,22 +1755,15 @@ class _ContractFormState extends State<ContractForm> {
     // step1Key.currentState is null when we edit the contract in a step greater than 1.
     if (toggleStepOne == true) {
       var flag = step1Key.currentState!.validate() == true;
-
-
       if (flag) {
-        setBaseContractDetails();
-        bool success = await dataProvider.createBaseContract(contract);
-        if (success) {
-          contract.contractId = await dataProvider.fetchContractIdByContractorId(widget.user.id!);
-          setState(() {
-            stepOneComplete = true;
-          });
-        } else {
-          setState(() {
-            stepOneComplete = false;
-          });
-        }
-        }
+        setState(() {
+          stepOneComplete = true;
+        });
+      } else {
+        setState(() {
+          stepOneComplete = false;
+        });
+      }
     }
   }
 
@@ -1783,6 +1776,19 @@ class _ContractFormState extends State<ContractForm> {
     contract.endDate = endDate;
     contract.executionDate = executionDate;
     contract.purpose = widget.titleController.text;
+  }
+
+  /// In the [contractors] list all of the existing contractors in the system
+  /// are listed. After the user sets enters the contractor's details in the UI
+  /// the contractor's ID must be attained based on the email entered.
+  void setContractor(String email) {
+    String id = contractors.firstWhere((User contractor) => contractor.email!.compareTo(email) == 0).id!;
+    contract.contractors.add(id);
+  }
+
+  void removeContractor(String email) {
+    String id = contractors.firstWhere((User contractor) => contractor.email!.compareTo(email) == 0).id!;
+    contract.contractors.removeWhere((element) => element.compareTo(id) == 0);
   }
 
   /// Function that checks every textFormField in the second step of the
