@@ -901,6 +901,10 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+  Widget contractTypeDropDown() {
+    return Container();
+  }
+
   removeTermWidget(String index) {
     setState(() {
       _termList.remove(index);
