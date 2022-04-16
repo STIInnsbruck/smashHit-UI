@@ -278,7 +278,7 @@ class DataProvider {
     }
   }
 
-  //---------------------------- Obligation -------------------------------------
+  //---------------------------- Obligation ------------------------------------
   Future<Obligation> fetchObligationById(String obligationId) async {
     final response = await http.get(kBaseUrl.replace(path: '/obligation/$obligationId/'), headers: headers);
 
@@ -327,6 +327,29 @@ class DataProvider {
       throw Exception('Failed to load termType $termTypeId.');
     }
   }
+
+  //---------------------------- Term Type -------------------------------------
+  Future<bool> createTermType(TermType termType) async {
+    var body = {
+      "Description": termType.description,
+      "Name": termType.name
+    };
+    var jsonBody = jsonEncode(body);
+    final response = await http.post(kBaseUrl.replace(path: "/term/type/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data.toString().compareTo('{"Success": "Record inserted successfully."}') == 0 ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
 
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {
