@@ -99,6 +99,8 @@ class _ContractFormState extends State<ContractForm> {
     //Initialize the term controllers.
     initTermControllers();
 
+    fetchAllContractors();
+
     // Add minimum amount of keys for each initial textFormField.
     addStep2Keys();
     addStep3Keys();
@@ -1533,8 +1535,7 @@ class _ContractFormState extends State<ContractForm> {
     });
   }
 
-  void setStepTwo() async {
-    contractors = await dataProvider.fetchAllUsers();
+  void setStepTwo() {
     validateStepOne();
     validateStepThree();
     validateStepFour();
@@ -1547,8 +1548,7 @@ class _ContractFormState extends State<ContractForm> {
     });
   }
 
-  void setStepThree() async {
-    contractors = await dataProvider.fetchAllUsers();
+  void setStepThree() {
     validateStepOne();
     validateStepTwo();
     validateStepFour();
@@ -1634,6 +1634,10 @@ class _ContractFormState extends State<ContractForm> {
     setState(() {
       _termTypeList = body.map((dynamic e) => TermType.fromJson(e)).toList();
     });
+  }
+
+  Future<void> fetchAllContractors() async {
+    contractors = await dataProvider.fetchAllUsers();
   }
 
   Future<void> getTerm(String termTypeId) async {
