@@ -15,6 +15,7 @@ class TermWidget extends StatefulWidget {
 
 class _TermWidgetState extends State<TermWidget> {
   bool expand = true;
+  bool edit = false;
 
   @override
   void initState() {
@@ -61,6 +62,14 @@ class _TermWidgetState extends State<TermWidget> {
                   ),
                   IconButton(
                     onPressed: () => {
+                      setState(() {
+                        edit =  !edit;
+                      })
+                    },
+                    icon: Icon(Icons.edit, color: edit? Colors.blue : Colors.grey),
+                  ),
+                  IconButton(
+                    onPressed: () => {
                       widget.onDeletePressed(widget.id)
                     },
                     icon: Icon(Icons.delete_forever, color: Colors.red),
@@ -90,6 +99,7 @@ class _TermWidgetState extends State<TermWidget> {
                     ),
                     child: TextField(
                       expands: true,
+                      enabled: edit,
                       minLines: null,
                       maxLines: null,
                       controller: widget.textController,
@@ -101,6 +111,10 @@ class _TermWidgetState extends State<TermWidget> {
           ]
       ),
     );
+  }
+
+  void addObligation() {
+
   }
 
 }
