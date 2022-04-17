@@ -27,6 +27,7 @@ class ContractForm extends StatefulWidget {
   TextEditingController categoryController = TextEditingController();
   TextEditingController considerationValController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  List<TextEditingController> contractorControllers = [];
   List<TextEditingController> requesterControllers = [];
   List<TextEditingController> providerControllers = [];
   List<TextEditingController> termControllers = [];
@@ -74,11 +75,9 @@ class _ContractFormState extends State<ContractForm> {
   final _step4Key = GlobalKey<FormState>();
 
   //------------------- Other Variables ----------------------------------------
-  List<User> requesters = [];
-  List<User> providers = [];
   static List<User> contractors = [];
-  int currentRequesterIndex = 0;
-  int currentProviderIndex = 0;
+  int currentContractorIndex = 0;
+  int addedContractorsIndex = 0;
   Contract? tmpContract;
   List<TermType> _termTypeList = [];
   Map<String, Widget> _termList = {};
@@ -93,8 +92,7 @@ class _ContractFormState extends State<ContractForm> {
     getTermType();
 
     // Add at least one contract requester & one provider.
-    addRequester();
-    addProvider();
+    addContractor();
 
     //Initialize the term controllers.
     initTermControllers();
@@ -127,7 +125,6 @@ class _ContractFormState extends State<ContractForm> {
               children: [
                 contractStepOne(formWidth),
                 contractStepTwo(formWidth),
-                contractStepThree(formWidth),
                 contractStepFour(formWidth),
                 contractStepFinal(formWidth),
               ])),
@@ -185,7 +182,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         ContractStepHeader(
             width: width,
-            name: "Step 2. Data Controller Details",
+            name: "Step 2. Add Contractors",
             stepComplete: stepTwoComplete,
             onPressed: () async {
               setStepTwo();
@@ -194,52 +191,32 @@ class _ContractFormState extends State<ContractForm> {
             ? ContractStepBody(
             width: width,
             children: [
-              Text("Role: Data Controller ${currentRequesterIndex + 1}",
+              Text("Add Contractor ${currentContractorIndex + 1}",
                   style: TextStyle(fontSize: 20)),
+              // Every Contractor has 7 Fields. Assign each field the right contractor.
+              contractorFieldSuggestor((currentContractorIndex * 7) + 0),
+              contractorEmailField((currentContractorIndex * 7) + 1),
+              contractorAddressField((currentContractorIndex * 7) + 2),
               SizedBox(height: 10),
-              // Every Requester has 7 Fields. Assign each field the right controller.
-              requesterFieldSuggestor((currentRequesterIndex * 7) + 0),
-              requesterEmailField((currentRequesterIndex * 7) + 1),
-              requesterAddressField((currentRequesterIndex * 7) + 2),
+              contractorCSCDropDownList((currentContractorIndex * 7) + 3),
               SizedBox(height: 10),
-              requesterCSCDropDownList((currentRequesterIndex * 7) + 3),
+              contractorPhoneField((currentContractorIndex * 7) + 6),
               SizedBox(height: 10),
-              requesterPhoneField((currentRequesterIndex * 7) + 6),
-              SizedBox(height: 20),
+              Row(
+                children: [
+                  currentContractorIndex != 0
+                      ? Expanded(child: previousContractorButton())
+                      : Expanded(child: Container()),
+                  currentContractorIndex != 0
+                      ? Expanded(flex: 2, child: removeContractorButton())
+                      : Expanded(child: Container()),
+                  Expanded(flex: 2, child: addContractorButton()),
+                  currentContractorIndex < (addedContractorsIndex - 1)
+                      ? Expanded(child: nextContractorButton())
+                      : Expanded(child: Container())
+                ],
+              ),
             ])
-            : Container()
-      ],
-    );
-  }
-
-  Widget contractStepThree(double width) {
-    return Column(
-      children: [
-        ContractStepHeader(
-            width: width,
-            name: "Step 3. Data Subject Details",
-            stepComplete: stepThreeComplete,
-            onPressed:  () async  {
-              setStepThree();
-            }
-        ),
-        toggleStepThree == true
-            ? ContractStepBody(
-            width: width,
-            children: [
-              Text("Role: Data Processor ${currentProviderIndex + 1}",
-                  style: TextStyle(fontSize: 20)),
-              SizedBox(height: 10),
-              providerFieldSuggestor((currentProviderIndex * 7) + 0),
-              providerEmailField((currentProviderIndex * 7) + 1),
-              providerAddressField((currentProviderIndex * 7) + 2),
-              SizedBox(height: 10),
-              providerCSCDropDownList((currentProviderIndex * 7) + 3),
-              SizedBox(height: 10),
-              providerPhoneField((currentProviderIndex * 7) + 6),
-              SizedBox(height: 20),
-            ]
-        )
             : Container()
       ],
     );
@@ -371,7 +348,7 @@ class _ContractFormState extends State<ContractForm> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('${widget.requesterControllers[0].text}')
+                      Text('${widget.contractorControllers[0].text}')
                     ],
                   )
                 ],
@@ -462,8 +439,8 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  //------------------- REQUESTER FIELDS ---------------------------------------
-  Form requesterInfoFieldForm(int index, String fieldText, String fieldHint) {
+  //------------------- CONTRACTOR FIELDS ---------------------------------------
+  Form contractorInfoFieldForm(int index, String fieldText, String fieldHint) {
     return Form(
       key: step2Keys[index],
       child: Column(
@@ -486,7 +463,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
             style: TextStyle(fontSize: 15),
-            controller: widget.requesterControllers[index],
+            controller: widget.contractorControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return '$fieldHint';
@@ -499,7 +476,7 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget requesterFieldSuggestor(int index) {
+  Widget contractorFieldSuggestor(int index) {
     return Form(
       key: step2Keys[index],
       child: Column(
@@ -507,8 +484,7 @@ class _ContractFormState extends State<ContractForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              "What is the name of the contract data controller ${currentRequesterIndex + 1}?",
-              style: TextStyle(fontSize: 15)),
+              "Name", style: TextStyle(fontSize: 15)),
           SizedBox(height: 5),
           Autocomplete(
             displayStringForOption: _displayStringForOption,
@@ -529,7 +505,7 @@ class _ContractFormState extends State<ContractForm> {
                 FocusNode fieldFocusNode,
                 VoidCallback onFieldSubmitted
                 ) {
-              fieldTextEditingController.text = widget.requesterControllers[index].text;
+              fieldTextEditingController.text = widget.contractorControllers[index].text;
               return TextField(
                 controller: fieldTextEditingController,
                 focusNode: fieldFocusNode,
@@ -554,139 +530,27 @@ class _ContractFormState extends State<ContractForm> {
 
   static String _displayStringForOption(User option) => option.name!;
 
-  Widget requesterEmailField(int index) {
-    return requesterInfoFieldForm(index, "E-mail:", "Please enter an e-mail.");
+  Widget contractorEmailField(int index) {
+    return contractorInfoFieldForm(index, "E-mail:", "Please enter an e-mail.");
   }
 
-  Widget requesterAddressField(int index) {
-    return requesterInfoFieldForm(index, "House Number and Street Name:", "Please enter an address.");
+  Widget contractorAddressField(int index) {
+    return contractorInfoFieldForm(index, "House Number and Street Name:", "Please enter an address.");
   }
 
-  Widget requesterCSCDropDownList(int index) {
+  Widget contractorCSCDropDownList(int index) {
     return CountryStateCityPicker(
-      state: widget.requesterControllers[index],
-      city: widget.requesterControllers[index + 1],
-      country: widget.requesterControllers[index + 2],
+      state: widget.contractorControllers[index],
+      city: widget.contractorControllers[index + 1],
+      country: widget.contractorControllers[index + 2],
       textFieldInputBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(2.0),
           borderSide: BorderSide(color: Colors.black, width: 2.0)),
     );
   }
 
-  Widget requesterPhoneField(int index) {
-    return requesterInfoFieldForm(index - 3, "Phone number:", "Please enter a phone number.");
-  }
-
-  //------------------- PROVIDER FIELDS ----------------------------------------
-  Form providerInfoFieldForm(int index, String fieldText, String fieldHint) {
-    return Form(
-      key: step3Keys[index],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("$fieldText",
-              style: TextStyle(fontSize: 15)),
-          Container(height: 5),
-          TextFormField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.blue)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.black, width: 1.0)),
-            ),
-            style: TextStyle(fontSize: 15),
-            controller: widget.providerControllers[index],
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return '$fieldHint';
-              }
-              return null;
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget providerFieldSuggestor(int index) {
-    return Form(
-      key: step3Keys[index],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-              "What is the name of the contract data processor ${currentProviderIndex + 1}?",
-              style: TextStyle(fontSize: 15)),
-          SizedBox(height: 5),
-          Autocomplete(
-            displayStringForOption: _displayStringForOption,
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              if (textEditingValue.text == '') {
-                return const Iterable<User>.empty();
-              }
-              return contractors.where((User option) {
-                return option.toString().contains(textEditingValue.text.toLowerCase());
-              });
-            },
-            onSelected: (User selection) {
-              _fillProviderForm(selection, index);
-            },
-            fieldViewBuilder: (
-                BuildContext context,
-                TextEditingController fieldTextEditingController,
-                FocusNode fieldFocusNode,
-                VoidCallback onFieldSubmitted
-                ) {
-              fieldTextEditingController.text = widget.providerControllers[index].text;
-              return TextField(
-                controller: fieldTextEditingController,
-                focusNode: fieldFocusNode,
-                decoration: InputDecoration(
-                  isDense: true,
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(2.0),
-                      borderSide: BorderSide(color: Colors.blue)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(2.0),
-                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
-                ),
-                style: TextStyle(fontSize: 15),
-              );
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget providerEmailField(int index) {
-    return providerInfoFieldForm(index, "E-mail:", "Please enter an e-mail.");
-  }
-
-  Widget providerAddressField(int index) {
-    return providerInfoFieldForm(index, "House and Street name:", "Please enter an address.");
-  }
-
-  Widget providerCSCDropDownList(int index) {
-    return CountryStateCityPicker(
-      state: widget.providerControllers[index],
-      city: widget.providerControllers[index + 1],
-      country: widget.providerControllers[index + 2],
-      textFieldInputBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(2.0),
-          borderSide: BorderSide(color: Colors.black, width: 2.0)),
-    );
-  }
-
-  Widget providerPhoneField(int index) {
-    return providerInfoFieldForm(index - 3, "Phone number:", "Please enter a phone number.");
+  Widget contractorPhoneField(int index) {
+    return contractorInfoFieldForm(index, "Phone number:", "Please enter a phone number.");
   }
 
   //------------------- CONTRACT FIELDS ----------------------------------------
@@ -1254,9 +1118,9 @@ class _ContractFormState extends State<ContractForm> {
         ));
   }
 
-  Widget addRequesterButton() {
+  Widget addContractorButton() {
     return Tooltip(
-      message: "Add another data controller.",
+      message: "Add another contractor.",
       child: CircleAvatar(
           radius: 20,
           backgroundColor: Colors.blue,
@@ -1264,13 +1128,13 @@ class _ContractFormState extends State<ContractForm> {
               icon: Icon(Icons.person_add),
               onPressed: () {
                 setState(() {
-                  addRequester();
+                  addContractor();
                 });
               })),
     );
   }
 
-  Widget removeRequesterButton() {
+  Widget removeContractorButton() {
     return Tooltip(
         message: "Remove this data controller.",
         child: CircleAvatar(
@@ -1280,45 +1144,14 @@ class _ContractFormState extends State<ContractForm> {
                 icon: Icon(Icons.person_remove),
                 onPressed: () {
                   setState(() {
-                    removeRequester(currentRequesterIndex);
+                    removeContractor(currentContractorIndex);
                   });
                 })));
   }
 
-  Widget addProviderButton() {
+  Widget nextContractorButton() {
     return Tooltip(
-      message: "Add another data processor.",
-      child: CircleAvatar(
-          radius: 20,
-          backgroundColor: Colors.blue,
-          child: IconButton(
-              icon: Icon(Icons.person_add),
-              onPressed: () {
-                setState(() {
-                  addProvider();
-                });
-              })),
-    );
-  }
-
-  Widget removeProviderButton() {
-    return Tooltip(
-        message: "Remove this data processor.",
-        child: CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.blue,
-            child: IconButton(
-                icon: Icon(Icons.person_remove),
-                onPressed: () {
-                  setState(() {
-                    removeProvider(currentProviderIndex);
-                  });
-                })));
-  }
-
-  Widget nextRequesterButton() {
-    return Tooltip(
-        message: "Proceed to the next data controller form.",
+        message: "Proceed to the next contractor form.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
@@ -1326,14 +1159,14 @@ class _ContractFormState extends State<ContractForm> {
                 icon: Icon(Icons.navigate_next),
                 onPressed: () {
                   setState(() {
-                    currentRequesterIndex += 1;
+                    currentContractorIndex += 1;
                   });
                 })));
   }
 
-  Widget previousRequesterButton() {
+  Widget previousContractorButton() {
     return Tooltip(
-        message: "Go back to the previous data controller form.",
+        message: "Go back to the previous contractor form.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
@@ -1341,70 +1174,9 @@ class _ContractFormState extends State<ContractForm> {
                 icon: Icon(Icons.navigate_before),
                 onPressed: () {
                   setState(() {
-                    currentRequesterIndex -= 1;
+                    currentContractorIndex -= 1;
                   });
                 })));
-  }
-
-  Widget nextProviderButton() {
-    return Tooltip(
-        message: "Proceed to the next data processor form.",
-        child: CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.blue,
-            child: IconButton(
-                icon: Icon(Icons.navigate_next),
-                onPressed: () {
-                  setState(() {
-                    currentProviderIndex += 1;
-                  });
-                })));
-  }
-
-  Widget previousProviderButton() {
-    return Tooltip(
-        message: "Go back to the previous data processor form.",
-        child: CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.blue,
-            child: IconButton(
-                icon: Icon(Icons.navigate_before),
-                onPressed: () {
-                  setState(() {
-                    currentProviderIndex -= 1;
-                  });
-                })));
-  }
-
-  Widget nextRoleButton() {
-    return CircleAvatar(
-      radius: 20,
-      backgroundColor: Colors.green,
-      child: IconButton(
-        icon: Icon(Icons.navigate_next),
-        onPressed: () {
-          setState(() {
-            toggleRequester = false;
-            toggleProvider = true;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget previousRoleButton() {
-    return CircleAvatar(
-      radius: 20,
-      backgroundColor: Colors.grey,
-      child: IconButton(
-          icon: Icon(Icons.navigate_before),
-          onPressed: () {
-            setState(() {
-              toggleProvider = false;
-              toggleRequester = true;
-            });
-          }),
-    );
   }
 
   Widget addTermButton() {
@@ -1716,12 +1488,12 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void _fillRequesterForm(User selected, int index) {
-    widget.requesterControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
-    widget.requesterControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    widget.requesterControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    widget.requesterControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.requesterControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.requesterControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
+    widget.contractorControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
+    widget.contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    widget.contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    widget.contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    widget.contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    widget.contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
   void validateStepOne() async {
@@ -1758,11 +1530,6 @@ class _ContractFormState extends State<ContractForm> {
   void setContractor(String email) {
     String id = contractors.firstWhere((User contractor) => contractor.email!.compareTo(email) == 0).id!;
     contract.contractors.add(id);
-  }
-
-  void removeContractor(String email) {
-    String id = contractors.firstWhere((User contractor) => contractor.email!.compareTo(email) == 0).id!;
-    contract.contractors.removeWhere((element) => element.compareTo(id) == 0);
   }
 
   /// Function that checks every textFormField in the second step of the
@@ -1865,53 +1632,28 @@ class _ContractFormState extends State<ContractForm> {
     widget.endDate = endDate;
   }
 
-  /// Helper function to add a new requester into the form. Each requester has
+  /// Helper function to add a new contractor into the form. Each contractor has
   /// 7 TextFields. That is why we add 7 TextEditingController, one for each
   /// field.
-  void addRequester() {
+  void addContractor() {
     setState(() {
+      addedContractorsIndex++;
+      addStep2Keys();
       for (int i = 0; i < 7; i++) {
-        widget.requesterControllers.add(TextEditingController());
+        widget.contractorControllers.add(TextEditingController());
       }
-      requesters.add(User(role: "Primary"));
     });
   }
 
-  /// Helper function to remove a requester form. Each requester has 7
+  /// Helper function to remove a contractor form. Each contractor has 7
   /// TextFields. That is why we remove 7 TextEditingControllers.
-  /// [index] represents the current selected requester.
-  void removeRequester(int index) {
+  /// [index] represents the current selected contractor.
+  void removeContractor(int index) {
     setState(() {
       for (int i = (index * 7) + 6; i >= (index * 7); i--) {
-        widget.requesterControllers.removeAt(i);
+        widget.contractorControllers.removeAt(i);
       }
-      requesters.removeAt(index);
-      currentRequesterIndex -= 1;
-    });
-  }
-
-  /// Helper function to remove a provider form. Each provider has 7
-  /// TextFields. That is why we remove 7 TextEditingControllers.
-  /// [index] represents the current selected provider.
-  void removeProvider(int index) {
-    setState(() {
-      for (int i = (index * 7) + 6; i >= (index * 7); i--) {
-        widget.providerControllers.removeAt(i);
-      }
-      providers.removeAt(index);
-      currentProviderIndex -= 1;
-    });
-  }
-
-  /// Helper function to add a new provider into the form. Each provider has
-  /// 7 TextFields. That is why we add 7 TextEditingController, one for each
-  /// field.
-  void addProvider() {
-    setState(() {
-      for (int i = 0; i < 7; i++) {
-        widget.providerControllers.add(TextEditingController());
-      }
-      providers.add(User(role: "Secondary"));
+      currentContractorIndex -= 1;
     });
   }
 
@@ -1923,11 +1665,11 @@ class _ContractFormState extends State<ContractForm> {
     });
   }
 
-  /// Helper function to add 7 keys to validate each textFormField in the
+  /// Helper function to add 6 keys to validate each textFormField in the
   /// second step of the contract creation.
   void addStep2Keys() {
     setState(() {
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 7; i++) {
         step2Keys.add(GlobalKey<FormState>());
       }
     });
