@@ -19,7 +19,16 @@ class _TermWidgetState extends State<TermWidget> {
   @override
   void initState() {
     super.initState();
-    widget.textController.text = widget.term.description!;
+
+    addExampleText();
+  }
+
+  ///Function to add a sample text from the json file in the assets. If not
+  ///called, the text box of a term will be empty, but still editable.
+  addExampleText() {
+    if(widget.textController.text == "") {
+      widget.textController.text = widget.term.description!;
+    }
   }
 
   @override
