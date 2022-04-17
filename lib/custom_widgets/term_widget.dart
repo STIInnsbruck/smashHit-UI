@@ -112,9 +112,4 @@ class _TermWidgetState extends State<TermWidget> {
       ),
     );
   }
-
-  void addObligation() {
-
-  }
-
 }
