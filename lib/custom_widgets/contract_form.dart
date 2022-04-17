@@ -11,8 +11,6 @@ import 'package:smashhit_ui/custom_widgets/term_widget.dart';
 import 'package:smashhit_ui/misc/contract_categories.dart';
 import 'package:smashhit_ui/misc/contract_types.dart';
 
-enum ContractType { Written, Mutual, Verbal, Transferable }
-
 class ContractForm extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   Function(int?)? toggleEditing;
@@ -56,16 +54,14 @@ class _ContractFormState extends State<ContractForm> {
   //------------------- StepNavigation Booleans --------------------------------
   bool toggleStepOne = true;
   bool toggleStepTwo = false;
-  bool toggleStepThree = false;
   bool toggleStepFour = false;
+  bool toggleStepObligation = false;
   bool toggleStepFinal = false;
-  bool toggleRequester = true;
-  bool toggleProvider = false;
 
   //------------------- StepValidation Booleans --------------------------------
   bool stepOneComplete = false;
   bool stepTwoComplete = false;
-  bool stepThreeComplete = false;
+  bool stepObligationComplete = false;
   bool stepFourComplete = false;
 
   //------------------- Validation Keys ----------------------------------------
@@ -93,10 +89,7 @@ class _ContractFormState extends State<ContractForm> {
 
     // Add at least one contractor
     addContractor();
-
-    //Initialize the term controllers.
-    initTermControllers();
-
+    // Fetch all existing contractors for the suggestion field
     fetchAllContractors();
 
     setStep();
@@ -123,6 +116,7 @@ class _ContractFormState extends State<ContractForm> {
                 contractStepOne(formWidth),
                 contractStepTwo(formWidth),
                 contractStepFour(formWidth),
+                contractStepObligation(formWidth),
                 contractStepFinal(formWidth),
               ])),
       Align(
@@ -226,7 +220,7 @@ class _ContractFormState extends State<ContractForm> {
             width: width,
             name: "Step 4. Terms & Conditions of the Contract",
             stepComplete: stepFourComplete,
-            onPressed:  () async  {
+            onPressed:  () {
               setStepFour();
             }
         ),
@@ -234,7 +228,10 @@ class _ContractFormState extends State<ContractForm> {
           ? ContractStepBody(
             width: width,
             children: [
+              Text("Add Terms to Your Contract", style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
               ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: _termList.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -247,6 +244,30 @@ class _ContractFormState extends State<ContractForm> {
             ]
         )
             : Container()
+      ]
+    );
+
+  }
+
+  Widget contractStepObligation(double width) {
+    return Column(
+      children: [
+        ContractStepHeader(
+            width: width,
+            name: "Step 4. Obligations of the Contract",
+            onPressed: () async {
+              setStepObligation();
+            }),
+        toggleStepObligation == true
+          ? ContractStepBody(
+              width: width,
+              children: [
+                Text("Add Obligations to Your Contract", style: TextStyle(fontSize: 20)),
+                SizedBox(height: 10),
+                addObligationButton(),
+              ]
+        )
+          : Container()
       ]
     );
   }
@@ -988,6 +1009,8 @@ class _ContractFormState extends State<ContractForm> {
             } else if (toggleStepTwo == true) {
               setStepFour();
             } else if (toggleStepFour == true) {
+              setStepObligation();
+            } else if (toggleStepObligation == true) {
               setStepFinal();
             } else if (toggleStepFinal == true) {
               setState(() {
@@ -1051,8 +1074,10 @@ class _ContractFormState extends State<ContractForm> {
                 setStepOne();
               } else if (toggleStepFour == true) {
                 setStepTwo();
-              } else if (toggleStepFinal == true) {
+              } else if (toggleStepObligation == true) {
                 setStepFour();
+              } else if (toggleStepFinal == true) {
+                setStepObligation();
               }
             });
           },
@@ -1135,6 +1160,35 @@ class _ContractFormState extends State<ContractForm> {
             );
           }).toList();
         },
+    );
+  }
+
+  Widget addObligationButton() {
+    List<PopupMenuItem> items = [];
+    return PopupMenuButton(
+      tooltip: "Add an obligation",
+      child: Icon(Icons.add),
+      onSelected: (value) {
+        print("first selection $value");
+      },
+      itemBuilder: (BuildContext context) {
+        return [
+          PopupMenuItem<Object>(
+              value: "value",
+              child: PopupMenuButton(
+                child: Text("nested button"),
+                onSelected: (e) {
+                  Text("second selection $e");
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(child: Text("item nested"),value: "second",)
+                  ];
+                },
+              )
+          )
+        ];
+      },
     );
   }
 
@@ -1223,6 +1277,9 @@ class _ContractFormState extends State<ContractForm> {
       case 2:
         setStepTwo();
         break;
+      case 3:
+        setStepObligation();
+        break;
       case 4:
         setStepFour();
         break;
@@ -1235,10 +1292,12 @@ class _ContractFormState extends State<ContractForm> {
   void setStepOne() {
     validateStepTwo();
     validateStepFour();
+    validateStepObligation();
     setState(() {
       toggleStepOne = true;
       toggleStepTwo = false;
       toggleStepFour = false;
+      toggleStepObligation = false;
       toggleStepFinal = false;
     });
   }
@@ -1246,10 +1305,12 @@ class _ContractFormState extends State<ContractForm> {
   void setStepTwo() {
     validateStepOne();
     validateStepFour();
+    validateStepObligation();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = true;
       toggleStepFour = false;
+      toggleStepObligation = false;
       toggleStepFinal = false;
     });
   }
@@ -1257,10 +1318,25 @@ class _ContractFormState extends State<ContractForm> {
   void setStepFour() {
     validateStepOne();
     validateStepTwo();
+    validateStepObligation();
     setState(() {
       toggleStepOne = false;
       toggleStepTwo = false;
       toggleStepFour = true;
+      toggleStepObligation = false;
+      toggleStepFinal = false;
+    });
+  }
+
+  void setStepObligation() {
+    validateStepOne();
+    validateStepTwo();
+    validateStepFour();
+    setState(() {
+      toggleStepOne = false;
+      toggleStepTwo = false;
+      toggleStepFour = false;
+      toggleStepObligation = true;
       toggleStepFinal = false;
     });
   }
@@ -1274,6 +1350,7 @@ class _ContractFormState extends State<ContractForm> {
         toggleStepOne = false;
         toggleStepTwo = false;
         toggleStepFour = false;
+        toggleStepObligation = false;
         toggleStepFinal = true;
       });
     } else {
@@ -1466,6 +1543,22 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
+  void validateStepObligation() {
+    if(toggleStepObligation == true) {
+      var flag = true;
+
+      if (flag) {
+        setState(() {
+          stepObligationComplete = true;
+        });
+      } else {
+        setState(() {
+          stepObligationComplete = false;
+        });
+      }
+    }
+  }
+
   /// Function that checks every textFormField in the fourth step of the
   /// contract to validate if each field has content in it.
   /// Checked fields:
@@ -1490,14 +1583,6 @@ class _ContractFormState extends State<ContractForm> {
         });
       }
     }*/
-  }
-
-  bool validateAllPreviousSteps() {
-    if (stepOneComplete && stepTwoComplete && stepThreeComplete && stepFourComplete) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   bool _isWideScreen(double width, double height) {
@@ -1552,14 +1637,6 @@ class _ContractFormState extends State<ContractForm> {
         widget.contractorControllers.removeAt(i);
       }
       currentContractorIndex -= 1;
-    });
-  }
-
-  void initTermControllers() {
-    setState(() {
-      for (int i = 0; i < 14; i++) {
-        widget.termControllers.add(TextEditingController());
-      }
     });
   }
 
