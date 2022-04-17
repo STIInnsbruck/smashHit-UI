@@ -76,7 +76,7 @@ class _ContractFormState extends State<ContractForm> {
   int addedContractorsIndex = 0;
   Contract? tmpContract;
   List<TermType> _termTypeList = [];
-  Map<String, Widget> _termList = {};
+  Map<String, TermWidget> _termList = {};
   Contract contract = new Contract();
 
 
@@ -298,10 +298,34 @@ class _ContractFormState extends State<ContractForm> {
               Column(
                 children: displayAllContractorsInfo(),
               ),
+              Align(
+                child: Text("Consideration: ${widget.considerationDescController.text}"),
+                alignment: Alignment.centerLeft
+              ),
               SizedBox(height: 10),
+              Column(
+                children: displayAllTerms(),
+              ),
+              SizedBox(height: 10),
+              Align(
+                child: Text("Contract Category: $contractCategory", style: TextStyle(fontSize: 15)),
+                alignment: Alignment.centerLeft
+              ),
+              SizedBox(height: 10),
+              contractDates()
             ]
         )
             : Container()
+      ],
+    );
+  }
+
+  Widget contractDates() {
+    return Row(
+      children: [
+        Expanded(child: Text("Effective Date: ${_formatDate(effectiveDate)}", textAlign: TextAlign.center)),
+        Expanded(child: Text("Execution Date: ${_formatDate(executionDate)}", textAlign: TextAlign.center)),
+        Expanded(child: Text("End Date: ${_formatDate(endDate)}", textAlign: TextAlign.center)),
       ],
     );
   }
@@ -334,6 +358,27 @@ class _ContractFormState extends State<ContractForm> {
             Text("${widget.contractorControllers[index * 7 + 6].text}"),
           ],
         )
+      ],
+    );
+  }
+
+  List<Widget> displayAllTerms() {
+    List<Widget> widgets = [];
+    int index = 0;
+    _termList.values.forEach((element) {
+      widgets.add(termInfo(element, index));
+      widgets.add(SizedBox(height: 20));
+      index++;
+    });
+    return widgets;
+  }
+
+  Widget termInfo(TermWidget termWidget, int index) {
+    return Column(
+      children: [
+        Text("${index+1} ${termWidget.term.name}", style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
+        SizedBox(height: 10),
+        Text("${termWidget.textController.text}", textAlign: TextAlign.justify),
       ],
     );
   }
