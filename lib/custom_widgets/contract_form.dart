@@ -261,10 +261,12 @@ class _ContractFormState extends State<ContractForm> {
         toggleStepObligation == true
           ? ContractStepBody(
               width: width,
-              children: [
-                Text("Add Obligations to Your Contract", style: TextStyle(fontSize: 20)),
+              children: _termList.keys.length > 0? [
+                Text("You have ${_termList.keys.length} term(s), you can add obligations to each term.", style: TextStyle(fontSize: 20)),
                 SizedBox(height: 10),
                 addObligationButton(),
+              ] : [
+                Text("You have not added any terms in the previous step. To add obligations you must have terms in your contract.", style: TextStyle(fontSize:20)),
               ]
         )
           : Container()
