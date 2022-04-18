@@ -88,8 +88,8 @@ class ResponseParser {
     Obligation obligation = new Obligation(
       id: jsonObligation["obligationID"],
       description: jsonObligation["description"],
-      executionDate: jsonObligation["execution_date"],
-      endDate: jsonObligation["end_date"],
+      executionDate: formatDate(jsonObligation["execution_date"]),
+      endDate: formatDate(jsonObligation["end_date"]),
       state: jsonObligation["state"],
       //the first json has contractorId
       contractorId: jsonObligation["identifier"][0],
