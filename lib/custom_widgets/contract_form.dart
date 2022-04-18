@@ -358,7 +358,7 @@ class _ContractFormState extends State<ContractForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Contractor-${index+1}:', style: TextStyle(fontSize: 15)),
-        SizedBox(width: 5),
+        SizedBox(width: 10),
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -387,12 +387,48 @@ class _ContractFormState extends State<ContractForm> {
     return widgets;
   }
 
+  List<Widget> displayATermsObligations(Term term) {
+    List<Widget> widgets = [];
+    int index = 0;
+    _obligationMap.values.forEach((element) {
+      if(element.term.id == term.id) {
+        widgets.add(obligationInfo(element, index));
+        widgets.add(SizedBox(height: 20));
+        index++;
+      }
+    });
+    return widgets;
+  }
+
   Widget termInfo(TermWidget termWidget, int index) {
     return Column(
       children: [
         Text("${index+1} ${termWidget.term.name}", style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
         SizedBox(height: 10),
         Text("${termWidget.textController.text}", textAlign: TextAlign.justify),
+        SizedBox(height: 10),
+        Column(
+          children: displayATermsObligations(termWidget.term),
+        )
+      ],
+    );
+  }
+
+  Widget obligationInfo(ObligationWidget obligationWidget, int index) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Obligation-${index+1}:", style: TextStyle(fontSize: 15)),
+        SizedBox(width: 10),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Description: ${obligationWidget.textController.text}", textAlign: TextAlign.justify),
+            Text("Execution Date: ${obligationWidget.obligation.getExecutionDateAsString()}"),
+            Text("Start Date: ${obligationWidget.obligation.getEndDateAsString()}"),
+          ],
+        ),
       ],
     );
   }
