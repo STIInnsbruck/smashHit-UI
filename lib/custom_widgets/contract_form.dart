@@ -10,6 +10,7 @@ import 'package:smashhit_ui/custom_widgets/contract_step_body.dart';
 import 'package:smashhit_ui/custom_widgets/term_widget.dart';
 import 'package:smashhit_ui/misc/contract_categories.dart';
 import 'package:smashhit_ui/misc/contract_types.dart';
+import 'package:smashhit_ui/custom_widgets/obligation_widget.dart';
 
 class ContractForm extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -76,7 +77,8 @@ class _ContractFormState extends State<ContractForm> {
   int addedContractorsIndex = 0;
   Contract? tmpContract;
   List<TermType> _termTypeList = [];
-  Map<String, TermWidget> _termList = {};
+  Map<String, TermWidget> _termMap = {};
+  Map<String, ObligationWidget> _obligationMap = {};
   Contract contract = new Contract();
 
 
@@ -233,10 +235,10 @@ class _ContractFormState extends State<ContractForm> {
               ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: _termList.length,
+                  itemCount: _termMap.length,
                   itemBuilder: (BuildContext context, int index) {
-                    String key = _termList.keys.elementAt(index);
-                    return _termList[key]!;
+                    String key = _termMap.keys.elementAt(index);
+                    return _termMap[key]!;
                   }
               ),
               Text("Add a term to the contract"),
@@ -261,12 +263,22 @@ class _ContractFormState extends State<ContractForm> {
         toggleStepObligation == true
           ? ContractStepBody(
               width: width,
-              children: _termList.keys.length > 0? [
-                Text("You have ${_termList.keys.length} term(s), you can add obligations to each term.", style: TextStyle(fontSize: 20)),
+              children: _termMap.keys.length > 0? [
+                Text("You have ${_termMap.keys.length} term(s), you can add obligations to each term.", style: TextStyle(fontSize: 20)),
+                SizedBox(height: 10),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _obligationMap.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    String key = _obligationMap.keys.elementAt(index);
+                    return _obligationMap[key]!;
+                  },
+                ),
                 SizedBox(height: 10),
                 addObligationButton(),
               ] : [
-                Text("You have not added any terms in the previous step. To add obligations you must have terms in your contract.", style: TextStyle(fontSize:20)),
+                Text("You have not added any terms in the previous step. To add obligations you must have terms in your contract.", style: TextStyle(fontSize:20), textAlign: TextAlign.center),
               ]
         )
           : Container()
@@ -367,7 +379,7 @@ class _ContractFormState extends State<ContractForm> {
   List<Widget> displayAllTerms() {
     List<Widget> widgets = [];
     int index = 0;
-    _termList.values.forEach((element) {
+    _termMap.values.forEach((element) {
       widgets.add(termInfo(element, index));
       widgets.add(SizedBox(height: 20));
       index++;
@@ -748,9 +760,15 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  removeTermWidget(String index) {
+  removeTermWidget(String id) {
     setState(() {
-      _termList.remove(index);
+      _termMap.remove(id);
+    });
+  }
+
+  removeObligationWidget(String id) {
+    setState(() {
+      _obligationMap.remove(id);
     });
   }
 
@@ -839,48 +857,6 @@ class _ContractFormState extends State<ContractForm> {
                 textAlign: TextAlign.center),
         onPressed: () => chooseExecutionDate(),
       ),
-    );
-  }
-
-  Widget timeFrameField() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text("Start date: ", style: TextStyle(fontSize: 15)),
-            startDate == null
-                ? IconButton(
-                    icon: Icon(Icons.calendar_today),
-                    onPressed: () => chooseStartDate())
-                : Expanded(
-                    child: Row(
-                    children: [
-                      Text(_formatDate(startDate)),
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          iconSize: 20,
-                          onPressed: () => chooseStartDate())
-                    ],
-                  )),
-            Spacer(),
-            Text("End date: ", style: TextStyle(fontSize: 15)),
-            endDate == null
-                ? IconButton(
-                    icon: Icon(Icons.calendar_today),
-                    onPressed: () => chooseEndDate())
-                : Expanded(
-                    child: Row(
-                    children: [
-                      Text(_formatDate(endDate)),
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          iconSize: 20,
-                          onPressed: () => chooseEndDate())
-                    ],
-                  )),
-          ],
-        )
-      ],
     );
   }
 
@@ -1215,28 +1191,25 @@ class _ContractFormState extends State<ContractForm> {
     return PopupMenuButton(
       tooltip: "Add an obligation",
       child: Icon(Icons.add),
-      onSelected: (value) {
-        print("first selection $value");
+      onSelected: (Term term) {
+        addObligation(term);
       },
       itemBuilder: (BuildContext context) {
-        return [
-          PopupMenuItem<Object>(
-              value: "value",
-              child: PopupMenuButton(
-                child: Text("nested button"),
-                onSelected: (e) {
-                  Text("second selection $e");
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem(child: Text("item nested"),value: "second",)
-                  ];
-                },
-              )
-          )
-        ];
+        return _termMap.values.map((TermWidget tw) {
+            return PopupMenuItem<Term>(
+              value: tw.term,
+              child: Text(tw.term.name!)
+            );
+          }).toList();
       },
     );
+  }
+
+  void addObligation(Term term) {
+    setState(() {
+      String id = UniqueKey().toString();
+      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", removeObligationWidget, id));
+    });
   }
 
   /// Widget to form a signature line with [name] of the corresponding person
@@ -1461,7 +1434,7 @@ class _ContractFormState extends State<ContractForm> {
       if(element.termTypeId == termTypeId) {
         setState(() {
           String id = UniqueKey().toString();
-          _termList.putIfAbsent(id, () =>
+          _termMap.putIfAbsent(id, () =>
               //termWidget(element, id)
               TermWidget(element, removeTermWidget, id)
           );
