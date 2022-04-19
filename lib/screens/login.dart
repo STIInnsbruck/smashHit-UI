@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
+import 'package:smashhit_ui/data/models.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
   final Function(String) setUserId;
+  final Function(User) setUser;
 
-  LoginScreen(this.changeScreen, this.setUserId);
+  LoginScreen(this.changeScreen, this.setUserId, this.setUser);
 
   @override
   _LoginScreenState createState() => new _LoginScreenState();
@@ -19,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _signUp = false;
   bool loading = false;
   double smallSide = 10;
+  late Future<User> futureUser = User() as Future<User>;
+  User? user;
 
   //TextField CONTROLLERS for Login
   TextEditingController _loginController = new TextEditingController();
@@ -39,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _phoneFocus = FocusNode();
   final FocusNode _addressFocus = FocusNode();
-
 
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _registrationFormKey = GlobalKey<FormState>();
@@ -114,8 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialButton(
                               onPressed: () {
                                 if(_loginFormKey.currentState!.validate()) {
-                                  widget.setUserId(_loginController.text);
-                                  widget.changeScreen(0);
+                                  _loginUser(_loginController.text);
                                 }
                               },
                               child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
@@ -327,13 +329,28 @@ class _LoginScreenState extends State<LoginScreen> {
     var result = await dataProvider.createAgent(name, agentId, address, city, country, state, phone, agentType, email);
     if (result == 1) {
       _toggleLoading();
-      widget.changeScreen(0);
+      _loginUser(agentId);
+      //widget.changeScreen(0);
     } else if (result == -1){
       _toggleLoading();
       showUserAlreadyExistsDialog();
     } else {
     _toggleLoading();
     showRegisterErrorDialog();
+    }
+  }
+
+  _loginUser(String agentId) async {
+    _toggleLoading();
+    try {
+      user = await dataProvider.fetchUserById(agentId);
+      _toggleLoading();
+      widget.setUserId(agentId);
+      widget.setUser(user!);
+      widget.changeScreen(0);
+    } catch (e) {
+      _toggleLoading();
+      _showUserNotFoundDialog();
     }
   }
 
@@ -383,6 +400,28 @@ class _LoginScreenState extends State<LoginScreen> {
   _focusNextTextField(BuildContext context, FocusNode currentNode, FocusNode nextNode) {
     currentNode.unfocus();
     FocusScope.of(context).requestFocus(nextNode);
+  }
+
+  _showUserNotFoundDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Error', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Text('User was not found.', textAlign: TextAlign.center),
+              MaterialButton(
+                child: Text('Try again'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
+    );
   }
 
 }

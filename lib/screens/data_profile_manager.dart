@@ -1,30 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
+import 'package:smashhit_ui/data/models.dart';
 
 class ProfileManagerPage extends StatefulWidget {
+  final Function(int, [String]) changeScreen;
+  final String userId;
+
+  ProfileManagerPage(this.changeScreen, this.userId);
+
   @override
   _ProfileManagerPage createState() => _ProfileManagerPage();
 }
 
 class _ProfileManagerPage extends State<ProfileManagerPage> {
-  TextEditingController nameController = new TextEditingController();
-  bool nameEnabled = false;
-  TextEditingController surnameController = new TextEditingController();
-  bool surnameEnabled = false;
-  TextEditingController emailController = new TextEditingController();
-  bool emailEnabled = false;
-  TextEditingController birthdateController = new TextEditingController();
-  bool birthdateEnabled = false;
-  TextEditingController passwordController = new TextEditingController();
-  bool passwordEnabled = false;
-  TextEditingController countryController = new TextEditingController();
-  bool countryEnabled = false;
-  TextEditingController stateController = new TextEditingController();
-  bool stateEnabled = false;
-  TextEditingController cityController = new TextEditingController();
-  bool cityEnabled = false;
-  TextEditingController streetAddressController = new TextEditingController();
-  bool streetAddressEnabled = false;
 
+  //CONTROLLERS
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController phoneController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController countryController = new TextEditingController();
+  TextEditingController stateController = new TextEditingController();
+  TextEditingController cityController = new TextEditingController();
+  TextEditingController addressController = new TextEditingController();
+
+  //FOCUSNODES
+  final FocusNode _nameFocus = FocusNode();
+  final FocusNode _phoneFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _countryFocus = FocusNode();
+  final FocusNode _stateFocus = FocusNode();
+  final FocusNode _cityFocus = FocusNode();
+  final FocusNode _addressFocus = FocusNode();
+
+  //BOOLS
+  bool nameEnabled = false;
+  bool phoneEnabled = false;
+  bool emailEnabled = false;
+  bool countryEnabled = false;
+  bool stateEnabled = false;
+  bool cityEnabled = false;
+  bool addressEnabled = false;
+
+  DataProvider dataProvider = new DataProvider();
+  late Future<User> futureUser = User() as Future<User>;
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+
+    futureUser = dataProvider.fetchUserById(widget.userId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,27 +58,53 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      child: _isWideScreen(screenWidth, screenHeight)
-          ? _wideScreenLayout()
-          : _slimScreenLayout()
+      child: FutureBuilder<User>(
+        future: futureUser,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            user = snapshot.data;
+            insertUserData();
+            return _isWideScreen(screenWidth, screenHeight)
+                ? Center(child: _wideScreenLayout())
+                : _slimScreenLayout();
+          } else if (snapshot.hasError) {
+            return Center(child: Text('${snapshot.error}'));
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+      )
     );
   }
 
   Widget _wideScreenLayout() {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Scrollbar(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(flex: 3),
-            Expanded(flex: 3, child: profilePicture()),
-            Spacer(),
-            Expanded(flex: 10,child: profileDetails()),
-            Spacer(flex: 3)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Spacer(flex: 3),
+                Expanded(flex: 3, child: profilePicture()),
+                Spacer(),
+                Expanded(flex: 10,child: profileDetails()),
+                Spacer(flex: 3)
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Spacer(flex: 2),
+                Expanded(flex: 1, child: deleteButton()),
+                Spacer(flex: 2),
+                Expanded(flex: 1, child: confirmButton()),
+                Spacer(flex: 2)
+              ],
+            )
           ],
         ),
-        confirmButton()
-      ],
+      ),
     );
   }
 
@@ -63,7 +115,19 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
           children: [
             profilePicture(),
             SizedBox(height: 10),
-            profileDetails(),
+            Container(
+                child: profileDetails(),
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0)
+            ),
+            Row(
+              children: [
+                Spacer(),
+                Expanded(flex: 4, child: deleteButton()),
+                Spacer(),
+                Expanded(flex: 4, child: confirmButton()),
+                Spacer()
+              ],
+            )
           ],
         ),
       ),
@@ -85,7 +149,11 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
                     border: InputBorder.none,
                   ),
                   enabled: nameEnabled,
-                  onFieldSubmitted: (val) => { nameEnabled = false },
+                  focusNode: _nameFocus,
+                  onFieldSubmitted: (val)  {
+                    nameEnabled = false;
+                    _focusNextTextField(context, _nameFocus, _phoneFocus);
+                    },
                 ),
               ),
               IconButton(
@@ -100,19 +168,23 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
             children: [
               Flexible(
                 child: TextFormField(
-                  controller: surnameController,
+                  controller: phoneController,
                   decoration: InputDecoration(
-                    hintText: "Surname",
+                    hintText: "Phone",
                     border: InputBorder.none,
                   ),
-                  enabled: surnameEnabled,
-                  onFieldSubmitted: (val) => { surnameEnabled = false },
+                  enabled: phoneEnabled,
+                  focusNode: _phoneFocus,
+                  onFieldSubmitted: (val) {
+                    phoneEnabled = false;
+                    _focusNextTextField(context, _phoneFocus, _emailFocus);
+                    },
                 ),
               ),
               IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () { setState(() {
-                  surnameEnabled = !surnameEnabled;
+                  phoneEnabled = !phoneEnabled;
                 }); },
               )
             ],
@@ -127,7 +199,11 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
                     border: InputBorder.none,
                   ),
                   enabled: emailEnabled,
-                  onFieldSubmitted: (val) => { emailEnabled = false },
+                  focusNode: _emailFocus,
+                  onFieldSubmitted: (val) {
+                    emailEnabled = false;
+                    _focusNextTextField(context, _emailFocus, _countryFocus);
+                    },
                 ),
               ),
               IconButton(
@@ -142,56 +218,17 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
             children: [
               Flexible(
                 child: TextFormField(
-                  controller: birthdateController,
-                  decoration: InputDecoration(
-                    hintText: "Birthdate",
-                    border: InputBorder.none,
-                  ),
-                  enabled: birthdateEnabled,
-                  onFieldSubmitted: (val) => { birthdateEnabled = false },
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () { setState(() {
-                  birthdateEnabled = !birthdateEnabled;
-                }); },
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Flexible(
-                child: TextFormField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    hintText: "Password",
-                    border: InputBorder.none,
-                  ),
-                  enabled: passwordEnabled,
-                  obscureText: true,
-                  onFieldSubmitted: (val) => { passwordEnabled = false },
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () { setState(() {
-                  passwordEnabled = !passwordEnabled;
-                }); },
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Flexible(
-                child: TextFormField(
                   controller: countryController,
                   decoration: InputDecoration(
                     hintText: "Country",
                     border: InputBorder.none,
                   ),
                   enabled: countryEnabled,
-                  onFieldSubmitted: (val) => { countryEnabled = false },
+                  focusNode: _countryFocus,
+                  onFieldSubmitted: (val) {
+                    countryEnabled = false;
+                    _focusNextTextField(context, _countryFocus, _stateFocus);
+                    },
                 ),
               ),
               IconButton(
@@ -212,7 +249,11 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
                     border: InputBorder.none,
                   ),
                   enabled: stateEnabled,
-                  onFieldSubmitted: (val) => { stateEnabled = false },
+                  focusNode: _stateFocus,
+                  onFieldSubmitted: (val) {
+                    stateEnabled = false;
+                    _focusNextTextField(context, _stateFocus, _cityFocus);
+                    },
                 ),
               ),
               IconButton(
@@ -233,7 +274,11 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
                     border: InputBorder.none,
                   ),
                   enabled: cityEnabled,
-                  onFieldSubmitted: (val) => { cityEnabled = false },
+                  focusNode: _cityFocus,
+                  onFieldSubmitted: (val) {
+                    cityEnabled = false;
+                    _focusNextTextField(context, _cityFocus, _addressFocus);
+                    },
                 ),
               ),
               IconButton(
@@ -248,19 +293,23 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
             children: [
               Flexible(
                 child: TextFormField(
-                  controller: streetAddressController,
+                  controller: addressController,
                   decoration: InputDecoration(
                     hintText: "House Number and Street Name",
                     border: InputBorder.none,
                   ),
-                  enabled: streetAddressEnabled,
-                  onFieldSubmitted: (val) => { streetAddressEnabled = false },
+                  enabled: addressEnabled,
+                  focusNode: _addressFocus,
+                  onFieldSubmitted: (val) {
+                    addressEnabled = false;
+                    _addressFocus.unfocus();
+                    },
                 ),
               ),
               IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () { setState(() {
-                  streetAddressEnabled = !streetAddressEnabled;
+                  addressEnabled = !addressEnabled;
                 }); },
               )
             ],
@@ -279,6 +328,16 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
     );
   }
 
+  Widget deleteButton() {
+    return MaterialButton(
+      color: Colors.red,
+      child: Text("Delete Account", style: TextStyle(color: Colors.white)),
+      onPressed: () {
+        showConfirmDeletionDialog();
+      },
+    );
+  }
+
   Widget profilePicture() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,10 +345,105 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
         Text("Profile Picture"),
         CircleAvatar(
           backgroundColor: Colors.blue,
-          child: Icon(Icons.person),
-          radius: 100,
+          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
+          radius: 75,
         )
       ],
+    );
+  }
+
+  void insertUserData() {
+    nameController.text = user!.name!;
+    phoneController.text = user!.telephoneNumber!;
+    emailController.text = user!.email!;
+    countryController.text = user!.country!;
+    stateController.text = user!.state!;
+    cityController.text = user!.city!;
+    addressController.text = user!.streetAddress!;
+  }
+
+  showConfirmDeletionDialog() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.warning, size: 40, color: Colors.red),
+                Container(height: 20),
+                Text("Are you sure you want to delete your account?"),
+              ],
+            ),
+            actions: [
+              MaterialButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              MaterialButton(
+                  child: Text('Delete', style: TextStyle(color: Colors.white)),
+                  color: Colors.red,
+                  onPressed: () async {
+                    if (await dataProvider.deleteUserById(widget.userId)) {
+                      Navigator.of(context).pop();
+                      showSuccessfulDeletionDialog(widget.userId);
+                    } else {
+                      Navigator.of(context).pop();
+                      showFailedDeletionDialog(widget.userId);
+                    }
+                  }
+              ),
+            ],
+          );
+        });
+  }
+
+  showSuccessfulDeletionDialog(String userId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Success!', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 100),
+              Text('The account $userId was successfully deleted!\nNavigating you back to the login page.', textAlign: TextAlign.center),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  widget.changeScreen(5);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
+    );
+  }
+
+  showFailedDeletionDialog(String userId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Error!'),
+            children: [
+              Icon(Icons.error, color: Colors.red, size: 60),
+              Text('The account $userId could not be deleted!'),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
     );
   }
 
@@ -299,6 +453,11 @@ class _ProfileManagerPage extends State<ProfileManagerPage> {
     } else {
       return false;
     }
+  }
+
+  _focusNextTextField(BuildContext context, FocusNode currentNode, FocusNode nextNode) {
+    currentNode.unfocus();
+    FocusScope.of(context).requestFocus(nextNode);
   }
 
 }

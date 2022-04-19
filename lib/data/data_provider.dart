@@ -59,44 +59,37 @@ class DataProvider {
         return 0;
       }
     } else {
-      print("Statuscode: ${response.statusCode}");
-      print("Response body: ${response.body}");
       return 0;
     }
   }
 
-  Future<bool> createContract(String title, String contractTerms, String contractType,
-      DateTime startDate, DateTime expireDate, String requester, String provider, String amendment,
-      String confidentiality, String existDataController, String existDataProtection,
-      String limitation, String methodNotice, String thirdParties, String disclosure, String receiptNotice,
-      String severability, String insolvency, String materialBreach, String terminationNotice,
-      String waiver) async {
+  Future<bool> createContract(Contract contract) async {
 
     var body = {
-      "ContractId": title.replaceAll(' ', ''),
-      "ContractType": contractType,
-      "Purpose": contractTerms.replaceAll('\n', ''),
-      "ContractRequester": requester.replaceAll(' ', ''),
-      "ContractProvider": provider.replaceAll(' ', ''),
-      "DataController": requester.replaceAll(' ', ''),
-      "StartDate": _formatDate(startDate),
-      "ExecutionDate": _formatDate(startDate),
-      "EffectiveDate": _formatDate(startDate),
-      "ExpireDate": _formatDate(expireDate),
+      "ContractId": contract.contractId!.replaceAll(' ', ''),
+      "ContractType": contract.contractType,
+      "Purpose": contract.description!.replaceAll('\n', ''),
+      "ContractRequester": contract.contractorId!.replaceAll(' ', ''),
+      "ContractProvider": contract.contracteeId!.replaceAll(' ', ''),
+      "DataController": contract.contractorId!.replaceAll(' ', ''),
+      "StartDate": _formatDate(contract.executionDate),
+      "ExecutionDate": _formatDate(contract.executionDate),
+      "EffectiveDate": _formatDate(contract.executionDate),
+      "ExpireDate": _formatDate(contract.expireDate),
       "Medium": "SmashHit Flutter Application",
-      "Waiver": waiver,
-      "Amendment": amendment,
-      "ConfidentialityObligation": confidentiality,
-      "DataProtection": existDataProtection,
-      "LimitationOnUse": limitation,
-      "MethodOfNotice": methodNotice,
-      "NoThirdPartyBeneficiaries": thirdParties,
-      "PermittedDisclosure": disclosure,
-      "ReceiptOfNotice": receiptNotice,
-      "Severability": severability,
-      "TerminationForInsolvency": insolvency,
-      "TerminationForMaterialBreach": materialBreach,
-      "TerminationOnNotice": terminationNotice,
+      "Waiver": contract.waiver,
+      "Amendment": contract.amendment,
+      "ConfidentialityObligation": contract.confidentialityObligation,
+      "DataProtection": contract.existDataProtection,
+      "LimitationOnUse": contract.limitation,
+      "MethodOfNotice": contract.methodNotice,
+      "NoThirdPartyBeneficiaries": contract.thirdParties,
+      "PermittedDisclosure": contract.disclosure,
+      "ReceiptOfNotice": contract.receiptNotice,
+      "Severability": contract.severability,
+      "TerminationForInsolvency": contract.terminationInsolvency,
+      "TerminationForMaterialBreach": contract.terminationMaterialBreach,
+      "TerminationOnNotice": contract.terminationNotice,
       "ContractStatus": "string"
     };
 
@@ -117,10 +110,6 @@ class DataProvider {
       return false;
     }
   }
-
-  acceptContract(Uri path) async {}
-
-  rejectContract(Uri path) async {}
 
   Future<Contract> fetchContractById(String contractId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId/'), headers: headers);
@@ -161,13 +150,28 @@ class DataProvider {
   }
 
   Future<User> fetchUserById(String agentId) async {
-    final response = await http.get(kBaseUrl.replace(path: 'agent/by_agentId/SvenRasmusen'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: 'agent/by_agentId/$agentId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
-      return parser.parseUser(data["bindings"]);
+      try {
+        return parser.parseAllUsersById(data["bindings"])[0];
+      }catch (e) {
+        throw Exception('Failed to fetch agent by id: $agentId.');
+      }
+
     } else {
       throw Exception('Failed to load agent by id: $agentId.');
+    }
+  }
+
+  Future<bool> deleteUserById(String agentId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/agent/delete/$agentId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete account $agentId.\nBack-end response: ${response.reasonPhrase}.');
     }
   }
 

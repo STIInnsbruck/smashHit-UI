@@ -19,7 +19,7 @@ class _BasePageState extends State<BasePage> {
   int _selectedIndex = 5;
   String _selectedTitle = "";
   Widget? _selectedPage;
-  User? currentUser;
+  User? user;
   String? userId;
   final TextEditingController searchBarController = new TextEditingController();
   final FocusNode _searchFocus = FocusNode();
@@ -27,7 +27,7 @@ class _BasePageState extends State<BasePage> {
   String? searchId;
 
   _BasePageState() {
-    _selectedPage = LoginScreen(changeScreen, setUserId);
+    _selectedPage = LoginScreen(changeScreen, setUserId, setUser);
     _selectedTitle = "Login Screen";
   }
 
@@ -96,7 +96,7 @@ class _BasePageState extends State<BasePage> {
             ),
           ]),
         ),
-        body: _selectedIndex == 0? Dashboard(changeScreen, userId, searchId) : _selectedPage,
+        body: _selectedIndex == 0? Dashboard(changeScreen, user, searchId) : _selectedPage,
         resizeToAvoidBottomInset: true,
       ),
     );
@@ -107,36 +107,36 @@ class _BasePageState extends State<BasePage> {
       _selectedIndex = x;
       switch (_selectedIndex) {
         case 0:
-          _selectedPage = Dashboard(changeScreen, userId, searchId);
+          _selectedPage = Dashboard(changeScreen, user, searchId);
           _selectedTitle = "Contracts Dashboard";
           break;
         case 1:
-          _selectedPage = ContractCreation(changeScreen, currentUser);
+          _selectedPage = ContractCreation(changeScreen, user);
           _selectedTitle = "Contract Creation";
           break;
         case 2:
-          _selectedPage = ViewContract(changeScreen, contractId!, currentUser);
+          _selectedPage = ViewContract(changeScreen, contractId!, user);
           _selectedTitle = "Contract ID: $contractId";
           (context as Element).performRebuild();
           break;
         case 3:
-          _selectedPage = TemplateSelector(changeScreen, currentUser);
+          _selectedPage = TemplateSelector(changeScreen, user);
           _selectedTitle = "Template Selector";
           break;
         case 4:
-          _selectedPage = ContractViolation(changeScreen, contractId!, currentUser);
+          _selectedPage = ContractViolation(changeScreen, contractId!, user);
           _selectedTitle = "Violation Claim";
           break;
         case 5:
-          _selectedPage = LoginScreen(changeScreen, setUserId);
+          _selectedPage = LoginScreen(changeScreen, setUserId, setUser);
           _selectedTitle = "Login Screen";
           break;
         case 6:
-          _selectedPage = UpdateScreen(changeScreen, contractId!, currentUser);
+          _selectedPage = UpdateScreen(changeScreen, contractId!, user);
           _selectedTitle = "Change & Update Your Contract";
           break;
         case 7:
-          _selectedPage = ProfileManagerPage();
+          _selectedPage = ProfileManagerPage(changeScreen, userId!);
           _selectedTitle = "Profile";
       }
     });
@@ -148,14 +148,21 @@ class _BasePageState extends State<BasePage> {
     });
   }
 
+  setUser(User user) {
+    setState(() {
+      this.user = user;
+    });
+  }
+
   Container searchField(double width) {
     return Container(
       margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
       decoration: BoxDecoration(
         color: Colors.white,
       ),
-      width: width / 6,
+      width: width / 4,
       child: TextFormField(
+        maxLines: 1,
         focusNode: _searchFocus,
         controller: searchBarController,
         textAlignVertical: TextAlignVertical.center,

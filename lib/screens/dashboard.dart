@@ -6,10 +6,10 @@ import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
 
 class Dashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
-  final String? userId;
   final String? searchId;
+  final User? user;
 
-  Dashboard(this.changeScreen, this.userId, this.searchId);
+  Dashboard(this.changeScreen, this.user, this.searchId);
 
   @override
   _DashboardState createState() => new _DashboardState();
@@ -27,8 +27,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    //futureContractList = dataProvider.fetchAllContracts();
-    futureContractList = dataProvider.fetchContractsByProviderId(widget.userId!);
   }
 
   @override
@@ -42,28 +40,15 @@ class _DashboardState extends State<Dashboard> {
     searchId = widget.searchId;
     return Container(
       child: FutureBuilder<List<Contract>>(
-        future: futureContractList,
+        future: futureContractList = dataProvider.fetchContractsByProviderId(widget.user!.name!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contractList = snapshot.data;
             return Column(
               children: [
                 _isSmallScreen(screenWidth)? Container() : listHeader(),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: contractList!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (searchId == null) {
-                          return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
-                        } else {
-                          if (contractList![index].contractId!.contains(searchId!)) {
-                            return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
-                          } else {
-                            return Container();
-                          }
-                        }
-                      }),
-                )
+                contractList!.isEmpty
+                  ? noContractsText() : contractListWidget()
               ],
             );
           } else if (snapshot.hasError) {
@@ -91,6 +76,27 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget noContractsText() {
+    return Expanded(child: Center(child: Text("You have no contracts. Create a contract in the drawer menu to the left.")));
+  }
+
+  Widget contractListWidget() {
+    return Expanded(
+      child: ListView.builder(
+          itemCount: contractList!.length,
+          itemBuilder: (BuildContext context, int index) {
+            if (searchId == null) {
+              return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+            } else {
+              if (contractList![index].contractId!.contains(searchId!)) {
+                return ContractTile(widget.changeScreen, refreshContractList, contractList![index]);
+              } else {
+                return Container();
+              }
+            }
+          }),
+    );
+  }
 
   bool _isSmallScreen(double width) {
     if (width <= 500.0) {

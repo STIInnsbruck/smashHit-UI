@@ -19,6 +19,23 @@ class ResponseParser {
     return jsonList.map((jsonUser) => parseUser(jsonUser)).toList();
   }
 
+  User parseUserById(Map jsonUser) {
+    return User(
+      id: jsonUser['Agent']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      name: jsonUser['name']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      streetAddress: jsonUser['address'] == null ? null : jsonUser['address']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      state: jsonUser['state']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      city: jsonUser['city']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      country: jsonUser['country']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      email: jsonUser['email'] == null ? null : jsonUser['email']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      telephoneNumber: jsonUser['phone'] == null ? null : jsonUser['phone']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+    );
+  }
+
+  List<User> parseAllUsersById(List jsonList) {
+    return jsonList.map((jsonUser) => parseUserById(jsonUser)).toList();
+  }
+
   Contract parseContract(Map jsonContract) {
     return Contract(contractId: jsonContract['Contract']['value']);
   }
