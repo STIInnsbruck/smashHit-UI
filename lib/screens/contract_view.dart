@@ -421,7 +421,7 @@ class _ContractCreationState extends State<ViewContract> {
             padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: contractDetailText("Consideration: ", "${contract.consideration}"),
+              child: contractDetailText("Consideration: ", "${contract.considerationDescription}"),
             ),
           ),
           contractTAC(contract),

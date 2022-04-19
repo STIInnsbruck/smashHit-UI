@@ -37,14 +37,15 @@ class Contract {
   DateTime? executionDate;
   String? medium;
   String? purpose;
-  String? consideration;
+  String? considerationDescription;
+  String? considerationValue;
   List contractors = [];
   List obligations = [];
   List terms = [];
 
 
   Contract({
-    required this.contractId,
+    this.contractId,
     this.consentId,
     this.contractCategory,
     this.contractStatus,
@@ -54,7 +55,8 @@ class Contract {
     this.effectiveDate,
     this.medium,
     this.purpose,
-    this.consideration,
+    this.considerationDescription,
+    this.considerationValue
   });
 
   /// Returns an int given the contract's status. The int is needed for the
@@ -154,8 +156,8 @@ class Obligation {
   String? contractorId;
   String? termId;
   String? description;
-  String? endDate;
-  String? executionDate;
+  DateTime? endDate;
+  DateTime? executionDate;
   String? state;
 
   Obligation({
@@ -168,6 +170,16 @@ class Obligation {
     this.executionDate,
     this.state
   });
+
+  String getExecutionDateAsString() {
+    String dateString = "${executionDate!.day}.${executionDate!.month}.${executionDate!.year}";
+    return dateString;
+  }
+
+  String getEndDateAsString() {
+    String dateString = "${endDate!.day}.${endDate!.month}.${endDate!.year}";
+    return dateString;
+  }
 }
 
 class Term {
@@ -175,8 +187,18 @@ class Term {
   String? termTypeId;
   String? contractId;
   String? description;
+  String? name;
 
-  Term({this.id, this.termTypeId, this.contractId, this.description});
+  Term({this.id, this.termTypeId, this.contractId, this.description, this.name});
+
+  factory Term.fromTemplateJson(Map<String, dynamic> json) {
+    return Term(
+      id: json['id'],
+      description: json['description'],
+      termTypeId: json['termTypeId'],
+      name: json['name']
+    );
+  }
 }
 
 class TermType {
@@ -185,6 +207,14 @@ class TermType {
   String? name;
 
   TermType({this.id, this.description, this.name});
+
+  factory TermType.fromJson(Map<String, dynamic> json) {
+    return TermType(
+      id: json['id'],
+      description: json['description'],
+      name: json['name']
+    );
+  }
 }
 
 /// Object model to be used in a Contract. It describes the actual object

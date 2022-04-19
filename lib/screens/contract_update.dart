@@ -46,7 +46,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                isEditing? Expanded(child: ContractForm(widget.changeScreen, currentStep, contract!, toggleEditing)) : Expanded(child: UpdateForm(widget.changeScreen, toggleEditing, contract!))
+                isEditing? Expanded(child: ContractForm(widget.changeScreen, currentStep, contract!, widget.user!, toggleEditing)) : Expanded(child: UpdateForm(widget.changeScreen, toggleEditing, contract!))
               ],
             )
           );

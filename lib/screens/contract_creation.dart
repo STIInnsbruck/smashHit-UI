@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
-import 'package:smashhit_ui/custom_widgets/contract_status_bar.dart';
 import 'package:smashhit_ui/custom_widgets/contract_form.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
-import '../custom_widgets/contract_status_bar.dart';
 
 class ContractCreation extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -42,7 +40,7 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    contractForm  = ContractForm(widget.changeScreen, 1, null);
+    contractForm  = ContractForm(widget.changeScreen, 1, null, widget.user!);
     _titleController = contractForm!.titleController;
     _descriptionController = contractForm!.descriptionController;
   }
@@ -58,11 +56,6 @@ class _ContractCreationState extends State<ContractCreation> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                width: screenWidth * 0.66,
-                height: 100,
-                child: ContractStatusBar(contract != null? contract!.getContractStatusAsInt() : 0),
-              ),
               contractForm!
             ],
           ),

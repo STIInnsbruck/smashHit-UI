@@ -40,6 +40,16 @@ class ResponseParser {
     return Contract(contractId: jsonContract['Contract']);
   }
 
+  String parseFetchContractId(List jsonContracts) {
+    String contractId = "";
+    jsonContracts.forEach((element) {
+      if (element["ContractStatus"] == "hasCreated") {
+        contractId = element["ContractStatus"];
+      }
+    });
+    return contractId;
+  }
+
   Contract parseContractId(Map jsonContract) {
     //initiate contract with its foundational data.
     Contract contract = new Contract(
@@ -52,7 +62,8 @@ class ResponseParser {
         medium: jsonContract["Medium"],
         purpose: jsonContract['Purpose'],
         consentId: jsonContract['ConsentId'],
-        consideration: jsonContract['consideration'],
+        considerationDescription: jsonContract['consideration'],
+        considerationValue: jsonContract['value'],
         contractCategory: jsonContract['ContractCategory']
     );
 
@@ -77,8 +88,8 @@ class ResponseParser {
     Obligation obligation = new Obligation(
       id: jsonObligation["obligationID"],
       description: jsonObligation["description"],
-      executionDate: jsonObligation["execution_date"],
-      endDate: jsonObligation["end_date"],
+      executionDate: formatDate(jsonObligation["execution_date"]),
+      endDate: formatDate(jsonObligation["end_date"]),
       state: jsonObligation["state"],
       //the first json has contractorId
       contractorId: jsonObligation["identifier"][0],
