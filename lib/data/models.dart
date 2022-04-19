@@ -156,8 +156,8 @@ class Obligation {
   String? contractorId;
   String? termId;
   String? description;
-  String? endDate;
-  String? executionDate;
+  DateTime? endDate;
+  DateTime? executionDate;
   String? state;
 
   Obligation({
@@ -170,6 +170,16 @@ class Obligation {
     this.executionDate,
     this.state
   });
+
+  String getExecutionDateAsString() {
+    String dateString = "${executionDate!.day}.${executionDate!.month}.${executionDate!.year}";
+    return dateString;
+  }
+
+  String getEndDateAsString() {
+    String dateString = "${endDate!.day}.${endDate!.month}.${endDate!.year}";
+    return dateString;
+  }
 }
 
 class Term {

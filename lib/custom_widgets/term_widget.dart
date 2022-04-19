@@ -15,11 +15,21 @@ class TermWidget extends StatefulWidget {
 
 class _TermWidgetState extends State<TermWidget> {
   bool expand = true;
+  bool edit = false;
 
   @override
   void initState() {
     super.initState();
-    widget.textController.text = widget.term.description!;
+
+    addExampleText();
+  }
+
+  ///Function to add a sample text from the json file in the assets. If not
+  ///called, the text box of a term will be empty, but still editable.
+  addExampleText() {
+    if(widget.textController.text == "") {
+      widget.textController.text = widget.term.description!;
+    }
   }
 
   @override
@@ -52,6 +62,14 @@ class _TermWidgetState extends State<TermWidget> {
                   ),
                   IconButton(
                     onPressed: () => {
+                      setState(() {
+                        edit =  !edit;
+                      })
+                    },
+                    icon: Icon(Icons.edit, color: edit? Colors.blue : Colors.grey),
+                  ),
+                  IconButton(
+                    onPressed: () => {
                       widget.onDeletePressed(widget.id)
                     },
                     icon: Icon(Icons.delete_forever, color: Colors.red),
@@ -81,6 +99,7 @@ class _TermWidgetState extends State<TermWidget> {
                     ),
                     child: TextField(
                       expands: true,
+                      enabled: edit,
                       minLines: null,
                       maxLines: null,
                       controller: widget.textController,
@@ -93,5 +112,4 @@ class _TermWidgetState extends State<TermWidget> {
       ),
     );
   }
-
 }
