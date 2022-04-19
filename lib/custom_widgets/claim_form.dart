@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/reportable_widget.dart';
 
@@ -49,10 +50,13 @@ class _ClaimFormState extends State<ClaimForm> {
   CheckBoxBooleanEdit isTerminationOnNotice2 = CheckBoxBooleanEdit();
   CheckBoxBooleanEdit isWaiver2 = CheckBoxBooleanEdit();
 
+  List<Widget> termWidgets = [];
+  DataProvider dataProvider = new DataProvider();
+
   @override
   void initState() {
     super.initState();
-    conditionController.text = widget.contract.description!;
+    conditionController.text = widget.contract.purpose!;
   }
 
   @override
@@ -78,6 +82,7 @@ class _ClaimFormState extends State<ClaimForm> {
   }
 
   Widget claimFormBody(double width) {
+    buildContractTerms();
     return Container(
       width: width,
       decoration: BoxDecoration(
@@ -117,37 +122,26 @@ class _ClaimFormState extends State<ClaimForm> {
                   Spacer(flex: 2),
                   Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
-                  Text(widget.contract.getContracteeName(), style: TextStyle(fontSize: 15)),
+                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
                   Spacer(flex: 2),
                 ],
               ),
               Container(height: 20),
               Row(
                 children: [
-                  Text('Start Date: ${widget.contract.displayDate(widget.contract.executionDate!)}', style: TextStyle(fontSize: 15)),
+                  Text('Start Date: ${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1),
-                  Text('End Date: ${widget.contract.displayDate(widget.contract.expireDate!)}', style: TextStyle(fontSize: 15)),
+                  Text('End Date: ${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15)),
                   Spacer(flex: 1)
                 ],
               ),
               Container(height: 20),
               Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
               Container(height: 10),
-              ReportableWidget(child: Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
-              ReportableWidget(child: displayTermElementInfo("Amendment", widget.contract.amendment!)),
-              ReportableWidget(child: displayTermElementInfo("Confidentiality Obligation", widget.contract.confidentialityObligation!)),
-              ReportableWidget(child: displayTermElementInfo("Data Controller", widget.contract.existDataController!)),
-              ReportableWidget(child: displayTermElementInfo("Data Protection", widget.contract.existDataProtection!)),
-              ReportableWidget(child: displayTermElementInfo("Limitation On Use", widget.contract.limitation!)),
-              ReportableWidget(child: displayTermElementInfo("Method Of Notice", widget.contract.methodNotice!)),
-              ReportableWidget(child: displayTermElementInfo("Third Party Beneficiaries", widget.contract.thirdParties!)),
-              ReportableWidget(child: displayTermElementInfo("Permitted Disclosure", widget.contract.disclosure!)),
-              ReportableWidget(child: displayTermElementInfo("Receipt Of Notice", widget.contract.receiptNotice!)),
-              ReportableWidget(child: displayTermElementInfo("Severability", widget.contract.severability!)),
-              ReportableWidget(child: displayTermElementInfo("Termination Of Insolvency", widget.contract.terminationInsolvency!)),
-              ReportableWidget(child: displayTermElementInfo("Termination For Material Breach", widget.contract.terminationMaterialBreach!)),
-              ReportableWidget(child: displayTermElementInfo("Termination On Notice", widget.contract.terminationNotice!)),
-              ReportableWidget(child: displayTermElementInfo("Waiver", widget.contract.waiver!)),
+              ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              Column(
+                children: termWidgets,
+              ),
               Container(height: 20),
               Container(height: 50),
               Container(height: 50,
@@ -171,6 +165,34 @@ class _ClaimFormState extends State<ClaimForm> {
     );
   }
 
+  void buildContractTerms() {
+    widget.contract.terms.forEach((termId) {
+      termWidgets.add(ReportableWidget(
+        child: FutureBuilder<Term>(
+            future: dataProvider.fetchTermById(termId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                FutureBuilder<TermType>(
+                    future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                    builder: (context, typeSnapshot) {
+                      if (typeSnapshot.hasData) {
+                        return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
+                      } else if (typeSnapshot.hasError) {
+                        return Center(child: Text('${snapshot.error}'));
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('${snapshot.error}'));
+              }
+              return Center(child: CircularProgressIndicator());
+            }
+        )
+      ));
+    });
+  }
+
   bool isBigScreen(double width) {
     if (width <= 500) {
       return false;
@@ -179,16 +201,16 @@ class _ClaimFormState extends State<ClaimForm> {
     }
   }
 
-  Widget displayTermElementInfo(String termElementName, String text) {
+  Widget displayTermElementInfo(String name, String description) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Center(child: Text(termElementName, style: TextStyle(fontSize: 20))),
-        text.compareTo("") == 0 ?
+        Center(child: Text(name, style: TextStyle(fontSize: 20))),
+        description.compareTo("") == 0 ?
           Text('None.', textAlign: TextAlign.justify) :
           Align(
               alignment: Alignment.centerLeft,
-              child: Text('$text', textAlign: TextAlign.justify)
+              child: Text('$description', textAlign: TextAlign.justify)
           )
       ],
     );

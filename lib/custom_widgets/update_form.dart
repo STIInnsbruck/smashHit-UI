@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class UpdateForm extends StatefulWidget {
@@ -17,6 +18,9 @@ class UpdateForm extends StatefulWidget {
 
 class _UpdateFormState extends State<UpdateForm> {
 
+  List<Widget> termWidgets = [];
+  List<Widget> contractorWidgets = [];
+  DataProvider dataProvider = new DataProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -66,15 +70,13 @@ class _UpdateFormState extends State<UpdateForm> {
               child: Column(
                 children: [
                   Center(
-                      child: Text('Contract Update Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
+                      child: Text('Contract Update Form', style: TextStyle(fontSize: 25, decoration: TextDecoration.underline))
                   ),
-                  SizedBox(height: 20),
-                  contractInformationBlock(),
-                  SizedBox(height: 5),
-                  contractRequesterBlock(),
-                  SizedBox(height: 5),
-                  contractProviderBlock(),
-                  SizedBox(height: 5),
+                  SizedBox(height: 10),
+                  contractDetailsBlock(),
+                  SizedBox(height: 10),
+                  contractContractorBlock(),
+                  SizedBox(height: 10),
                   contractTACBlock(),
                   SizedBox(height: 20),
                 ],
@@ -84,9 +86,9 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractInformationBlock() {
+  Widget contractDetailsBlock() {
     return Tooltip(
-      message: 'Tap to edit contract information.',
+      message: 'Tap to edit contract details.',
       child: MaterialButton(
         color: Colors.white,
         hoverColor: Colors.blue,
@@ -96,16 +98,30 @@ class _UpdateFormState extends State<UpdateForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-                child: Text('Contract Information', style: TextStyle(fontSize: 25)),
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
+                    child: Text('Contract Details', style: TextStyle(fontSize: 20))),
             ),
-            Text('Contract Type: ${widget.contract.getContractType()}', style: TextStyle(fontSize: 15))
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                child: Text('Contract ID: ${widget.contract.contractId}')),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5 , 15),
+                child: Text('Contract Type: ${widget.contract.getContractType()}'))
           ],
         ),
       ),
     );
   }
 
-  Tooltip contractRequesterBlock() {
+  Widget contractContractorBlock() {
+    buildContractContractors();
+    return Column(
+      children: contractorWidgets,
+    );
+  }
+
+  Widget contractRequesterBlock() {
     return Tooltip(
       message: 'Tap to edit data controller information',
       child: MaterialButton(
@@ -127,7 +143,7 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractProviderBlock() {
+  Widget contractProviderBlock() {
     return Tooltip(
       message: 'Tap to edit data processor information',
       child: MaterialButton(
@@ -149,10 +165,12 @@ class _UpdateFormState extends State<UpdateForm> {
     );
   }
 
-  Tooltip contractTACBlock() {
+  Widget contractTACBlock() {
+    buildContractTerms();
     return Tooltip(
       message: 'Tap to edit the terms & conditions',
       child: MaterialButton(
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         color: Colors.white,
         hoverColor: Colors.blue,
         onPressed: () { widget.toggleEditing(4); },
@@ -162,35 +180,112 @@ class _UpdateFormState extends State<UpdateForm> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Center(
-              child: Text('Terms & Conditions', style: TextStyle(fontSize: 25)),
+              child: Text('Terms & Conditions', style: TextStyle(fontSize: 20)),
             ),
-            Text(widget.contract.description!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+            Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
             Container(height: 20),
-            termElement('Amendment', widget.contract.amendment!),
-            termElement('Confidentiality Obligation', widget.contract.confidentialityObligation!),
-            termElement('Data Controller', widget.contract.existDataController!),
-            termElement('Data Protection', widget.contract.existDataProtection!),
-            termElement('Limitation On Use', widget.contract.limitation!),
-            termElement('Method Of notice', widget.contract.methodNotice!),
-            termElement('Third Party Beneficiaries', widget.contract.thirdParties!),
-            termElement('Permitted Disclosure', widget.contract.disclosure!),
-            termElement('Receipt Of Notice', widget.contract.receiptNotice!),
-            termElement('Severability', widget.contract.severability!),
-            termElement('Termination Of Insolvency', widget.contract.terminationInsolvency!),
-            termElement('Termination For Material Breach', widget.contract.terminationMaterialBreach!),
-            termElement('Termination On Notice', widget.contract.terminationNotice!),
-            termElement('Waiver', widget.contract.waiver!),
+            Column(
+              children: termWidgets
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text('Start Date: ${_formatDate(widget.contract.executionDate!)}'),
-                Text('End Date: ${_formatDate(widget.contract.expireDate!)}')
+                Text('End Date: ${_formatDate(widget.contract.endDate!)}')
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  void buildContractContractors() {
+    contractorWidgets.clear();
+    widget.contract.contractors.forEach((contractorId) {
+      contractorWidgets.add(Container(
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        child: FutureBuilder<User> (
+          future: dataProvider.fetchUserById(contractorId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Tooltip(
+                message: 'Tap to edit contractor information',
+                child: MaterialButton(
+                    color: Colors.white,
+                    hoverColor: Colors.blue,
+                    onPressed: () { widget.toggleEditing(2); },
+                    child: Center(
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 15, 5, 15),
+                              child: Column(
+                                children: [
+                                  contractDetailText("Contractor: ", "${snapshot.data!.name}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Email: ", "${snapshot.data!.email}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Phone: ", "${snapshot.data!.phone}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Country: ", "${snapshot.data!.country}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("City: ", "${snapshot.data!.city}"),
+                                  SizedBox(height: 2),
+                                  contractDetailText("Address: ", "${snapshot.data!.streetAddress}")
+                                ],
+                              ),
+                            )
+                        )
+                    )
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        )
+      ));
+    });
+  }
+
+  Widget contractDetailText(String type, String content) {
+    return Row(
+      children: [
+        Text("$type", style: TextStyle(fontWeight: FontWeight.bold)),
+        Text("$content")
+      ],
+    );
+  }
+
+  void buildContractTerms() {
+    termWidgets.clear();
+    widget.contract.terms.forEach((termId) {
+      termWidgets.add(Container(
+        child: FutureBuilder<Term>(
+            future: dataProvider.fetchTermById(termId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                FutureBuilder<TermType>(
+                    future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                    builder: (context, typeSnapshot) {
+                      if (typeSnapshot.hasData) {
+                        return termElement(typeSnapshot.data!.name!, snapshot.data!.description!);
+                      } else if (typeSnapshot.hasError) {
+                        return Center(child: Text('${snapshot.error}'));
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('${snapshot.error}'));
+              }
+              return Center(child: CircularProgressIndicator());
+            }
+        )
+      ));
+    });
   }
 
   Widget termElement(String term, String termValue) {

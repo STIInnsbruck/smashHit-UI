@@ -8,7 +8,8 @@ import 'package:smashhit_ui/screens/template_selector.dart';
 import 'package:smashhit_ui/screens/contract_violation.dart';
 import 'package:smashhit_ui/screens/login.dart';
 import 'package:smashhit_ui/screens/contract_update.dart';
-import 'package:smashhit_ui/screens/data_profile_manager.dart';
+import 'package:smashhit_ui/screens/profile_editor.dart';
+import 'package:smashhit_ui/screens/contract_party_profile.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -102,7 +103,7 @@ class _BasePageState extends State<BasePage> {
     );
   }
 
-  changeScreen(x, [String? contractId]) {
+  changeScreen(x, [String? id]) {
     setState(() {
       _selectedIndex = x;
       switch (_selectedIndex) {
@@ -115,8 +116,8 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Contract Creation";
           break;
         case 2:
-          _selectedPage = ViewContract(changeScreen, contractId!, user);
-          _selectedTitle = "Contract ID: $contractId";
+          _selectedPage = ViewContract(changeScreen, id!, user);
+          _selectedTitle = "Contract ID: $id";
           (context as Element).performRebuild();
           break;
         case 3:
@@ -124,7 +125,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Template Selector";
           break;
         case 4:
-          _selectedPage = ContractViolation(changeScreen, contractId!, user);
+          _selectedPage = ContractViolation(changeScreen, id!, user);
           _selectedTitle = "Violation Claim";
           break;
         case 5:
@@ -132,11 +133,15 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Login Screen";
           break;
         case 6:
-          _selectedPage = UpdateScreen(changeScreen, contractId!, user);
+          _selectedPage = UpdateScreen(changeScreen, id!, user);
           _selectedTitle = "Change & Update Your Contract";
           break;
         case 7:
-          _selectedPage = ProfileManagerPage(changeScreen, userId!);
+          _selectedPage = ProfileEditorPage(changeScreen, userId!);
+          _selectedTitle = "Profile Editor";
+          break;
+        case 8:
+          _selectedPage = ContractPartyProfile(changeScreen, id!);
           _selectedTitle = "Profile";
       }
     });
@@ -230,11 +235,11 @@ class _BasePageState extends State<BasePage> {
     return Column(
       children: [
         CircleAvatar(
-          backgroundColor: Colors.lightGreen,
-          child: Icon(Icons.person),
+          backgroundColor: Colors.blue,
+          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
           radius: 50,
         ),
-        Text("Name Surname")
+        Text("username")
       ],
     );
   }

@@ -5,7 +5,6 @@ import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-
 class ViewContract extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String contractId;
@@ -18,7 +17,8 @@ class ViewContract extends StatefulWidget {
 }
 
 class _ContractCreationState extends State<ViewContract> {
-  List<User> users = [];
+  List<Widget> contractorWidgets = [];
+  List<Widget> termWidgets = [];
   DataProvider dataProvider = new DataProvider();
   Contract? contract;
   String? contractDropDownType;
@@ -26,7 +26,6 @@ class _ContractCreationState extends State<ViewContract> {
   double smallSide = 10;
   double textSize = 0;
   int screenSize = 0;
-
 
   @override
   void initState() {
@@ -51,69 +50,65 @@ class _ContractCreationState extends State<ViewContract> {
 
     return Container(
       child: FutureBuilder<Contract>(
-        future: dataProvider.fetchContractById(widget.contractId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            contract = snapshot.data;
-            return Container(
-              margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: screenHeight,
-                  minHeight: screenHeight,
-                ),
-                child: Scrollbar(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: screenSize == 2
-                      ? smallScreenBuild(contract!)
-                      : mediumScreenBuild(contract!, orientation)
+          future: dataProvider.fetchContractById(widget.contractId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              contract = snapshot.data;
+              return Container(
+                margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: screenHeight,
+                    minHeight: screenHeight,
+                  ),
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: screenSize == 2
+                            ? smallScreenBuild(contract!)
+                            : mediumScreenBuild(contract!, orientation)),
                   ),
                 ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("The contract ID you entered was not found.", style: TextStyle(fontSize: 32)),
-                  Text('${snapshot.error}')
-                ],
-              ),
-            );
-          }
-          // show loading indicator while fetching.
-          return Center(child: CircularProgressIndicator());
-        }
-      ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("The contract ID you entered was not found.",
+                        style: TextStyle(fontSize: 32)),
+                    Text('${snapshot.error}')
+                  ],
+                ),
+              );
+            }
+            // show loading indicator while fetching.
+            return Center(child: CircularProgressIndicator());
+          }),
     );
   }
-  
+
   Widget mediumScreenBuild(Contract contract, Orientation orientation) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(child: contractStatusCard(contract)),
-              Expanded(flex: 2, child: contractTimeCard(contract)),
-              Expanded(child: reportIssueCard(contract))
-            ]
-        ),
-        GridView.count(
-          shrinkWrap: true,
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          Expanded(child: contractStatusCard(contract)),
+          Expanded(flex: 2, child: contractTimeCard(contract)),
+          Expanded(child: reportIssueCard(contract))
+        ]),
+        GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: orientation == Orientation.portrait ? 1.55 : 2.70,
+          ),
           physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          childAspectRatio: orientation == Orientation.portrait
-            ? 1.58
-            : 2.9,
-          children: [
-            partyObligationCard(contract.getContractorName()),
-            partyObligationCard(contract.getContracteeName()),
-          ],
+          shrinkWrap: true,
+          itemCount: contract.obligations.length,
+          itemBuilder: (BuildContext context, index) {
+            return partyObligationCard(contract.obligations[index]);
+          }
         ),
         contractDetailsCard(contract),
       ],
@@ -121,77 +116,140 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Widget smallScreenBuild(Contract contract) {
-    return Column(
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(child: contractStatusCard(contract)),
-              Expanded(child: reportIssueCard(contract))
-            ],
-          ),
-          contractTimeCard(contract),
-          partyObligationCard(contract.getContractorName()),
-          partyObligationCard(contract.getContracteeName()),
-          contractDetailsCard(contract),
-        ]);
-  }
-
-  Card partyObligationCard(String userId) {
-    return Card(
-      elevation: 10.0,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Obligation', style: TextStyle(fontSize: 20))),
-            ),
-          ),
-          ListTile(
-              leading: CircleAvatar(child: Icon(Icons.person)),
-              title: Text(userId)
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Obligation Description: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                Text('Lorem ipsum dolor per malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.', overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Time Remaining: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                    Text('23.10.2022')
-                  ],
-                ),
-              ),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Status: ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                      Icon(Icons.check_circle, color: Colors.green, size: 30)
-                    ],
-                  )
-              )
-            ],
-          )
+          Expanded(child: contractStatusCard(contract)),
+          Expanded(child: reportIssueCard(contract))
         ],
       ),
+      contractTimeCard(contract),
+      partyObligationCard(contract.getContractorName()),
+      partyObligationCard(contract.getContracteeName()),
+      contractDetailsCard(contract),
+    ]);
+  }
+
+  Card partyObligationCard(String obligationId) {
+    return Card(
+      elevation: 10.0,
+      child: FutureBuilder<Obligation>(
+        future: dataProvider.fetchObligationById(obligationId),
+        builder: (context, obligationSnapshot) {
+          if (obligationSnapshot.hasData) {
+            return FutureBuilder<User>(
+              future: dataProvider.fetchUserById(obligationSnapshot.data!.contractorId!),
+              builder: (context, userSnapshot) {
+                if (userSnapshot.hasData) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                          child: Center(
+                              child: Text('Obligation', style: TextStyle(fontSize: 20))),
+                        ),
+                      ),
+                      ListTile(
+                        leading: CircleAvatar(child: Icon(Icons.person)),
+                        title: GestureDetector(
+                            onTap: () {
+                              widget.changeScreen(8, "${obligationSnapshot.data!.contractorId}");
+                            },
+                            child: Text('${userSnapshot.data!.name}')),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Obligation Description: ',
+                                style:
+                                TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                            Text(
+                              '${obligationSnapshot.data!.description}',
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.justify,
+                            )
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Time Remaining: ',
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.bold)),
+                                Text('${obligationSnapshot.data!.endDate}')
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Status: ',
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.bold)),
+                                getIconByStatus(obligationSnapshot.data!.state!)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      userSnapshot.data!.name!.compareTo(widget.user!.name!) == 0
+                          ? Center(
+                        child: MaterialButton(
+                          onPressed: () {
+                            _showObligationCompletionDialog();
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text('Tap to complete',
+                              style: TextStyle(color: Colors.white)),
+                          color: Colors.blue,
+                        ),
+                      )
+                          : Center(
+                        child: MaterialButton(
+                          elevation: 0,
+                          onPressed: null,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text('${userSnapshot.data!.name!} must complete',
+                              style: TextStyle(color: Colors.grey)),
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  );
+                } else if (userSnapshot.hasError) {
+                  return Text('${userSnapshot.error}');
+                }
+                return Center(child: CircularProgressIndicator());
+              },
+            );
+          } else if (obligationSnapshot.hasError) {
+            return Center(
+              child: Text('${obligationSnapshot.error}')
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+      )
     );
   }
 
@@ -203,13 +261,17 @@ class _ContractCreationState extends State<ViewContract> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Contract Status', style: TextStyle(fontSize: 20))),
+              child: Center(
+                  child:
+                      Text('Contract Status', style: TextStyle(fontSize: 20))),
             ),
           ),
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Icon(Icons.check_circle, size: 50, color: Colors.green)),
+              child: Center(
+                  child:
+                      Icon(Icons.check_circle, size: 50, color: Colors.green)),
             ),
           ),
         ],
@@ -221,92 +283,96 @@ class _ContractCreationState extends State<ViewContract> {
     return Card(
       elevation: 10.0,
       child: InkWell(
-        splashColor: Colors.blue,
-        onTap: () {
-          widget.changeScreen(4, widget.contractId);
-        },
+          splashColor: Colors.blue,
+          onTap: () {
+            widget.changeScreen(4, widget.contractId);
+          },
+          child: Column(
+            children: [
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Center(
+                      child:
+                          Text('Report Issue', style: TextStyle(fontSize: 20))),
+                ),
+              ),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Center(
+                      child: Icon(Icons.report_problem,
+                          size: 50, color: Colors.yellow)),
+                ),
+              ),
+            ],
+          )),
+    );
+  }
+
+  Card contractTimeCard(Contract contract) {
+    double percentageCompleted = calculateElapsedContractTime();
+    return Card(
+        elevation: 10.0,
         child: Column(
           children: [
             Container(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Center(child: Text('Report Issue', style: TextStyle(fontSize: 20))),
+                child: Center(
+                    child:
+                        Text('Contract Time', style: TextStyle(fontSize: 20))),
               ),
             ),
             Container(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Center(child: Icon(Icons.report_problem, size: 50, color: Colors.yellow)),
-              ),
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Start: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
+                      Text('End: ${contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
+                    ],
+                  )),
             ),
-          ],
-        )
-      ),
-    );
-  }
-
-  Card contractTimeCard(Contract contract) {
-    return Card(
-      elevation: 10.0,
-      child: Column(
-        children: [
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Contract Time', style: TextStyle(fontSize: 20))),
-            ),
-          ),
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Start: 23.10.2022', style: TextStyle(fontSize: 15)),
-                  Text('End: 30.12.2022', style: TextStyle(fontSize: 15))
-                ],
-              )
-            ),
-          ),
-          Container(
-            height: 40,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Center(
-                child: Container(
-                  width: double.infinity,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1
-                    )
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: FractionallySizedBox(
-                      heightFactor: 1.0,
-                      widthFactor: 0.8,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.blue
+            Container(
+              height: 40,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Center(
+                  child: Container(
+                    width: double.infinity,
+                    height: 20,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.black, width: 1)),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: FractionallySizedBox(
+                        heightFactor: 1.0,
+                        widthFactor: percentageCompleted / 100,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              color: Colors.blue),
+                          child: Center(
+                              child:
+                                  Text('${percentageCompleted.toInt()}%', style: TextStyle(fontSize: 15))),
                         ),
-                        child: Center(child: Text('80%', style: TextStyle(fontSize: 15))),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      )
-    );
+          ],
+        ));
   }
 
   Card contractDetailsCard(Contract contract) {
+    buildContractUsers(contract);
+    buildContractTerms(contract);
     return Card(
       elevation: 10.0,
       child: Column(
@@ -314,236 +380,184 @@ class _ContractCreationState extends State<ViewContract> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('Contract Details', style: TextStyle(fontSize: 20))),
+              child: Center(
+                  child:
+                      Text('Contract Details', style: TextStyle(fontSize: 20))),
             ),
           ),
           Container(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(child: Text('${contract.contractId}', style: TextStyle(fontSize: 20))),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Contract Type: ${contract.contractType}'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Contract Requester: ${contract.getContractorName()}'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Contract Provider: ${contract.getContracteeName()}'),
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text('Terms and Conditions', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id velit ut tortor pretium viverra suspendisse. Ut placerat orci nulla pellentesque dignissim. Ut tortor pretium viverra suspendisse. Etiam sit amet nisl purus in mollis nunc. Tellus in hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Donec enim diam vulputate ut pharetra sit. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin. Sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc. Mi in nulla posuere sollicitudin aliquam ultrices sagittis. Elit ullamcorper dignissim cras tincidunt. Vestibulum lectus mauris ultrices eros. Facilisi etiam dignissim diam quis enim lobortis scelerisque. Justo laoreet sit amet cursus sit. Sed augue lacus viverra vitae congue eu. Enim nunc faucibus a pellentesque sit amet porttitor eget. Sed ullamcorper morbi tincidunt ornare massa eget. Et ligula ullamcorper malesuada proin libero nunc consequat interdum. Metus aliquam eleifend mi in nulla posuere. Volutpat lacus laoreet non curabitur gravida arcu ac.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text('Amendment', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text('Confidentiality Obligation', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Center(child: Text("Amet porttitor eget dolor morbi non. Magna sit amet purus gravida quis. Odio ut sem nulla pharetra diam sit. Ut tellus elementum sagittis vitae et leo duis ut. Urna nec tincidunt praesent semper feugiat nibh. Enim praesent elementum facilisis leo vel. Eget egestas purus viverra accumsan in. Feugiat sed lectus vestibulum mattis ullamcorper velit sed. Faucibus purus in massa tempor. Velit dignissim sodales ut eu. Bibendum neque egestas congue quisque egestas diam. Interdum varius sit amet mattis vulputate enim nulla aliquet porttitor. Viverra aliquet eget sit amet.", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify))
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Start Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
-              )
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 1),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Effective Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
-              )
+                  child: contractDetailText("Contract ID: ", "${contract.contractId}")),
+            ),
           ),
           Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Execution Date: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
-              )
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Contract Type: ", "${contract.contractType}"),
+            ),
           ),
           Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('End Date: ${contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
-              )
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Contract Medium: ", "${contract.medium}"),
+            ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget partiesTile(double width, double height) {
-    return Container(
-      height: height / 3,
-      width: width / 3,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 5,
-                spreadRadius: 2.5,
-                offset: Offset(2.5, 2.5))
-          ]),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text("Involved Parties:", style: TextStyle(fontSize: textSize)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              //first 45 characters are the URI from the ontology
-              partyEntity(contract!.contractorId!.substring(45, contract!.contractorId!.length)),
-              partyEntity(contract!.contracteeId!.substring(45, contract!.contracteeId!.length)),
-            ],
+          Column(
+            children: contractorWidgets,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Purpose: ", "${contract.purpose}"),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Consideration: ", "${contract.considerationDescription}"),
+            ),
+          ),
+          contractTAC(contract),
+          termWidgets.isNotEmpty
+            ? Column(
+            children: termWidgets,
           )
+            : Center(child: Text("No Terms were found in the contract.")),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 1),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: contractDetailText("Start Date: ", "${contract.getFormattedStartDate()}"))),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: contractDetailText("Effective Date: ", "${contract.getFormattedStartDate()}"))),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: contractDetailText("End Date: ", "${contract.getFormattedEndDate()}"))),
         ],
       ),
     );
   }
 
-  Widget partyEntity(String partyName) {
-    return Container(
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: smallSide / 25,
-            backgroundColor: Colors.white,
-            child: CircleAvatar(
-              radius: smallSide / 30,
-              child: Icon(Icons.person),
-            ),
-          ),
-          Text(partyName, style: TextStyle(fontSize: textSize)),
-          //Text("Primary", style: TextStyle(color: Colors.grey, fontSize: 15))
-        ],
-      ),
-    );
+  void buildContractUsers(Contract contract) {
+    contractorWidgets.clear();
+    contract.contractors.forEach((contractorId) {
+      contractorWidgets.add(contractorDetails(contractorId));
+    });
   }
 
-  // ignore: non_constant_identifier_names
-  Widget TOSTile(double width, double height) {
-    return Tooltip(
-      message: 'Click to view contract details.',
-      child: MaterialButton(
-        child: Container(
-          height: height / 3,
-          width: width / 3,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(2)),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black45,
-                    blurRadius: 5,
-                    spreadRadius: 2.5,
-                    offset: Offset(2.5, 2.5))
-              ]),
-          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text("Contract Purpose", style: TextStyle(fontSize: textSize)),
-              ),
-              Container(
-                color: Colors.grey[300],
-                height: height / 40,
-                width: width / 5,
-              ),
-              Container(
-                color: Colors.grey[300],
-                height: height / 40,
-                width: width / 10,
-              ),
-              Container(
-                color: Colors.grey[300],
-                height: height / 40,
-                width: width / 8,
-              ),
-            ],
-          ),
-        ),
-        onPressed: () { _showContractPurposeDialog(width); }
-      ),
-    );
-  }
-
-  Widget statusTile(double width, double height) {
+  Widget contractorDetails(String contractorId) {
     return Container(
-      height: height / 3,
-      width: width / 3,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 5,
-                spreadRadius: 2.5,
-                offset: Offset(2.5, 2.5))
-          ]),
-      child: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+      child: FutureBuilder<User>(
+        future: dataProvider.fetchUserById(contractorId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
               children: [
-                Text("Contract Status:", style: TextStyle(fontSize: textSize)),
-                statusIconByContractStatus(height)
+                contractDetailText("Contractor: ", "${snapshot.data!.name}"),
+                SizedBox(height: 2),
+                contractDetailText("Email: ", "${snapshot.data!.email}"),
+                SizedBox(height: 2),
+                contractDetailText("Phone: ", "${snapshot.data!.phone}"),
+                SizedBox(height: 2),
+                contractDetailText("Country: ", "${snapshot.data!.country}"),
+                SizedBox(height: 2),
+                contractDetailText("City: ", "${snapshot.data!.city}"),
+                SizedBox(height: 2),
+                contractDetailText("Address: ", "${snapshot.data!.streetAddress}")
               ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: reportViolationButton(),
-          )
-        ],
-      ),
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        }
+      )
     );
   }
 
-  Widget reportViolationButton() {
-    return IconButton(
-      iconSize: smallSide / 15,
-      padding: EdgeInsets.zero,
-      icon: Icon(Icons.report_problem, color: Colors.orange),
-      tooltip: 'Report a contract violation.',
-      onPressed: () {
-        widget.changeScreen(4, widget.contractId);
-      },
+  Widget contractDetailText(String type, String content) {
+    return Row(
+      children: [
+        Text("$type", style: TextStyle(fontWeight: FontWeight.bold)),
+        Text("$content")
+      ],
     );
+  }
+
+  Widget contractTAC(Contract contract) {
+    return contractTermTitle('Terms and Conditions');
+  }
+
+  Widget contractTerm(String termId, int index) {
+    return Container(
+      child: FutureBuilder<Term>(
+          future: dataProvider.fetchTermById(termId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return FutureBuilder<TermType>(
+                future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                builder: (context, typeSnapshot) {
+                  if (typeSnapshot.hasData) {
+                    return Column(
+                      children: [
+                        contractTermTitle("$index. ${typeSnapshot.data!.name!}"),
+                        contractTermText(snapshot.data!.description!)
+                      ],
+                    );
+                  } else if (typeSnapshot.hasError) {
+                    return Center(child: Text('${snapshot.error}'));
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('${snapshot.error}'));
+            }
+            return Center(child: CircularProgressIndicator());
+          }
+      )
+    );
+  }
+
+  void buildContractTerms(Contract contract) {
+    if (contract.terms.isNotEmpty) {
+      termWidgets.clear();
+      int index = 1;
+      contract.terms.forEach((termId) {
+        termWidgets.add(contractTerm(termId, index));
+        index++;
+      });
+    }
+  }
+
+  Widget contractTermTitle(String title) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        child: Center(
+            child: Text(title,
+                style: TextStyle(
+                    fontSize: 20, decoration: TextDecoration.underline))));
+  }
+
+  Widget contractTermText(String text) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        child: Center(
+            child: Text(text,
+                style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)));
   }
 
   /// Takes the current Contract's status and returns the appropriate icon.
@@ -586,86 +600,18 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Widget contractedEntitiesTile(double width, double height) {
-    return Container(
-      height: height / 3,
-      width: width / 3,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 5,
-                spreadRadius: 2.5,
-                offset: Offset(2.5, 2.5))
-          ]),
-      //padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text("Contracted Entities", style: TextStyle(fontSize: textSize)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CircleAvatar(
-                child: Icon(Icons.person),
-                radius: smallSide / 18,
-              ),
-              Icon(Icons.compare_arrows, color: Colors.grey, size: smallSide / 10),
-              CircleAvatar(
-                child: Icon(Icons.person),
-                radius: smallSide / 18,
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget contractTimeProgressBar(double width, double height) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Start Date: ${_formatDate(contract!.executionDate!)}", overflow: TextOverflow.ellipsis),
-          Container(height: 20),
-          RotatedBox(
-            quarterTurns: 1,
-            child: Container(
-                child: Column(children: [
-                  Text("Elapsed Contract Time:", style: TextStyle(fontSize: smallSide / 30)),
-                  LinearPercentIndicator(
-                    width: height / 1.4,
-                    lineHeight: smallSide / 30,
-                    percent: calculateElapsedContractTime() / 100,
-                    backgroundColor: Colors.grey,
-                    progressColor: Colors.blue,
-                    center: Text("${calculateElapsedContractTime()}%",
-                        style: TextStyle(fontSize: width / 60)),
-                  ),
-                ])),
-          ),
-          Container(height: 20),
-          Text("End Date: ${_formatDate(contract!.expireDate!)}", overflow: TextOverflow.ellipsis)
-        ],
-      ),
-    );
-  }
-
   /// This function returns the calculated elapsed time of the contract towards the
   /// current day. Return value must be between 0.0 and 1.0 inclusive. If the contract
   /// lies in the past, return 1.0 to represent 100% completion of the contract.
   double calculateElapsedContractTime() {
     DateTime today = DateTime.now();
     var totalTime =
-        contract!.expireDate!.difference(contract!.executionDate!).inDays;
+        contract!.endDate!.difference(contract!.executionDate!).inDays;
     var elapsedTime = today.difference(contract!.executionDate!).inDays;
 
-    if(elapsedTime >= totalTime) {
+    if (elapsedTime >= totalTime) {
       return 100.0;
-    } else if (elapsedTime < 0){
+    } else if (elapsedTime < 0) {
       return 0.0;
     } else {
       double progressPercentage = (elapsedTime / totalTime) * 100;
@@ -683,32 +629,50 @@ class _ContractCreationState extends State<ViewContract> {
     });
   }
 
-  void _showContractPurposeDialog(double width) {
+  void _showObligationCompletionDialog() {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Contract Purpose'),
-          content: Scrollbar(
-            child: SingleChildScrollView(
-              child: Container(
-                  width: width / 2,
-                  child: Text(contract!.description!)),
-            ),
-          ),
-          actions: <Widget> [
-            TextButton(
-              onPressed: () {
-                _dismissDialog();
-              },
-              child: Text('Close'),
-            )
-          ],
-        );
-      }
-    );
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Completing Your Obligation'),
+            content: Text(
+                'You are about to state that you have completed your selected obligation.\nTo finalise the completion of your obligation, a confirmation of the other parties will be required.'),
+            actions: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  _dismissDialog();
+                },
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text('Cancel'),
+              ),
+              MaterialButton(
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Text('Complete & await confirmation',
+                    style: TextStyle(color: Colors.white)),
+                color: Colors.blue,
+              )
+            ],
+          );
+        });
   }
-  
+
+  Tooltip getIconByStatus(String status) {
+    if (status.compareTo("hasPendingState") == 0) {
+      return Tooltip(
+        message: "Obligation is pending.",
+          child: Icon(Icons.pending, color: Colors.grey, size: 30));
+    } else {
+      return Tooltip(
+        message: "Obligation is completed.",
+          child: Icon(Icons.check_circle, color: Colors.green, size: 30));
+    }
+  }
+
   String _formatDate(DateTime dateTime) {
     String dateString = '${dateTime.day}.${dateTime.month}.${dateTime.year}';
     return dateString;

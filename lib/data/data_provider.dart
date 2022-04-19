@@ -25,33 +25,31 @@ class DataProvider {
   var headers = {
     'accept': 'application/json',
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer $token'
   };
 
-  Future<int> createAgent(String name, String agentId, String address, String city,
-      String country, String state, String phone, String agentType, String email) async {
+  //---------------------------- CONTRACTORS -----------------------------------
+  Future<int> createAgent(String name, String address, String city,
+      String country, String phone, String role, String email) async {
 
     var body = {
       "Address": address,
-      "AgentId": agentId,
-      "AgentType": "Person",
-      "City": city,
       "Country": country,
       "Email": email,
       "Name": name,
       "Phone": phone,
-      "State": state
+      "Role": role,
+      "Territory": city
     };
 
     var jsonBody = jsonEncode(body);
 
-    final response = await http.post(kBaseUrl.replace(path: "/agent/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contractor/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print("Message: \t $data");
-      if(data.toString().compareTo('{Error: Agent id already exist}') == 0 ) {
+      if(data.toString().compareTo('{Error: Contractor id already exist}') == 0 ) {
         return -1;
       } else if (data.toString().compareTo('{Success: Record inserted successfully.}') == 0 ){
         return 1;
@@ -63,33 +61,59 @@ class DataProvider {
     }
   }
 
+  Future<List<User>> fetchAllUsers() async {
+    final response = await http.get(kBaseUrl.replace(path: 'contractors/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return parser.parseAllUsers(data);
+    } else {
+      throw Exception('Failed to load all users.');
+    }
+  }
+
+  Future<User> fetchUserById(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contractor/$contractorId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      try {
+        return parser.parseUserById(jsonDecode(response.body));
+      }catch (e) {
+        throw Exception('Failed to fetch agent by id: $contractorId.');
+      }
+
+    } else {
+      throw Exception('Failed to load agent by id: $contractorId.');
+    }
+  }
+
+  Future<bool> deleteUserById(String agentId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/agent/delete/$agentId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete account $agentId.\nBack-end response: ${response.reasonPhrase}.');
+    }
+  }
+
+  //---------------------------- Contract --------------------------------------
+  Future<List<Contract>> fetchAllContracts() async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map data = jsonDecode(response.body);
+      return parser.parseAllContracts(data["bindings"]);
+    } else {
+      throw Exception('Failed to load all contracts.');
+    }
+  }
+
   Future<bool> createContract(Contract contract) async {
 
     var body = {
       "ContractId": contract.contractId!.replaceAll(' ', ''),
-      "ContractType": contract.contractType,
-      "Purpose": contract.description!.replaceAll('\n', ''),
-      "ContractRequester": contract.contractorId!.replaceAll(' ', ''),
-      "ContractProvider": contract.contracteeId!.replaceAll(' ', ''),
-      "DataController": contract.contractorId!.replaceAll(' ', ''),
-      "StartDate": _formatDate(contract.executionDate),
-      "ExecutionDate": _formatDate(contract.executionDate),
-      "EffectiveDate": _formatDate(contract.executionDate),
-      "ExpireDate": _formatDate(contract.expireDate),
-      "Medium": "SmashHit Flutter Application",
-      "Waiver": contract.waiver,
-      "Amendment": contract.amendment,
-      "ConfidentialityObligation": contract.confidentialityObligation,
-      "DataProtection": contract.existDataProtection,
-      "LimitationOnUse": contract.limitation,
-      "MethodOfNotice": contract.methodNotice,
-      "NoThirdPartyBeneficiaries": contract.thirdParties,
-      "PermittedDisclosure": contract.disclosure,
-      "ReceiptOfNotice": contract.receiptNotice,
-      "Severability": contract.severability,
-      "TerminationForInsolvency": contract.terminationInsolvency,
-      "TerminationForMaterialBreach": contract.terminationMaterialBreach,
-      "TerminationOnNotice": contract.terminationNotice,
       "ContractStatus": "string"
     };
 
@@ -111,8 +135,62 @@ class DataProvider {
     }
   }
 
+  Future<bool> createBaseContract(Contract contract) async {
+    var body = {
+      "ConsentId": "string",
+      "ConsiderationDescription": contract.considerationDescription,
+      "ConsiderationValue": contract.considerationValue,
+      "ContractCategory": contract.contractCategory,
+      "ContractStatus": "hasCreated",
+      "ContractType": contract.contractType,
+      "Contractors": [
+        contract.contractors[0]
+      ],
+      "EffectiveDate": _formatDate(contract.effectiveDate),
+      "EndDate": _formatDate(contract.endDate),
+      "ExecutionDate": _formatDate(contract.executionDate),
+      "Medium": "App Based",
+      "Obligations": [
+        "string"
+      ],
+      "Purpose": contract.purpose,
+      "Signatures": [
+        "string"
+      ],
+      "Terms": [
+        "string"
+      ]
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data.toString().compareTo('{"Success": "Record inserted successfully."}') == 0 ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<String> fetchContractIdByContractorId(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return parser.parseFetchContractId(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to find contract id.');
+    }
+  }
+
   Future<Contract> fetchContractById(String contractId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/by_contractId/$contractId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContract/$contractId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Contract contract;
@@ -127,54 +205,6 @@ class DataProvider {
     }
   }
 
-  Future<List<Contract>> fetchAllContracts() async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      return parser.parseAllContracts(data["bindings"]);
-    } else {
-      throw Exception('Failed to load all contracts.');
-    }
-  }
-
-  Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: 'contract/agents/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      return parser.parseAllUsers(data["bindings"]);
-    } else {
-      throw Exception('Failed to load all users.');
-    }
-  }
-
-  Future<User> fetchUserById(String agentId) async {
-    final response = await http.get(kBaseUrl.replace(path: 'agent/by_agentId/$agentId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      try {
-        return parser.parseAllUsersById(data["bindings"])[0];
-      }catch (e) {
-        throw Exception('Failed to fetch agent by id: $agentId.');
-      }
-
-    } else {
-      throw Exception('Failed to load agent by id: $agentId.');
-    }
-  }
-
-  Future<bool> deleteUserById(String agentId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/agent/delete/$agentId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to delete account $agentId.\nBack-end response: ${response.reasonPhrase}.');
-    }
-  }
-
   Future<bool> deleteContractById(String contractId) async {
     final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
 
@@ -185,23 +215,17 @@ class DataProvider {
     }
   }
 
-  Future<List<Contract>> fetchContractsByProviderId(String agentId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/by_provider/$agentId/'), headers: headers);
+  Future<List<Contract>> fetchContractsByContractorId(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      return parser.parseAllContracts(data["bindings"]);
-    } else {
-      throw Exception('Failed to load all contracts.');
-    }
-  }
-
-  Future<List<Contract>> fetchContractsByRequesterId(String agentId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/by_requester/$agentId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      return parser.parseAllContracts(data["bindings"]);
+      List<Contract> contracts = [];
+      try {
+        contracts = parser.parseAllContracts(jsonDecode(response.body));
+        return contracts;
+      } catch (e) {
+        return contracts;
+      }
     } else {
       throw Exception('Failed to load all contracts.');
     }
@@ -253,6 +277,79 @@ class DataProvider {
       return false;
     }
   }
+
+  //---------------------------- Obligation ------------------------------------
+  Future<Obligation> fetchObligationById(String obligationId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/obligation/$obligationId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Obligation obligation;
+      try {
+        obligation = parser.parseObligationId(jsonDecode(response.body)[0]);
+        return obligation;
+      } catch (e) {
+        throw Exception('Failed to load obligation $obligationId.');
+      }
+    } else {
+      throw Exception('Failed to load obligation $obligationId.');
+    }
+  }
+
+  //---------------------------- Term ------------------------------------------
+  Future<Term> fetchTermById(String termId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/term/$termId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      Term term;
+      try {
+        term = parser.parseTermId(jsonDecode(response.body));
+        return term;
+      } catch (e) {
+        throw Exception('Failed to parse response for term $termId.');
+      }
+    } else {
+      throw Exception('Failed to load term $termId.');
+    }
+  }
+
+  Future<TermType> fetchTermTypeById(String termTypeId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/termType/$termTypeId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      TermType termType;
+      try {
+        termType = parser.parseTermTypeId(jsonDecode(response.body));
+        return termType;
+      } catch (e) {
+        throw Exception('Failed to parse response for termType $termTypeId.');
+      }
+    } else {
+      throw Exception('Failed to load termType $termTypeId.');
+    }
+  }
+
+  //---------------------------- Term Type -------------------------------------
+  Future<bool> createTermType(TermType termType) async {
+    var body = {
+      "Description": termType.description,
+      "Name": termType.name
+    };
+    var jsonBody = jsonEncode(body);
+    final response = await http.post(kBaseUrl.replace(path: "/term/type/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data.toString().compareTo('{"Success": "Record inserted successfully."}') == 0 ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
 
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {

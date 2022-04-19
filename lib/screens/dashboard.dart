@@ -40,7 +40,7 @@ class _DashboardState extends State<Dashboard> {
     searchId = widget.searchId;
     return Container(
       child: FutureBuilder<List<Contract>>(
-        future: futureContractList = dataProvider.fetchContractsByProviderId(widget.user!.name!),
+        future: futureContractList = dataProvider.fetchContractsByContractorId(widget.user!.id!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             contractList = snapshot.data;

@@ -2,16 +2,16 @@ import 'package:smashhit_ui/data/models.dart';
 
 class ResponseParser {
 
+  //USER PARSERS
   User parseUser(Map jsonUser) {
     return User(
-      id: jsonUser['Agent']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      name: jsonUser['Name']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      streetAddress: jsonUser['Address'] == null ? null : jsonUser['Address']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      state: jsonUser['state']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      city: jsonUser['city']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      country: jsonUser['country']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      email: jsonUser['email'] == null ? null : jsonUser['email']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      telephoneNumber: jsonUser['telephone'] == null ? null : jsonUser['telephone']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      id: jsonUser['ContractorID'],
+      name: jsonUser['name'],
+      streetAddress: jsonUser['address'],
+      city: jsonUser['territory'],
+      country: jsonUser['country'],
+      email: jsonUser['email'],
+      phone: jsonUser['phone'],
     );
   }
 
@@ -21,14 +21,13 @@ class ResponseParser {
 
   User parseUserById(Map jsonUser) {
     return User(
-      id: jsonUser['Agent']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      name: jsonUser['name']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      streetAddress: jsonUser['address'] == null ? null : jsonUser['address']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      state: jsonUser['state']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      city: jsonUser['city']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      country: jsonUser['country']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      email: jsonUser['email'] == null ? null : jsonUser['email']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
-      telephoneNumber: jsonUser['phone'] == null ? null : jsonUser['phone']['value'].toString().replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', ''),
+      id: jsonUser['ContractorID'],
+      streetAddress: jsonUser['address'],
+      country: jsonUser['country'],
+      email: jsonUser['email'],
+      name: jsonUser['name'],
+      phone: jsonUser['phone'],
+      city: jsonUser['territory'],
     );
   }
 
@@ -36,59 +35,118 @@ class ResponseParser {
     return jsonList.map((jsonUser) => parseUserById(jsonUser)).toList();
   }
 
+  //CONTRACT PARSERS
   Contract parseContract(Map jsonContract) {
-    return Contract(contractId: jsonContract['Contract']['value']);
+    return Contract(contractId: jsonContract['Contract']);
+  }
+
+  String parseFetchContractId(List jsonContracts) {
+    String contractId = "";
+    jsonContracts.forEach((element) {
+      if (element["ContractStatus"] == "hasCreated") {
+        contractId = element["ContractStatus"];
+      }
+    });
+    return contractId;
   }
 
   Contract parseContractId(Map jsonContract) {
-    return new Contract(
-        contractId: jsonContract["bindings"][0]['Contract']['value'],
-        contractType: jsonContract["bindings"][0]['ContractType']['value'],
-        contractorId: jsonContract["bindings"][0]['ContractRequester']['value'],
-        contracteeId: jsonContract["bindings"][0]['ContractProvider']['value'],
-        title: "Contract Title (Hardcoded, not in ontology.)",
-        description: jsonContract["bindings"][0]['Purpose']['value'],
-        executionDate: formatDate(jsonContract["bindings"][0]["ExecutionDate"]["value"]),
-        expireDate: formatDate(jsonContract["bindings"][0]["EndingDate"]["value"]),
-        contractStatus: jsonContract["bindings"][0]['ContractStatus']['value'],
-        amendment: jsonContract["bindings"][0]['Amendment']['value'],
-        confidentialityObligation: jsonContract["bindings"][0]['ConfidentialityObligation']['value'],
-        existDataController: jsonContract["bindings"][0]['DataController']['value'],
-        existDataProtection: jsonContract["bindings"][0]['DataProtection']['value'],
-        limitation: jsonContract["bindings"][0]['LimitationOnUse']['value'],
-        methodNotice: jsonContract["bindings"][0]['MethodOfNotice']['value'],
-        thirdParties: jsonContract["bindings"][0]['NoThirdPartyBeneficiaries']['value'],
-        disclosure: jsonContract["bindings"][0]['PermittedDisclosure']['value'],
-        receiptNotice: jsonContract["bindings"][0]['ReceiptOfNotice']['value'],
-        severability: jsonContract["bindings"][0]['Severability']['value'],
-        terminationInsolvency: jsonContract["bindings"][0]['TerminationForInsolvency']['value'],
-        terminationMaterialBreach: jsonContract["bindings"][0]['TerminationForMaterialBreach']['value'],
-        terminationNotice: jsonContract["bindings"][0]['TerminationOnNotice']['value'],
-        waiver: jsonContract["bindings"][0]['Waiver']['value']
+    //initiate contract with its foundational data.
+    Contract contract = new Contract(
+        contractId: jsonContract['Contract'],
+        contractStatus: jsonContract['ContractStatus'],
+        contractType: jsonContract['ContractType'],
+        effectiveDate: formatDate(jsonContract["EffectiveDate"]),
+        executionDate: formatDate(jsonContract["ExecutionDate"]),
+        endDate: formatDate(jsonContract["ExecutionDate"]),
+        medium: jsonContract["Medium"],
+        purpose: jsonContract['Purpose'],
+        consentId: jsonContract['ConsentId'],
+        considerationDescription: jsonContract['consideration'],
+        considerationValue: jsonContract['value'],
+        contractCategory: jsonContract['ContractCategory']
     );
+
+    contract.contractors = jsonContract['identifiers']['contractors'];
+    contract.obligations = jsonContract['identifiers']['obligations'];
+    contract.terms = jsonContract['identifiers']['terms'];
+
+    return contract;
   }
 
   List<Contract> parseAllContracts(List jsonList) {
     return jsonList.map((jsonContract) => parseContract(jsonContract)).toList();
   }
 
+  //OBLIGATION PARSERS
+  Obligation parseObligation(Map jsonObligation) {
+    return Obligation(id: jsonObligation['Obligation']['value']);
+  }
+
+  Obligation parseObligationId(Map jsonObligation) {
+    //initiate obligation with its foundational data.
+    Obligation obligation = new Obligation(
+      id: jsonObligation["obligationID"],
+      description: jsonObligation["description"],
+      executionDate: formatDate(jsonObligation["execution_date"]),
+      endDate: formatDate(jsonObligation["end_date"]),
+      state: jsonObligation["state"],
+      //the first json has contractorId
+      contractorId: jsonObligation["identifier"][0],
+      //the second json has obligationId
+      contractId: jsonObligation["identifier"][1],
+      //the third json has termiId
+      termId: jsonObligation["identifier"][2],
+    );
+
+    return obligation;
+
+  }
+
+  List<Obligation> parseAllObligations(List jsonList) {
+    return jsonList.map((jsonObligation) => parseObligation(jsonObligation)).toList();
+  }
+
+  //TERM PARSERS
+  Term parseTerm(Map jsonTerm) {
+    return Term(id: jsonTerm['Term']);
+  }
+
+  Term parseTermId(Map jsonTerm) {
+    Term term = new Term(
+      id: jsonTerm["TermId"],
+      description: jsonTerm["description"],
+      contractId: jsonTerm["ContractId"],
+      termTypeId: jsonTerm["TermTypeId"]
+    );
+
+    return term;
+  }
+
+  List<Term> parseAllTerm(List jsonList) {
+    return jsonList.map((jsonTerm) => parseTerm(jsonTerm)).toList();
+  }
+
+  //TERMTYPE PARSERS
+  TermType parseTermType(Map jsonTermType) {
+    return TermType(id: jsonTermType["TermTypeId"]);
+  }
+
+  TermType parseTermTypeId(Map jsonTermType) {
+    TermType termType = new TermType(
+      id: jsonTermType["TermTypeId"],
+      description: jsonTermType["description"],
+      name: jsonTermType["name"]
+    );
+
+    return termType;
+  }
+
+  List<TermType> parseAllTermTypes(List jsonList) {
+    return jsonList.map((jsonTermType) => parseTermType(jsonTermType)).toList();
+  }
+
   DateTime formatDate(String dateString) {
-    if(dateString.length > 12) {
-      var length = dateString.length;
-      int year = int.parse(dateString.substring(length - 4, length));
-      int month = int.parse(dateString.substring(length - 7, length - 5));
-      int day = int.parse(dateString.substring(length - 10, length - 8));
-      DateTime date = new DateTime(year, month, day);
-
-      return date;
-    } else {
-      int year = int.parse(dateString.substring(0, 4));
-      int month = int.parse(dateString.substring(5, 7));
-      int day = int.parse(dateString.substring(8, 10));
-      DateTime date = new DateTime(year, month, day);
-
-      return date;
-    }
-
+    return DateTime.parse(dateString);
   }
 }
