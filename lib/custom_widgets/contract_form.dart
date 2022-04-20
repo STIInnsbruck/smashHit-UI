@@ -21,15 +21,6 @@ class ContractForm extends StatefulWidget {
   DateTime? effectiveDate;
   DateTime? executionDate;
   DateTime? endDate;
-  TextEditingController titleController = TextEditingController();
-  TextEditingController considerationDescController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController considerationValController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  List<TextEditingController> contractorControllers = [];
-  List<TextEditingController> requesterControllers = [];
-  List<TextEditingController> providerControllers = [];
-  List<TextEditingController> termControllers = [];
   String? contractDropDownType;
   User user;
 
@@ -40,6 +31,14 @@ class ContractForm extends StatefulWidget {
 }
 
 class _ContractFormState extends State<ContractForm> {
+
+
+  TextEditingController titleController = TextEditingController();
+  TextEditingController considerationDescController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController considerationValController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  List<TextEditingController> contractorControllers = [];
 
   //------------------- General Variables --------------------------------------
   DateTime? startDate;
@@ -96,7 +95,6 @@ class _ContractFormState extends State<ContractForm> {
 
     setStep();
     if (widget.contract != null) {
-      setFormFields();
       //tmpContract = widget.contract;
     } else {
 
@@ -121,7 +119,7 @@ class _ContractFormState extends State<ContractForm> {
                 contractStepObligation(formWidth),
                 contractStepFinal(formWidth),
               ])),
-      Align(
+      /**Align(
         alignment: Alignment.bottomRight,
         child: widget.contract != null? Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -135,7 +133,7 @@ class _ContractFormState extends State<ContractForm> {
       Align(
         alignment: Alignment.bottomLeft,
         child: previousStepButton(),
-      )
+      )*/
     ]);
   }
 
@@ -149,7 +147,7 @@ class _ContractFormState extends State<ContractForm> {
           stepComplete: stepOneComplete,
           onPressed: () => setStepOne(),
         ),
-        toggleStepOne == true
+        widget.step == 1
             ? ContractStepBody(
             width: width,
             children: [
@@ -180,7 +178,7 @@ class _ContractFormState extends State<ContractForm> {
             onPressed: () async {
               setStepTwo();
             }),
-        toggleStepTwo == true
+        widget.step == 2
             ? ContractStepBody(
             width: width,
             children: [
@@ -220,13 +218,13 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         ContractStepHeader(
             width: width,
-            name: "Step 4. Terms & Conditions of the Contract",
+            name: "Step 3. Terms & Conditions of the Contract",
             stepComplete: stepFourComplete,
             onPressed:  () {
               setStepFour();
             }
         ),
-        toggleStepFour == true
+        widget.step == 3
           ? ContractStepBody(
             width: width,
             children: [
@@ -260,7 +258,7 @@ class _ContractFormState extends State<ContractForm> {
             onPressed: () async {
               setStepObligation();
             }),
-        toggleStepObligation == true
+        widget.step == 4
           ? ContractStepBody(
               width: width,
               children: _termMap.keys.length > 0? [
@@ -294,11 +292,11 @@ class _ContractFormState extends State<ContractForm> {
             name: "Final Step - Overview",
             onPressed: () => setStepFinal()
         ),
-        toggleStepFinal == true
+        widget.step == 5
             ? ContractStepBody(
             width: width,
             children: [
-              Text('${widget.titleController.text}',
+              Text('${titleController.text}',
                   style: TextStyle(
                       fontSize: 25, decoration: TextDecoration.underline),
                   textAlign: TextAlign.center),
@@ -313,7 +311,7 @@ class _ContractFormState extends State<ContractForm> {
                 children: displayAllContractorsInfo(),
               ),
               Align(
-                child: Text("Consideration: ${widget.considerationDescController.text}"),
+                child: Text("Consideration: ${considerationDescController.text}"),
                 alignment: Alignment.centerLeft
               ),
               SizedBox(height: 10),
@@ -363,13 +361,13 @@ class _ContractFormState extends State<ContractForm> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("${widget.contractorControllers[index * 7 + 0].text}"),
-            Text("${widget.contractorControllers[index * 7 + 1].text}"),
-            Text("${widget.contractorControllers[index * 7 + 2].text}"),
-            Text("${widget.contractorControllers[index * 7 + 3].text}"),
-            Text("${widget.contractorControllers[index * 7 + 4].text}"),
-            Text("${widget.contractorControllers[index * 7 + 5].text}"),
-            Text("${widget.contractorControllers[index * 7 + 6].text}"),
+            Text("${contractorControllers[index * 7 + 0].text}"),
+            Text("${contractorControllers[index * 7 + 1].text}"),
+            Text("${contractorControllers[index * 7 + 2].text}"),
+            Text("${contractorControllers[index * 7 + 3].text}"),
+            Text("${contractorControllers[index * 7 + 4].text}"),
+            Text("${contractorControllers[index * 7 + 5].text}"),
+            Text("${contractorControllers[index * 7 + 6].text}"),
           ],
         )
       ],
@@ -524,7 +522,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
             style: TextStyle(fontSize: 15),
-            controller: widget.contractorControllers[index],
+            controller: contractorControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return '$fieldHint';
@@ -566,7 +564,7 @@ class _ContractFormState extends State<ContractForm> {
                 FocusNode fieldFocusNode,
                 VoidCallback onFieldSubmitted
                 ) {
-              fieldTextEditingController.text = widget.contractorControllers[index].text;
+              fieldTextEditingController.text = contractorControllers[index].text;
               return TextField(
                 controller: fieldTextEditingController,
                 focusNode: fieldFocusNode,
@@ -601,9 +599,9 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget contractorCSCDropDownList(int index) {
     return CountryStateCityPicker(
-      state: widget.contractorControllers[index],
-      city: widget.contractorControllers[index + 1],
-      country: widget.contractorControllers[index + 2],
+      state: contractorControllers[index],
+      city: contractorControllers[index + 1],
+      country: contractorControllers[index + 2],
       textFieldInputBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(2.0),
           borderSide: BorderSide(color: Colors.black, width: 2.0)),
@@ -624,7 +622,7 @@ class _ContractFormState extends State<ContractForm> {
           Text("What are the Terms & Conditions of the Contract?",
               style: TextStyle(fontSize: 15)),
           TextFormField(
-            controller: widget.descriptionController,
+            controller: descriptionController,
             maxLines: null,
             decoration: InputDecoration(
               hintText: "Enter Contract details here...",
@@ -701,7 +699,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            controller: widget.titleController,
+            controller: titleController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a title for your contract.';
@@ -724,7 +722,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            controller: widget.considerationDescController,
+            controller: considerationDescController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a consideration for your contract.';
@@ -747,7 +745,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            controller: widget.considerationValController,
+            controller: considerationValController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a value for your contract.';
@@ -1079,7 +1077,7 @@ class _ContractFormState extends State<ContractForm> {
               if (await dataProvider.createContract(createdContract)) {
                 _showCreateSuccessDialog();
                 //TODO: change so that this navigation function is not in this widget but in a screen
-                widget.changeScreen(2, widget.titleController.text.replaceAll(' ', ''));
+                widget.changeScreen(2, titleController.text.replaceAll(' ', ''));
               } else {
                 _showCreateFailDialog();
               }
@@ -1090,8 +1088,8 @@ class _ContractFormState extends State<ContractForm> {
 
   Contract createContractObject() {
     return Contract(
-      contractId: widget.titleController.text,
-      purpose: widget.descriptionController.text,
+      contractId: titleController.text,
+      purpose: descriptionController.text,
       contractType: contractType,
       executionDate: startDate!,
       endDate: endDate!
@@ -1106,7 +1104,6 @@ class _ContractFormState extends State<ContractForm> {
         hoverColor: Colors.blueGrey,
         child: Text("Confirm Changes", style: TextStyle(color: Colors.white)),
         onPressed: () {
-          setContract();
           print("Original contract ID: ${widget.contract!.contractId!}");
           setState(() {
             widget.contract = tmpContract;
@@ -1282,40 +1279,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  List<String> setContractors() {
-    List<String> contractors = [];
-    contractors.add(widget.providerControllers[0].text);
-    contractors.add(widget.providerControllers[0].text);
-    return contractors;
-  }
-
-  void setContract() {
-    tmpContract = new Contract(
-      contractId: widget.titleController.text,
-      purpose: widget.descriptionController.text,
-      contractType: 'Written',
-      executionDate: startDate,
-      endDate: endDate,
-    );
-    tmpContract!.contractors= setContractors();
-  }
-
-  void setFormFields() async {
-    contractors = await dataProvider.fetchAllUsers();
-    setState(() {
-      widget.titleController.text = displayStringWithoutUri(widget.contract!.contractId!);
-      contractType = contractTypes[0].value; //TODO: make this use real type -> this is hardcode!
-      //TODO: this only takes the first data controller, make it take all existing ones.
-      _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[0])) == 0), 0);
-      //TODO: this only takes the first data processor, make it take all existing ones.
-      _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[1])) == 0), 0);
-      widget.descriptionController.text = widget.contract!.purpose!;
-      startDate = widget.contract!.executionDate;
-      effectiveDate = widget.contract!.executionDate;
-      executionDate = widget.contract!.executionDate;
-      endDate = widget.contract!.endDate;
-    });
-  }
 
   /// Helper function to display contract value without the uri. This is just
   /// a DISPLAY function. It does NOT remove the uri in the value.
@@ -1526,22 +1489,14 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  void _fillProviderForm(User selected, int index) {
-    widget.providerControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
-    widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.providerControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
-  }
 
   void _fillRequesterForm(User selected, int index) {
-    widget.contractorControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
-    widget.contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    widget.contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    widget.contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
+    contractorControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
+    contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
   void validateStepOne() async {
@@ -1561,15 +1516,15 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setBaseContractDetails() {
-    contract.considerationDescription = widget.considerationDescController.text;
-    contract.considerationValue = widget.considerationValController.text;
+    contract.considerationDescription = considerationDescController.text;
+    contract.considerationValue = considerationValController.text;
     contract.contractCategory = contractCategory;
     contract.contractType = contractType;
     contract.contractors.add(widget.user.id);
     contract.effectiveDate = effectiveDate;
     contract.endDate = endDate;
     contract.executionDate = executionDate;
-    contract.purpose = widget.titleController.text;
+    contract.purpose = titleController.text;
   }
 
   /// In the [contractors] list all of the existing contractors in the system
@@ -1679,7 +1634,7 @@ class _ContractFormState extends State<ContractForm> {
       addedContractorsIndex++;
       addStep2Keys();
       for (int i = 0; i < 7; i++) {
-        widget.contractorControllers.add(TextEditingController());
+        contractorControllers.add(TextEditingController());
       }
     });
   }
@@ -1690,7 +1645,7 @@ class _ContractFormState extends State<ContractForm> {
   void removeContractor(int index) {
     setState(() {
       for (int i = (index * 7) + 6; i >= (index * 7); i--) {
-        widget.contractorControllers.removeAt(i);
+        contractorControllers.removeAt(i);
       }
       currentContractorIndex -= 1;
     });
