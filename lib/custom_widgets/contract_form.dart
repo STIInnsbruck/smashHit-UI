@@ -429,32 +429,18 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
-          child: Column(
-            children: [
-              effectiveDate == null
-                  ? Container()
-                  : Text("Chosen Effective Date:"),
-              effectiveDateButton(),
-            ],
-          ),
+            flex: 2,
+            child: effectiveDateButton()
         ),
+        Spacer(),
         Expanded(
-          child: Column(
-            children: [
-              executionDate == null
-                  ? Container()
-                  : Text("Chosen Execution Date:"),
-              executionDateButton(),
-            ],
-          ),
+          flex: 2,
+          child: executionDateButton(),
         ),
+        Spacer(),
         Expanded(
-          child: Column(
-            children: [
-              endDate == null ? Container() : Text("Chosen End Date:"),
-              endDateButton(),
-            ],
-          ),
+          flex: 2,
+          child: endDateButton(),
         ),
       ],
     );
@@ -463,30 +449,11 @@ class _ContractFormState extends State<ContractForm> {
   Widget _slimScreenDateButtonsLayout() {
     return Column(
       children: [
-        Column(
-          children: [
-            effectiveDate == null
-                ? Container()
-                : Text("Chosen Effective Date:"),
-            effectiveDateButton(),
-          ],
-        ),
+        effectiveDateButton(),
         SizedBox(height: 10),
-        Column(
-          children: [
-            executionDate == null
-                ? Container()
-                : Text("Chosen Execution Date:"),
-            executionDateButton(),
-          ],
-        ),
+        executionDateButton(),
         SizedBox(height: 10),
-        Column(
-          children: [
-            endDate == null ? Container() : Text("Chosen End Date:"),
-            endDateButton(),
-          ],
-        ),
+        endDateButton(),
       ],
     );
   }
@@ -803,40 +770,6 @@ class _ContractFormState extends State<ContractForm> {
     validateStepObligation();
   }
 
-  /// CURRENTLY NOT IN USE!
-  Widget addContractElementButton() {
-    return MaterialButton(
-      child: Column(
-        children: [
-          Icon(Icons.add_circle_outline, size: 40),
-          Text("Add Contract Element",
-              style: TextStyle(color: Colors.black, fontSize: 10))
-        ],
-      ),
-      onPressed: () {
-        print("Add Contract Element - Pressed.");
-      },
-    );
-  }
-
-  Widget startDateButton() {
-    return Container(
-      height: 50,
-      child: MaterialButton(
-        color: Colors.blue,
-        hoverColor: Colors.lightBlueAccent,
-        child: startDate == null
-            ? Text("Pick a Start Date",
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center)
-            : Text(_formatDate(startDate),
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center),
-        onPressed: () => chooseStartDate(),
-      ),
-    );
-  }
-
   Widget effectiveDateButton() {
     return Container(
       height: 50,
@@ -847,7 +780,7 @@ class _ContractFormState extends State<ContractForm> {
             ? Text("Pick an Effective Date",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
-            : Text(_formatDate(effectiveDate),
+            : Text("Effective Date: ${_formatDate(effectiveDate)}",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEffectiveDate(),
@@ -865,7 +798,7 @@ class _ContractFormState extends State<ContractForm> {
             ? Text("Pick an End Date",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
-            : Text(_formatDate(endDate),
+            : Text("End Date: ${_formatDate(endDate)}",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEndDate(),
@@ -883,7 +816,7 @@ class _ContractFormState extends State<ContractForm> {
             ? Text("Pick an Execution Date",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
-            : Text(_formatDate(executionDate),
+            : Text("Execution Date: ${_formatDate(executionDate)}",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseExecutionDate(),
