@@ -247,6 +247,7 @@ class _ContractFormState extends State<ContractForm> {
         ContractStepHeader(
             width: width,
             name: "Step 4. Obligations of the Contract",
+            stepComplete: stepObligationComplete,
             onPressed: () async {
               setStepObligation();
             }),
@@ -788,14 +789,18 @@ class _ContractFormState extends State<ContractForm> {
 
   removeTermWidget(String id) {
     setState(() {
+      _obligationMap.removeWhere((key, value) => value.term.id == _termMap[id]!.term.id);
       _termMap.remove(id);
     });
+    validateStepFour();
+    validateStepObligation();
   }
 
   removeObligationWidget(String id) {
     setState(() {
       _obligationMap.remove(id);
     });
+    validateStepObligation();
   }
 
   /// CURRENTLY NOT IN USE!
@@ -1466,7 +1471,6 @@ class _ContractFormState extends State<ContractForm> {
   /// contract to validate if each field has content in it.
   bool validateStepTwo() {
     var flag = true;
-
     if (flag) {
       setState(() {
         stepTwoComplete = true;
@@ -1491,10 +1495,21 @@ class _ContractFormState extends State<ContractForm> {
           dateFlag = obligationHasBothDates(element);
         }
       });
-    }
-    if(textFlag && dateFlag) {
-      return true;
+      if(textFlag && dateFlag) {
+        setState(() {
+          stepObligationComplete = true;
+        });
+        return true;
+      } else {
+          setState(() {
+            stepObligationComplete = false;
+          });
+          return false;
+        }
     } else {
+      setState(() {
+        stepObligationComplete = false;
+      });
       return false;
     }
   }
@@ -1523,8 +1538,21 @@ class _ContractFormState extends State<ContractForm> {
           flag = element.textController.text.isNotEmpty;
         }
       });
-      return flag;
+      if(flag) {
+        setState(() {
+          stepFourComplete = true;
+        });
+        return true;
+      } else {
+        setState(() {
+          stepFourComplete = false;
+        });
+        return false;
+      }
     } else {
+      setState(() {
+        stepFourComplete = false;
+      });
       return false;
     }
   }
