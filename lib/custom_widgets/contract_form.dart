@@ -1159,7 +1159,7 @@ class _ContractFormState extends State<ContractForm> {
   void addObligation(Term term) {
     setState(() {
       String id = UniqueKey().toString();
-      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", removeObligationWidget, id));
+      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", addedContractors, removeObligationWidget, id));
     });
   }
 
@@ -1439,14 +1439,16 @@ class _ContractFormState extends State<ContractForm> {
   bool validateStepObligation() {
     bool textFlag = true;
     bool dateFlag = true;
+    bool contractorFlag = true;
     if(_obligationMap.keys.isNotEmpty) {
       _obligationMap.values.forEach((element) {
-        if(textFlag && dateFlag) {
+        if(textFlag && dateFlag && contractorFlag) {
           textFlag = element.textController.text.isNotEmpty;
           dateFlag = obligationHasBothDates(element);
+          contractorFlag = element.selectedContractor != null;
         }
       });
-      if(textFlag && dateFlag) {
+      if(textFlag && dateFlag && contractorFlag) {
         setState(() {
           stepObligationComplete = true;
         });
