@@ -30,7 +30,6 @@ class _ContractCreationState extends State<ContractCreation> {
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
   static ContractForm? contractForm;
-  int contractStep = 1;
 
   //-------------------------------------------------- TextEditingControllers
   late final TextEditingController _titleController;
@@ -55,58 +54,12 @@ class _ContractCreationState extends State<ContractCreation> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(height: 10),
-                    ContractForm(widget.changeScreen, contractStep, null, widget.user!)
+                    ContractForm(widget.changeScreen, null, widget.user!)
                   ],
                 )
             )
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            children: [
-              previousStepButton(),
-              Spacer(),
-              nextStepButton()
-            ]
-          ),
-        )
       ],
-    );
-  }
-
-  Widget nextStepButton() {
-    return Container(
-      child: MaterialButton(
-        minWidth: 125,
-        onPressed: () {
-          setState(() {
-            if(contractStep < 5) {
-              contractStep++;
-            }
-          });
-        },
-        color: Colors.blue,
-        hoverColor: Colors.lightBlue,
-        child: Text("Next Step", style: TextStyle(color: Colors.white)),
-      ),
-    );
-  }
-
-  Widget previousStepButton() {
-    return Container(
-      child: MaterialButton(
-        minWidth: 125,
-        onPressed: () {
-          setState(() {
-            if(contractStep > 1) {
-              contractStep--;
-            }
-          });
-        },
-        color: Colors.blue,
-        hoverColor: Colors.lightBlue,
-        child: Text("Previous Step", style: TextStyle(color: Colors.white)),
-      ),
     );
   }
 

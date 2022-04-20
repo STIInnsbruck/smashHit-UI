@@ -15,7 +15,6 @@ import 'package:smashhit_ui/custom_widgets/obligation_widget.dart';
 class ContractForm extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   Function(int?)? toggleEditing;
-  int step;
   Contract? contract;
   DateTime? startDate;
   DateTime? effectiveDate;
@@ -24,7 +23,7 @@ class ContractForm extends StatefulWidget {
   String? contractDropDownType;
   User user;
 
-  ContractForm(this.changeScreen, this.step, this.contract, this.user, [this.toggleEditing]);
+  ContractForm(this.changeScreen, this.contract, this.user, [this.toggleEditing]);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
@@ -51,12 +50,7 @@ class _ContractFormState extends State<ContractForm> {
 
   DataProvider dataProvider = DataProvider();
 
-  //------------------- StepNavigation Booleans --------------------------------
-  bool toggleStepOne = true;
-  bool toggleStepTwo = false;
-  bool toggleStepFour = false;
-  bool toggleStepObligation = false;
-  bool toggleStepFinal = false;
+  int contractStep = 1;
 
   //------------------- StepValidation Booleans --------------------------------
   bool stepOneComplete = false;
@@ -93,7 +87,6 @@ class _ContractFormState extends State<ContractForm> {
     // Fetch all existing contractors for the suggestion field
     fetchAllContractors();
 
-    setStep();
     if (widget.contract != null) {
       //tmpContract = widget.contract;
     } else {
@@ -119,21 +112,20 @@ class _ContractFormState extends State<ContractForm> {
                 contractStepObligation(formWidth),
                 contractStepFinal(formWidth),
               ])),
-      /**Align(
-        alignment: Alignment.bottomRight,
-        child: widget.contract != null? Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            nextStepButton(),
-            SizedBox(height: 10),
-            confirmEditButton()
-          ],
-        ) : nextStepButton(),
-      ),
-      Align(
-        alignment: Alignment.bottomLeft,
-        child: previousStepButton(),
-      )*/
+      Container(
+        height: screenHeight,
+        width: screenWidth,
+        child: Align(
+          alignment: Alignment.center,
+          child: Row(
+              children: [
+                previousStepButton(),
+                Spacer(),
+                nextStepButton()
+              ]
+          ),
+        ),
+      )
     ]);
   }
 
@@ -147,7 +139,7 @@ class _ContractFormState extends State<ContractForm> {
           stepComplete: stepOneComplete,
           onPressed: () => setStepOne(),
         ),
-        widget.step == 1
+        contractStep == 1
             ? ContractStepBody(
             width: width,
             children: [
@@ -178,7 +170,7 @@ class _ContractFormState extends State<ContractForm> {
             onPressed: () async {
               setStepTwo();
             }),
-        widget.step == 2
+        contractStep == 2
             ? ContractStepBody(
             width: width,
             children: [
@@ -224,7 +216,7 @@ class _ContractFormState extends State<ContractForm> {
               setStepFour();
             }
         ),
-        widget.step == 3
+        contractStep == 3
           ? ContractStepBody(
             width: width,
             children: [
@@ -258,7 +250,7 @@ class _ContractFormState extends State<ContractForm> {
             onPressed: () async {
               setStepObligation();
             }),
-        widget.step == 4
+        contractStep == 4
           ? ContractStepBody(
               width: width,
               children: _termMap.keys.length > 0? [
@@ -292,7 +284,7 @@ class _ContractFormState extends State<ContractForm> {
             name: "Final Step - Overview",
             onPressed: () => setStepFinal()
         ),
-        widget.step == 5
+        contractStep == 5
             ? ContractStepBody(
             width: width,
             children: [
@@ -1045,47 +1037,6 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
-  Widget nextStepButton() {
-    return Container(
-        child: MaterialButton(
-          color: Colors.green,
-          hoverColor: Colors.lightGreen,
-          child: toggleStepFinal == true
-              ? Text('Confirm & Submit',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center)
-              : toggleStepFour == true
-                  ? Text("Go To Overview",
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center)
-                  : Text("Next Step",
-                      style: TextStyle(color: Colors.white)),
-          onPressed: () async {
-            if (toggleStepOne == true) {
-              setStepTwo();
-            } else if (toggleStepTwo == true) {
-              setStepFour();
-            } else if (toggleStepFour == true) {
-              setStepObligation();
-            } else if (toggleStepObligation == true) {
-              setStepFinal();
-            } else if (toggleStepFinal == true) {
-              setState(() {
-                toggleStepFinal = false;
-              });
-              Contract createdContract = createContractObject();
-              if (await dataProvider.createContract(createdContract)) {
-                _showCreateSuccessDialog();
-                //TODO: change so that this navigation function is not in this widget but in a screen
-                widget.changeScreen(2, titleController.text.replaceAll(' ', ''));
-              } else {
-                _showCreateFailDialog();
-              }
-            }
-          },
-        ));
-  }
-
   Contract createContractObject() {
     return Contract(
       contractId: titleController.text,
@@ -1093,6 +1044,42 @@ class _ContractFormState extends State<ContractForm> {
       contractType: contractType,
       executionDate: startDate!,
       endDate: endDate!
+    );
+  }
+
+  Widget nextStepButton() {
+    return Container(
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () {
+          setState(() {
+            if(contractStep < 5) {
+              setNextStep();
+            }
+          });
+        },
+        color: Colors.blue,
+        hoverColor: Colors.lightBlue,
+        child: Text("Next Step", style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
+  Widget previousStepButton() {
+    return Container(
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () {
+          setState(() {
+            if(contractStep > 1) {
+              contractStep--;
+            }
+          });
+        },
+        color: Colors.blue,
+        hoverColor: Colors.lightBlue,
+        child: Text("Previous Step", style: TextStyle(color: Colors.white)),
+      ),
     );
   }
 
@@ -1113,31 +1100,6 @@ class _ContractFormState extends State<ContractForm> {
         }
       )
     );
-  }
-
-  Widget previousStepButton() {
-    return Container(
-        child: MaterialButton(
-          color: Colors.grey,
-          hoverColor: Colors.blueGrey,
-          child: Text("Previous Step",
-              style: TextStyle(color: Colors.white)),
-          onPressed: () {
-            setState(() {
-              if (toggleStepOne == true) {
-                setStepOne();
-              } else if (toggleStepTwo == true) {
-                setStepOne();
-              } else if (toggleStepFour == true) {
-                setStepTwo();
-              } else if (toggleStepObligation == true) {
-                setStepFour();
-              } else if (toggleStepFinal == true) {
-                setStepObligation();
-              }
-            });
-          },
-        ));
   }
 
   Widget addContractorButton() {
@@ -1286,92 +1248,58 @@ class _ContractFormState extends State<ContractForm> {
     return s.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
-  void setFields() {}
-
-  void setStep() {
-    switch (widget.step) {
+  void setNextStep() {
+    switch(contractStep) {
       case 1:
-        setStepOne();
+        if(validateStepOne()) {
+          incrementContractStep();
+        }
         break;
       case 2:
-        setStepTwo();
+        if(validateStepTwo()) {
+          incrementContractStep();
+        }
         break;
       case 3:
-        setStepObligation();
+        if(validateStepFour()) {
+          incrementContractStep();
+        }
         break;
       case 4:
-        setStepFour();
-        break;
-      case 5:
-        setStepFinal();
+        if(validateStepObligation()) {
+          incrementContractStep();
+        }
         break;
     }
   }
 
-  void setStepOne() {
-    validateStepTwo();
-    validateStepFour();
-    validateStepObligation();
+  void incrementContractStep() {
     setState(() {
-      toggleStepOne = true;
-      toggleStepTwo = false;
-      toggleStepFour = false;
-      toggleStepObligation = false;
-      toggleStepFinal = false;
+      contractStep++;
+    });
+  }
+
+  void setStepOne() {
+    setState(() {
+      contractStep = 1;
     });
   }
 
   void setStepTwo() {
     validateStepOne();
-    validateStepFour();
-    validateStepObligation();
-    setState(() {
-      toggleStepOne = false;
-      toggleStepTwo = true;
-      toggleStepFour = false;
-      toggleStepObligation = false;
-      toggleStepFinal = false;
-    });
   }
 
   void setStepFour() {
-    validateStepOne();
     validateStepTwo();
-    validateStepObligation();
-    setState(() {
-      toggleStepOne = false;
-      toggleStepTwo = false;
-      toggleStepFour = true;
-      toggleStepObligation = false;
-      toggleStepFinal = false;
-    });
   }
 
   void setStepObligation() {
-    validateStepOne();
-    validateStepTwo();
     validateStepFour();
-    setState(() {
-      toggleStepOne = false;
-      toggleStepTwo = false;
-      toggleStepFour = false;
-      toggleStepObligation = true;
-      toggleStepFinal = false;
-    });
   }
 
   void setStepFinal() {
-    validateStepOne();
-    validateStepTwo();
     validateStepFour();
-    if (stepOneComplete && stepTwoComplete && stepFourComplete) {
-      setState(() {
-        toggleStepOne = false;
-        toggleStepTwo = false;
-        toggleStepFour = false;
-        toggleStepObligation = false;
-        toggleStepFinal = true;
-      });
+    if (stepOneComplete && stepTwoComplete && stepFourComplete && stepObligationComplete) {
     } else {
       print("you have not completed the contract.");
       showContractNotCompleteDialog();
@@ -1499,19 +1427,18 @@ class _ContractFormState extends State<ContractForm> {
     contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
-  void validateStepOne() async {
-    // step1Key.currentState is null when we edit the contract in a step greater than 1.
-    if (toggleStepOne == true) {
-      var flag = step1Key.currentState!.validate() == true;
-      if (flag && contractCategory != null && contractType != null) {
-        setState(() {
-          stepOneComplete = true;
-        });
-      } else {
-        setState(() {
-          stepOneComplete = false;
-        });
-      }
+  bool validateStepOne() {
+    var flag = step1Key.currentState!.validate() == true;
+    if (flag && contractCategory != null && contractType != null && effectiveDate != null && executionDate != null && endDate != null) {
+      setState(() {
+        stepOneComplete = true;
+      });
+      return true;
+    } else {
+      setState(() {
+        stepOneComplete = false;
+      });
+      return false;
     }
   }
 
@@ -1537,36 +1464,46 @@ class _ContractFormState extends State<ContractForm> {
 
   /// Function that checks every textFormField in the second step of the
   /// contract to validate if each field has content in it.
-  void validateStepTwo() {
-    if (toggleStepTwo == true) {
-      //var flag = step2Keys.every((element) => element.currentState!.validate() == true);
-      var flag = true;
+  bool validateStepTwo() {
+    var flag = true;
 
-      if (flag) {
-        setState(() {
-          stepTwoComplete = true;
-        });
-      } else {
-        setState(() {
-          stepTwoComplete = false;
-        });
-      }
+    if (flag) {
+      setState(() {
+        stepTwoComplete = true;
+      });
+      return true;
+    } else {
+      setState(() {
+        stepTwoComplete = false;
+      });
+      return false;
     }
   }
 
-  void validateStepObligation() {
-    if(toggleStepObligation == true) {
-      var flag = true;
 
-      if (flag) {
-        setState(() {
-          stepObligationComplete = true;
-        });
-      } else {
-        setState(() {
-          stepObligationComplete = false;
-        });
-      }
+  bool validateStepObligation() {
+    bool textFlag = true;
+    bool dateFlag = true;
+    if(_obligationMap.keys.isNotEmpty) {
+      _obligationMap.values.forEach((element) {
+        if(textFlag && dateFlag) {
+          textFlag = element.textController.text.isNotEmpty;
+          dateFlag = obligationHasBothDates(element);
+        }
+      });
+    }
+    if(textFlag && dateFlag) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool obligationHasBothDates(ObligationWidget ow) {
+    if(ow.obligation.executionDate == null || ow.obligation.endDate == null) {
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -1578,22 +1515,18 @@ class _ContractFormState extends State<ContractForm> {
   ///   - Effective Date
   ///   - Execution Date
   ///   - End Date
-  void validateStepFour() {
-    if (toggleStepFour == true) {
-      setState(() {
-        stepFourComplete = true;
+  bool validateStepFour() {
+    bool flag = true;
+    if(_termMap.keys.isNotEmpty) {
+      _termMap.values.forEach((element) {
+        if(flag) {
+          flag = element.textController.text.isNotEmpty;
+        }
       });
+      return flag;
+    } else {
+      return false;
     }
-      /**if (_step4Key.currentState!.validate() == true && effectiveDate != null && executionDate != null && endDate != null) {
-        setState(() {
-          stepFourComplete = true;
-        });
-      } else {
-        setState(() {
-          stepFourComplete = false;
-        });
-      }
-    }*/
   }
 
   bool _isWideScreen(double width, double height) {
