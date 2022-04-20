@@ -30,6 +30,7 @@ class _ContractCreationState extends State<ContractCreation> {
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button
   static ContractForm? contractForm;
+  int contractStep = 1;
 
   //-------------------------------------------------- TextEditingControllers
   late final TextEditingController _titleController;
@@ -40,27 +41,72 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    contractForm  = ContractForm(widget.changeScreen, 1, null, widget.user!);
-    _titleController = contractForm!.titleController;
-    _descriptionController = contractForm!.descriptionController;
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    _checkIfFormComplete();
 
-    return Center(
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              contractForm!
-            ],
-          ),
+    return Stack(
+      children: [
+        Scrollbar(
+            child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    ContractForm(widget.changeScreen, contractStep, null, widget.user!)
+                  ],
+                )
+            )
         ),
-      )
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            children: [
+              previousStepButton(),
+              Spacer(),
+              nextStepButton()
+            ]
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget nextStepButton() {
+    return Container(
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () {
+          setState(() {
+            if(contractStep < 5) {
+              contractStep++;
+            }
+          });
+        },
+        color: Colors.blue,
+        hoverColor: Colors.lightBlue,
+        child: Text("Next Step", style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
+  Widget previousStepButton() {
+    return Container(
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () {
+          setState(() {
+            if(contractStep > 1) {
+              contractStep--;
+            }
+          });
+        },
+        color: Colors.blue,
+        hoverColor: Colors.lightBlue,
+        child: Text("Previous Step", style: TextStyle(color: Colors.white)),
+      ),
     );
   }
 
