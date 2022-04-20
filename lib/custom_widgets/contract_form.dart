@@ -66,6 +66,7 @@ class _ContractFormState extends State<ContractForm> {
 
   //------------------- Other Variables ----------------------------------------
   static List<User> contractors = [];
+  List<User> addedContractors = [];
   int currentContractorIndex = 0;
   int addedContractorsIndex = 0;
   Contract? tmpContract;
@@ -993,6 +994,9 @@ class _ContractFormState extends State<ContractForm> {
           setState(() {
             if(contractStep < 5) {
               setNextStep();
+              if(contractStep == 3) {
+                createContractorObjects();
+              }
             }
           });
         },
@@ -1001,6 +1005,20 @@ class _ContractFormState extends State<ContractForm> {
         child: Text("Next Step", style: TextStyle(color: Colors.white)),
       ),
     );
+  }
+
+  void createContractorObjects() {
+    int numContractors = contractorControllers.length ~/ 7;
+    for(int i = 0; i < numContractors; i++) {
+      addedContractors.add(User(
+        name: contractorControllers[(i*7) + 0].text,
+        email: contractorControllers[(i*7) + 1].text,
+        streetAddress: contractorControllers[(i*7) + 2].text,
+        country: contractorControllers[(i*7) + 3].text,
+        city: contractorControllers[(i*7) + 5].text,
+        phone: contractorControllers[(i*7) + 6].text,
+      ));
+    }
   }
 
   Widget previousStepButton() {
