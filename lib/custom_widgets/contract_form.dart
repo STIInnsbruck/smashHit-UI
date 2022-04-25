@@ -65,8 +65,8 @@ class _ContractFormState extends State<ContractForm> {
   final _step4Key = GlobalKey<FormState>();
 
   //------------------- Other Variables ----------------------------------------
-  static List<User> contractors = [];
-  List<User> addedContractors = [];
+  static List<User> contractors = []; //list of all existing contractors
+  List<User> addedContractors = [];   //list of contractors added to the form
   int currentContractorIndex = 0;
   int addedContractorsIndex = 0;
   Contract? tmpContract;
@@ -122,7 +122,9 @@ class _ContractFormState extends State<ContractForm> {
               children: [
                 previousStepButton(),
                 Spacer(),
-                nextStepButton()
+                contractStep == 5
+                  ? createContractButton()
+                  : nextStepButton()
               ]
           ),
         ),
@@ -517,7 +519,11 @@ class _ContractFormState extends State<ContractForm> {
               });
             },
             onSelected: (User selection) {
-              _fillRequesterForm(selection, index);
+              if (!addedContractors.contains(selection)) {
+                _fillRequesterForm(selection, index);
+                addedContractors.insert(currentContractorIndex, selection);
+                print("insert response");
+              }
             },
             fieldViewBuilder: (
                 BuildContext context,
@@ -976,16 +982,6 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
-  Contract createContractObject() {
-    return Contract(
-      contractId: titleController.text,
-      purpose: descriptionController.text,
-      contractType: contractType,
-      executionDate: startDate!,
-      endDate: endDate!
-    );
-  }
-
   Widget nextStepButton() {
     return Container(
       child: MaterialButton(
@@ -994,9 +990,6 @@ class _ContractFormState extends State<ContractForm> {
           setState(() {
             if(contractStep < 5) {
               setNextStep();
-              if(contractStep == 3) {
-                createContractorObjects();
-              }
             }
           });
         },
@@ -1007,19 +1000,33 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  void createContractorObjects() {
-    int numContractors = contractorControllers.length ~/ 7;
-    for(int i = 0; i < numContractors; i++) {
-      addedContractors.add(User(
-        name: contractorControllers[(i*7) + 0].text,
-        email: contractorControllers[(i*7) + 1].text,
-        streetAddress: contractorControllers[(i*7) + 2].text,
-        country: contractorControllers[(i*7) + 3].text,
-        city: contractorControllers[(i*7) + 5].text,
-        phone: contractorControllers[(i*7) + 6].text,
-      ));
-    }
+  Widget createContractButton() {
+    return Container(
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () async {
+          setBaseContractDetails();
+          contract.contractId = await dataProvider.createBaseContract(contract);
+          _termMap.forEach((key, value) async {
+            TermType tempTermType = await dataProvider.createTermType(value.term.name!, value.term.description!);
+            Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, tempTermType.id!);
+            contract.terms.add(tempTerm.id!);
+            await dataProvider.updateContract(contract);
+          });
+          _obligationMap.forEach((key, value) async {
+            Obligation tmpObligation = await dataProvider.createObligation(contract, value.obligation);
+            contract.obligations.add(tmpObligation.id!);
+            await dataProvider.updateContract(contract);
+          });
+        },
+        color: Colors.green,
+        hoverColor: Colors.lightGreen,
+        child: Text("Create Contract", style: TextStyle(color: Colors.white)),
+      ),
+    );
   }
+
+
 
   Widget previousStepButton() {
     return Container(
@@ -1402,8 +1409,11 @@ class _ContractFormState extends State<ContractForm> {
     contract.considerationDescription = considerationDescController.text;
     contract.considerationValue = considerationValController.text;
     contract.contractCategory = contractCategory;
+    contract.contractStatus = "hasCreated";
     contract.contractType = contractType;
-    contract.contractors.add(widget.user.id);
+    for(User user in addedContractors) {
+      contract.contractors.add(user.id);
+    }
     contract.effectiveDate = effectiveDate;
     contract.endDate = endDate;
     contract.executionDate = executionDate;

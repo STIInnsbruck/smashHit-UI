@@ -100,7 +100,6 @@ class ResponseParser {
     );
 
     return obligation;
-
   }
 
   List<Obligation> parseAllObligations(List jsonList) {
