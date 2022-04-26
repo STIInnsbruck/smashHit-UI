@@ -70,7 +70,7 @@ class _ContractFormState extends State<ContractForm> {
   int currentContractorIndex = 0;
   int addedContractorsIndex = 0;
   Contract? tmpContract;
-  List<TermType> _termTypeList = [];
+  List<TermType> _termTypeList = [];  //list of all existing termTypes
   Map<String, TermWidget> _termMap = {};
   Map<String, ObligationWidget> _obligationMap = {};
   Contract contract = new Contract();
@@ -80,8 +80,11 @@ class _ContractFormState extends State<ContractForm> {
   void initState() {
     super.initState();
 
-    //get existing termTypes
-    getTermType();
+    //get offline existing termTypes
+    //getTermType();
+
+    //Fetch all online existing termTypes
+    fetchAllTermTypes();
 
     // Add at least one contractor
     addContractor();
@@ -1010,14 +1013,20 @@ class _ContractFormState extends State<ContractForm> {
           _termMap.forEach((key, value) async {
             TermType tempTermType = await dataProvider.createTermType(value.term.name!, value.term.description!);
             Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, tempTermType.id!);
+            value.term.id = tempTerm.id;
             contract.terms.add(tempTerm.id!);
+            _obligationMap.forEach((key, obl) {
+              if(obl.term.termTypeId == value.term.termTypeId) {
+                print("termtypeIds of OBL and TERM are equal. TRUE!");
+              }
+            });
             await dataProvider.updateContract(contract);
           });
-          _obligationMap.forEach((key, value) async {
+          /**_obligationMap.forEach((key, value) async {
             Obligation tmpObligation = await dataProvider.createObligation(contract, value.obligation);
             contract.obligations.add(tmpObligation.id!);
             await dataProvider.updateContract(contract);
-          });
+          });*/
         },
         color: Colors.green,
         hoverColor: Colors.lightGreen,
@@ -1128,13 +1137,14 @@ class _ContractFormState extends State<ContractForm> {
     return PopupMenuButton(
         tooltip: "Add a term",
         child: Icon(Icons.add),
-        onSelected: (termTypeId) {
-          getTerm(termTypeId.toString());
+        onSelected: (TermType termType) {
+          //getTerm(termTypeId.toString());
+          createTerm(termType);
         },
         itemBuilder: (BuildContext context) {
-          return _termTypeList.map((element) {
-            return PopupMenuItem<Object>(
-              value: element.id,
+          return _termTypeList.map((TermType element) {
+            return PopupMenuItem<TermType>(
+              value: element,
               child: Text(element.name!)
             );
           }).toList();
@@ -1163,6 +1173,7 @@ class _ContractFormState extends State<ContractForm> {
 
   void addObligation(Term term) {
     setState(() {
+      //Must be unique, otherwise deletion of all obligations with same termId
       String id = UniqueKey().toString();
       _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", addedContractors, removeObligationWidget, id));
     });
@@ -1311,6 +1322,10 @@ class _ContractFormState extends State<ContractForm> {
     contractors = await dataProvider.fetchAllUsers();
   }
 
+  Future<void> fetchAllTermTypes() async {
+    _termTypeList = await dataProvider.fetchAllTermTypes();
+  }
+
   Future<void> getTerm(String termTypeId) async {
     List<Term> tempTerms = [];
     var jsonString = await rootBundle.loadString('assets/term.json');
@@ -1327,6 +1342,22 @@ class _ContractFormState extends State<ContractForm> {
           );
         });
       }
+    });
+  }
+
+  void createTerm(TermType termType) {
+    //Create term based on termType
+    Term term = new Term(
+      name: termType.name,
+      termTypeId: termType.id,
+      description: termType.description,
+    );
+    //Add created term into map with the id so that deleting it is easy.
+    setState(() {
+      String id = termType.id!;
+      _termMap.putIfAbsent(id, () =>
+          TermWidget(term, removeTermWidget, id)
+      );
     });
   }
 

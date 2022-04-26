@@ -349,6 +349,17 @@ class DataProvider {
   }
 
   //---------------------------- Term Type -------------------------------------
+  Future<List<TermType>> fetchAllTermTypes() async {
+    final response = await http.get(kBaseUrl.replace(path: '/term/types'), headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return parser.parseAllTermTypes(data);
+    } else {
+      throw Exception('Failed to load all termTypes.');
+    }
+  }
+
   Future<TermType> createTermType(String termTypeName, String termTypeDesc) async {
     var body = {
       "Description": termTypeDesc,

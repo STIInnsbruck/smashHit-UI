@@ -128,7 +128,11 @@ class ResponseParser {
 
   //TERMTYPE PARSERS
   TermType parseTermType(Map jsonTermType) {
-    return TermType(id: jsonTermType["TermTypeId"]);
+    return TermType(
+        id: jsonTermType["TermTypeId"],
+        description: jsonTermType["description"],
+        name: jsonTermType["name"]
+    );
   }
 
   TermType parseTermTypeId(Map jsonTermType) {
