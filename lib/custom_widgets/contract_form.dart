@@ -1026,8 +1026,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-
-
   Widget previousStepButton() {
     return Container(
       child: MaterialButton(
@@ -1204,7 +1202,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-
   /// Helper function to display contract value without the uri. This is just
   /// a DISPLAY function. It does NOT remove the uri in the value.
   String displayStringWithoutUri(String s) {
@@ -1380,7 +1377,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-
   void _fillRequesterForm(User selected, int index) {
     contractorControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
     contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
@@ -1444,7 +1440,6 @@ class _ContractFormState extends State<ContractForm> {
       return false;
     }
   }
-
 
   bool validateStepObligation() {
     bool textFlag = true;
