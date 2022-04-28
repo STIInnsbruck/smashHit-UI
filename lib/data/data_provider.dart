@@ -352,7 +352,7 @@ class DataProvider {
 
   //---------------------------- Term Type -------------------------------------
   Future<List<TermType>> fetchAllTermTypes() async {
-    final response = await http.get(kBaseUrl.replace(path: '/term/types'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/term/types/'), headers: headers);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
