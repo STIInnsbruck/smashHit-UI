@@ -424,7 +424,7 @@ class _ContractFormState extends State<ContractForm> {
           children: [
             Text("Description: ${obligationWidget.textController.text}", textAlign: TextAlign.justify),
             Text("Execution Date: ${obligationWidget.obligation.getExecutionDateAsString()}"),
-            Text("Start Date: ${obligationWidget.obligation.getEndDateAsString()}"),
+            Text("End Date: ${obligationWidget.obligation.getEndDateAsString()}"),
           ],
         ),
       ],
