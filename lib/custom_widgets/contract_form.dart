@@ -15,31 +15,29 @@ import 'package:smashhit_ui/custom_widgets/obligation_widget.dart';
 class ContractForm extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   Function(int?)? toggleEditing;
-  int step;
   Contract? contract;
   DateTime? startDate;
   DateTime? effectiveDate;
   DateTime? executionDate;
   DateTime? endDate;
-  TextEditingController titleController = TextEditingController();
-  TextEditingController considerationDescController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController considerationValController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  List<TextEditingController> contractorControllers = [];
-  List<TextEditingController> requesterControllers = [];
-  List<TextEditingController> providerControllers = [];
-  List<TextEditingController> termControllers = [];
   String? contractDropDownType;
   User user;
 
-  ContractForm(this.changeScreen, this.step, this.contract, this.user, [this.toggleEditing]);
+  ContractForm(this.changeScreen, this.contract, this.user, [this.toggleEditing]);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
 }
 
 class _ContractFormState extends State<ContractForm> {
+
+
+  TextEditingController titleController = TextEditingController();
+  TextEditingController considerationDescController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController considerationValController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  List<TextEditingController> contractorControllers = [];
 
   //------------------- General Variables --------------------------------------
   DateTime? startDate;
@@ -52,18 +50,14 @@ class _ContractFormState extends State<ContractForm> {
 
   DataProvider dataProvider = DataProvider();
 
-  //------------------- StepNavigation Booleans --------------------------------
-  bool toggleStepOne = true;
-  bool toggleStepTwo = false;
-  bool toggleStepFour = false;
-  bool toggleStepObligation = false;
-  bool toggleStepFinal = false;
+  int contractStep = 1;
 
   //------------------- StepValidation Booleans --------------------------------
   bool stepOneComplete = false;
   bool stepTwoComplete = false;
   bool stepObligationComplete = false;
   bool stepFourComplete = false;
+  bool loading = false;
 
   //------------------- Validation Keys ----------------------------------------
   final step1Key = GlobalKey<FormState>();
@@ -72,11 +66,12 @@ class _ContractFormState extends State<ContractForm> {
   final _step4Key = GlobalKey<FormState>();
 
   //------------------- Other Variables ----------------------------------------
-  static List<User> contractors = [];
+  static List<User> contractors = []; //list of all existing contractors
+  List<User> addedContractors = [];   //list of contractors added to the form
   int currentContractorIndex = 0;
   int addedContractorsIndex = 0;
   Contract? tmpContract;
-  List<TermType> _termTypeList = [];
+  List<TermType> _termTypeList = [];  //list of all existing termTypes
   Map<String, TermWidget> _termMap = {};
   Map<String, ObligationWidget> _obligationMap = {};
   Contract contract = new Contract();
@@ -86,17 +81,18 @@ class _ContractFormState extends State<ContractForm> {
   void initState() {
     super.initState();
 
-    //get existing termTypes
-    getTermType();
+    //get offline existing termTypes
+    //getTermType();
+
+    //Fetch all online existing termTypes
+    fetchAllTermTypes();
 
     // Add at least one contractor
     addContractor();
     // Fetch all existing contractors for the suggestion field
     fetchAllContractors();
 
-    setStep();
     if (widget.contract != null) {
-      setFormFields();
       //tmpContract = widget.contract;
     } else {
 
@@ -121,20 +117,21 @@ class _ContractFormState extends State<ContractForm> {
                 contractStepObligation(formWidth),
                 contractStepFinal(formWidth),
               ])),
-      Align(
-        alignment: Alignment.bottomRight,
-        child: widget.contract != null? Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            nextStepButton(),
-            SizedBox(height: 10),
-            confirmEditButton()
-          ],
-        ) : nextStepButton(),
-      ),
-      Align(
-        alignment: Alignment.bottomLeft,
-        child: previousStepButton(),
+      Container(
+        height: screenHeight,
+        width: screenWidth,
+        child: Align(
+          alignment: Alignment.center,
+          child: Row(
+              children: [
+                previousStepButton(),
+                Spacer(),
+                contractStep == 5
+                  ? createContractButton()
+                  : nextStepButton()
+              ]
+          ),
+        ),
       )
     ]);
   }
@@ -149,7 +146,7 @@ class _ContractFormState extends State<ContractForm> {
           stepComplete: stepOneComplete,
           onPressed: () => setStepOne(),
         ),
-        toggleStepOne == true
+        contractStep == 1
             ? ContractStepBody(
             width: width,
             children: [
@@ -180,7 +177,7 @@ class _ContractFormState extends State<ContractForm> {
             onPressed: () async {
               setStepTwo();
             }),
-        toggleStepTwo == true
+        contractStep == 2
             ? ContractStepBody(
             width: width,
             children: [
@@ -220,13 +217,13 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         ContractStepHeader(
             width: width,
-            name: "Step 4. Terms & Conditions of the Contract",
+            name: "Step 3. Terms & Conditions of the Contract",
             stepComplete: stepFourComplete,
             onPressed:  () {
               setStepFour();
             }
         ),
-        toggleStepFour == true
+        contractStep == 3
           ? ContractStepBody(
             width: width,
             children: [
@@ -257,10 +254,11 @@ class _ContractFormState extends State<ContractForm> {
         ContractStepHeader(
             width: width,
             name: "Step 4. Obligations of the Contract",
+            stepComplete: stepObligationComplete,
             onPressed: () async {
               setStepObligation();
             }),
-        toggleStepObligation == true
+        contractStep == 4
           ? ContractStepBody(
               width: width,
               children: _termMap.keys.length > 0? [
@@ -294,11 +292,11 @@ class _ContractFormState extends State<ContractForm> {
             name: "Final Step - Overview",
             onPressed: () => setStepFinal()
         ),
-        toggleStepFinal == true
+        contractStep == 5
             ? ContractStepBody(
             width: width,
             children: [
-              Text('${widget.titleController.text}',
+              Text('${titleController.text}',
                   style: TextStyle(
                       fontSize: 25, decoration: TextDecoration.underline),
                   textAlign: TextAlign.center),
@@ -313,7 +311,7 @@ class _ContractFormState extends State<ContractForm> {
                 children: displayAllContractorsInfo(),
               ),
               Align(
-                child: Text("Consideration: ${widget.considerationDescController.text}"),
+                child: Text("Consideration: ${considerationDescController.text}"),
                 alignment: Alignment.centerLeft
               ),
               SizedBox(height: 10),
@@ -363,13 +361,13 @@ class _ContractFormState extends State<ContractForm> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("${widget.contractorControllers[index * 7 + 0].text}"),
-            Text("${widget.contractorControllers[index * 7 + 1].text}"),
-            Text("${widget.contractorControllers[index * 7 + 2].text}"),
-            Text("${widget.contractorControllers[index * 7 + 3].text}"),
-            Text("${widget.contractorControllers[index * 7 + 4].text}"),
-            Text("${widget.contractorControllers[index * 7 + 5].text}"),
-            Text("${widget.contractorControllers[index * 7 + 6].text}"),
+            Text("${contractorControllers[index * 7 + 0].text}"),
+            Text("${contractorControllers[index * 7 + 1].text}"),
+            Text("${contractorControllers[index * 7 + 2].text}"),
+            Text("${contractorControllers[index * 7 + 3].text}"),
+            Text("${contractorControllers[index * 7 + 4].text}"),
+            Text("${contractorControllers[index * 7 + 5].text}"),
+            Text("${contractorControllers[index * 7 + 6].text}"),
           ],
         )
       ],
@@ -438,32 +436,18 @@ class _ContractFormState extends State<ContractForm> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
-          child: Column(
-            children: [
-              effectiveDate == null
-                  ? Container()
-                  : Text("Chosen Effective Date:"),
-              effectiveDateButton(),
-            ],
-          ),
+            flex: 2,
+            child: effectiveDateButton()
         ),
+        Spacer(),
         Expanded(
-          child: Column(
-            children: [
-              executionDate == null
-                  ? Container()
-                  : Text("Chosen Execution Date:"),
-              executionDateButton(),
-            ],
-          ),
+          flex: 2,
+          child: executionDateButton(),
         ),
+        Spacer(),
         Expanded(
-          child: Column(
-            children: [
-              endDate == null ? Container() : Text("Chosen End Date:"),
-              endDateButton(),
-            ],
-          ),
+          flex: 2,
+          child: endDateButton(),
         ),
       ],
     );
@@ -472,30 +456,11 @@ class _ContractFormState extends State<ContractForm> {
   Widget _slimScreenDateButtonsLayout() {
     return Column(
       children: [
-        Column(
-          children: [
-            effectiveDate == null
-                ? Container()
-                : Text("Chosen Effective Date:"),
-            effectiveDateButton(),
-          ],
-        ),
+        effectiveDateButton(),
         SizedBox(height: 10),
-        Column(
-          children: [
-            executionDate == null
-                ? Container()
-                : Text("Chosen Execution Date:"),
-            executionDateButton(),
-          ],
-        ),
+        executionDateButton(),
         SizedBox(height: 10),
-        Column(
-          children: [
-            endDate == null ? Container() : Text("Chosen End Date:"),
-            endDateButton(),
-          ],
-        ),
+        endDateButton(),
       ],
     );
   }
@@ -524,7 +489,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
             style: TextStyle(fontSize: 15),
-            controller: widget.contractorControllers[index],
+            controller: contractorControllers[index],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return '$fieldHint';
@@ -558,7 +523,11 @@ class _ContractFormState extends State<ContractForm> {
               });
             },
             onSelected: (User selection) {
-              _fillRequesterForm(selection, index);
+              if (!addedContractors.contains(selection)) {
+                _fillRequesterForm(selection, index);
+                addedContractors.insert(currentContractorIndex, selection);
+                print("insert response");
+              }
             },
             fieldViewBuilder: (
                 BuildContext context,
@@ -566,7 +535,7 @@ class _ContractFormState extends State<ContractForm> {
                 FocusNode fieldFocusNode,
                 VoidCallback onFieldSubmitted
                 ) {
-              fieldTextEditingController.text = widget.contractorControllers[index].text;
+              fieldTextEditingController.text = contractorControllers[index].text;
               return TextField(
                 controller: fieldTextEditingController,
                 focusNode: fieldFocusNode,
@@ -601,9 +570,9 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget contractorCSCDropDownList(int index) {
     return CountryStateCityPicker(
-      state: widget.contractorControllers[index],
-      city: widget.contractorControllers[index + 1],
-      country: widget.contractorControllers[index + 2],
+      state: contractorControllers[index],
+      city: contractorControllers[index + 1],
+      country: contractorControllers[index + 2],
       textFieldInputBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(2.0),
           borderSide: BorderSide(color: Colors.black, width: 2.0)),
@@ -624,7 +593,7 @@ class _ContractFormState extends State<ContractForm> {
           Text("What are the Terms & Conditions of the Contract?",
               style: TextStyle(fontSize: 15)),
           TextFormField(
-            controller: widget.descriptionController,
+            controller: descriptionController,
             maxLines: null,
             decoration: InputDecoration(
               hintText: "Enter Contract details here...",
@@ -701,7 +670,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            controller: widget.titleController,
+            controller: titleController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a title for your contract.';
@@ -724,7 +693,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            controller: widget.considerationDescController,
+            controller: considerationDescController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a consideration for your contract.';
@@ -747,7 +716,7 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            controller: widget.considerationValController,
+            controller: considerationValController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a value for your contract.';
@@ -798,48 +767,18 @@ class _ContractFormState extends State<ContractForm> {
 
   removeTermWidget(String id) {
     setState(() {
+      _obligationMap.removeWhere((key, value) => value.term.id == _termMap[id]!.term.id);
       _termMap.remove(id);
     });
+    validateStepFour();
+    validateStepObligation();
   }
 
   removeObligationWidget(String id) {
     setState(() {
       _obligationMap.remove(id);
     });
-  }
-
-  /// CURRENTLY NOT IN USE!
-  Widget addContractElementButton() {
-    return MaterialButton(
-      child: Column(
-        children: [
-          Icon(Icons.add_circle_outline, size: 40),
-          Text("Add Contract Element",
-              style: TextStyle(color: Colors.black, fontSize: 10))
-        ],
-      ),
-      onPressed: () {
-        print("Add Contract Element - Pressed.");
-      },
-    );
-  }
-
-  Widget startDateButton() {
-    return Container(
-      height: 50,
-      child: MaterialButton(
-        color: Colors.blue,
-        hoverColor: Colors.lightBlueAccent,
-        child: startDate == null
-            ? Text("Pick a Start Date",
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center)
-            : Text(_formatDate(startDate),
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center),
-        onPressed: () => chooseStartDate(),
-      ),
-    );
+    validateStepObligation();
   }
 
   Widget effectiveDateButton() {
@@ -852,7 +791,7 @@ class _ContractFormState extends State<ContractForm> {
             ? Text("Pick an Effective Date",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
-            : Text(_formatDate(effectiveDate),
+            : Text("Effective Date: ${_formatDate(effectiveDate)}",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEffectiveDate(),
@@ -870,7 +809,7 @@ class _ContractFormState extends State<ContractForm> {
             ? Text("Pick an End Date",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
-            : Text(_formatDate(endDate),
+            : Text("End Date: ${_formatDate(endDate)}",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseEndDate(),
@@ -888,7 +827,7 @@ class _ContractFormState extends State<ContractForm> {
             ? Text("Pick an Execution Date",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center)
-            : Text(_formatDate(executionDate),
+            : Text("Execution Date: ${_formatDate(executionDate)}",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center),
         onPressed: () => chooseExecutionDate(),
@@ -1049,52 +988,87 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget nextStepButton() {
     return Container(
-        child: MaterialButton(
-          color: Colors.green,
-          hoverColor: Colors.lightGreen,
-          child: toggleStepFinal == true
-              ? Text('Confirm & Submit',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center)
-              : toggleStepFour == true
-                  ? Text("Go To Overview",
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center)
-                  : Text("Next Step",
-                      style: TextStyle(color: Colors.white)),
-          onPressed: () async {
-            if (toggleStepOne == true) {
-              setStepTwo();
-            } else if (toggleStepTwo == true) {
-              setStepFour();
-            } else if (toggleStepFour == true) {
-              setStepObligation();
-            } else if (toggleStepObligation == true) {
-              setStepFinal();
-            } else if (toggleStepFinal == true) {
-              setState(() {
-                toggleStepFinal = false;
-              });
-              Contract createdContract = createContractObject();
-              if (await dataProvider.createContract(createdContract)) {
-                _showCreateSuccessDialog();
-                //TODO: change so that this navigation function is not in this widget but in a screen
-                widget.changeScreen(2, widget.titleController.text.replaceAll(' ', ''));
-              } else {
-                _showCreateFailDialog();
-              }
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () {
+          setState(() {
+            if(contractStep < 5) {
+              setNextStep();
             }
-          },
-        ));
+          });
+        },
+        color: Colors.blue,
+        hoverColor: Colors.lightBlue,
+        child: Text("Next Step", style: TextStyle(color: Colors.white)),
+      ),
+    );
   }
 
-  Contract createContractObject() {
-    return Contract(
-      contractId: widget.titleController.text,
-      purpose: widget.descriptionController.text,
-      contractType: contractType,
-      executionDate: startDate!,
-      endDate: endDate!
+  Widget createContractButton() {
+    return Container(
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () async {
+          await performContractCreation();
+        },
+        color: Colors.green,
+        hoverColor: Colors.lightGreen,
+        child: Text("Create Contract", style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
+  Future<void> performContractCreation() async {
+    _toggleLoading();
+    setBaseContractDetails();
+    contract.contractId = await dataProvider.createBaseContract(contract);
+    _termMap.forEach((key, value) async {
+      TermType tempTermType = await dataProvider.createTermType(value.term.name!, value.term.description!);
+      Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, tempTermType.id!);
+      value.term.id = tempTerm.id;
+      contract.terms.add(tempTerm.id!);
+      _obligationMap.forEach((key, obl) async {
+        if(obl.term.termTypeId == value.term.termTypeId) {
+          obl.obligation.termId = value.term.id;
+          obl.obligation.contractorId = obl.selectedContractor!.id;
+          obl.obligation.description = obl.textController.text;
+          obl.obligation.state = "hasPending";
+          obl.obligation.contractId = contract.contractId;
+          Obligation tmpObligation = await dataProvider.createObligation(contract, obl.obligation);
+          contract.obligations.add(tmpObligation.id!);
+          await dataProvider.updateContract(contract);
+        }
+        if(contract.obligations.length == _obligationMap.values.length) {
+          //all obligations have been added, stop loading
+          _toggleLoading();
+          //navigate to contract viewing page
+          widget.changeScreen(2, '${contract.contractId!}');
+        }
+      });
+    });
+  }
+
+  void _toggleLoading() {
+    setState(() {
+      loading = !loading;
+    });
+  }
+
+  Widget previousStepButton() {
+    return Container(
+      child: MaterialButton(
+        minWidth: 125,
+        onPressed: () {
+          setState(() {
+            if(contractStep > 1) {
+              contractStep--;
+            }
+          });
+        },
+        color: Colors.blue,
+        hoverColor: Colors.lightBlue,
+        child: Text("Previous Step", style: TextStyle(color: Colors.white)),
+      ),
     );
   }
 
@@ -1106,7 +1080,6 @@ class _ContractFormState extends State<ContractForm> {
         hoverColor: Colors.blueGrey,
         child: Text("Confirm Changes", style: TextStyle(color: Colors.white)),
         onPressed: () {
-          setContract();
           print("Original contract ID: ${widget.contract!.contractId!}");
           setState(() {
             widget.contract = tmpContract;
@@ -1116,31 +1089,6 @@ class _ContractFormState extends State<ContractForm> {
         }
       )
     );
-  }
-
-  Widget previousStepButton() {
-    return Container(
-        child: MaterialButton(
-          color: Colors.grey,
-          hoverColor: Colors.blueGrey,
-          child: Text("Previous Step",
-              style: TextStyle(color: Colors.white)),
-          onPressed: () {
-            setState(() {
-              if (toggleStepOne == true) {
-                setStepOne();
-              } else if (toggleStepTwo == true) {
-                setStepOne();
-              } else if (toggleStepFour == true) {
-                setStepTwo();
-              } else if (toggleStepObligation == true) {
-                setStepFour();
-              } else if (toggleStepFinal == true) {
-                setStepObligation();
-              }
-            });
-          },
-        ));
   }
 
   Widget addContractorButton() {
@@ -1208,13 +1156,14 @@ class _ContractFormState extends State<ContractForm> {
     return PopupMenuButton(
         tooltip: "Add a term",
         child: Icon(Icons.add),
-        onSelected: (termTypeId) {
-          getTerm(termTypeId.toString());
+        onSelected: (TermType termType) {
+          //getTerm(termTypeId.toString());
+          createTerm(termType);
         },
         itemBuilder: (BuildContext context) {
-          return _termTypeList.map((element) {
-            return PopupMenuItem<Object>(
-              value: element.id,
+          return _termTypeList.map((TermType element) {
+            return PopupMenuItem<TermType>(
+              value: element,
               child: Text(element.name!)
             );
           }).toList();
@@ -1243,8 +1192,9 @@ class _ContractFormState extends State<ContractForm> {
 
   void addObligation(Term term) {
     setState(() {
+      //Must be unique, otherwise deletion of all obligations with same termId
       String id = UniqueKey().toString();
-      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", removeObligationWidget, id));
+      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", addedContractors, removeObligationWidget, id));
     });
   }
 
@@ -1282,133 +1232,64 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  List<String> setContractors() {
-    List<String> contractors = [];
-    contractors.add(widget.providerControllers[0].text);
-    contractors.add(widget.providerControllers[0].text);
-    return contractors;
-  }
-
-  void setContract() {
-    tmpContract = new Contract(
-      contractId: widget.titleController.text,
-      purpose: widget.descriptionController.text,
-      contractType: 'Written',
-      executionDate: startDate,
-      endDate: endDate,
-    );
-    tmpContract!.contractors= setContractors();
-  }
-
-  void setFormFields() async {
-    contractors = await dataProvider.fetchAllUsers();
-    setState(() {
-      widget.titleController.text = displayStringWithoutUri(widget.contract!.contractId!);
-      contractType = contractTypes[0].value; //TODO: make this use real type -> this is hardcode!
-      //TODO: this only takes the first data controller, make it take all existing ones.
-      _fillRequesterForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[0])) == 0), 0);
-      //TODO: this only takes the first data processor, make it take all existing ones.
-      _fillProviderForm(contractors.firstWhere((element) => element.id!.compareTo(displayStringWithoutUri(widget.contract!.contractors[1])) == 0), 0);
-      widget.descriptionController.text = widget.contract!.purpose!;
-      startDate = widget.contract!.executionDate;
-      effectiveDate = widget.contract!.executionDate;
-      executionDate = widget.contract!.executionDate;
-      endDate = widget.contract!.endDate;
-    });
-  }
-
   /// Helper function to display contract value without the uri. This is just
   /// a DISPLAY function. It does NOT remove the uri in the value.
   String displayStringWithoutUri(String s) {
     return s.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
-  void setFields() {}
-
-  void setStep() {
-    switch (widget.step) {
+  void setNextStep() {
+    switch(contractStep) {
       case 1:
-        setStepOne();
+        if(validateStepOne()) {
+          incrementContractStep();
+        }
         break;
       case 2:
-        setStepTwo();
+        if(validateStepTwo()) {
+          incrementContractStep();
+        }
         break;
       case 3:
-        setStepObligation();
+        if(validateStepFour()) {
+          incrementContractStep();
+        }
         break;
       case 4:
-        setStepFour();
-        break;
-      case 5:
-        setStepFinal();
+        if(validateStepObligation()) {
+          incrementContractStep();
+        }
         break;
     }
   }
 
-  void setStepOne() {
-    validateStepTwo();
-    validateStepFour();
-    validateStepObligation();
+  void incrementContractStep() {
     setState(() {
-      toggleStepOne = true;
-      toggleStepTwo = false;
-      toggleStepFour = false;
-      toggleStepObligation = false;
-      toggleStepFinal = false;
+      contractStep++;
+    });
+  }
+
+  void setStepOne() {
+    setState(() {
+      contractStep = 1;
     });
   }
 
   void setStepTwo() {
     validateStepOne();
-    validateStepFour();
-    validateStepObligation();
-    setState(() {
-      toggleStepOne = false;
-      toggleStepTwo = true;
-      toggleStepFour = false;
-      toggleStepObligation = false;
-      toggleStepFinal = false;
-    });
   }
 
   void setStepFour() {
-    validateStepOne();
     validateStepTwo();
-    validateStepObligation();
-    setState(() {
-      toggleStepOne = false;
-      toggleStepTwo = false;
-      toggleStepFour = true;
-      toggleStepObligation = false;
-      toggleStepFinal = false;
-    });
   }
 
   void setStepObligation() {
-    validateStepOne();
-    validateStepTwo();
     validateStepFour();
-    setState(() {
-      toggleStepOne = false;
-      toggleStepTwo = false;
-      toggleStepFour = false;
-      toggleStepObligation = true;
-      toggleStepFinal = false;
-    });
   }
 
   void setStepFinal() {
-    validateStepOne();
-    validateStepTwo();
     validateStepFour();
-    if (stepOneComplete && stepTwoComplete && stepFourComplete) {
-      setState(() {
-        toggleStepOne = false;
-        toggleStepTwo = false;
-        toggleStepFour = false;
-        toggleStepObligation = false;
-        toggleStepFinal = true;
-      });
+    if (stepOneComplete && stepTwoComplete && stepFourComplete && stepObligationComplete) {
     } else {
       print("you have not completed the contract.");
       showContractNotCompleteDialog();
@@ -1460,6 +1341,10 @@ class _ContractFormState extends State<ContractForm> {
     contractors = await dataProvider.fetchAllUsers();
   }
 
+  Future<void> fetchAllTermTypes() async {
+    _termTypeList = await dataProvider.fetchAllTermTypes();
+  }
+
   Future<void> getTerm(String termTypeId) async {
     List<Term> tempTerms = [];
     var jsonString = await rootBundle.loadString('assets/term.json');
@@ -1476,6 +1361,22 @@ class _ContractFormState extends State<ContractForm> {
           );
         });
       }
+    });
+  }
+
+  void createTerm(TermType termType) {
+    //Create term based on termType
+    Term term = new Term(
+      name: termType.name,
+      termTypeId: termType.id,
+      description: termType.description,
+    );
+    //Add created term into map with the id so that deleting it is easy.
+    setState(() {
+      String id = termType.id!;
+      _termMap.putIfAbsent(id, () =>
+          TermWidget(term, removeTermWidget, id)
+      );
     });
   }
 
@@ -1526,50 +1427,43 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  void _fillProviderForm(User selected, int index) {
-    widget.providerControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
-    widget.providerControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    widget.providerControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    widget.providerControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.providerControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.providerControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
-  }
-
   void _fillRequesterForm(User selected, int index) {
-    widget.contractorControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
-    widget.contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    widget.contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    widget.contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
-    widget.contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    widget.contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
+    contractorControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
+    contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
+    contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
+    contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
+    contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
-  void validateStepOne() async {
-    // step1Key.currentState is null when we edit the contract in a step greater than 1.
-    if (toggleStepOne == true) {
-      var flag = step1Key.currentState!.validate() == true;
-      if (flag && contractCategory != null && contractType != null) {
-        setState(() {
-          stepOneComplete = true;
-        });
-      } else {
-        setState(() {
-          stepOneComplete = false;
-        });
-      }
+  bool validateStepOne() {
+    var flag = step1Key.currentState!.validate() == true;
+    if (flag && contractCategory != null && contractType != null && effectiveDate != null && executionDate != null && endDate != null) {
+      setState(() {
+        stepOneComplete = true;
+      });
+      return true;
+    } else {
+      setState(() {
+        stepOneComplete = false;
+      });
+      return false;
     }
   }
 
   void setBaseContractDetails() {
-    contract.considerationDescription = widget.considerationDescController.text;
-    contract.considerationValue = widget.considerationValController.text;
+    contract.considerationDescription = considerationDescController.text;
+    contract.considerationValue = considerationValController.text;
     contract.contractCategory = contractCategory;
+    contract.contractStatus = "hasCreated";
     contract.contractType = contractType;
-    contract.contractors.add(widget.user.id);
+    for(User user in addedContractors) {
+      contract.contractors.add(user.id);
+    }
     contract.effectiveDate = effectiveDate;
     contract.endDate = endDate;
     contract.executionDate = executionDate;
-    contract.purpose = widget.titleController.text;
+    contract.purpose = titleController.text;
   }
 
   /// In the [contractors] list all of the existing contractors in the system
@@ -1582,36 +1476,57 @@ class _ContractFormState extends State<ContractForm> {
 
   /// Function that checks every textFormField in the second step of the
   /// contract to validate if each field has content in it.
-  void validateStepTwo() {
-    if (toggleStepTwo == true) {
-      //var flag = step2Keys.every((element) => element.currentState!.validate() == true);
-      var flag = true;
-
-      if (flag) {
-        setState(() {
-          stepTwoComplete = true;
-        });
-      } else {
-        setState(() {
-          stepTwoComplete = false;
-        });
-      }
+  bool validateStepTwo() {
+    var flag = true;
+    if (flag) {
+      setState(() {
+        stepTwoComplete = true;
+      });
+      return true;
+    } else {
+      setState(() {
+        stepTwoComplete = false;
+      });
+      return false;
     }
   }
 
-  void validateStepObligation() {
-    if(toggleStepObligation == true) {
-      var flag = true;
-
-      if (flag) {
+  bool validateStepObligation() {
+    bool textFlag = true;
+    bool dateFlag = true;
+    bool contractorFlag = true;
+    if(_obligationMap.keys.isNotEmpty) {
+      _obligationMap.values.forEach((element) {
+        if(textFlag && dateFlag && contractorFlag) {
+          textFlag = element.textController.text.isNotEmpty;
+          dateFlag = obligationHasBothDates(element);
+          contractorFlag = element.selectedContractor != null;
+        }
+      });
+      if(textFlag && dateFlag && contractorFlag) {
         setState(() {
           stepObligationComplete = true;
         });
+        return true;
       } else {
-        setState(() {
-          stepObligationComplete = false;
-        });
-      }
+          setState(() {
+            stepObligationComplete = false;
+          });
+          return false;
+        }
+    } else {
+      setState(() {
+        stepObligationComplete = false;
+      });
+      return false;
+    }
+  }
+
+  bool obligationHasBothDates(ObligationWidget ow) {
+    if(ow.obligation.executionDate == null || ow.obligation.endDate == null) {
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -1623,22 +1538,31 @@ class _ContractFormState extends State<ContractForm> {
   ///   - Effective Date
   ///   - Execution Date
   ///   - End Date
-  void validateStepFour() {
-    if (toggleStepFour == true) {
-      setState(() {
-        stepFourComplete = true;
+  bool validateStepFour() {
+    bool flag = true;
+    if(_termMap.keys.isNotEmpty) {
+      _termMap.values.forEach((element) {
+        if(flag) {
+          flag = element.textController.text.isNotEmpty;
+        }
       });
-    }
-      /**if (_step4Key.currentState!.validate() == true && effectiveDate != null && executionDate != null && endDate != null) {
+      if(flag) {
         setState(() {
           stepFourComplete = true;
         });
+        return true;
       } else {
         setState(() {
           stepFourComplete = false;
         });
+        return false;
       }
-    }*/
+    } else {
+      setState(() {
+        stepFourComplete = false;
+      });
+      return false;
+    }
   }
 
   bool _isWideScreen(double width, double height) {
@@ -1679,7 +1603,7 @@ class _ContractFormState extends State<ContractForm> {
       addedContractorsIndex++;
       addStep2Keys();
       for (int i = 0; i < 7; i++) {
-        widget.contractorControllers.add(TextEditingController());
+        contractorControllers.add(TextEditingController());
       }
     });
   }
@@ -1690,7 +1614,7 @@ class _ContractFormState extends State<ContractForm> {
   void removeContractor(int index) {
     setState(() {
       for (int i = (index * 7) + 6; i >= (index * 7); i--) {
-        widget.contractorControllers.removeAt(i);
+        contractorControllers.removeAt(i);
       }
       currentContractorIndex -= 1;
     });

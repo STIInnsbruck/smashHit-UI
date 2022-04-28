@@ -40,27 +40,26 @@ class _ContractCreationState extends State<ContractCreation> {
   @override
   void initState() {
     super.initState();
-    contractForm  = ContractForm(widget.changeScreen, 1, null, widget.user!);
-    _titleController = contractForm!.titleController;
-    _descriptionController = contractForm!.descriptionController;
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    _checkIfFormComplete();
 
-    return Center(
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              contractForm!
-            ],
-          ),
+    return Stack(
+      children: [
+        Scrollbar(
+            child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    ContractForm(widget.changeScreen, null, widget.user!)
+                  ],
+                )
+            )
         ),
-      )
+      ],
     );
   }
 

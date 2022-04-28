@@ -135,17 +135,15 @@ class DataProvider {
     }
   }
 
-  Future<bool> createBaseContract(Contract contract) async {
+  Future<String> createBaseContract(Contract contract) async {
     var body = {
       "ConsentId": "string",
       "ConsiderationDescription": contract.considerationDescription,
       "ConsiderationValue": contract.considerationValue,
       "ContractCategory": contract.contractCategory,
-      "ContractStatus": "hasCreated",
+      "ContractStatus": contract.contractStatus,
       "ContractType": contract.contractType,
-      "Contractors": [
-        contract.contractors[0]
-      ],
+      "Contractors": contract.contractors,
       "EffectiveDate": _formatDate(contract.effectiveDate),
       "EndDate": _formatDate(contract.endDate),
       "ExecutionDate": _formatDate(contract.executionDate),
@@ -168,14 +166,15 @@ class DataProvider {
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      if (data.toString().compareTo('{"Success": "Record inserted successfully."}') == 0 ) {
-        return true;
-      } else {
-        return false;
+      Contract contract;
+      try {
+        contract = parser.parseContractId(jsonDecode(response.body));
+        return contract.contractId!;
+      } catch (e) {
+        throw Exception('Failed to load contract.');
       }
     } else {
-      return false;
+      return "to return failed creation 2";
     }
   }
 
@@ -231,50 +230,45 @@ class DataProvider {
     }
   }
 
-  updateContract(String title, String contractTerms, String contractType,
-      DateTime startDate, DateTime expireDate, String requester, String provider) async {
-
+  Future<int> updateContract(Contract contract) async {
     var body = {
-      "ContractId": title.replaceAll(' ', ''),
-      "ContractType": contractType,
-      "Purpose": contractTerms.replaceAll('\n', ''),
-      "ContractRequester": requester.replaceAll(' ', ''),
-      "ContractProvider": provider.replaceAll(' ', ''),
-      "DataController": requester.replaceAll(' ', ''),
-      "StartDate": _formatDate(startDate),
-      "ExecutionDate": _formatDate(startDate),
-      "EffectiveDate": _formatDate(startDate),
-      "ExpireDate": _formatDate(expireDate),
-      "Medium": "SmashHit Flutter Application",
-      "Waiver": "string",
-      "Amendment": "string",
-      "ConfidentialityObligation": "string",
-      "DataProtection": "string",
-      "LimitationOnUse": "string",
-      "MethodOfNotice": "string",
-      "NoThirdPartyBeneficiaries": "string",
-      "PermittedDisclosure": "string",
-      "ReceiptOfNotice": "string",
-      "Severability": "string",
-      "TerminationForInsolvency": "string",
-      "TerminationForMaterialBreach": "string",
-      "TerminationOnNotice": "string",
-      "ContractStatus": "string"
+      "ConsentId": "string",
+      "ConsiderationDescription": contract.considerationDescription,
+      "ConsiderationValue": contract.considerationValue,
+      "ContractCategory": contract.contractCategory,
+      "ContractId": contract.contractId,
+      "ContractStatus": contract.contractStatus,
+      "ContractType": contract.contractType,
+      "Contractors": contract.contractors,
+      "EffectiveDate": _formatDate(contract.effectiveDate),
+      "EndDate": _formatDate(contract.endDate),
+      "ExecutionDate": _formatDate(contract.executionDate),
+      "Medium": "App Based",
+      "Obligations": contract.obligations,
+      "Purpose": contract.purpose,
+      "Signatures": [
+        "string"
+      ],
+      "Terms": contract.terms
     };
 
     var jsonBody = jsonEncode(body);
 
-    final response = await http.post(kBaseUrl.replace(path: "/contract/update/"),
+    final response = await http.put(kBaseUrl.replace(path: "/contract/update/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
-      print("Contract Updated.");
-      return true;
+      var data = json.decode(response.body);
+      print("Message: \t $data");
+      if(data.toString().compareTo('{"Success": "No record found for this ID"}') == 0 ) {
+        return -1;
+      } else if (data.toString().compareTo('{"Success": "Record updated successfully"}') == 0 ){
+        return 1;
+      } else {
+        return 0;
+      }
     } else {
-      print("Error createContract()");
-      print("${response.statusCode}");
-      print("${response.body}");
-      return false;
+      return 0;
     }
   }
 
@@ -292,6 +286,34 @@ class DataProvider {
       }
     } else {
       throw Exception('Failed to load obligation $obligationId.');
+    }
+  }
+
+  Future<Obligation> createObligation(Contract contract, Obligation obligation) async {
+    var body = {
+      "ContractId": contract.contractId,
+      "ContractIdB2C": "string",
+      "ContractorId": obligation.contractorId,
+      "Description": obligation.description,
+      "EndDate": _formatDate(obligation.endDate),
+      "ExecutionDate": _formatDate(obligation.executionDate),
+      "State": obligation.state,
+      "TermId": obligation.termId
+    };
+    var jsonBody = jsonEncode(body);
+    final response = await http.post(kBaseUrl.replace(path: "/obligation/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      Obligation tmpObligation;
+      try {
+        tmpObligation = parser.parseAllObligationsId(jsonDecode(response.body))[0];
+        return tmpObligation;
+      } catch (e) {
+        throw Exception('Failed to parse response for obligation.');
+      }
+    } else {
+      throw Exception('Failed to load obligation.');
     }
   }
 
@@ -329,27 +351,61 @@ class DataProvider {
   }
 
   //---------------------------- Term Type -------------------------------------
-  Future<bool> createTermType(TermType termType) async {
+  Future<List<TermType>> fetchAllTermTypes() async {
+    final response = await http.get(kBaseUrl.replace(path: '/term/types'), headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return parser.parseAllTermTypes(data);
+    } else {
+      throw Exception('Failed to load all termTypes.');
+    }
+  }
+
+  Future<TermType> createTermType(String termTypeName, String termTypeDesc) async {
     var body = {
-      "Description": termType.description,
-      "Name": termType.name
+      "Description": termTypeDesc,
+      "Name": termTypeName
     };
     var jsonBody = jsonEncode(body);
     final response = await http.post(kBaseUrl.replace(path: "/term/type/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      if (data.toString().compareTo('{"Success": "Record inserted successfully."}') == 0 ) {
-        return true;
-      } else {
-        return false;
+      TermType tmpTermType;
+      try {
+        tmpTermType = parser.parseTermTypeId(jsonDecode(response.body));
+        return tmpTermType;
+      } catch (e) {
+        throw Exception('Failed to parse response for termType $termTypeName.');
       }
     } else {
-      return false;
+      throw Exception('Failed to load termType $termTypeName.');
     }
   }
 
+  Future<Term> createTerm(String contractId, String description, String termTypeId) async {
+    var body = {
+      "ContractId": contractId,
+      "Description": description,
+      "TermTypeId": termTypeId
+    };
+    var jsonBody = jsonEncode(body);
+    final response = await http.post(kBaseUrl.replace(path: "/contract/term/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      Term tmpTerm;
+      try {
+        tmpTerm = parser.parseTermId(jsonDecode(response.body));
+        return tmpTerm;
+      } catch (e) {
+        throw Exception('Failed to parse response for term with termTypeId: $termTypeId.');
+      }
+    } else {
+      throw Exception('Failed to load term with termTypeId: $termTypeId.');
+    }
+  }
 
   ///Standard function to format the date to send a correctly structured date.
   String _formatDate(DateTime? date) {

@@ -5,12 +5,14 @@ class ObligationWidget extends StatefulWidget {
   Obligation obligation = new Obligation();
   Term term;
   String contractorName;
+  User? selectedContractor;
+  List<User> contractors;
   String id;
   Function(String) onDeletePressed;
   TextEditingController textController = new TextEditingController();
 
   ObligationWidget(
-      this.term, this.contractorName, this.onDeletePressed, this.id);
+      this.term, this.contractorName, this.contractors, this.onDeletePressed, this.id);
 
   @override
   _ObligationWidgetState createState() => new _ObligationWidgetState();
@@ -34,23 +36,32 @@ class _ObligationWidgetState extends State<ObligationWidget> {
           color: Colors.grey[300],
           child: Row(
             children: [
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () => {
-                    setState(() {
-                      expand = !expand;
-                    })
-                  },
-                  child: Row(children: [
-                    expand
-                        ? Icon(Icons.unfold_less, color: Colors.black)
-                        : Icon(Icons.unfold_more, color: Colors.black),
-                    Text(
-                        "Obligation to the term ${widget.term.name} for the contractor [EXAMPLE NAME]",
-                        style: TextStyle(color: Colors.black)),
-                  ]),
-                ),
+              MaterialButton(
+                onPressed: () => {
+                  setState(() {
+                    expand = !expand;
+                  })
+                },
+                child: Row(children: [
+                  expand
+                      ? Icon(Icons.unfold_less, color: Colors.black)
+                      : Icon(Icons.unfold_more, color: Colors.black),
+                  Text(
+                      "Obligation to the term ${widget.term.name} for the contractor ",
+                      style: TextStyle(color: Colors.black)),
+                ]),
               ),
+              DropdownButton(
+                items: listContractors(),
+                hint: Text("Select a contractor"),
+                value: widget.selectedContractor,
+                onChanged: (User? selected) {
+                  setState(() {
+                    widget.selectedContractor = selected;
+                  });
+                },
+              ),
+              Spacer(),
               IconButton(
                 onPressed: () => {
                   setState(() {
@@ -125,6 +136,17 @@ class _ObligationWidgetState extends State<ObligationWidget> {
             : Container()
       ]),
     );
+  }
+
+  List<DropdownMenuItem<User>> listContractors() {
+    List<DropdownMenuItem<User>> items = [];
+    for(int i = 0; i < widget.contractors.length; i++) {
+      items.add(DropdownMenuItem(
+          child: Text("${widget.contractors[i].name}"),
+          value: widget.contractors[i],
+      ));
+    }
+    return items;
   }
 
   Future<void> chooseExecutionDate() async {
