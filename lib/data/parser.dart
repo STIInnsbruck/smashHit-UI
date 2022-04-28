@@ -92,11 +92,11 @@ class ResponseParser {
       endDate: formatDate(jsonObligation["end_date"]),
       state: jsonObligation["state"],
       //the first json has contractorId
-      contractorId: jsonObligation["identifier"][0],
+      contractorId: jsonObligation["identifier"][1],
       //the second json has obligationId
-      contractId: jsonObligation["identifier"][1],
+      contractId: jsonObligation["identifier"][2],
       //the third json has termiId
-      termId: jsonObligation["identifier"][2],
+      termId: jsonObligation["identifier"][3],
     );
 
     return obligation;
@@ -104,6 +104,11 @@ class ResponseParser {
 
   List<Obligation> parseAllObligations(List jsonList) {
     return jsonList.map((jsonObligation) => parseObligation(jsonObligation)).toList();
+  }
+
+
+  List<Obligation> parseAllObligationsId(List jsonList) {
+    return jsonList.map((jsonObligation) => parseObligationId(jsonObligation)).toList();
   }
 
   //TERM PARSERS

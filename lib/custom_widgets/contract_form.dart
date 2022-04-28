@@ -57,6 +57,7 @@ class _ContractFormState extends State<ContractForm> {
   bool stepTwoComplete = false;
   bool stepObligationComplete = false;
   bool stepFourComplete = false;
+  bool loading = false;
 
   //------------------- Validation Keys ----------------------------------------
   final step1Key = GlobalKey<FormState>();
@@ -1008,31 +1009,49 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         minWidth: 125,
         onPressed: () async {
-          setBaseContractDetails();
-          contract.contractId = await dataProvider.createBaseContract(contract);
-          _termMap.forEach((key, value) async {
-            TermType tempTermType = await dataProvider.createTermType(value.term.name!, value.term.description!);
-            Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, tempTermType.id!);
-            value.term.id = tempTerm.id;
-            contract.terms.add(tempTerm.id!);
-            _obligationMap.forEach((key, obl) {
-              if(obl.term.termTypeId == value.term.termTypeId) {
-                print("termtypeIds of OBL and TERM are equal. TRUE!");
-              }
-            });
-            await dataProvider.updateContract(contract);
-          });
-          /**_obligationMap.forEach((key, value) async {
-            Obligation tmpObligation = await dataProvider.createObligation(contract, value.obligation);
-            contract.obligations.add(tmpObligation.id!);
-            await dataProvider.updateContract(contract);
-          });*/
+          await performContractCreation();
         },
         color: Colors.green,
         hoverColor: Colors.lightGreen,
         child: Text("Create Contract", style: TextStyle(color: Colors.white)),
       ),
     );
+  }
+
+  Future<void> performContractCreation() async {
+    _toggleLoading();
+    setBaseContractDetails();
+    contract.contractId = await dataProvider.createBaseContract(contract);
+    _termMap.forEach((key, value) async {
+      TermType tempTermType = await dataProvider.createTermType(value.term.name!, value.term.description!);
+      Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, tempTermType.id!);
+      value.term.id = tempTerm.id;
+      contract.terms.add(tempTerm.id!);
+      _obligationMap.forEach((key, obl) async {
+        if(obl.term.termTypeId == value.term.termTypeId) {
+          obl.obligation.termId = value.term.id;
+          obl.obligation.contractorId = obl.selectedContractor!.id;
+          obl.obligation.description = obl.textController.text;
+          obl.obligation.state = "hasPending";
+          obl.obligation.contractId = contract.contractId;
+          Obligation tmpObligation = await dataProvider.createObligation(contract, obl.obligation);
+          contract.obligations.add(tmpObligation.id!);
+          await dataProvider.updateContract(contract);
+        }
+        if(contract.obligations.length == _obligationMap.values.length) {
+          //all obligations have been added, stop loading
+          _toggleLoading();
+          //navigate to contract viewing page
+          widget.changeScreen(2, '${contract.contractId!}');
+        }
+      });
+    });
+  }
+
+  void _toggleLoading() {
+    setState(() {
+      loading = !loading;
+    });
   }
 
   Widget previousStepButton() {

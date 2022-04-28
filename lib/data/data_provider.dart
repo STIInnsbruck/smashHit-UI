@@ -230,7 +230,7 @@ class DataProvider {
     }
   }
 
-  Future<bool> updateContract(Contract contract) async {
+  Future<int> updateContract(Contract contract) async {
     var body = {
       "ConsentId": "string",
       "ConsiderationDescription": contract.considerationDescription,
@@ -258,15 +258,17 @@ class DataProvider {
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
-      Contract contract;
-      try {
-        contract = parser.parseContractId(jsonDecode(response.body));
-        return true;
-      } catch (e) {
-        throw Exception('Failed to load contract.');
+      var data = json.decode(response.body);
+      print("Message: \t $data");
+      if(data.toString().compareTo('{"Success": "No record found for this ID"}') == 0 ) {
+        return -1;
+      } else if (data.toString().compareTo('{"Success": "Record updated successfully"}') == 0 ){
+        return 1;
+      } else {
+        return 0;
       }
     } else {
-      return false;
+      return 0;
     }
   }
 
@@ -305,7 +307,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       Obligation tmpObligation;
       try {
-        tmpObligation = parser.parseObligationId(jsonDecode(response.body));
+        tmpObligation = parser.parseAllObligationsId(jsonDecode(response.body))[0];
         return tmpObligation;
       } catch (e) {
         throw Exception('Failed to parse response for obligation.');
