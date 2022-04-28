@@ -19,6 +19,7 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
+  List<Obligation> obligations = [];
   DataProvider dataProvider = new DataProvider();
   Contract? contract;
   String? contractDropDownType;
@@ -138,6 +139,7 @@ class _ContractCreationState extends State<ViewContract> {
         future: dataProvider.fetchObligationById(obligationId),
         builder: (context, obligationSnapshot) {
           if (obligationSnapshot.hasData) {
+            obligations.add(obligationSnapshot.data!);
             return FutureBuilder<User>(
               future: dataProvider.fetchUserById(obligationSnapshot.data!.contractorId!),
               builder: (context, userSnapshot) {
@@ -180,6 +182,7 @@ class _ContractCreationState extends State<ViewContract> {
                       ),
                       Spacer(),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
@@ -189,12 +192,12 @@ class _ContractCreationState extends State<ViewContract> {
                                 Text('Time Remaining: ',
                                     style: TextStyle(
                                         fontSize: 15, fontWeight: FontWeight.bold)),
-                                Text('${obligationSnapshot.data!.endDate}')
+                                Text('${obligationSnapshot.data!.getEndDateAsString()}')
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -407,6 +410,13 @@ class _ContractCreationState extends State<ViewContract> {
               child: contractDetailText("Contract Medium: ", "${contract.medium}"),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: contractDetailText("Contract Category: ", "${contract.contractCategory}"),
+            ),
+          ),
           Column(
             children: contractorWidgets,
           ),
@@ -431,22 +441,21 @@ class _ContractCreationState extends State<ViewContract> {
           )
             : Center(child: Text("No Terms were found in the contract.")),
           Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 1),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: contractDetailText("Start Date: ", "${contract.getFormattedStartDate()}"))),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: contractDetailText("Effective Date: ", "${contract.getFormattedStartDate()}"))),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: contractDetailText("End Date: ", "${contract.getFormattedEndDate()}"))),
+              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+              child: contractDates()
+          )
         ],
       ),
+    );
+  }
+
+  Widget contractDates() {
+    return Row(
+      children: [
+        Expanded(child: contractDetailText("Effective Date:", contract!.getFormattedEffectiveDate())),
+        Expanded(child: contractDetailText("Execution Date:", contract!.getFormattedExecutionDate())),
+        Expanded(child: contractDetailText("End Date:", contract!.getFormattedEndDate())),
+      ],
     );
   }
 
@@ -514,7 +523,14 @@ class _ContractCreationState extends State<ViewContract> {
                     return Column(
                       children: [
                         contractTermTitle("$index. ${typeSnapshot.data!.name!}"),
-                        contractTermText(snapshot.data!.description!)
+                        contractTermText(snapshot.data!.description!),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          child: Column(
+                            children: displayATermsObligations(termId),
+                          ),
+                        )
                       ],
                     );
                   } else if (typeSnapshot.hasError) {
@@ -529,6 +545,38 @@ class _ContractCreationState extends State<ViewContract> {
             return Center(child: CircularProgressIndicator());
           }
       )
+    );
+  }
+
+  List<Widget> displayATermsObligations(String termId) {
+    List<Widget> widgets = [];
+    int index = 0;
+    obligations.forEach((element) {
+      if(element.termId == termId) {
+        widgets.add(obligationInfo(element, index));
+        widgets.add(SizedBox(height: 20));
+        index++;
+      }
+    });
+    return widgets;
+  }
+
+  Widget obligationInfo(Obligation obligation, int index) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Obligation-${index+1}:", style: TextStyle(fontSize: 15)),
+        SizedBox(width: 10),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Description: ${obligation.description}", textAlign: TextAlign.justify),
+            Text("Execution Date: ${obligation.getExecutionDateAsString()}"),
+            Text("End Date: ${obligation.getEndDateAsString()}"),
+          ]
+        )
+      ],
     );
   }
 
