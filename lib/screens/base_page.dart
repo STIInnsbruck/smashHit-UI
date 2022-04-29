@@ -11,6 +11,7 @@ import 'package:smashhit_ui/screens/contract_update.dart';
 import 'package:smashhit_ui/screens/profile_editor.dart';
 import 'package:smashhit_ui/screens/contract_party_profile.dart';
 import 'package:smashhit_ui/screens/term_type_creation.dart';
+import 'package:smashhit_ui/screens/term_type_view.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -63,6 +64,13 @@ class _BasePageState extends State<BasePage> {
               title: Text("View Data Requesters"),
               onTap: () {
                 changeScreen(3);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("View Term Types"),
+              onTap: () {
+                changeScreen(10);
                 Navigator.of(context).pop();
               },
             ),
@@ -155,6 +163,10 @@ class _BasePageState extends State<BasePage> {
         case 9:
           _selectedPage = TermTypeCreationPage(changeScreen, user);
           _selectedTitle = "Create Term Types";
+          break;
+        case 10:
+          _selectedPage = TermTypeViewPage(changeScreen, user);
+          _selectedTitle = "View Term Types";
       }
     });
   }

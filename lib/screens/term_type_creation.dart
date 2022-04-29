@@ -206,7 +206,7 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
           TermType termType = await dataProvider.createTermType(nameController.text, descriptionController.text);
           if (termType.id != null) {
             _toggleLoading();
-            print("successful creation");
+            widget.changeScreen(10);
           }
         },
         color: Colors.green,
