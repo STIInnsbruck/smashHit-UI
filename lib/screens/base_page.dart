@@ -67,6 +67,13 @@ class _BasePageState extends State<BasePage> {
               },
             ),
             ListTile(
+              title: Text("Create a new term"),
+              onTap: () {
+                changeScreen(9);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
               title: Text("Create a new contract"),
               onTap: () {
                 changeScreen(3);

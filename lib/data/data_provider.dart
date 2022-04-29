@@ -340,7 +340,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       TermType termType;
       try {
-        termType = parser.parseTermTypeId(jsonDecode(response.body));
+        termType = parser.parseTermType(jsonDecode(response.body));
         return termType;
       } catch (e) {
         throw Exception('Failed to parse response for termType $termTypeId.');
@@ -374,7 +374,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       TermType tmpTermType;
       try {
-        tmpTermType = parser.parseTermTypeId(jsonDecode(response.body));
+        tmpTermType = parser.parseTermType(jsonDecode(response.body));
         return tmpTermType;
       } catch (e) {
         throw Exception('Failed to parse response for termType $termTypeName.');
