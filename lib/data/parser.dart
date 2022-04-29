@@ -140,16 +140,6 @@ class ResponseParser {
     );
   }
 
-  TermType parseTermTypeId(Map jsonTermType) {
-    TermType termType = new TermType(
-      id: jsonTermType["TermTypeId"],
-      description: jsonTermType["description"],
-      name: jsonTermType["name"]
-    );
-
-    return termType;
-  }
-
   List<TermType> parseAllTermTypes(List jsonList) {
     return jsonList.map((jsonTermType) => parseTermType(jsonTermType)).toList();
   }
