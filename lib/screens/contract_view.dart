@@ -710,10 +710,22 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Tooltip getIconByStatus(String status) {
-    if (status.compareTo("hasPendingState") == 0) {
+    if (status.compareTo("hasPending") == 0) {
       return Tooltip(
         message: "Obligation is pending.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
+    } else if (status.compareTo("hasInvalid") == 0) {
+      return Tooltip(
+          message: "Obligation is invalid.",
+          child: Icon(Icons.warning, color: Colors.yellow, size: 30));
+    } else if (status.compareTo("hasFulfilled") == 0) {
+      return Tooltip(
+          message: "Obligation is fulfilled.",
+          child: Icon(Icons.check_circle, color: Colors.green, size: 30));
+    } else if (status.compareTo("hasValid") == 0) {
+      return Tooltip(
+          message: "Obligation is valid.",
+          child: Icon(Icons.done, color: Colors.grey, size: 30));
     } else {
       return Tooltip(
         message: "Obligation is completed.",
