@@ -215,7 +215,7 @@ class _ContractCreationState extends State<ViewContract> {
                           ? Center(
                         child: MaterialButton(
                           onPressed: () {
-                            _showObligationCompletionDialog();
+                            _showObligationCompletionDialog(obligationSnapshot.data!);
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
@@ -677,7 +677,7 @@ class _ContractCreationState extends State<ViewContract> {
     });
   }
 
-  void _showObligationCompletionDialog() {
+  void _showObligationCompletionDialog(Obligation obligation) {
     showDialog(
         context: context,
         builder: (context) {
@@ -697,7 +697,17 @@ class _ContractCreationState extends State<ViewContract> {
                 child: Text('Cancel'),
               ),
               MaterialButton(
-                onPressed: () {},
+                onPressed: () async {
+                  bool updateSuccess = await dataProvider.updateObligationStatus(obligation, "hasFulfilled");
+                  if (updateSuccess) {
+                    setState(() {
+                      obligation.state = "hasFulfilled";
+                    });
+                  } else {
+                    _showObligationUpdateError(obligation);
+                  }
+                  _dismissDialog();
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
                 child: Text('Complete & await confirmation',
@@ -707,6 +717,31 @@ class _ContractCreationState extends State<ViewContract> {
             ],
           );
         });
+  }
+
+  void _showObligationUpdateError(Obligation obligation) {
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error on completing your obligation.'),
+            content: Text('There appears to be an error on completing the obligation with ID: ${obligation.id}'),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  _dismissDialog();
+                },
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text('Ok'),
+              )
+            ],
+          );
+        }
+    );
   }
 
   Tooltip getIconByStatus(String status) {

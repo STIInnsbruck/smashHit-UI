@@ -37,7 +37,10 @@ class ResponseParser {
 
   //CONTRACT PARSERS
   Contract parseContract(Map jsonContract) {
-    return Contract(contractId: jsonContract['Contract']);
+    return Contract(
+        contractId: jsonContract['Contract'],
+        purpose: jsonContract['Purpose']
+    );
   }
 
   String parseFetchContractId(List jsonContracts) {
@@ -105,7 +108,6 @@ class ResponseParser {
   List<Obligation> parseAllObligations(List jsonList) {
     return jsonList.map((jsonObligation) => parseObligation(jsonObligation)).toList();
   }
-
 
   List<Obligation> parseAllObligationsId(List jsonList) {
     return jsonList.map((jsonObligation) => parseObligationId(jsonObligation)).toList();
