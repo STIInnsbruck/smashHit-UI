@@ -57,10 +57,14 @@ class _ContractTileState extends State<ContractTile> {
           children: [
             Expanded(flex: 2, child: Icon(Icons.folder_shared, size: 25)),
             Expanded(
-                flex: 22,
+                flex: 10,
                 child: Text('${widget.contract!.contractId!}', overflow: TextOverflow.ellipsis)
             ),
             //Spacer(flex: 25),
+            Expanded(
+              flex: 11,
+              child: Text('${widget.contract!.purpose}', overflow: TextOverflow.ellipsis)
+            ),
             contractIconByStatus(widget.contract!.contractStatus!),
             Spacer(flex: 3),
             editContractButton(widget.contract!.contractId!),
