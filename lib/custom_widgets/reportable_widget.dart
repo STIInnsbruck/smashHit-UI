@@ -21,29 +21,26 @@ class _ReportableWidgetState extends State<ReportableWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: _displayComment && _isAViolation ? Colors.black87 : _backgroundColor,
       child: Stack(
         children: [
-          FractionallySizedBox(
-            //widthFactor: 0.99,
-            child: Container(
-              color: _displayComment && _isAViolation ? Colors.black87 : _backgroundColor,
-              margin: EdgeInsets.fromLTRB(0, 10, 10, 0),
-              child: InkWell(
-                  onTap: () => null,
-                  onHover: (val) {
-                    setState(() {
-                      _displayComment = !_displayComment;
-                    });
-                  },
-                  child: Stack(
-                    children: [
-                      widget.child,
-                      _displayComment && _isAViolation ?
-                          Text(widget.comment!, style: TextStyle(color: Colors.white)) :
-                          Container()
-                    ],
-                  )
-              ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: InkWell(
+                onTap: () => null,
+                onHover: (val) {
+                  setState(() {
+                    _displayComment = !_displayComment;
+                  });
+                },
+                child: Stack(
+                  children: [
+                    widget.child,
+                    _displayComment && _isAViolation ?
+                    Text(widget.comment!, style: TextStyle(color: Colors.white)) :
+                    Container()
+                  ],
+                )
             ),
           ),
           Align(

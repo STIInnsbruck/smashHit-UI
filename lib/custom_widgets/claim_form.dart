@@ -20,6 +20,7 @@ class _ClaimFormState extends State<ClaimForm> {
   TextEditingController textController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
 
+  List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
   DataProvider dataProvider = new DataProvider();
 
@@ -27,6 +28,7 @@ class _ClaimFormState extends State<ClaimForm> {
   void initState() {
     super.initState();
     conditionController.text = widget.contract.purpose!;
+    buildContractUsers(widget.contract);
   }
 
   @override
@@ -73,7 +75,7 @@ class _ClaimFormState extends State<ClaimForm> {
               Center(
                   child: Text('Contract Violation Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -81,22 +83,23 @@ class _ClaimFormState extends State<ClaimForm> {
                   Text('Contract ID: ${widget.contract.formatContractId()}')
                 ],
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Center(
                   child: Text('Contract Information', style: TextStyle(fontSize: 25))
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Involved Parties:', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 2),
-                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1),
-                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 2),
+                  Text('Contractors:', style: TextStyle(fontSize: 15)),
+                  SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: contractorWidgets
+                  ),
                 ],
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Row(
                 children: [
                   Text('Start Date: ${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
@@ -105,22 +108,36 @@ class _ClaimFormState extends State<ClaimForm> {
                   Spacer(flex: 1)
                 ],
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
+              ReportableWidget(
+                  child: Row(
+                    children: [
+                      Text("Purpose: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(widget.contract.purpose!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                    ],
+                  )),
+              SizedBox(height: 10),
+              ReportableWidget(
+                  child: Row(
+                    children: [
+                      Text("Consideration: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                    ],
+                  )),
               Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
-              Container(height: 10),
-              ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              SizedBox(height: 10),
               Column(
                 children: termWidgets,
               ),
-              Container(height: 20),
-              Container(height: 50),
+              SizedBox(height: 20),
+              SizedBox(height: 50),
               Container(height: 50,
               child: TextFormField(
                 textAlign: TextAlign.justify,
                 controller: conditionController,
               )),
-              Container(height: 20),
-              Container(height: 50),
+              SizedBox(height: 20),
+              SizedBox(height: 50),
               Row(
                 children: [
                   cancelViolationButton(),
@@ -133,6 +150,30 @@ class _ClaimFormState extends State<ClaimForm> {
         )
       ),
     );
+  }
+
+  Widget contractorDetails(String contractorId) {
+    return Container(
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+        child: FutureBuilder<User>(
+            future: dataProvider.fetchUserById(contractorId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text('${snapshot.data!.name}');
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return CircularProgressIndicator();
+            }
+        )
+    );
+  }
+
+  void buildContractUsers(Contract contract) {
+    contractorWidgets.clear();
+    contract.contractors.forEach((contractorId) {
+      contractorWidgets.add(contractorDetails(contractorId));
+    });
   }
 
   void buildContractTerms() {
