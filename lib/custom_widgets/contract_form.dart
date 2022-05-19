@@ -1194,7 +1194,7 @@ class _ContractFormState extends State<ContractForm> {
     setState(() {
       //Must be unique, otherwise deletion of all obligations with same termId
       String id = UniqueKey().toString();
-      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", addedContractors, removeObligationWidget, id));
+      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", addedContractors, removeObligationWidget, id, effectiveDate, endDate));
     });
   }
 

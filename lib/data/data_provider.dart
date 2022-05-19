@@ -103,8 +103,8 @@ class DataProvider {
     final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
 
     if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
-      return parser.parseAllContracts(data["bindings"]);
+      var data = jsonDecode(response.body);
+      return parser.parseAllContracts(data);
     } else {
       throw Exception('Failed to load all contracts.');
     }
@@ -314,6 +314,16 @@ class DataProvider {
       }
     } else {
       throw Exception('Failed to load obligation.');
+    }
+  }
+
+  Future<bool> updateObligationStatus(Obligation obligation, String newStatus) async {
+    final response = await http.get(kBaseUrl.replace(path: '/obligation/status/${obligation.id}/${obligation.contractId}/${obligation.contractorId}/$newStatus'));
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 
