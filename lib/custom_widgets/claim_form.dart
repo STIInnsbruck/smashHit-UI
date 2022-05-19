@@ -20,36 +20,6 @@ class _ClaimFormState extends State<ClaimForm> {
   TextEditingController textController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
 
-  CheckBoxBoolean isAmendment = CheckBoxBoolean();
-  CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
-  CheckBoxBoolean isDataController = CheckBoxBoolean();
-  CheckBoxBoolean isDataProtection = CheckBoxBoolean();
-  CheckBoxBoolean isLimitationOnUse = CheckBoxBoolean();
-  CheckBoxBoolean isMethodOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isNoThirdPartyBeneficiaries = CheckBoxBoolean();
-  CheckBoxBoolean isPermittedDisclosure = CheckBoxBoolean();
-  CheckBoxBoolean isReceiptOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isSeverability = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForInsolvency = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForMaterialBreach = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
-  CheckBoxBoolean isWaiver = CheckBoxBoolean();
-
-  CheckBoxBooleanEdit isAmendment2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isConfidentialObligation2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isDataController2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isDataProtection2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isLimitationOnUse2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isMethodOfNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isNoThirdPartyBeneficiaries2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isPermittedDisclosure2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isReceiptOfNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isSeverability2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationForInsolvency2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationForMaterialBreach2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationOnNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isWaiver2 = CheckBoxBooleanEdit();
-
   List<Widget> termWidgets = [];
   DataProvider dataProvider = new DataProvider();
 
