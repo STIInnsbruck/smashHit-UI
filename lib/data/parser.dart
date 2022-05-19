@@ -62,7 +62,7 @@ class ResponseParser {
         contractType: jsonContract['ContractType'],
         effectiveDate: formatDate(jsonContract["EffectiveDate"]),
         executionDate: formatDate(jsonContract["ExecutionDate"]),
-        endDate: formatDate(jsonContract["ExecutionDate"]),
+        endDate: formatDate(jsonContract["EndDate"]),
         medium: jsonContract["Medium"],
         purpose: jsonContract['Purpose'],
         consentId: jsonContract['ConsentId'],
