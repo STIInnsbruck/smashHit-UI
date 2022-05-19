@@ -57,11 +57,15 @@ class _ContractTileState extends State<ContractTile> {
           children: [
             Expanded(flex: 2, child: Icon(Icons.folder_shared, size: 25)),
             Expanded(
-                flex: 22,
+                flex: 10,
                 child: Text('${widget.contract!.contractId!}', overflow: TextOverflow.ellipsis)
             ),
             //Spacer(flex: 25),
-            statusIconByContractStatus(),
+            Expanded(
+              flex: 11,
+              child: Text('${widget.contract!.purpose}', overflow: TextOverflow.ellipsis)
+            ),
+            contractIconByStatus(widget.contract!.contractStatus!),
             Spacer(flex: 3),
             editContractButton(widget.contract!.contractId!),
             Spacer(),
@@ -114,7 +118,7 @@ class _ContractTileState extends State<ContractTile> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text("Status:"),
-                          statusIconByContractStatus(),
+                          contractIconByStatus(widget.contract!.contractStatus!),
                         ],
                       ),
                     ),
@@ -143,6 +147,38 @@ class _ContractTileState extends State<ContractTile> {
         ),
       ),
     );
+  }
+
+  Tooltip contractIconByStatus(String status) {
+    if (status.compareTo("hasCreated") == 0) {
+      return Tooltip(
+          message: "The contract has recently been created.",
+          child: Icon(Icons.new_releases, color: Colors.blue, size: 30));
+    } else if (status.compareTo("hasPending") == 0) {
+      return Tooltip(
+          message: "The contract is still awaiting signatures.",
+          child: Icon(Icons.pending, color: Colors.grey, size: 30));
+    } else if (status.compareTo("hasSigned") == 0) {
+      return Tooltip(
+          message: "The contract has been signed by all parties.",
+          child: Icon(Icons.thumb_up, color: Colors.blue, size: 30));
+    } else if (status.compareTo("hasTerminated") == 0) {
+      return Tooltip(
+          message: "The contract has been terminated.",
+          child: Icon(Icons.do_not_disturb, color: Colors.yellow, size: 30));
+    } else if (status.compareTo("hasRenewed") == 0) {
+      return Tooltip(
+          message: "The contract has been renewed.",
+          child: Icon(Icons.history, color: Colors.blue, size: 30));
+    } else if (status.compareTo("hasExpired") == 0) {
+      return Tooltip(
+          message: "The contract has expired.",
+          child: Icon(Icons.hourglass_bottom, color: Colors.blue, size: 30));
+    } else {
+      return Tooltip(
+          message: "The contract has recently been created.",
+          child: Icon(Icons.new_releases, color: Colors.blue, size: 30));
+    }
   }
 
   Widget editContractButton(String contractId) {
@@ -253,20 +289,6 @@ class _ContractTileState extends State<ContractTile> {
   String _formatContractUri(String contractUri) {
     int length = contractUri.length;
     return contractUri.substring(45, length);
-  }
-
-  Widget statusIconByContractStatus() {
-    switch (widget.contract!.getContractStatusAsInt()) {
-      case 0:
-        return Icon(Icons.description, color: Colors.grey, size: 30);
-      case 1:
-        return Icon(Icons.work, color: Colors.grey, size: 30);
-      case 2:
-        return Icon(Icons.check_circle, color: Colors.green, size: 30);
-      case 5:
-        return Icon(Icons.report, color: Colors.red, size: 30);
-    }
-    return Icon(Icons.check_circle, color: Colors.green, size: 30);
   }
 
 }
