@@ -361,7 +361,7 @@ class _ContractCreationState extends State<ViewContract> {
                               color: Colors.blue),
                           child: Center(
                               child:
-                                  Text('${percentageCompleted.toInt()}%', style: TextStyle(fontSize: 15))),
+                                  Text('${percentageCompleted.toInt()}%', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
                         ),
                       ),
                     ),

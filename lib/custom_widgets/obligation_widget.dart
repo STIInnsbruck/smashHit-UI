@@ -10,9 +10,11 @@ class ObligationWidget extends StatefulWidget {
   String id;
   Function(String) onDeletePressed;
   TextEditingController textController = new TextEditingController();
+  DateTime? contractStartDate;
+  DateTime? contractEndDate;
 
   ObligationWidget(
-      this.term, this.contractorName, this.contractors, this.onDeletePressed, this.id);
+      this.term, this.contractorName, this.contractors, this.onDeletePressed, this.id, this.contractStartDate, this.contractEndDate);
 
   @override
   _ObligationWidgetState createState() => new _ObligationWidgetState();
@@ -152,9 +154,9 @@ class _ObligationWidgetState extends State<ObligationWidget> {
   Future<void> chooseExecutionDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2050, 1, 1),
+      initialDate: widget.contractStartDate!,
+      firstDate: widget.contractStartDate!,
+      lastDate: widget.contractEndDate!,
     );
     if (pickedDate != null && widget.obligation.endDate == null) {
       setState(() {
@@ -189,9 +191,9 @@ class _ObligationWidgetState extends State<ObligationWidget> {
   Future<void> chooseEndDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2050, 1, 1),
+      initialDate: widget.contractStartDate!,
+      firstDate: widget.contractStartDate!,
+      lastDate: widget.contractEndDate!,
     );
     if (pickedDate != null &&
         widget.obligation.executionDate != null &&
