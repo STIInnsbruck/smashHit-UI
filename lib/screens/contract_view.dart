@@ -204,7 +204,7 @@ class _ContractCreationState extends State<ViewContract> {
                                 Text('Status: ',
                                     style: TextStyle(
                                         fontSize: 15, fontWeight: FontWeight.bold)),
-                                getIconByStatus(obligationSnapshot.data!.state!)
+                                obligationIconByStatus(obligationSnapshot.data!.state!)
                               ],
                             ),
                           ),
@@ -274,7 +274,7 @@ class _ContractCreationState extends State<ViewContract> {
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               child: Center(
                   child:
-                      Icon(Icons.check_circle, size: 50, color: Colors.green)),
+                      contractIconByStatus(contract.contractStatus!)),
             ),
           ),
         ],
@@ -361,7 +361,7 @@ class _ContractCreationState extends State<ViewContract> {
                               color: Colors.blue),
                           child: Center(
                               child:
-                                  Text('${percentageCompleted.toInt()}%', style: TextStyle(fontSize: 15))),
+                                  Text('${percentageCompleted.toInt()}%', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
                         ),
                       ),
                     ),
@@ -744,7 +744,7 @@ class _ContractCreationState extends State<ViewContract> {
     );
   }
 
-  Tooltip getIconByStatus(String status) {
+  Tooltip obligationIconByStatus(String status) {
     if (status.compareTo("hasPending") == 0) {
       return Tooltip(
         message: "Obligation is pending.",
@@ -765,6 +765,38 @@ class _ContractCreationState extends State<ViewContract> {
       return Tooltip(
         message: "Obligation is completed.",
           child: Icon(Icons.check_circle, color: Colors.green, size: 30));
+    }
+  }
+
+  Tooltip contractIconByStatus(String status) {
+    if (status.compareTo("hasCreated") == 0) {
+      return Tooltip(
+        message: "The contract has recently been created.",
+        child: Icon(Icons.new_releases, color: Colors.blue, size: 50));
+    } else if (status.compareTo("hasPending") == 0) {
+      return Tooltip(
+          message: "The contract is still awaiting signatures.",
+          child: Icon(Icons.pending, color: Colors.grey, size: 50));
+    } else if (status.compareTo("hasSigned") == 0) {
+      return Tooltip(
+          message: "The contract has been signed by all parties.",
+          child: Icon(Icons.thumb_up, color: Colors.blue, size: 50));
+    } else if (status.compareTo("hasTerminated") == 0) {
+      return Tooltip(
+          message: "The contract has been terminated.",
+          child: Icon(Icons.do_not_disturb, color: Colors.yellow, size: 50));
+    } else if (status.compareTo("hasRenewed") == 0) {
+      return Tooltip(
+          message: "The contract has been renewed.",
+          child: Icon(Icons.history, color: Colors.blue, size: 50));
+    } else if (status.compareTo("hasExpired") == 0) {
+      return Tooltip(
+          message: "The contract has expired.",
+          child: Icon(Icons.hourglass_bottom, color: Colors.blue, size: 50));
+    } else {
+      return Tooltip(
+          message: "The contract has recently been created.",
+          child: Icon(Icons.new_releases, color: Colors.blue, size: 50));
     }
   }
 

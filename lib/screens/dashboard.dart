@@ -66,7 +66,9 @@ class _DashboardState extends State<Dashboard> {
         children: [
           Container(width: 75, child: Text("Type")),
           Text("ID"),
-          Spacer(flex: 28),
+          Spacer(flex: 12),
+          Text("Purpose"),
+          Spacer(flex: 12),
           Text("Status"),
           Spacer(flex: 5),
           Text("Actions"),

@@ -267,7 +267,7 @@ class _UpdateFormState extends State<UpdateForm> {
             future: dataProvider.fetchTermById(termId),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                FutureBuilder<TermType>(
+                return FutureBuilder<TermType>(
                     future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
                     builder: (context, typeSnapshot) {
                       if (typeSnapshot.hasData) {

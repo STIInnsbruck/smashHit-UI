@@ -39,7 +39,8 @@ class ResponseParser {
   Contract parseContract(Map jsonContract) {
     return Contract(
         contractId: jsonContract['Contract'],
-        purpose: jsonContract['Purpose']
+        purpose: jsonContract['Purpose'],
+        contractStatus: jsonContract['ContractStatus']
     );
   }
 
