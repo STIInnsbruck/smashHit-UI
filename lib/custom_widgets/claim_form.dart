@@ -85,7 +85,7 @@ class _ClaimFormState extends State<ClaimForm> {
               ),
               SizedBox(height: 20),
               Center(
-                  child: Text('Contract Information', style: TextStyle(fontSize: 25))
+                  child: Text('Contract Information', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline))
               ),
               SizedBox(height: 20),
               Row(
@@ -99,16 +99,29 @@ class _ClaimFormState extends State<ClaimForm> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Row(
+              SizedBox(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Start Date: ${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1),
-                  Text('End Date: ${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1)
+                  ReportableWidget(
+                      child: Row(
+                        children: [
+                          Text("Start Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
+                        ],
+                      )),
+                  SizedBox(height: 10),
+                  ReportableWidget(
+                      child: Row(
+                        children: [
+                          Text("End Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
+                        ],
+                      ))
+                  ,
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               ReportableWidget(
                   child: Row(
                     children: [
@@ -124,7 +137,7 @@ class _ClaimFormState extends State<ClaimForm> {
                       Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                     ],
                   )),
-              Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
+              Text('Terms and Conditions:', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
               SizedBox(height: 10),
               Column(
                 children: termWidgets,
