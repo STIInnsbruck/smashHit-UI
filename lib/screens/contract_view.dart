@@ -439,7 +439,7 @@ class _ContractCreationState extends State<ViewContract> {
             ? Column(
             children: termWidgets,
           )
-            : Center(child: Text("No Terms were found in the contract.")),
+            : Center(child: Text("No terms were found in the contract.")),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
               child: contractDates()

@@ -20,36 +20,7 @@ class _ClaimFormState extends State<ClaimForm> {
   TextEditingController textController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
 
-  CheckBoxBoolean isAmendment = CheckBoxBoolean();
-  CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
-  CheckBoxBoolean isDataController = CheckBoxBoolean();
-  CheckBoxBoolean isDataProtection = CheckBoxBoolean();
-  CheckBoxBoolean isLimitationOnUse = CheckBoxBoolean();
-  CheckBoxBoolean isMethodOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isNoThirdPartyBeneficiaries = CheckBoxBoolean();
-  CheckBoxBoolean isPermittedDisclosure = CheckBoxBoolean();
-  CheckBoxBoolean isReceiptOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isSeverability = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForInsolvency = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForMaterialBreach = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
-  CheckBoxBoolean isWaiver = CheckBoxBoolean();
-
-  CheckBoxBooleanEdit isAmendment2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isConfidentialObligation2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isDataController2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isDataProtection2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isLimitationOnUse2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isMethodOfNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isNoThirdPartyBeneficiaries2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isPermittedDisclosure2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isReceiptOfNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isSeverability2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationForInsolvency2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationForMaterialBreach2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationOnNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isWaiver2 = CheckBoxBooleanEdit();
-
+  List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
   DataProvider dataProvider = new DataProvider();
 
@@ -57,6 +28,7 @@ class _ClaimFormState extends State<ClaimForm> {
   void initState() {
     super.initState();
     conditionController.text = widget.contract.purpose!;
+    buildContractUsers(widget.contract);
   }
 
   @override
@@ -103,7 +75,7 @@ class _ClaimFormState extends State<ClaimForm> {
               Center(
                   child: Text('Contract Violation Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -111,46 +83,76 @@ class _ClaimFormState extends State<ClaimForm> {
                   Text('Contract ID: ${widget.contract.formatContractId()}')
                 ],
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Center(
-                  child: Text('Contract Information', style: TextStyle(fontSize: 25))
+                  child: Text('Contract Information', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline))
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Involved Parties:', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 2),
-                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1),
-                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 2),
+                  Text('Contractors:', style: TextStyle(fontSize: 15)),
+                  SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: contractorWidgets
+                  ),
                 ],
               ),
-              Container(height: 20),
-              Row(
-                children: [
-                  Text('Start Date: ${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1),
-                  Text('End Date: ${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1)
-                ],
-              ),
-              Container(height: 20),
-              Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
-              Container(height: 10),
-              ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              SizedBox(height: 10),
               Column(
-                children: termWidgets,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ReportableWidget(
+                      child: Row(
+                        children: [
+                          Text("Start Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
+                        ],
+                      )),
+                  SizedBox(height: 10),
+                  ReportableWidget(
+                      child: Row(
+                        children: [
+                          Text("End Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
+                        ],
+                      ))
+                  ,
+                ],
               ),
-              Container(height: 20),
-              Container(height: 50),
+              SizedBox(height: 10),
+              ReportableWidget(
+                  child: Row(
+                    children: [
+                      Text("Purpose: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(widget.contract.purpose!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                    ],
+                  )),
+              SizedBox(height: 10),
+              ReportableWidget(
+                  child: Row(
+                    children: [
+                      Text("Consideration: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                    ],
+                  )),
+              Text('Terms and Conditions:', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
+              SizedBox(height: 10),
+              termWidgets.isNotEmpty
+                ? Column(
+                children: termWidgets,
+                )
+                : Center(child: Text("No terms were found in the contract.")),
+              SizedBox(height: 20),
+              SizedBox(height: 50),
               Container(height: 50,
               child: TextFormField(
                 textAlign: TextAlign.justify,
                 controller: conditionController,
               )),
-              Container(height: 20),
-              Container(height: 50),
+              SizedBox(height: 20),
+              SizedBox(height: 50),
               Row(
                 children: [
                   cancelViolationButton(),
@@ -165,32 +167,61 @@ class _ClaimFormState extends State<ClaimForm> {
     );
   }
 
-  void buildContractTerms() {
-    widget.contract.terms.forEach((termId) {
-      termWidgets.add(ReportableWidget(
-        child: FutureBuilder<Term>(
-            future: dataProvider.fetchTermById(termId),
+  Widget contractorDetails(String contractorId) {
+    return Container(
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+        child: FutureBuilder<User>(
+            future: dataProvider.fetchUserById(contractorId),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                FutureBuilder<TermType>(
-                    future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
-                    builder: (context, typeSnapshot) {
-                      if (typeSnapshot.hasData) {
-                        return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
-                      } else if (typeSnapshot.hasError) {
-                        return Center(child: Text('${snapshot.error}'));
-                      }
-                      return Center(child: CircularProgressIndicator());
-                    }
-                );
+                return Text('${snapshot.data!.name}');
               } else if (snapshot.hasError) {
-                return Center(child: Text('${snapshot.error}'));
+                return Text("${snapshot.error}");
               }
-              return Center(child: CircularProgressIndicator());
+              return CircularProgressIndicator();
             }
         )
-      ));
+    );
+  }
+
+  void buildContractUsers(Contract contract) {
+    contractorWidgets.clear();
+    contract.contractors.forEach((contractorId) {
+      contractorWidgets.add(contractorDetails(contractorId));
     });
+  }
+
+  void buildContractTerms() {
+    if (widget.contract.terms.isNotEmpty) {
+      termWidgets.clear();
+      widget.contract.terms.forEach((termId) {
+        termWidgets.add(ReportableWidget(
+            child: Container(
+              child: FutureBuilder<Term>(
+                  future: dataProvider.fetchTermById(termId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return FutureBuilder<TermType>(
+                          future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                          builder: (context, typeSnapshot) {
+                            if (typeSnapshot.hasData) {
+                              return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
+                            } else if (typeSnapshot.hasError) {
+                              return Center(child: Text('${snapshot.error}'));
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          }
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('${snapshot.error}'));
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  }
+              ),
+            )
+        ));
+      });
+    }
   }
 
   bool isBigScreen(double width) {
