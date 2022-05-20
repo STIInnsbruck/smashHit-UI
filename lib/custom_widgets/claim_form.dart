@@ -22,6 +22,7 @@ class _ClaimFormState extends State<ClaimForm> {
 
   List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
+  List<Obligation> obligations = [];
   DataProvider dataProvider = new DataProvider();
 
   @override
@@ -195,33 +196,81 @@ class _ClaimFormState extends State<ClaimForm> {
     if (widget.contract.terms.isNotEmpty) {
       termWidgets.clear();
       widget.contract.terms.forEach((termId) {
-        termWidgets.add(ReportableWidget(
-            child: Container(
-              child: FutureBuilder<Term>(
-                  future: dataProvider.fetchTermById(termId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return FutureBuilder<TermType>(
-                          future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
-                          builder: (context, typeSnapshot) {
-                            if (typeSnapshot.hasData) {
-                              return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
-                            } else if (typeSnapshot.hasError) {
-                              return Center(child: Text('${snapshot.error}'));
-                            }
-                            return Center(child: CircularProgressIndicator());
-                          }
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('${snapshot.error}'));
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  }
-              ),
-            )
+        termWidgets.add(Container(
+          child: FutureBuilder<Term>(
+              future: dataProvider.fetchTermById(termId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return FutureBuilder<TermType>(
+                      future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                      builder: (context, typeSnapshot) {
+                        if (typeSnapshot.hasData) {
+                          return Column(
+                            children: [
+                              ReportableWidget(child: displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!)),
+                              SizedBox(height: 10),
+                              Column(
+                                children: displayATermsObligations(termId),
+                              )
+                            ],
+                          );
+                        } else if (typeSnapshot.hasError) {
+                          return Center(child: Text('${snapshot.error}'));
+                        }
+                        return Center(child: CircularProgressIndicator());
+                      }
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('${snapshot.error}'));
+                }
+                return Center(child: CircularProgressIndicator());
+              }
+          ),
         ));
       });
     }
+  }
+
+  List<Widget> displayATermsObligations(String termId) {
+    List<Widget> widgets = [];
+    int index = 0;
+    //TODO: add condition to add obligation only to their respective term.
+    widget.contract.obligations.forEach((element) {
+      widgets.add(fetchObligation(element, index));
+      widgets.add(SizedBox(height: 10));
+      index++;
+    });
+    return widgets;
+  }
+
+  Widget fetchObligation(String obligationId, int index) {
+    return ReportableWidget(
+        child: FutureBuilder<Obligation>(
+          future: dataProvider.fetchObligationById(obligationId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Obligation-${index+1}:", style: TextStyle(fontSize: 15)),
+                  SizedBox(width: 10),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Description: ${snapshot.data!.description}", textAlign: TextAlign.justify),
+                      Text("Execution Date: ${snapshot.data!.getExecutionDateAsString()}"),
+                      Text("End Date: ${snapshot.data!.getEndDateAsString()}")
+                    ],
+                  )
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('${snapshot.error}'));
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ));
   }
 
   bool isBigScreen(double width) {
