@@ -25,7 +25,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
       child: Stack(
         children: [
           Container(
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            margin: EdgeInsets.fromLTRB(10, 5, 40, 5),
             child: InkWell(
                 onTap: () => null,
                 onHover: (val) {

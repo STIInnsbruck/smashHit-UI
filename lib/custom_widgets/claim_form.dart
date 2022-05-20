@@ -139,9 +139,11 @@ class _ClaimFormState extends State<ClaimForm> {
                   )),
               Text('Terms and Conditions:', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
               SizedBox(height: 10),
-              Column(
+              termWidgets.isNotEmpty
+                ? Column(
                 children: termWidgets,
-              ),
+                )
+                : Center(child: Text("No terms were found in the contract.")),
               SizedBox(height: 20),
               SizedBox(height: 50),
               Container(height: 50,
@@ -190,31 +192,36 @@ class _ClaimFormState extends State<ClaimForm> {
   }
 
   void buildContractTerms() {
-    widget.contract.terms.forEach((termId) {
-      termWidgets.add(ReportableWidget(
-        child: FutureBuilder<Term>(
-            future: dataProvider.fetchTermById(termId),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                FutureBuilder<TermType>(
-                    future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
-                    builder: (context, typeSnapshot) {
-                      if (typeSnapshot.hasData) {
-                        return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
-                      } else if (typeSnapshot.hasError) {
-                        return Center(child: Text('${snapshot.error}'));
-                      }
-                      return Center(child: CircularProgressIndicator());
+    if (widget.contract.terms.isNotEmpty) {
+      termWidgets.clear();
+      widget.contract.terms.forEach((termId) {
+        termWidgets.add(ReportableWidget(
+            child: Container(
+              child: FutureBuilder<Term>(
+                  future: dataProvider.fetchTermById(termId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return FutureBuilder<TermType>(
+                          future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                          builder: (context, typeSnapshot) {
+                            if (typeSnapshot.hasData) {
+                              return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
+                            } else if (typeSnapshot.hasError) {
+                              return Center(child: Text('${snapshot.error}'));
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          }
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('${snapshot.error}'));
                     }
-                );
-              } else if (snapshot.hasError) {
-                return Center(child: Text('${snapshot.error}'));
-              }
-              return Center(child: CircularProgressIndicator());
-            }
-        )
-      ));
-    });
+                    return Center(child: CircularProgressIndicator());
+                  }
+              ),
+            )
+        ));
+      });
+    }
   }
 
   bool isBigScreen(double width) {
