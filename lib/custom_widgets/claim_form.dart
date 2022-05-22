@@ -90,11 +90,14 @@ class _ClaimFormState extends State<ClaimForm> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Contractors:', style: TextStyle(fontSize: 15)),
+                  Text('Contractors:', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: contractorWidgets
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: contractorWidgets
+                    ),
                   ),
                 ],
               ),
@@ -178,7 +181,8 @@ class _ClaimFormState extends State<ClaimForm> {
   void buildContractUsers(Contract contract) {
     contractorWidgets.clear();
     contract.contractors.forEach((contractorId) {
-      contractorWidgets.add(contractorDetails(contractorId));
+      contractorWidgets.add(ReportableWidget(child: contractorDetails(contractorId)));
+      contractorWidgets.add(SizedBox(height: 5));
     });
   }
 
