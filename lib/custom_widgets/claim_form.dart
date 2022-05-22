@@ -18,7 +18,6 @@ class ClaimForm extends StatefulWidget {
 
 class _ClaimFormState extends State<ClaimForm> {
   TextEditingController textController = TextEditingController();
-  TextEditingController conditionController = TextEditingController();
 
   List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
@@ -28,7 +27,6 @@ class _ClaimFormState extends State<ClaimForm> {
   @override
   void initState() {
     super.initState();
-    conditionController.text = widget.contract.purpose!;
     buildContractUsers(widget.contract);
   }
 
