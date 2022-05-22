@@ -26,11 +26,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
         children: [
           Container(
             margin: EdgeInsets.fromLTRB(10, 5, 40, 5),
-            child: Stack(
-              children: [
-                widget.child,
-              ],
-            )
+            child: widget.child,
           ),
           Align(
             alignment: Alignment.centerRight,
