@@ -46,26 +46,22 @@ class _ReportableWidgetState extends State<ReportableWidget> {
           Align(
             alignment: Alignment.centerRight,
             child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _isAViolation ?
-                  IconButton(
-                      iconSize: 30,
-                      padding: EdgeInsets.zero,
-                      icon: Icon(Icons.warning, color: Colors.red),
-                      onPressed: () {
-                        _reviewReportViolationDialog();
-                      }) :
-                  IconButton(
-                    iconSize: 30,
-                    padding: EdgeInsets.zero,
-                    icon: Icon(Icons.add, color: Colors.blue),
-                    onPressed: () {
-                      _showReportViolationDialog();
-                    },
-                  ),
-                ],
+              child:
+              _isAViolation ?
+              IconButton(
+                  iconSize: 30,
+                  padding: EdgeInsets.zero,
+                  icon: Icon(Icons.warning, color: Colors.red),
+                  onPressed: () {
+                    _reviewReportViolationDialog();
+                  }) :
+              IconButton(
+                iconSize: 30,
+                padding: EdgeInsets.zero,
+                icon: Icon(Icons.add, color: Colors.blue),
+                onPressed: () {
+                  _showReportViolationDialog();
+                },
               ),
             ),
           )
