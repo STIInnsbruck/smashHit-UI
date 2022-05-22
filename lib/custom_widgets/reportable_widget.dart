@@ -22,11 +22,13 @@ class _ReportableWidgetState extends State<ReportableWidget> {
   Widget build(BuildContext context) {
     return Container(
       color: _backgroundColor,
-      child: Stack(
+      child: Row(
         children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(10, 5, 40, 5),
-            child: widget.child,
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(10, 5, 40, 5),
+              child: widget.child,
+            ),
           ),
           Align(
             alignment: Alignment.centerRight,
