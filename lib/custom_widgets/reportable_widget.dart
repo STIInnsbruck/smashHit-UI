@@ -26,22 +26,11 @@ class _ReportableWidgetState extends State<ReportableWidget> {
         children: [
           Container(
             margin: EdgeInsets.fromLTRB(10, 5, 40, 5),
-            child: InkWell(
-                onTap: () => null,
-                onHover: (val) {
-                  setState(() {
-                    _displayComment = !_displayComment;
-                  });
-                },
-                child: Stack(
-                  children: [
-                    widget.child,
-                    _displayComment && _isAViolation ?
-                    Text(widget.comment!, style: TextStyle(color: Colors.white)) :
-                    Container()
-                  ],
-                )
-            ),
+            child: Stack(
+              children: [
+                widget.child,
+              ],
+            )
           ),
           Align(
             alignment: Alignment.centerRight,
