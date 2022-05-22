@@ -195,6 +195,7 @@ class _ClaimFormState extends State<ClaimForm> {
   void buildContractTerms() {
     if (widget.contract.terms.isNotEmpty) {
       termWidgets.clear();
+      int termNum = 0;
       widget.contract.terms.forEach((termId) {
         termWidgets.add(Container(
           child: FutureBuilder<Term>(
@@ -207,7 +208,7 @@ class _ClaimFormState extends State<ClaimForm> {
                         if (typeSnapshot.hasData) {
                           return Column(
                             children: [
-                              ReportableWidget(child: displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!)),
+                              ReportableWidget(child: displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, termNum)),
                               SizedBox(height: 10),
                               Column(
                                 children: displayATermsObligations(termId),
@@ -227,6 +228,7 @@ class _ClaimFormState extends State<ClaimForm> {
               }
           ),
         ));
+        termNum++;
       });
     }
   }
@@ -281,11 +283,11 @@ class _ClaimFormState extends State<ClaimForm> {
     }
   }
 
-  Widget displayTermElementInfo(String name, String description) {
+  Widget displayTermElementInfo(String name, String description, int termNum) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Center(child: Text(name, style: TextStyle(fontSize: 20))),
+        Center(child: Text("$termNum. $name", style: TextStyle(fontSize: 20))),
         description.compareTo("") == 0 ?
           Text('None.', textAlign: TextAlign.justify) :
           Align(
