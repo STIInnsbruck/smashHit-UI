@@ -254,7 +254,7 @@ class _ClaimFormState extends State<ClaimForm> {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Obligation-${index+1}:", style: TextStyle(fontSize: 15)),
+                  Text("Obligation ${index+1}:", style: TextStyle(fontSize: 15)),
                   SizedBox(width: 10),
                   Column(
                     mainAxisSize: MainAxisSize.min,
