@@ -146,14 +146,6 @@ class _ClaimFormState extends State<ClaimForm> {
                 )
                 : Center(child: Text("No terms were found in the contract.")),
               SizedBox(height: 20),
-              SizedBox(height: 50),
-              Container(height: 50,
-              child: TextFormField(
-                textAlign: TextAlign.justify,
-                controller: conditionController,
-              )),
-              SizedBox(height: 20),
-              SizedBox(height: 50),
               Row(
                 children: [
                   cancelViolationButton(),
