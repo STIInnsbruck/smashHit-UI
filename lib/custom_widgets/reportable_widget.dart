@@ -21,7 +21,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: _displayComment && _isAViolation ? Colors.black87 : _backgroundColor,
+      color: _backgroundColor,
       child: Stack(
         children: [
           Container(
