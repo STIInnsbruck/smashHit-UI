@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 class ReportableWidget extends StatefulWidget {
 
   final Function()? violationCallback;
+  final String? termId;
 
   Widget child;
   //TODO: fix the setback to false when screen is rebuilt.
   bool isAViolation = false;
 
-  ReportableWidget({required this.child, this.violationCallback});
+  ReportableWidget({required this.child, this.violationCallback, this.termId});
 
   @override
   _ReportableWidgetState createState() => _ReportableWidgetState();
@@ -23,6 +24,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
 
   @override
   Widget build(BuildContext context) {
+    widget.isAViolation = _isAViolation;
     return Container(
       color: _backgroundColor,
       child: Row(

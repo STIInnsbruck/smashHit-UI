@@ -20,8 +20,8 @@ class _ClaimFormState extends State<ClaimForm> {
   TextEditingController textController = TextEditingController();
 
   List<ReportableWidget> contractorWidgets = [];
-  List<Widget> termWidgets = [];
-  List<Obligation> obligations = [];
+  List<ReportableWidget> termWidgets = [];
+  List<ReportableWidget> obligationWidgets = [];
   DataProvider dataProvider = new DataProvider();
   ReportableWidget? startDateWidget;
   ReportableWidget? endDateWidget;
@@ -238,7 +238,9 @@ class _ClaimFormState extends State<ClaimForm> {
       termWidgets.clear();
       int termNum = 0;
       widget.contract.terms.forEach((termId) {
-        termWidgets.add(Container(
+        fetchAllObligations(termId);
+        termWidgets.add(ReportableWidget(
+          violationCallback: setExistsAViolation,
           child: FutureBuilder<Term>(
               future: dataProvider.fetchTermById(termId),
               builder: (context, snapshot) {
@@ -249,10 +251,10 @@ class _ClaimFormState extends State<ClaimForm> {
                         if (typeSnapshot.hasData) {
                           return Column(
                             children: [
-                              ReportableWidget(child: displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, termNum), violationCallback: setExistsAViolation),
+                              displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, termNum),
                               SizedBox(height: 10),
                               Column(
-                                children: displayATermsObligations(termId),
+                                children: displayATermsObligations(termId)
                               )
                             ],
                           );
@@ -267,7 +269,7 @@ class _ClaimFormState extends State<ClaimForm> {
                 }
                 return Center(child: CircularProgressIndicator());
               }
-          ),
+          )
         ));
         termNum++;
       });
@@ -275,40 +277,46 @@ class _ClaimFormState extends State<ClaimForm> {
   }
 
   List<Widget> displayATermsObligations(String termId) {
-    List<Widget> widgets = [];
-    int index = 0;
-    //TODO: add condition to add obligation only to their respective term.
-    widget.contract.obligations.forEach((element) {
-      widgets.add(fetchObligation(element, index));
-      widgets.add(SizedBox(height: 10));
-      index++;
-    });
-    return widgets;
+    return obligationWidgets.where((element) => element.termId!.compareTo(termId) == 0).toList();
   }
 
-  Widget fetchObligation(String obligationId, int index) {
+  void fetchAllObligations(String termId) {
+    int index = 0;
+    if (widget.contract.obligations.isNotEmpty) {
+      obligationWidgets.clear();
+      widget.contract.obligations.forEach((element) {
+        obligationWidgets.add(fetchObligation(element, index, termId));
+        index++;
+      });
+    }
+  }
+
+  ReportableWidget fetchObligation(String obligationId, int index, String termId) {
     return ReportableWidget(
+        termId: termId,
         violationCallback: setExistsAViolation,
         child: FutureBuilder<Obligation>(
           future: dataProvider.fetchObligationById(obligationId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Obligation ${index+1}:", style: TextStyle(fontSize: 15)),
-                  SizedBox(width: 10),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Description: ${snapshot.data!.description}", textAlign: TextAlign.justify),
-                      Text("Execution Date: ${snapshot.data!.getExecutionDateAsString()}"),
-                      Text("End Date: ${snapshot.data!.getEndDateAsString()}")
-                    ],
-                  )
-                ],
-              );
+              if (snapshot.data!.termId!.compareTo(termId) == 0) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Obligation ${index+1}:", style: TextStyle(fontSize: 15)),
+                    SizedBox(width: 10),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Description: ${snapshot.data!.description}", textAlign: TextAlign.justify),
+                        Text("Execution Date: ${snapshot.data!.getExecutionDateAsString()}"),
+                        Text("End Date: ${snapshot.data!.getEndDateAsString()}")
+                      ],
+                    )
+                  ],
+                );
+              }
             } else if (snapshot.hasError) {
               return Center(child: Text('${snapshot.error}'));
             }
@@ -454,10 +462,19 @@ class _ClaimFormState extends State<ClaimForm> {
 
   void setExistsAViolation() {
     setState(() {
-      existsAViolation = contractorWidgets.any((element) => element.isAViolation == true);
+      existsAViolation = false;
+      for (int i = 0; i < contractorWidgets.length; i++) {
+        if (contractorWidgets[i].isAViolation == true) { existsAViolation = true; }
+      }
+      for (int i = 0; i < termWidgets.length; i++) {
+        if (termWidgets[i].isAViolation == true) { existsAViolation = true; }
+      }
+      for (int i = 0; i < obligationWidgets.length; i++) {
+        if (obligationWidgets[i].isAViolation == true) { existsAViolation = true; }
+      }
       if (startDateWidget!.isAViolation == true || endDateWidget!.isAViolation == true
           || purposeWidget!.isAViolation == true || considerationWidget!.isAViolation == true) {
-        existsAViolation = false;
+        existsAViolation = true;
       }
     });
   }
