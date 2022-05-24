@@ -384,7 +384,7 @@ class _LoginScreenState extends State<LoginScreen> {
             contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
             children: [
               Icon(Icons.error, color: Colors.orange, size: 100),
-              Text('An error occured while trying to register.', textAlign: TextAlign.center),
+              Text('An error occurred while trying to register.', textAlign: TextAlign.center),
               MaterialButton(
                 child: Text('Okay, try again!'),
                 onPressed: () {

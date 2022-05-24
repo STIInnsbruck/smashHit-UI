@@ -5,7 +5,6 @@ class ReportableWidget extends StatefulWidget {
   final Function()? violationCallback;
 
   Widget child;
-  String? comment;
   //TODO: fix the setback to false when screen is rebuilt.
   bool isAViolation = false;
 
@@ -19,6 +18,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
 
   Color _backgroundColor = Colors.white;
   bool _isAViolation = false;
+  String? comment;
   TextEditingController reportViolationController = new TextEditingController();
 
   @override
@@ -75,7 +75,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
 
   void _setComment(String value) {
     setState(() {
-      widget.comment = value;
+      comment = value;
     });
   }
 
@@ -120,7 +120,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
         builder: (context) {
           return AlertDialog(
             title: Text('Would you like to remove the entered violation below?'),
-            content: Text(widget.comment!),
+            content: Text(comment!),
             actions: [
               MaterialButton(
                   onPressed: () {
