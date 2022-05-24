@@ -219,7 +219,7 @@ class _ContractCreationState extends State<ViewContract> {
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
-                          child: Text('Tap to complete',
+                          child: Text('Tap to confirm completion',
                               style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),

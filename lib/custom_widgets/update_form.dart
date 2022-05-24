@@ -99,15 +99,37 @@ class _UpdateFormState extends State<UpdateForm> {
           children: [
             Center(
                 child: Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
+                    padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                     child: Text('Contract Details', style: TextStyle(fontSize: 20))),
             ),
             Padding(
-                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
                 child: Text('Contract ID: ${widget.contract.contractId}')),
             Padding(
-                padding: const EdgeInsets.fromLTRB(5, 0, 5 , 15),
-                child: Text('Contract Type: ${widget.contract.getContractType()}'))
+                padding: const EdgeInsets.fromLTRB(5, 0, 5 , 5),
+                child: Text('Contract Type: ${widget.contract.getContractType()}')),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5 , 5),
+                child: Text('Contract Medium: ${widget.contract.medium}')),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5 , 5),
+                child: Text('Contract Category: ${widget.contract.contractCategory}')),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5 , 5),
+                child: Text('Purpose: ${widget.contract.purpose}')),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+                child: Text('Consideration: ${widget.contract.considerationDescription}')),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(5, 0, 5, 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('Start Date: ${_formatDate(widget.contract.executionDate!)}'),
+                  Text('End Date: ${_formatDate(widget.contract.endDate!)}')
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -182,17 +204,9 @@ class _UpdateFormState extends State<UpdateForm> {
             Center(
               child: Text('Terms & Conditions', style: TextStyle(fontSize: 20)),
             ),
-            Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
-            Container(height: 20),
+            SizedBox(height: 10),
             Column(
               children: termWidgets
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('Start Date: ${_formatDate(widget.contract.executionDate!)}'),
-                Text('End Date: ${_formatDate(widget.contract.endDate!)}')
-              ],
             ),
           ],
         ),
