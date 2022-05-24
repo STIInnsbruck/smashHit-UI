@@ -36,7 +36,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
                   return Column(
                     children: [
                       snapshot.data!.isEmpty
-                          ? Center(child: Text("No TermTypes")) : termTypeListWidget()
+                          ? noTermTypesText() : termTypeListWidget()
                     ],
                   );
                 } else if (snapshot.hasError) {
@@ -46,7 +46,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
               }
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomCenter,
             child: createTermTypeButton(),
           ),
         ],
@@ -97,26 +97,6 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
     );
   }
 
-  Widget editTermTypeButton(String contractId) {
-    return IconButton(
-      padding: EdgeInsets.zero,
-      icon: Icon(Icons.edit, size: 30),
-      onPressed: () {
-        print("edit term type pressed.");
-      },
-    );
-  }
-
-  Widget deleteTermTypeButton(String termTypeId) {
-    return IconButton(
-      padding: EdgeInsets.zero,
-      icon: Icon(Icons.delete, size: 30),
-      onPressed: () {
-        showConfirmDeletionDialog(termTypeId);
-      },
-    );
-  }
-
   showConfirmDeletionDialog(String termTypeId) async {
     showDialog(
         context: context,
@@ -142,12 +122,92 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
                   child: Text('Delete', style: TextStyle(color: Colors.white)),
                   color: Colors.red,
                   onPressed: () async {
-                    print("confirmed term type deletion");
+                    if (await dataProvider.deleteTermTypeById(termTypeId)) {
+                      setState(() {
+                        termTypeList!.removeWhere((element) => element.id!.compareTo(termTypeId) == 0);
+                      });
+                      Navigator.of(context).pop();
+                      showSuccessfulDeletionDialog(termTypeId);
+                    } else {
+                      Navigator.of(context).pop();
+                      showFailedDeletionDialog(termTypeId);
+                    }
                   }
               ),
             ],
           );
         });
+  }
+
+  Widget noTermTypesText() {
+    return Expanded(
+        child: Center(
+            child: Text("There are currently no existing term types. Please create a new term type before creating a contract.")));
+  }
+
+  showSuccessfulDeletionDialog(String termTypeId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Success!', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 100),
+              Text('The term type $termTypeId was successfully deleted!', textAlign: TextAlign.center),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
+    );
+  }
+
+  showFailedDeletionDialog(String termTypeId) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Error!'),
+            children: [
+              Icon(Icons.error, color: Colors.red, size: 60),
+              Text('The term type $termTypeId could not be deleted!'),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+
+          );
+        }
+    );
+  }
+
+  Widget editTermTypeButton(String contractId) {
+    return IconButton(
+      padding: EdgeInsets.zero,
+      icon: Icon(Icons.edit, size: 30),
+      onPressed: () {
+        print("edit term type pressed.");
+      },
+    );
+  }
+
+  Widget deleteTermTypeButton(String termTypeId) {
+    return IconButton(
+      padding: EdgeInsets.zero,
+      icon: Icon(Icons.delete, size: 30),
+      onPressed: () {
+        showConfirmDeletionDialog(termTypeId);
+      },
+    );
   }
 
   Widget createTermTypeButton() {
