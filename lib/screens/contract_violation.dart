@@ -5,7 +5,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 
 
 class ContractViolation extends StatefulWidget {
-  final Function(int) changeScreen;
+  final Function(int, [String]) changeScreen;
   final String contractId;
   final User? user;
 

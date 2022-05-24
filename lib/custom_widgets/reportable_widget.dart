@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 class ReportableWidget extends StatefulWidget {
 
+  final Function()? violationCallback;
+
   Widget child;
   String? comment;
+  //TODO: fix the setback to false when screen is rebuilt.
+  bool isAViolation = false;
 
-  ReportableWidget({required this.child});
+  ReportableWidget({required this.child, this.violationCallback});
 
   @override
   _ReportableWidgetState createState() => _ReportableWidgetState();
@@ -13,9 +17,8 @@ class ReportableWidget extends StatefulWidget {
 
 class _ReportableWidgetState extends State<ReportableWidget> {
 
-  bool _isAViolation = false;
-  bool _displayComment = false;
   Color _backgroundColor = Colors.white;
+  bool _isAViolation = false;
   TextEditingController reportViolationController = new TextEditingController();
 
   @override
@@ -58,9 +61,11 @@ class _ReportableWidgetState extends State<ReportableWidget> {
   }
 
   void _toggleViolation() {
+    widget.violationCallback!();
     setState(() {
+      widget.isAViolation = !_isAViolation;
       _isAViolation = !_isAViolation;
-      if (_isAViolation) {
+      if (widget.isAViolation) {
         _backgroundColor = Colors.orange;
       } else {
         _backgroundColor = Colors.white;

@@ -6,7 +6,7 @@ import 'package:smashhit_ui/custom_widgets/reportable_widget.dart';
 
 class ClaimForm extends StatefulWidget {
 
-  final Function(int) changeScreen;
+  final Function(int, [String]) changeScreen;
   final Contract contract;
 
   ClaimForm(this.changeScreen, this.contract);
@@ -19,20 +19,28 @@ class ClaimForm extends StatefulWidget {
 class _ClaimFormState extends State<ClaimForm> {
   TextEditingController textController = TextEditingController();
 
-  List<Widget> contractorWidgets = [];
+  List<ReportableWidget> contractorWidgets = [];
   List<Widget> termWidgets = [];
   List<Obligation> obligations = [];
   DataProvider dataProvider = new DataProvider();
+  ReportableWidget? startDateWidget;
+  ReportableWidget? endDateWidget;
+  ReportableWidget? purposeWidget;
+  ReportableWidget? considerationWidget;
+
+  bool existsAViolation = false;
 
   @override
   void initState() {
     super.initState();
     buildContractUsers(widget.contract);
+    setWidgets();
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    setExistsAViolation();
 
     return Stack(
         children: [
@@ -105,13 +113,13 @@ class _ClaimFormState extends State<ClaimForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ReportableWidget(
+                  /**ReportableWidget(
                       child: Row(
                         children: [
                           Text("Start Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
                           Text('${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
                         ],
-                      )),
+                      ), violationCallback: setExistsAViolation),
                   SizedBox(height: 10),
                   ReportableWidget(
                       child: Row(
@@ -119,26 +127,30 @@ class _ClaimFormState extends State<ClaimForm> {
                           Text("End Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
                           Text('${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
                         ],
-                      ))
-                  ,
+                      ), violationCallback: setExistsAViolation),*/
+                  Container(child: startDateWidget),
+                  Container(child: endDateWidget),
                 ],
               ),
               SizedBox(height: 10),
-              ReportableWidget(
+              /**ReportableWidget(
                   child: Row(
                     children: [
                       Text("Purpose: ", style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(widget.contract.purpose!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                     ],
-                  )),
+                  ), violationCallback: setExistsAViolation),*/
+              Container(child: purposeWidget),
               SizedBox(height: 10),
-              ReportableWidget(
+              /**ReportableWidget(
                   child: Row(
                     children: [
                       Text("Consideration: ", style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                     ],
-                  )),
+                  ), violationCallback: setExistsAViolation),*/
+              Container(child: considerationWidget),
+              SizedBox(height: 10),
               Text('Terms and Conditions:', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
               SizedBox(height: 10),
               termWidgets.isNotEmpty
@@ -161,6 +173,42 @@ class _ClaimFormState extends State<ClaimForm> {
     );
   }
 
+  void setWidgets() {
+    setState(() {
+      startDateWidget = ReportableWidget(
+          child: Row(
+            children: [
+              Text("Start Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
+            ],
+          ), violationCallback: setExistsAViolation);
+
+      endDateWidget = ReportableWidget(
+              child: Row(
+                children: [
+                  Text("End Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
+                ],
+              ), violationCallback: setExistsAViolation);
+
+      purposeWidget = ReportableWidget(
+              child: Row(
+                children: [
+                  Text("Purpose: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(widget.contract.purpose!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                ],
+              ), violationCallback: setExistsAViolation);
+
+      considerationWidget = ReportableWidget(
+              child: Row(
+                children: [
+                  Text("Consideration: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                ],
+              ), violationCallback: setExistsAViolation);
+    });
+  }
+
   Widget contractorDetails(String contractorId) {
     return Container(
         padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
@@ -181,8 +229,7 @@ class _ClaimFormState extends State<ClaimForm> {
   void buildContractUsers(Contract contract) {
     contractorWidgets.clear();
     contract.contractors.forEach((contractorId) {
-      contractorWidgets.add(ReportableWidget(child: contractorDetails(contractorId)));
-      contractorWidgets.add(SizedBox(height: 5));
+      contractorWidgets.add(ReportableWidget(child: contractorDetails(contractorId), violationCallback: setExistsAViolation));
     });
   }
 
@@ -202,7 +249,7 @@ class _ClaimFormState extends State<ClaimForm> {
                         if (typeSnapshot.hasData) {
                           return Column(
                             children: [
-                              ReportableWidget(child: displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, termNum)),
+                              ReportableWidget(child: displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, termNum), violationCallback: setExistsAViolation),
                               SizedBox(height: 10),
                               Column(
                                 children: displayATermsObligations(termId),
@@ -241,6 +288,7 @@ class _ClaimFormState extends State<ClaimForm> {
 
   Widget fetchObligation(String obligationId, int index) {
     return ReportableWidget(
+        violationCallback: setExistsAViolation,
         child: FutureBuilder<Obligation>(
           future: dataProvider.fetchObligationById(obligationId),
           builder: (context, snapshot) {
@@ -391,17 +439,27 @@ class _ClaimFormState extends State<ClaimForm> {
   MaterialButton cancelViolationButton() {
     return MaterialButton(
       color: Colors.grey,
-      onPressed: () => widget.changeScreen(0),
+      onPressed: () => widget.changeScreen(2, widget.contract.contractId!),
       child: Text('CANCEL', style: TextStyle(fontSize: 40, color: Colors.white)),
     );
   }
 
   MaterialButton confirmViolationButton() {
     return MaterialButton(
-      color: Colors.green,
+      color: existsAViolation ? Colors.green : Colors.grey,
       onPressed: () => widget.changeScreen(0),
       child: Text('CONFIRM', style: TextStyle(fontSize: 40, color: Colors.white)),
     );
+  }
+
+  void setExistsAViolation() {
+    setState(() {
+      existsAViolation = contractorWidgets.any((element) => element.isAViolation == true);
+      if (startDateWidget!.isAViolation == true || endDateWidget!.isAViolation == true
+          || purposeWidget!.isAViolation == true || considerationWidget!.isAViolation == true) {
+        existsAViolation = false;
+      }
+    });
   }
 
   String _formatDate(DateTime? date) {
