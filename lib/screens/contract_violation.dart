@@ -6,10 +6,11 @@ import 'package:smashhit_ui/data/data_provider.dart';
 
 class ContractViolation extends StatefulWidget {
   final Function(int, [String]) changeScreen;
+  final List<Obligation> obligations;
   final String contractId;
   final User? user;
 
-  ContractViolation(this.changeScreen, this.contractId, this.user);
+  ContractViolation(this.changeScreen, this.contractId, this.user, this.obligations);
 
   @override
   _ContractViolationState createState() => new _ContractViolationState();
@@ -46,7 +47,7 @@ class _ContractViolationState extends State<ContractViolation> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ClaimForm(widget.changeScreen, contract!)
+                    ClaimForm(widget.changeScreen, contract!, widget.obligations)
                   ],
                 ),
               ),

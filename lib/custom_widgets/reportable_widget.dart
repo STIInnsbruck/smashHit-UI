@@ -26,6 +26,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
   Widget build(BuildContext context) {
     widget.isAViolation = _isAViolation;
     return Container(
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
       color: _backgroundColor,
       child: Row(
         children: [

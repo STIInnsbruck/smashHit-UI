@@ -6,7 +6,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class ViewContract extends StatefulWidget {
-  final Function(int, [String]) changeScreen;
+  final Function(int, [String, List<Obligation>]) changeScreen;
   final String contractId;
   final User? user;
 
@@ -288,7 +288,7 @@ class _ContractCreationState extends State<ViewContract> {
       child: InkWell(
           splashColor: Colors.blue,
           onTap: () {
-            widget.changeScreen(4, widget.contractId);
+            widget.changeScreen(4, widget.contractId, obligations);
           },
           child: Column(
             children: [

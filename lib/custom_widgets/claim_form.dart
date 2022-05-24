@@ -8,8 +8,9 @@ class ClaimForm extends StatefulWidget {
 
   final Function(int, [String]) changeScreen;
   final Contract contract;
+  final List<Obligation> obligations;
 
-  ClaimForm(this.changeScreen, this.contract);
+  ClaimForm(this.changeScreen, this.contract, this.obligations);
 
 
   @override
@@ -22,6 +23,7 @@ class _ClaimFormState extends State<ClaimForm> {
   List<ReportableWidget> contractorWidgets = [];
   List<ReportableWidget> termWidgets = [];
   List<ReportableWidget> obligationWidgets = [];
+  List<Obligation> obligations = [];
   DataProvider dataProvider = new DataProvider();
   ReportableWidget? startDateWidget;
   ReportableWidget? endDateWidget;
@@ -34,6 +36,8 @@ class _ClaimFormState extends State<ClaimForm> {
   void initState() {
     super.initState();
     buildContractUsers(widget.contract);
+    buildReportableObligations();
+    buildContractTerms();
     setWidgets();
   }
 
@@ -61,7 +65,6 @@ class _ClaimFormState extends State<ClaimForm> {
   }
 
   Widget claimFormBody(double width) {
-    buildContractTerms();
     return Container(
       width: width,
       decoration: BoxDecoration(
@@ -113,42 +116,13 @@ class _ClaimFormState extends State<ClaimForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /**ReportableWidget(
-                      child: Row(
-                        children: [
-                          Text("Start Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
-                        ],
-                      ), violationCallback: setExistsAViolation),
-                  SizedBox(height: 10),
-                  ReportableWidget(
-                      child: Row(
-                        children: [
-                          Text("End Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
-                        ],
-                      ), violationCallback: setExistsAViolation),*/
                   Container(child: startDateWidget),
                   Container(child: endDateWidget),
                 ],
               ),
               SizedBox(height: 10),
-              /**ReportableWidget(
-                  child: Row(
-                    children: [
-                      Text("Purpose: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text(widget.contract.purpose!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
-                    ],
-                  ), violationCallback: setExistsAViolation),*/
               Container(child: purposeWidget),
               SizedBox(height: 10),
-              /**ReportableWidget(
-                  child: Row(
-                    children: [
-                      Text("Consideration: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
-                    ],
-                  ), violationCallback: setExistsAViolation),*/
               Container(child: considerationWidget),
               SizedBox(height: 10),
               Text('Terms and Conditions:', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
@@ -236,93 +210,80 @@ class _ClaimFormState extends State<ClaimForm> {
   void buildContractTerms() {
     if (widget.contract.terms.isNotEmpty) {
       termWidgets.clear();
-      int termNum = 0;
+      int index = 1;
       widget.contract.terms.forEach((termId) {
-        fetchAllObligations(termId);
-        termWidgets.add(ReportableWidget(
-          violationCallback: setExistsAViolation,
-          child: FutureBuilder<Term>(
-              future: dataProvider.fetchTermById(termId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return FutureBuilder<TermType>(
-                      future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
-                      builder: (context, typeSnapshot) {
-                        if (typeSnapshot.hasData) {
-                          return Column(
-                            children: [
-                              displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, termNum),
-                              SizedBox(height: 10),
-                              Column(
-                                children: displayATermsObligations(termId)
-                              )
-                            ],
-                          );
-                        } else if (typeSnapshot.hasError) {
-                          return Center(child: Text('${snapshot.error}'));
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      }
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('${snapshot.error}'));
-                }
-                return Center(child: CircularProgressIndicator());
-              }
-          )
-        ));
-        termNum++;
+        termWidgets.add(contractTerm(termId, index));
+        index++;
       });
     }
+  }
+
+  ReportableWidget contractTerm(String termId, int index) {
+    return ReportableWidget(
+        violationCallback: setExistsAViolation,
+        child: FutureBuilder<Term>(
+            future: dataProvider.fetchTermById(termId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return FutureBuilder<TermType>(
+                    future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
+                    builder: (context, typeSnapshot) {
+                      if (typeSnapshot.hasData) {
+                        return Column(
+                          children: [
+                            displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, index),
+                            SizedBox(height: 10),
+                            Column(
+                                children: displayATermsObligations(termId)
+                            )
+                          ],
+                        );
+                      } else if (typeSnapshot.hasError) {
+                        return Center(child: Text('${snapshot.error}'));
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('${snapshot.error}'));
+              }
+              return Center(child: CircularProgressIndicator());
+            }
+        )
+    );
   }
 
   List<Widget> displayATermsObligations(String termId) {
     return obligationWidgets.where((element) => element.termId!.compareTo(termId) == 0).toList();
   }
 
-  void fetchAllObligations(String termId) {
+  void buildReportableObligations() {
     int index = 0;
-    if (widget.contract.obligations.isNotEmpty) {
-      obligationWidgets.clear();
-      widget.contract.obligations.forEach((element) {
-        obligationWidgets.add(fetchObligation(element, index, termId));
-        index++;
-      });
-    }
-  }
-
-  ReportableWidget fetchObligation(String obligationId, int index, String termId) {
-    return ReportableWidget(
-        termId: termId,
-        violationCallback: setExistsAViolation,
-        child: FutureBuilder<Obligation>(
-          future: dataProvider.fetchObligationById(obligationId),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data!.termId!.compareTo(termId) == 0) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Obligation ${index+1}:", style: TextStyle(fontSize: 15)),
-                    SizedBox(width: 10),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Description: ${snapshot.data!.description}", textAlign: TextAlign.justify),
-                        Text("Execution Date: ${snapshot.data!.getExecutionDateAsString()}"),
-                        Text("End Date: ${snapshot.data!.getEndDateAsString()}")
-                      ],
-                    )
-                  ],
-                );
-              }
-            } else if (snapshot.hasError) {
-              return Center(child: Text('${snapshot.error}'));
-            }
-            return Center(child: CircularProgressIndicator());
-          },
-        ));
+    this.widget.obligations.forEach((element) {
+      obligationWidgets.add(
+        ReportableWidget(
+          termId: element.termId,
+          violationCallback: setExistsAViolation,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Obligation ${index+1}:", style: TextStyle(fontSize: 15)),
+              SizedBox(width: 10),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Description: ${element.description}", textAlign: TextAlign.justify),
+                  Text("Execution Date: ${element.getExecutionDateAsString()}"),
+                  Text("End Date: ${element.getEndDateAsString()}")
+                ],
+              )
+            ],
+          )
+        )
+      );
+      index++;
+    });
   }
 
   bool isBigScreen(double width) {
