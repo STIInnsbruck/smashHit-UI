@@ -31,13 +31,18 @@ class _TermTypeTileState extends State<TermTypeTile> {
               offset: Offset(2.0, 2.0))
         ]),
         child: Center(
-            child: Row(
+            child:
+            Row(
               children: [
                 Expanded(
                   flex: 28,
                   child: MaterialButton(
                     height: double.infinity,
-                    onPressed: () { print("tap"); },
+                    onPressed: () {
+                      setState(() {
+                        expand = !expand;
+                      });
+                    },
                     child: Row(
                       children: [
                         Expanded(flex: 2, child: Icon(Icons.description, size: 25)),
@@ -56,7 +61,7 @@ class _TermTypeTileState extends State<TermTypeTile> {
                 deleteTermTypeButton(widget.termType.id!),
                 Spacer()
               ],
-            )
+            ),
         )
     );
   }
