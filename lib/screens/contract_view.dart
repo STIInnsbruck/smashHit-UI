@@ -212,32 +212,6 @@ class _ContractCreationState extends State<ViewContract> {
                       ),
                       Spacer(),
                       Center(child: obligationCardButton(obligationSnapshot.data!, userSnapshot.data!)),
-                      /**userSnapshot.data!.name!.compareTo(widget.user!.name!) == 0
-                          ? Center(
-                        child: MaterialButton(
-                          onPressed: () {
-                            _showObligationCompletionDialog(obligationSnapshot.data!);
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Text('Tap to confirm completion',
-                              style: TextStyle(color: Colors.white)),
-                          color: Colors.blue,
-                        ),
-                      )
-                          : Center(
-                        child: MaterialButton(
-                          elevation: 0,
-                          onPressed: null,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text('${userSnapshot.data!.name!} must complete',
-                              style: TextStyle(color: Colors.grey)),
-                          color: Colors.white,
-                        ),
-                      )*/
                     ],
                   );
                 } else if (userSnapshot.hasError) {
