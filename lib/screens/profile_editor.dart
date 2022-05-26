@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smashhit_ui/custom_widgets/profileStatisticCard.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 
@@ -92,6 +93,16 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
               ],
             ),
             SizedBox(height: 20),
+            Row(
+              children: [
+                Spacer(flex: 1),
+                Expanded(child: ProfileStatisticCard(title: "Obligation Completed", tooltipMessage: "The amount of obligation you have completed against the amount you have in total.", value: "10/23")),
+                Expanded(child: ProfileStatisticCard(title: "Total Contracts", tooltipMessage: "The amount of contracts you have.", value: "2")),
+                Expanded(child: ProfileStatisticCard(title: "Completed Contracts", tooltipMessage: "The amount of contracts you have.", value: "4")),
+                Expanded(child: ProfileStatisticCard(title: "Running Contracts", tooltipMessage: "The amount of contracts you have.", value: "12")),
+                Spacer(flex: 1)
+              ],
+            ),
             Row(
               children: [
                 Spacer(flex: 2),
