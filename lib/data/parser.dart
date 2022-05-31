@@ -69,7 +69,7 @@ class ResponseParser {
   }
 
   List<Contract> parseAllContracts(List jsonList) {
-    return jsonList.map((jsonContract) => parseContract(jsonContract)).toList();
+    return jsonList.map((jsonContract) => parseContractId(jsonContract)).toList();
   }
 
   //OBLIGATION PARSERS

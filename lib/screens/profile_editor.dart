@@ -41,10 +41,14 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   bool stateEnabled = false;
   bool cityEnabled = false;
   bool addressEnabled = false;
+  bool fetchedObligations = false;
 
   DataProvider dataProvider = new DataProvider();
   late Future<User> futureUser = User() as Future<User>;
   User? user;
+
+  List<Contract> contracts = [];
+  List<Obligation> obligations = [];
 
   @override
   void initState() {
@@ -65,9 +69,26 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
           if (snapshot.hasData) {
             user = snapshot.data;
             insertUserData();
-            return _isWideScreen(screenWidth, screenHeight)
-                ? Center(child: _wideScreenLayout())
-                : _slimScreenLayout();
+            return FutureBuilder<List<Contract>>(
+                future: dataProvider.fetchContractsByContractorId(widget.userId),
+                builder: (context, contractsSnapshot) {
+                  if (contractsSnapshot.hasData) {
+                    contracts = contractsSnapshot.data!;
+                    _getAllObligationsOfEachContract().then((value) {
+                      setState(() {
+                        obligations = obligations;
+                        fetchedObligations = true;
+                      });
+                    });
+                    return _isWideScreen(screenWidth, screenHeight)
+                        ? Center(child: _wideScreenLayout())
+                        : _slimScreenLayout();
+                  } else if (contractsSnapshot.hasError) {
+                    return Text('${contractsSnapshot.error}');
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text('${snapshot.error}'));
           }
@@ -96,10 +117,10 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
             Row(
               children: [
                 Spacer(flex: 1),
-                Expanded(child: ProfileStatisticCard(title: "Obligation Completed", tooltipMessage: "The amount of obligation you have completed against the amount you have in total.", value: "10/23")),
-                Expanded(child: ProfileStatisticCard(title: "Total Contracts", tooltipMessage: "The amount of contracts you have.", value: "2")),
-                Expanded(child: ProfileStatisticCard(title: "Completed Contracts", tooltipMessage: "The amount of contracts you have.", value: "4")),
-                Expanded(child: ProfileStatisticCard(title: "Running Contracts", tooltipMessage: "The amount of contracts you have.", value: "12")),
+                Expanded(child: ProfileStatisticCard(title: "Obligation Completed", tooltipMessage: "The amount of obligation you have completed against the amount you have in total.", value: fetchedObligations? "${numCompletedObligation()}/${obligations.length}" : "Loading...")),
+                Expanded(child: ProfileStatisticCard(title: "Total Contracts", tooltipMessage: "The amount of contracts you have.", value: "${contracts.length}")),
+                Expanded(child: ProfileStatisticCard(title: "Completed Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numCompletedContracts()}")),
+                Expanded(child: ProfileStatisticCard(title: "Running Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numRunningContract()}")),
                 Spacer(flex: 1)
               ],
             ),
@@ -116,6 +137,46 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
         ),
       ),
     );
+  }
+
+  int numCompletedContracts() {
+    int numCompleted = 0;
+    contracts.forEach((element) {
+      if (element.contractStatus!.compareTo("hasFulfilled") == 0) {
+        numCompleted++;
+      }
+    });
+    return numCompleted;
+  }
+
+  int numRunningContract() {
+    int numRunning = 0;
+    contracts.forEach((element) {
+      if (element.contractStatus!.compareTo("hasFulfilled") != 0) {
+        numRunning++;
+      }
+    });
+    return numRunning;
+  }
+
+  int numCompletedObligation() {
+    int numCompleted = 0;
+    obligations.forEach((element) {
+      if (element.state!.compareTo("hasFulfilled") == 0) {
+        numCompleted++;
+      }
+    });
+    return numCompleted;
+  }
+  
+  Future<void> _getAllObligationsOfEachContract() async {
+    if (fetchedObligations == false) {
+      contracts.forEach((element) {
+        element.obligations.forEach((obl) async {
+          obligations.add(await dataProvider.fetchObligationById(obl as String));
+        });
+      });
+    }
   }
 
   Widget _slimScreenLayout() {
