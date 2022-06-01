@@ -44,16 +44,6 @@ class ResponseParser {
     );
   }
 
-  String parseFetchContractId(List jsonContracts) {
-    String contractId = "";
-    jsonContracts.forEach((element) {
-      if (element["ContractStatus"] == "hasCreated") {
-        contractId = element["ContractStatus"];
-      }
-    });
-    return contractId;
-  }
-
   Contract parseContractId(Map jsonContract) {
     //initiate contract with its foundational data.
     Contract contract = new Contract(
@@ -79,7 +69,7 @@ class ResponseParser {
   }
 
   List<Contract> parseAllContracts(List jsonList) {
-    return jsonList.map((jsonContract) => parseContract(jsonContract)).toList();
+    return jsonList.map((jsonContract) => parseContractId(jsonContract)).toList();
   }
 
   //OBLIGATION PARSERS

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
+import 'package:smashhit_ui/custom_widgets/term_type_tile.dart';
 
 class TermTypeViewPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -36,7 +37,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
                   return Column(
                     children: [
                       snapshot.data!.isEmpty
-                          ? Center(child: Text("No TermTypes")) : termTypeListWidget()
+                          ? noTermTypesText() : termTypeListWidget()
                     ],
                   );
                 } else if (snapshot.hasError) {
@@ -46,7 +47,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
               }
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomCenter,
             child: createTermTypeButton(),
           ),
         ],
@@ -59,95 +60,22 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
       child: ListView.builder(
         itemCount: termTypeList!.length,
         itemBuilder: (BuildContext context, int index) {
-          return termTypeTile(termTypeList![index]);
+          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType);
         }
       )
     );
   }
 
-  Widget termTypeTile(TermType termType) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-      width: 125,
-      height: 75,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-            color: Colors.black45,
-            blurRadius: 2.0,
-            spreadRadius: 1.0,
-            offset: Offset(2.0, 2.0))
-      ]),
-      child: Center(
-        child: Row(
-          children: [
-            Expanded(flex: 2, child: Icon(Icons.description, size: 25)),
-            Expanded(
-                flex: 22,
-                child: Text('Name: ${termType.name}\tID: ${termType.id}', overflow: TextOverflow.ellipsis)
-            ),
-            //Spacer(flex: 25),
-            Spacer(flex: 3),
-            editTermTypeButton(termType.id!),
-            Spacer(),
-            deleteTermTypeButton(termType.id!),
-            Spacer()
-          ],
-        )
-      )
-    );
+  void removeTermType(String termTypeId) {
+    setState(() {
+      termTypeList!.removeWhere((element) => element.id!.compareTo(termTypeId) == 0);
+    });
   }
 
-  Widget editTermTypeButton(String contractId) {
-    return IconButton(
-      padding: EdgeInsets.zero,
-      icon: Icon(Icons.edit, size: 30),
-      onPressed: () {
-        print("edit term type pressed.");
-      },
-    );
-  }
-
-  Widget deleteTermTypeButton(String termTypeId) {
-    return IconButton(
-      padding: EdgeInsets.zero,
-      icon: Icon(Icons.delete, size: 30),
-      onPressed: () {
-        showConfirmDeletionDialog(termTypeId);
-      },
-    );
-  }
-
-  showConfirmDeletionDialog(String termTypeId) async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.warning, size: 40, color: Colors.red),
-                Container(height: 20),
-                Text("Are you sure you want to delete the term type: $termTypeId?"),
-              ],
-            ),
-            actions: [
-              MaterialButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              MaterialButton(
-                  child: Text('Delete', style: TextStyle(color: Colors.white)),
-                  color: Colors.red,
-                  onPressed: () async {
-                    print("confirmed term type deletion");
-                  }
-              ),
-            ],
-          );
-        });
+  Widget noTermTypesText() {
+    return Expanded(
+        child: Center(
+            child: Text("There are currently no existing term types. Please create a new term type before creating a contract.")));
   }
 
   Widget createTermTypeButton() {

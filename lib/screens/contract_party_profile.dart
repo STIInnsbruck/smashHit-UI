@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/custom_widgets/profileStatisticCard.dart';
 
 class ContractPartyProfile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -99,7 +100,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
           children: [
             Spacer(),
             Expanded(child: mostRecentFineTypeCard()),
-            Expanded( child: obligationCompletionRateCard()),
+            Expanded(child: obligationCompletionRateCard()),
             Spacer(),
             Spacer(),
           ],
