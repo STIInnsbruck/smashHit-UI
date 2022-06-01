@@ -28,8 +28,8 @@ class DataProvider {
   };
 
   //---------------------------- CONTRACTORS -----------------------------------
-  Future<int> createAgent(String name, String address, String city,
-      String country, String phone, String role, String email) async {
+  Future<User> createAgent(String name, String address, String city,
+      String country, String phone, String email) async {
 
     var body = {
       "Address": address,
@@ -37,7 +37,7 @@ class DataProvider {
       "Email": email,
       "Name": name,
       "Phone": phone,
-      "Role": role,
+      "Role": "String",
       "Territory": city
     };
 
@@ -47,17 +47,15 @@ class DataProvider {
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      print("Message: \t $data");
-      if(data.toString().compareTo('{Error: Contractor id already exist}') == 0 ) {
-        return -1;
-      } else if (data.toString().compareTo('{Success: Record inserted successfully.}') == 0 ){
-        return 1;
-      } else {
-        return 0;
+      User user;
+      try {
+        user = parser.parseUser(jsonDecode(response.body));
+        return user;
+      } catch (e) {
+        throw Exception('Failed to parse response for user.');
       }
     } else {
-      return 0;
+      throw Exception('Failed to register user. User may already exists.');
     }
   }
 

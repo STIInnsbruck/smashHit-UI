@@ -326,17 +326,13 @@ class _LoginScreenState extends State<LoginScreen> {
   _registerUser(String name, String agentId, String address, String city,
       String country, String state, String phone, String agentType, String email) async {
     _toggleLoading();
-    var result = await dataProvider.createAgent(name, address, city, country, state, phone, email);
-    if (result == 1) {
+    User result = await dataProvider.createAgent(name, address, city, country, phone, email);
+    if (result.name!.isNotEmpty) {
       _toggleLoading();
-      _loginUser(agentId);
-      //widget.changeScreen(0);
-    } else if (result == -1){
-      _toggleLoading();
-      showUserAlreadyExistsDialog();
+      _loginUser(result.id!);
     } else {
-    _toggleLoading();
-    showRegisterErrorDialog();
+      _toggleLoading();
+      showRegisterErrorDialog();
     }
   }
 
