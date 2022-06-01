@@ -178,16 +178,6 @@ class DataProvider {
     }
   }
 
-  Future<String> fetchContractIdByContractorId(String contractorId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      return parser.parseFetchContractId(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to find contract id.');
-    }
-  }
-
   Future<Contract> fetchContractById(String contractId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/byContract/$contractId/'), headers: headers);
 
@@ -365,10 +355,26 @@ class DataProvider {
     final response = await http.get(kBaseUrl.replace(path: '/term/types'), headers: headers);
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      return parser.parseAllTermTypes(data);
+      List<TermType> termTypes = [];
+      try {
+        termTypes = parser.parseAllTermTypes(jsonDecode(response.body));
+        return termTypes;
+      } catch (e) {
+        return termTypes;
+      }
     } else {
-      throw Exception('Failed to load all termTypes.');
+      throw Exception('Failed to load all term types.');
+    }
+  }
+
+
+  Future<bool> deleteTermTypeById(String termTypeId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/term/type/delete/$termTypeId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete term type $termTypeId.\nBack-end response: ${response.reasonPhrase}.');
     }
   }
 

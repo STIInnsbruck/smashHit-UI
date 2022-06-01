@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 class ReportableWidget extends StatefulWidget {
 
-  Widget child;
-  String? comment;
+  final Function()? violationCallback;
+  final String? termId;
 
-  ReportableWidget({required this.child});
+  Widget child;
+  //TODO: fix the setback to false when screen is rebuilt.
+  bool isAViolation = false;
+
+  ReportableWidget({required this.child, this.violationCallback, this.termId});
 
   @override
   _ReportableWidgetState createState() => _ReportableWidgetState();
@@ -13,62 +17,44 @@ class ReportableWidget extends StatefulWidget {
 
 class _ReportableWidgetState extends State<ReportableWidget> {
 
-  bool _isAViolation = false;
-  bool _displayComment = false;
   Color _backgroundColor = Colors.white;
+  bool _isAViolation = false;
+  String? comment;
   TextEditingController reportViolationController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    widget.isAViolation = _isAViolation;
     return Container(
-      child: Stack(
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+      color: _backgroundColor,
+      child: Row(
         children: [
-          FractionallySizedBox(
-            //widthFactor: 0.99,
+          Expanded(
             child: Container(
-              color: _displayComment && _isAViolation ? Colors.black87 : _backgroundColor,
-              margin: EdgeInsets.fromLTRB(0, 10, 10, 0),
-              child: InkWell(
-                  onTap: () => null,
-                  onHover: (val) {
-                    setState(() {
-                      _displayComment = !_displayComment;
-                    });
-                  },
-                  child: Stack(
-                    children: [
-                      widget.child,
-                      _displayComment && _isAViolation ?
-                          Text(widget.comment!, style: TextStyle(color: Colors.white)) :
-                          Container()
-                    ],
-                  )
-              ),
+              margin: EdgeInsets.fromLTRB(10, 5, 40, 5),
+              child: widget.child,
             ),
           ),
           Align(
             alignment: Alignment.centerRight,
             child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _isAViolation ?
-                  IconButton(
-                      iconSize: 30,
-                      padding: EdgeInsets.zero,
-                      icon: Icon(Icons.warning, color: Colors.red),
-                      onPressed: () {
-                        _reviewReportViolationDialog();
-                      }) :
-                  IconButton(
-                    iconSize: 30,
-                    padding: EdgeInsets.zero,
-                    icon: Icon(Icons.add, color: Colors.blue),
-                    onPressed: () {
-                      _showReportViolationDialog();
-                    },
-                  ),
-                ],
+              child:
+              _isAViolation ?
+              IconButton(
+                  iconSize: 30,
+                  padding: EdgeInsets.zero,
+                  icon: Icon(Icons.warning, color: Colors.red),
+                  onPressed: () {
+                    _reviewReportViolationDialog();
+                  }) :
+              IconButton(
+                iconSize: 30,
+                padding: EdgeInsets.zero,
+                icon: Icon(Icons.add, color: Colors.blue),
+                onPressed: () {
+                  _showReportViolationDialog();
+                },
               ),
             ),
           )
@@ -78,9 +64,11 @@ class _ReportableWidgetState extends State<ReportableWidget> {
   }
 
   void _toggleViolation() {
+    widget.violationCallback!();
     setState(() {
+      widget.isAViolation = !_isAViolation;
       _isAViolation = !_isAViolation;
-      if (_isAViolation) {
+      if (widget.isAViolation) {
         _backgroundColor = Colors.orange;
       } else {
         _backgroundColor = Colors.white;
@@ -90,7 +78,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
 
   void _setComment(String value) {
     setState(() {
-      widget.comment = value;
+      comment = value;
     });
   }
 
@@ -135,7 +123,7 @@ class _ReportableWidgetState extends State<ReportableWidget> {
         builder: (context) {
           return AlertDialog(
             title: Text('Would you like to remove the entered violation below?'),
-            content: Text(widget.comment!),
+            content: Text(comment!),
             actions: [
               MaterialButton(
                   onPressed: () {

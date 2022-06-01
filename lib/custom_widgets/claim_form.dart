@@ -6,10 +6,11 @@ import 'package:smashhit_ui/custom_widgets/reportable_widget.dart';
 
 class ClaimForm extends StatefulWidget {
 
-  final Function(int) changeScreen;
+  final Function(int, [String]) changeScreen;
   final Contract contract;
+  final List<Obligation> obligations;
 
-  ClaimForm(this.changeScreen, this.contract);
+  ClaimForm(this.changeScreen, this.contract, this.obligations);
 
 
   @override
@@ -18,50 +19,32 @@ class ClaimForm extends StatefulWidget {
 
 class _ClaimFormState extends State<ClaimForm> {
   TextEditingController textController = TextEditingController();
-  TextEditingController conditionController = TextEditingController();
 
-  CheckBoxBoolean isAmendment = CheckBoxBoolean();
-  CheckBoxBoolean isConfidentialObligation = CheckBoxBoolean();
-  CheckBoxBoolean isDataController = CheckBoxBoolean();
-  CheckBoxBoolean isDataProtection = CheckBoxBoolean();
-  CheckBoxBoolean isLimitationOnUse = CheckBoxBoolean();
-  CheckBoxBoolean isMethodOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isNoThirdPartyBeneficiaries = CheckBoxBoolean();
-  CheckBoxBoolean isPermittedDisclosure = CheckBoxBoolean();
-  CheckBoxBoolean isReceiptOfNotice = CheckBoxBoolean();
-  CheckBoxBoolean isSeverability = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForInsolvency = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationForMaterialBreach = CheckBoxBoolean();
-  CheckBoxBoolean isTerminationOnNotice = CheckBoxBoolean();
-  CheckBoxBoolean isWaiver = CheckBoxBoolean();
-
-  CheckBoxBooleanEdit isAmendment2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isConfidentialObligation2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isDataController2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isDataProtection2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isLimitationOnUse2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isMethodOfNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isNoThirdPartyBeneficiaries2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isPermittedDisclosure2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isReceiptOfNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isSeverability2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationForInsolvency2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationForMaterialBreach2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isTerminationOnNotice2 = CheckBoxBooleanEdit();
-  CheckBoxBooleanEdit isWaiver2 = CheckBoxBooleanEdit();
-
-  List<Widget> termWidgets = [];
+  List<ReportableWidget> contractorWidgets = [];
+  List<ReportableWidget> termWidgets = [];
+  List<ReportableWidget> obligationWidgets = [];
+  List<Obligation> obligations = [];
   DataProvider dataProvider = new DataProvider();
+  ReportableWidget? startDateWidget;
+  ReportableWidget? endDateWidget;
+  ReportableWidget? purposeWidget;
+  ReportableWidget? considerationWidget;
+
+  bool existsAViolation = false;
 
   @override
   void initState() {
     super.initState();
-    conditionController.text = widget.contract.purpose!;
+    buildContractUsers(widget.contract);
+    buildReportableObligations();
+    buildContractTerms();
+    setWidgets();
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    setExistsAViolation();
 
     return Stack(
         children: [
@@ -82,7 +65,6 @@ class _ClaimFormState extends State<ClaimForm> {
   }
 
   Widget claimFormBody(double width) {
-    buildContractTerms();
     return Container(
       width: width,
       decoration: BoxDecoration(
@@ -103,7 +85,7 @@ class _ClaimFormState extends State<ClaimForm> {
               Center(
                   child: Text('Contract Violation Form', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline))
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -111,46 +93,46 @@ class _ClaimFormState extends State<ClaimForm> {
                   Text('Contract ID: ${widget.contract.formatContractId()}')
                 ],
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Center(
-                  child: Text('Contract Information', style: TextStyle(fontSize: 25))
+                  child: Text('Contract Information', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline))
               ),
-              Container(height: 20),
+              SizedBox(height: 20),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Involved Parties:', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 2),
-                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1),
-                  Text(widget.contract.getContractorName(), style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 2),
+                  Text('Contractors:', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: contractorWidgets
+                    ),
+                  ),
                 ],
               ),
-              Container(height: 20),
-              Row(
-                children: [
-                  Text('Start Date: ${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1),
-                  Text('End Date: ${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15)),
-                  Spacer(flex: 1)
-                ],
-              ),
-              Container(height: 20),
-              Text('Contract Terms & Conditions:', style: TextStyle(fontSize: 20)),
-              Container(height: 10),
-              ReportableWidget(child: Text(widget.contract.purpose!, style: TextStyle(fontSize: 15), textAlign: TextAlign.justify)),
+              SizedBox(height: 10),
               Column(
-                children: termWidgets,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(child: startDateWidget),
+                  Container(child: endDateWidget),
+                ],
               ),
-              Container(height: 20),
-              Container(height: 50),
-              Container(height: 50,
-              child: TextFormField(
-                textAlign: TextAlign.justify,
-                controller: conditionController,
-              )),
-              Container(height: 20),
-              Container(height: 50),
+              SizedBox(height: 10),
+              Container(child: purposeWidget),
+              SizedBox(height: 10),
+              Container(child: considerationWidget),
+              SizedBox(height: 10),
+              Text('Terms and Conditions:', style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
+              SizedBox(height: 10),
+              termWidgets.isNotEmpty
+                ? Column(
+                children: termWidgets,
+                )
+                : Center(child: Text("No terms were found in the contract.")),
+              SizedBox(height: 20),
               Row(
                 children: [
                   cancelViolationButton(),
@@ -165,18 +147,97 @@ class _ClaimFormState extends State<ClaimForm> {
     );
   }
 
+  void setWidgets() {
+    setState(() {
+      startDateWidget = ReportableWidget(
+          child: Row(
+            children: [
+              Text("Start Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('${widget.contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15))
+            ],
+          ), violationCallback: setExistsAViolation);
+
+      endDateWidget = ReportableWidget(
+              child: Row(
+                children: [
+                  Text("End Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${widget.contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
+                ],
+              ), violationCallback: setExistsAViolation);
+
+      purposeWidget = ReportableWidget(
+              child: Row(
+                children: [
+                  Text("Purpose: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(widget.contract.purpose!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                ],
+              ), violationCallback: setExistsAViolation);
+
+      considerationWidget = ReportableWidget(
+              child: Row(
+                children: [
+                  Text("Consideration: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                ],
+              ), violationCallback: setExistsAViolation);
+    });
+  }
+
+  Widget contractorDetails(String contractorId) {
+    return Container(
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+        child: FutureBuilder<User>(
+            future: dataProvider.fetchUserById(contractorId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text('${snapshot.data!.name}');
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return CircularProgressIndicator();
+            }
+        )
+    );
+  }
+
+  void buildContractUsers(Contract contract) {
+    contractorWidgets.clear();
+    contract.contractors.forEach((contractorId) {
+      contractorWidgets.add(ReportableWidget(child: contractorDetails(contractorId), violationCallback: setExistsAViolation));
+    });
+  }
+
   void buildContractTerms() {
-    widget.contract.terms.forEach((termId) {
-      termWidgets.add(ReportableWidget(
+    if (widget.contract.terms.isNotEmpty) {
+      termWidgets.clear();
+      int index = 1;
+      widget.contract.terms.forEach((termId) {
+        termWidgets.add(contractTerm(termId, index));
+        index++;
+      });
+    }
+  }
+
+  ReportableWidget contractTerm(String termId, int index) {
+    return ReportableWidget(
+        violationCallback: setExistsAViolation,
         child: FutureBuilder<Term>(
             future: dataProvider.fetchTermById(termId),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                FutureBuilder<TermType>(
+                return FutureBuilder<TermType>(
                     future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
                     builder: (context, typeSnapshot) {
                       if (typeSnapshot.hasData) {
-                        return displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!);
+                        return Column(
+                          children: [
+                            displayTermElementInfo(typeSnapshot.data!.name!, snapshot.data!.description!, index),
+                            SizedBox(height: 10),
+                            Column(
+                                children: displayATermsObligations(termId)
+                            )
+                          ],
+                        );
                       } else if (typeSnapshot.hasError) {
                         return Center(child: Text('${snapshot.error}'));
                       }
@@ -189,7 +250,39 @@ class _ClaimFormState extends State<ClaimForm> {
               return Center(child: CircularProgressIndicator());
             }
         )
-      ));
+    );
+  }
+
+  List<Widget> displayATermsObligations(String termId) {
+    return obligationWidgets.where((element) => element.termId!.compareTo(termId) == 0).toList();
+  }
+
+  void buildReportableObligations() {
+    int index = 0;
+    this.widget.obligations.forEach((element) {
+      obligationWidgets.add(
+        ReportableWidget(
+          termId: element.termId,
+          violationCallback: setExistsAViolation,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Obligation ${index+1}:", style: TextStyle(fontSize: 15)),
+              SizedBox(width: 10),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Description: ${element.description}", textAlign: TextAlign.justify),
+                  Text("Execution Date: ${element.getExecutionDateAsString()}"),
+                  Text("End Date: ${element.getEndDateAsString()}")
+                ],
+              )
+            ],
+          )
+        )
+      );
+      index++;
     });
   }
 
@@ -201,11 +294,11 @@ class _ClaimFormState extends State<ClaimForm> {
     }
   }
 
-  Widget displayTermElementInfo(String name, String description) {
+  Widget displayTermElementInfo(String name, String description, int termNum) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Center(child: Text(name, style: TextStyle(fontSize: 20))),
+        Center(child: Text("$termNum. $name", style: TextStyle(fontSize: 20))),
         description.compareTo("") == 0 ?
           Text('None.', textAlign: TextAlign.justify) :
           Align(
@@ -315,17 +408,36 @@ class _ClaimFormState extends State<ClaimForm> {
   MaterialButton cancelViolationButton() {
     return MaterialButton(
       color: Colors.grey,
-      onPressed: () => widget.changeScreen(0),
+      onPressed: () => widget.changeScreen(2, widget.contract.contractId!),
       child: Text('CANCEL', style: TextStyle(fontSize: 40, color: Colors.white)),
     );
   }
 
   MaterialButton confirmViolationButton() {
     return MaterialButton(
-      color: Colors.green,
+      color: existsAViolation ? Colors.green : Colors.grey,
       onPressed: () => widget.changeScreen(0),
       child: Text('CONFIRM', style: TextStyle(fontSize: 40, color: Colors.white)),
     );
+  }
+
+  void setExistsAViolation() {
+    setState(() {
+      existsAViolation = false;
+      for (int i = 0; i < contractorWidgets.length; i++) {
+        if (contractorWidgets[i].isAViolation == true) { existsAViolation = true; }
+      }
+      for (int i = 0; i < termWidgets.length; i++) {
+        if (termWidgets[i].isAViolation == true) { existsAViolation = true; }
+      }
+      for (int i = 0; i < obligationWidgets.length; i++) {
+        if (obligationWidgets[i].isAViolation == true) { existsAViolation = true; }
+      }
+      if (startDateWidget!.isAViolation == true || endDateWidget!.isAViolation == true
+          || purposeWidget!.isAViolation == true || considerationWidget!.isAViolation == true) {
+        existsAViolation = true;
+      }
+    });
   }
 
   String _formatDate(DateTime? date) {

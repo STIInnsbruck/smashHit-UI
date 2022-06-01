@@ -6,7 +6,7 @@ import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class ViewContract extends StatefulWidget {
-  final Function(int, [String]) changeScreen;
+  final Function(int, [String, List<Obligation>]) changeScreen;
   final String contractId;
   final User? user;
 
@@ -211,32 +211,7 @@ class _ContractCreationState extends State<ViewContract> {
                         ],
                       ),
                       Spacer(),
-                      userSnapshot.data!.name!.compareTo(widget.user!.name!) == 0
-                          ? Center(
-                        child: MaterialButton(
-                          onPressed: () {
-                            _showObligationCompletionDialog(obligationSnapshot.data!);
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Text('Tap to complete',
-                              style: TextStyle(color: Colors.white)),
-                          color: Colors.blue,
-                        ),
-                      )
-                          : Center(
-                        child: MaterialButton(
-                          elevation: 0,
-                          onPressed: null,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text('${userSnapshot.data!.name!} must complete',
-                              style: TextStyle(color: Colors.grey)),
-                          color: Colors.white,
-                        ),
-                      )
+                      Center(child: obligationCardButton(obligationSnapshot.data!, userSnapshot.data!)),
                     ],
                   );
                 } else if (userSnapshot.hasError) {
@@ -254,6 +229,47 @@ class _ContractCreationState extends State<ViewContract> {
         }
       )
     );
+  }
+
+  MaterialButton obligationCardButton(Obligation obligation, User user) {
+    if (user.id!.compareTo(widget.user!.id!) == 0) {
+      if (obligation.state!.compareTo("hasFulfilled") == 0) {
+        return MaterialButton(
+          elevation: 0,
+          onPressed: null,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text('Obligation already completed',
+              style: TextStyle(color: Colors.grey)),
+          color: Colors.white,
+        );
+      } else {
+        return MaterialButton(
+          onPressed: () {
+            _showObligationCompletionDialog(obligation);
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20)),
+          child: Text('Tap to confirm completion',
+              style: TextStyle(color: Colors.white)),
+          color: Colors.blue,
+        );
+      }
+    } else {
+      return MaterialButton(
+        elevation: 0,
+        onPressed: null,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text('${user.name!} must complete',
+            style: TextStyle(color: Colors.grey)),
+        color: Colors.white,
+      );
+    }
   }
 
   Card contractStatusCard(Contract contract) {
@@ -288,7 +304,7 @@ class _ContractCreationState extends State<ViewContract> {
       child: InkWell(
           splashColor: Colors.blue,
           onTap: () {
-            widget.changeScreen(4, widget.contractId);
+            widget.changeScreen(4, widget.contractId, obligations);
           },
           child: Column(
             children: [
@@ -439,7 +455,7 @@ class _ContractCreationState extends State<ViewContract> {
             ? Column(
             children: termWidgets,
           )
-            : Center(child: Text("No Terms were found in the contract.")),
+            : Center(child: Text("No terms were found in the contract.")),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
               child: contractDates()

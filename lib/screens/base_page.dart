@@ -119,7 +119,7 @@ class _BasePageState extends State<BasePage> {
     );
   }
 
-  changeScreen(x, [String? id]) {
+  changeScreen(x, [String? id, List<Obligation>? obligations]) {
     setState(() {
       _selectedIndex = x;
       switch (_selectedIndex) {
@@ -141,7 +141,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Template Selector";
           break;
         case 4:
-          _selectedPage = ContractViolation(changeScreen, id!, user);
+          _selectedPage = ContractViolation(changeScreen, id!, user, obligations!);
           _selectedTitle = "Violation Claim";
           break;
         case 5:
