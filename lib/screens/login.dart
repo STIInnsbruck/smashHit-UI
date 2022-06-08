@@ -326,18 +326,28 @@ class _LoginScreenState extends State<LoginScreen> {
   _registerUser(String name, String agentId, String address, String city,
       String country, String state, String phone, String agentType, String email) async {
     _toggleLoading();
-    var result = await dataProvider.createAgent(name, address, city, country, state, phone, email);
-    if (result == 1) {
+    try {
+      User tmpUser = await dataProvider.createAgent(setUser());
       _toggleLoading();
-      _loginUser(agentId);
-      //widget.changeScreen(0);
-    } else if (result == -1){
+      widget.setUserId(tmpUser.id!);
+      widget.setUser(tmpUser);
+      widget.changeScreen(0);
+    } catch (e) {
       _toggleLoading();
-      showUserAlreadyExistsDialog();
-    } else {
-    _toggleLoading();
-    showRegisterErrorDialog();
+      showRegisterErrorDialog();
     }
+  }
+
+  User setUser() {
+    return User(
+      name: (name.text + " " + surname.text),
+      email: email.text,
+      country: country.text,
+      city: city.text,
+      phone: phone.text,
+      streetAddress: address.text,
+      role: "role",
+    );
   }
 
   _loginUser(String agentId) async {
