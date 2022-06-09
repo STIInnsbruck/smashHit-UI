@@ -1390,7 +1390,7 @@ class _ContractFormState extends State<ContractForm> {
             title: Text('Loading...', textAlign: TextAlign.center),
             contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
             children: [
-              Icon(Icons.schedule, color: Colors.green, size: 100),
+              Icon(Icons.schedule, color: Colors.grey, size: 100),
               Text('Your contract is being created.', textAlign: TextAlign.center),
               Container(height: 5),
               Center(child: CircularProgressIndicator())

@@ -275,7 +275,7 @@ class _ContractTileState extends State<ContractTile> {
             title: Text('Deleting...', textAlign: TextAlign.center),
             contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
             children: [
-              Icon(Icons.schedule, color: Colors.green, size: 100),
+              Icon(Icons.schedule, color: Colors.grey, size: 100),
               Text('Your contract is being deleted.', textAlign: TextAlign.center),
               Container(height: 5),
               Center(child: CircularProgressIndicator())
