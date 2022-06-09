@@ -1009,7 +1009,9 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         minWidth: 125,
         onPressed: () async {
+          _showCreatingDialog();
           await performContractCreation();
+          _dismissDialog();
         },
         color: Colors.green,
         hoverColor: Colors.lightGreen,
@@ -1379,6 +1381,26 @@ class _ContractFormState extends State<ContractForm> {
     });
   }
 
+  _showCreatingDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Loading...', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 100),
+              Text('Your contract is being created.', textAlign: TextAlign.center),
+              Container(height: 5),
+              Center(child: CircularProgressIndicator())
+            ],
+
+          );
+        }
+    );
+  }
+
   _showCreateSuccessDialog() {
     showDialog(
         context: context,
@@ -1393,7 +1415,7 @@ class _ContractFormState extends State<ContractForm> {
               MaterialButton(
                 child: Text('Okay'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  _dismissDialog();
                 },
               ),
             ],
@@ -1416,7 +1438,7 @@ class _ContractFormState extends State<ContractForm> {
               MaterialButton(
                 child: Text('Okay'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  _dismissDialog();
                 },
               ),
             ],
@@ -1637,5 +1659,9 @@ class _ContractFormState extends State<ContractForm> {
         step3Keys.add(GlobalKey<FormState>());
       }
     });
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }
