@@ -1009,7 +1009,9 @@ class _ContractFormState extends State<ContractForm> {
       child: MaterialButton(
         minWidth: 125,
         onPressed: () async {
+          _showCreatingDialog();
           await performContractCreation();
+          _dismissDialog();
         },
         color: Colors.green,
         hoverColor: Colors.lightGreen,
@@ -1023,8 +1025,7 @@ class _ContractFormState extends State<ContractForm> {
     setBaseContractDetails();
     contract.contractId = await dataProvider.createBaseContract(contract);
     _termMap.forEach((key, value) async {
-      TermType tempTermType = await dataProvider.createTermType(value.term.name!, value.term.description!);
-      Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, tempTermType.id!);
+      Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, value.term.termTypeId!);
       value.term.id = tempTerm.id;
       contract.terms.add(tempTerm.id!);
       _obligationMap.forEach((key, obl) async {
@@ -1380,6 +1381,26 @@ class _ContractFormState extends State<ContractForm> {
     });
   }
 
+  _showCreatingDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Loading...', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.schedule, color: Colors.grey, size: 100),
+              Text('Your contract is being created.', textAlign: TextAlign.center),
+              Container(height: 5),
+              Center(child: CircularProgressIndicator())
+            ],
+
+          );
+        }
+    );
+  }
+
   _showCreateSuccessDialog() {
     showDialog(
         context: context,
@@ -1394,7 +1415,7 @@ class _ContractFormState extends State<ContractForm> {
               MaterialButton(
                 child: Text('Okay'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  _dismissDialog();
                 },
               ),
             ],
@@ -1417,7 +1438,7 @@ class _ContractFormState extends State<ContractForm> {
               MaterialButton(
                 child: Text('Okay'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  _dismissDialog();
                 },
               ),
             ],
@@ -1638,5 +1659,9 @@ class _ContractFormState extends State<ContractForm> {
         step3Keys.add(GlobalKey<FormState>());
       }
     });
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }

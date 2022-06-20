@@ -226,11 +226,13 @@ class _ContractTileState extends State<ContractTile> {
                   child: Text('Delete', style: TextStyle(color: Colors.white)),
                   color: Colors.red,
                   onPressed: () async {
+                    _dismissDialog();
+                    _showDeletingDialog();
                     if (await dataProvider.deleteContractById(contractId)) {
-                      Navigator.of(context).pop();
+                      _dismissDialog();
                       showSuccessfulDeletionDialog(contractId);
                     } else {
-                      Navigator.of(context).pop();
+                      _dismissDialog();
                       showFailedDeletionDialog(contractId);
                     }
                   }
@@ -264,6 +266,26 @@ class _ContractTileState extends State<ContractTile> {
     );
   }
 
+  _showDeletingDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Deleting...', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.schedule, color: Colors.grey, size: 100),
+              Text('Your contract is being deleted.', textAlign: TextAlign.center),
+              Container(height: 5),
+              Center(child: CircularProgressIndicator())
+            ],
+
+          );
+        }
+    );
+  }
+
   showFailedDeletionDialog(String contractId) {
     showDialog(
         context: context,
@@ -289,6 +311,10 @@ class _ContractTileState extends State<ContractTile> {
   String _formatContractUri(String contractUri) {
     int length = contractUri.length;
     return contractUri.substring(45, length);
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 
 }
