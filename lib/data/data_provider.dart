@@ -28,17 +28,17 @@ class DataProvider {
   };
 
   //---------------------------- CONTRACTORS -----------------------------------
-  Future<User> createAgent(String name, String address, String city,
-      String country, String phone, String email) async {
+
+  Future<User> createAgent(User user) async {
 
     var body = {
-      "Address": address,
-      "Country": country,
-      "Email": email,
-      "Name": name,
-      "Phone": phone,
-      "Role": "String",
-      "Territory": city
+      "Address": user.streetAddress,
+      "Country": user.country,
+      "Email": user.email,
+      "Name": user.name,
+      "Phone": user.phone,
+      "Role": user.role,
+      "Territory": user.city
     };
 
     var jsonBody = jsonEncode(body);
@@ -47,15 +47,14 @@ class DataProvider {
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
-      User user;
+
       try {
-        user = parser.parseUser(jsonDecode(response.body));
-        return user;
+        return parser.parseUser(jsonDecode(response.body));
       } catch (e) {
-        throw Exception('Failed to parse response for user.');
+        throw Exception('Failed to fetch created user.');
       }
     } else {
-      throw Exception('Failed to register user. User may already exists.');
+      throw Exception('Failed to load created user.');
     }
   }
 
@@ -74,7 +73,6 @@ class DataProvider {
     final response = await http.get(kBaseUrl.replace(path: '/contractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
       try {
         return parser.parseUserById(jsonDecode(response.body));
       }catch (e) {
