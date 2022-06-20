@@ -28,6 +28,7 @@ class DataProvider {
   };
 
   //---------------------------- CONTRACTORS -----------------------------------
+
   Future<User> createAgent(User user) async {
 
     var body = {
@@ -46,6 +47,7 @@ class DataProvider {
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
+
       try {
         return parser.parseUser(jsonDecode(response.body));
       } catch (e) {
