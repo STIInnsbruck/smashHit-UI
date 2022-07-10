@@ -81,16 +81,16 @@ class ResponseParser {
     //initiate obligation with its foundational data.
     Obligation obligation = new Obligation(
       id: jsonObligation["obligationID"],
-      description: jsonObligation["description"],
-      executionDate: formatDate(jsonObligation["execution_date"]),
-      endDate: formatDate(jsonObligation["end_date"]),
+      description: jsonObligation["obligationDescription"],
+      executionDate: formatDate(jsonObligation["executionDate"]),
+      endDate: formatDate(jsonObligation["endDate"]),
       state: jsonObligation["state"],
       //the first json has contractorId
-      contractorId: jsonObligation["identifier"][1],
+      contractorId: jsonObligation["identifier"][0],
       //the second json has obligationId
-      contractId: jsonObligation["identifier"][2],
+      contractId: jsonObligation["identifier"][1],
       //the third json has termiId
-      termId: jsonObligation["identifier"][3],
+      termId: jsonObligation["identifier"][2],
     );
 
     return obligation;
@@ -111,10 +111,8 @@ class ResponseParser {
 
   Term parseTermId(Map jsonTerm) {
     Term term = new Term(
-      id: jsonTerm["TermId"],
-      description: jsonTerm["description"],
-      contractId: jsonTerm["ContractId"],
-      termTypeId: jsonTerm["TermTypeId"]
+      id: jsonTerm["termId"],
+      description: jsonTerm["description"]
     );
 
     return term;

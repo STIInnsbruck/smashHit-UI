@@ -212,6 +212,7 @@ class _ContractCreationState extends State<ViewContract> {
                       ),
                       Spacer(),
                       Center(child: obligationCardButton(obligationSnapshot.data!, userSnapshot.data!)),
+                      Spacer()
                     ],
                   );
                 } else if (userSnapshot.hasError) {
