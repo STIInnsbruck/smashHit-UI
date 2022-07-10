@@ -25,9 +25,16 @@ class _DashboardState extends State<Dashboard> {
   List<Contract>? contractList = [];
   String? searchId;
 
+  //Offline Variables
+  List<User> usersList = [];
+  List<Obligation> obligationsList = [];
+
   @override
   void initState() {
     super.initState();
+    if(widget.offlineMode) {
+      _generateOfflineData();
+    }
   }
 
   @override
@@ -112,5 +119,46 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       futureContractList = dataProvider.fetchAllContracts();
     });
+  }
+
+  _generateOfflineData() {
+
+  }
+
+  _generateOfflineContractor(String id, String name, String email,
+      String streetAddress, String country, String city, String phone, String role) {
+    User user = new User(
+      id: id,
+      name: name,
+      email: email,
+      streetAddress: streetAddress,
+      country: country,
+      city: city,
+      phone: phone,
+      role: role
+    );
+
+    usersList.add(user);
+  }
+
+  _generateOfflineObligation(String obligationId, String contractId, String contractorId,
+      String termId, String description, DateTime endDate,
+      DateTime executionDate, String state) {
+    Obligation obligation = new Obligation(
+      id: obligationId,
+      contractId: contractId,
+      contractorId: contractorId,
+      termId: termId,
+      description: description,
+      endDate: endDate,
+      executionDate: executionDate,
+      state: state
+    );
+
+    obligationsList.add(obligation);
+  }
+
+  _generateContract() {
+    return null;
   }
 }
