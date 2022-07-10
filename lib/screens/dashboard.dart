@@ -144,6 +144,24 @@ class _DashboardState extends State<Dashboard> {
     _generateOfflineObligation("obl_0001", "con_0001", "c_0001", "t_0001", "Deliver Package by end date.", DateTime.parse("2022-08-10"), DateTime.parse("2022-07-10"), "hasPending");
     _generateOfflineObligation("obl_0002", "con_0001", "c_0002", "t_0001", "Receive and notify receivable by end date.", DateTime.parse("2022-08-10"), DateTime.parse("2022-07-10"), "hasPending");
     _generateOfflineObligation("obl_0003", "con_0001", "c_0001", "t_0002", "Not leak any information to other parties", DateTime.parse("2022-08-10"), DateTime.parse("2022-07-10"), "hasPending");
+
+    List<String> contractors = [
+      "c_0001",
+      "c_0002",
+    ];
+
+    List<String> obligations = [
+      "obl_0001",
+      "obl_0002",
+      "obl_0003",
+    ];
+
+    List<String> terms = [
+      "t_0001",
+      "t_0002",
+    ];
+
+    _generateOfflineContract("con_0001", "categoryBusinessToConsumer", "statusUpdated", "written", DateTime.parse("2022-07-10"), DateTime.parse("2022-08-10"), DateTime.parse("2022-07-10"), "Online", "Sharing Personal Data", "Selling Personal Data", "300", contractors, obligations, terms);
   }
 
   _generateOfflineContractor(String id, String name, String email,
@@ -202,7 +220,25 @@ class _DashboardState extends State<Dashboard> {
     offlineTerms.add(term);
   }
 
-  _generateContract() {
-    return null;
+  _generateOfflineContract(String contractId, String category, String status, String type, DateTime effectiveDate, DateTime endDate, DateTime executionDate, String medium, String purpose, String considDescription, String considValue, List contractors, List obligations, List terms) {
+    Contract contract = new Contract(
+      contractId: contractId,
+      contractCategory: category,
+      contractStatus: status,
+      contractType: type,
+      effectiveDate: effectiveDate,
+      endDate: endDate,
+      executionDate: executionDate,
+      medium: medium,
+      purpose: purpose,
+      considerationDescription: considDescription,
+      considerationValue: considValue,
+    );
+
+    contract.contractors = contractors;
+    contract.obligations = obligations;
+    contract.terms = terms;
+
+    offlineContracts.add(contract);
   }
 }
