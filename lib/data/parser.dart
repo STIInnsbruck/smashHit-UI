@@ -5,7 +5,7 @@ class ResponseParser {
   //USER PARSERS
   User parseUser(Map jsonUser) {
     return User(
-      id: jsonUser['ContractorID'],
+      id: jsonUser['contractorId'],
       name: jsonUser['name'],
       streetAddress: jsonUser['address'],
       city: jsonUser['territory'],
@@ -21,7 +21,7 @@ class ResponseParser {
 
   User parseUserById(Map jsonUser) {
     return User(
-      id: jsonUser['ContractorID'],
+      id: jsonUser['contractorId'],
       streetAddress: jsonUser['address'],
       country: jsonUser['country'],
       email: jsonUser['email'],
@@ -47,18 +47,18 @@ class ResponseParser {
   Contract parseContractId(Map jsonContract) {
     //initiate contract with its foundational data.
     Contract contract = new Contract(
-        contractId: jsonContract['Contract'],
-        contractStatus: jsonContract['ContractStatus'],
-        contractType: jsonContract['ContractType'],
-        effectiveDate: formatDate(jsonContract["EffectiveDate"]),
-        executionDate: formatDate(jsonContract["ExecutionDate"]),
-        endDate: formatDate(jsonContract["EndDate"]),
-        medium: jsonContract["Medium"],
-        purpose: jsonContract['Purpose'],
-        consentId: jsonContract['ConsentId'],
+        contractId: jsonContract['contractId'],
+        contractStatus: jsonContract['contractStatus'],
+        contractType: jsonContract['contractType'],
+        effectiveDate: formatDate(jsonContract["effectiveDate"]),
+        executionDate: formatDate(jsonContract["executionDate"]),
+        endDate: formatDate(jsonContract["endDate"]),
+        medium: jsonContract["medium"],
+        purpose: jsonContract['purpose'],
+        consentId: jsonContract['consentId'],
         considerationDescription: jsonContract['consideration'],
         considerationValue: jsonContract['value'],
-        contractCategory: jsonContract['ContractCategory']
+        contractCategory: jsonContract['contractCategory']
     );
 
     contract.contractors = jsonContract['identifiers']['contractors'];
@@ -138,6 +138,6 @@ class ResponseParser {
   }
 
   DateTime formatDate(String dateString) {
-    return DateTime.parse(dateString);
+    return DateTime.parse(dateString.substring(0, 10));
   }
 }
