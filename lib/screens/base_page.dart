@@ -29,8 +29,12 @@ class _BasePageState extends State<BasePage> {
   DataProvider dataProvider = DataProvider();
   String? searchId;
 
+  //Offline Mode set to true to not use the online endpoints.
+  //Setting to true will use locally stored json files to read/write data.
+  bool offlineMode = false;
+
   _BasePageState() {
-    _selectedPage = LoginScreen(changeScreen, setUserId, setUser);
+    _selectedPage = LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
     _selectedTitle = "Login Screen";
   }
 
@@ -145,7 +149,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Violation Claim";
           break;
         case 5:
-          _selectedPage = LoginScreen(changeScreen, setUserId, setUser);
+          _selectedPage = LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
           _selectedTitle = "Login Screen";
           break;
         case 6:
@@ -180,6 +184,12 @@ class _BasePageState extends State<BasePage> {
   setUser(User user) {
     setState(() {
       this.user = user;
+    });
+  }
+
+  toggleOfflineMode() {
+    setState(() {
+      offlineMode = !offlineMode;
     });
   }
 

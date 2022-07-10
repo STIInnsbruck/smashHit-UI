@@ -8,8 +8,9 @@ class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
   final Function(String) setUserId;
   final Function(User) setUser;
+  final Function() toggleOfflineMode;
 
-  LoginScreen(this.changeScreen, this.setUserId, this.setUser);
+  LoginScreen(this.changeScreen, this.setUserId, this.setUser, this.toggleOfflineMode);
 
   @override
   _LoginScreenState createState() => new _LoginScreenState();
@@ -23,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   double smallSide = 10;
   late Future<User> futureUser = User() as Future<User>;
   User? user;
+
+  bool offlineMode = false;
 
   //TextField CONTROLLERS for Login
   TextEditingController _loginController = new TextEditingController();
@@ -148,6 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
+                      SizedBox(height: 20),
+                      offlineSwitch()
                     ],
                   ),
                 ),
@@ -294,6 +299,25 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget offlineSwitch() {
+    return Row(
+      children: [
+        Spacer(),
+        Text("Offline Mode: "),
+        Switch(
+            value: offlineMode,
+            onChanged: (value) {
+              setState(() {
+                offlineMode = !offlineMode;
+              });
+              widget.toggleOfflineMode();
+            }
+        ),
+        Spacer()
+      ],
     );
   }
 
