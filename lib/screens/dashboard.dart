@@ -26,8 +26,11 @@ class _DashboardState extends State<Dashboard> {
   String? searchId;
 
   //Offline Variables
-  List<User> usersList = [];
-  List<Obligation> obligationsList = [];
+  List<User> offlineUsers = [];
+  List<Obligation> offlineObligations = [];
+  List<TermType> offlineTermTypes = [];
+  List<Term> offlineTerms = [];
+  List<Contract> offlineContracts = [];
 
   @override
   void initState() {
@@ -122,7 +125,25 @@ class _DashboardState extends State<Dashboard> {
   }
 
   _generateOfflineData() {
+    //Generate Contractors
+    _generateOfflineContractor("c_0002", "Klaus Erlenmann", "erlenmann.klaus@email.com", "45, Vorarlbergerstrasse", "Austria", "Innsbruck", "004365874951", "DataController");
+    _generateOfflineContractor("c_0003", "Science For Future GmbH", "customer.support@sciencefuture.com", "06, Technikerstrasse", "Austria", "Innsbruck", "0043658561451", "DataController");
+    _generateOfflineContractor("c_0004", "Visualitics", "vis_secretary@visualitics.de", "78, Talstrasse", "Germany", "Saarbrücken", "004861322951", "DataController");
 
+    //Generate TermTypes
+    _generateOfflineTermType("tt_0001", "This Amendment is entered into the between [ENTER NAME] and [ENTER NAME] and amends any existing agreement ot our service Terms in accordance with the requirements of the European Union General Data Protection Regulation (Regulation (EU) 2016/679).", "Amendment");
+    _generateOfflineTermType("tt_0002", "[ENTER DATA CONTROLLER] shall ensure that any person who is authorised by [ENTER DATA CONTROLLER] to process Personal Data (including its staff, agents and subcontractors) shall be under an appropriate obligation of confidentiality (whether a contractual or statutory duty).", "Confidentiality Agreement");
+    _generateOfflineTermType("tt_0003", "1. All warranties, conditions, and other terms implied by statue or common law are, to the fullest extent permitted by law, excluded from this Agreement.\n2. Nothing in this Agreement limits or excludes the liability of [ENTER NAME A] for:\n(a) death or personal injury resulting from its negligence; or\n(b) fraud or fraudulent misrepresentation.\n3. Subject to clause 1 and clause 2:\n(a) [ENTER NAME A] shall not under any circumstances whatever be liable for:\ni. loss of profits; or\nii. any special, indirect or consequential loss, costs, damages, charges, or expenses; and\n(b) [ENTER NAME A]'s total liability in contract, tor (including negligence or breach of statutory duty), misrepresentation, restitution, or otherwise arising in connection with the perfomance or contemplated perfomance of this Agreement shall in all circumstances be limited to [AMOUNT].", "Limitation of Liability");
+
+    //Generate Terms
+    _generateOfflineTerm("t_0001", "tt_0001", "con_0001", "Term Description", "Amendment");
+    _generateOfflineTerm("t_0002", "tt_0002", "con_0001", "Term Description", "Confidentiality Agreement");
+    _generateOfflineTerm("t_0003", "tt_0003", "con_0001", "Term Description", "Limitation of Liability");
+
+    //Generate Obligations
+    _generateOfflineObligation("obl_0001", "con_0001", "c_0001", "t_0001", "Deliver Package by end date.", DateTime.parse("2022-08-10"), DateTime.parse("2022-07-10"), "hasPending");
+    _generateOfflineObligation("obl_0002", "con_0001", "c_0002", "t_0001", "Receive and notify receivable by end date.", DateTime.parse("2022-08-10"), DateTime.parse("2022-07-10"), "hasPending");
+    _generateOfflineObligation("obl_0003", "con_0001", "c_0001", "t_0002", "Not leak any information to other parties", DateTime.parse("2022-08-10"), DateTime.parse("2022-07-10"), "hasPending");
   }
 
   _generateOfflineContractor(String id, String name, String email,
@@ -138,7 +159,7 @@ class _DashboardState extends State<Dashboard> {
       role: role
     );
 
-    usersList.add(user);
+    offlineUsers.add(user);
   }
 
   _generateOfflineObligation(String obligationId, String contractId, String contractorId,
@@ -155,7 +176,30 @@ class _DashboardState extends State<Dashboard> {
       state: state
     );
 
-    obligationsList.add(obligation);
+    offlineObligations.add(obligation);
+  }
+
+  _generateOfflineTermType(String termTypeId, String description, String name) {
+    TermType termType = new TermType(
+      id: termTypeId,
+      description: description,
+      name: name
+    );
+
+    offlineTermTypes.add(termType);
+  }
+
+  _generateOfflineTerm(String termId, String termTypeId, String contractId,
+      String description, String name) {
+    Term term = new Term(
+      id: termId,
+      termTypeId: termTypeId,
+      contractId: contractId,
+      description: description,
+      name: name
+    );
+
+    offlineTerms.add(term);
   }
 
   _generateContract() {
