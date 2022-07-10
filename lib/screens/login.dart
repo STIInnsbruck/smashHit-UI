@@ -119,8 +119,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             ) :
                             MaterialButton(
                               onPressed: () {
-                                if(_loginFormKey.currentState!.validate()) {
-                                  _loginUser(_loginController.text);
+                                if(offlineMode) {
+                                  _loginOfflineMode();
+                                } else {
+                                  if(_loginFormKey.currentState!.validate()) {
+                                    _loginUser(_loginController.text);
+                                  }
                                 }
                               },
                               child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
@@ -373,6 +377,26 @@ class _LoginScreenState extends State<LoginScreen> {
       role: "role",
     );
   }
+
+  User setOfflineUser() {
+    return User(
+      id: "c_0001",
+      name: "Max Mustermann",
+      email: "max.musertmann@email.com",
+      country: "Austria",
+      city: "Innsbruck",
+      phone: "0035269815968",
+      streetAddress: "12, Maria-Theresien-Strasse",
+      role: "DataSubject"
+    );
+  }
+
+  _loginOfflineMode() {
+    _toggleLoading();
+    widget.setUser(setOfflineUser());
+    _toggleLoading();
+    widget.changeScreen(0);
+}
 
   _loginUser(String agentId) async {
     _toggleLoading();
