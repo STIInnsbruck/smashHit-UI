@@ -5,8 +5,9 @@ import 'package:smashhit_ui/data/data_provider.dart';
 class TermTypeCreationPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final User? user;
+  final bool offlineMode;
 
-  TermTypeCreationPage(this.changeScreen, this.user);
+  TermTypeCreationPage(this.changeScreen, this.user, this.offlineMode);
 
   @override
   _TermTypeCreationPage createState() => _TermTypeCreationPage();

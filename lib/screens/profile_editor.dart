@@ -6,8 +6,9 @@ import 'package:smashhit_ui/data/models.dart';
 class ProfileEditorPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String userId;
+  final bool offlineMode;
 
-  ProfileEditorPage(this.changeScreen, this.userId);
+  ProfileEditorPage(this.changeScreen, this.userId, this.offlineMode);
 
   @override
   _ProfileEditorPage createState() => _ProfileEditorPage();

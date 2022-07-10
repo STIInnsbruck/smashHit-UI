@@ -8,8 +8,9 @@ class Dashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String? searchId;
   final User? user;
+  final bool offlineMode;
 
-  Dashboard(this.changeScreen, this.user, this.searchId);
+  Dashboard(this.changeScreen, this.user, this.searchId, this.offlineMode);
 
   @override
   _DashboardState createState() => new _DashboardState();

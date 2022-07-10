@@ -117,7 +117,7 @@ class _BasePageState extends State<BasePage> {
             ),
           ]),
         ),
-        body: _selectedIndex == 0? Dashboard(changeScreen, user, searchId) : _selectedPage,
+        body: _selectedIndex == 0? Dashboard(changeScreen, user, searchId, offlineMode) : _selectedPage,
         resizeToAvoidBottomInset: true,
       ),
     );
@@ -128,15 +128,15 @@ class _BasePageState extends State<BasePage> {
       _selectedIndex = x;
       switch (_selectedIndex) {
         case 0:
-          _selectedPage = Dashboard(changeScreen, user, searchId);
+          _selectedPage = Dashboard(changeScreen, user, searchId, offlineMode);
           _selectedTitle = "Contracts Dashboard";
           break;
         case 1:
-          _selectedPage = ContractCreation(changeScreen, user);
+          _selectedPage = ContractCreation(changeScreen, user, offlineMode);
           _selectedTitle = "Contract Creation";
           break;
         case 2:
-          _selectedPage = ViewContract(changeScreen, id!, user);
+          _selectedPage = ViewContract(changeScreen, id!, user, offlineMode);
           _selectedTitle = "Contract ID: $id";
           (context as Element).performRebuild();
           break;
@@ -145,7 +145,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Template Selector";
           break;
         case 4:
-          _selectedPage = ContractViolation(changeScreen, id!, user, obligations!);
+          _selectedPage = ContractViolation(changeScreen, id!, user, obligations!, offlineMode);
           _selectedTitle = "Violation Claim";
           break;
         case 5:
@@ -153,23 +153,23 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Login Screen";
           break;
         case 6:
-          _selectedPage = UpdateScreen(changeScreen, id!, user);
+          _selectedPage = UpdateScreen(changeScreen, id!, user, offlineMode);
           _selectedTitle = "Change & Update Your Contract";
           break;
         case 7:
-          _selectedPage = ProfileEditorPage(changeScreen, userId!);
+          _selectedPage = ProfileEditorPage(changeScreen, userId!, offlineMode);
           _selectedTitle = "Profile Editor";
           break;
         case 8:
-          _selectedPage = ContractPartyProfile(changeScreen, id!);
+          _selectedPage = ContractPartyProfile(changeScreen, id!, offlineMode);
           _selectedTitle = "Profile";
           break;
         case 9:
-          _selectedPage = TermTypeCreationPage(changeScreen, user);
+          _selectedPage = TermTypeCreationPage(changeScreen, user, offlineMode);
           _selectedTitle = "Create Term Types";
           break;
         case 10:
-          _selectedPage = TermTypeViewPage(changeScreen, user);
+          _selectedPage = TermTypeViewPage(changeScreen, user, offlineMode);
           _selectedTitle = "View Term Types";
       }
     });

@@ -7,8 +7,9 @@ import 'package:smashhit_ui/data/data_provider.dart';
 class ContractCreation extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final User? user;
+  final bool offlineMode;
 
-  ContractCreation(this.changeScreen, this.user);
+  ContractCreation(this.changeScreen, this.user, this.offlineMode);
 
   @override
   _ContractCreationState createState() => new _ContractCreationState();
