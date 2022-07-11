@@ -9,8 +9,11 @@ class User {
   String? city;
   String? phone;
   String? role;
+  String? companyId;
+  String? vat;
+  String? createDate;
 
-  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role});
+  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role, this.companyId, this.vat, this.createDate});
 
   String? get getId => id;
   String? get getName => name;

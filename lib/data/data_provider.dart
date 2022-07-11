@@ -32,27 +32,30 @@ class DataProvider {
 
     var body = {
       "Address": user.streetAddress,
+      "CompanyId": user.companyId,
       "Country": user.country,
+      "CreateDate": user.createDate,
       "Email": user.email,
       "Name": user.name,
       "Phone": user.phone,
       "Role": user.role,
-      "Territory": user.city
+      "Territory": user.city,
+      "Vat": user.vat
     };
 
     var jsonBody = jsonEncode(body);
 
-    final response = await http.post(kBaseUrl.replace(path: "/contractor/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contract/contractor/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       try {
-        return parser.parseUser(jsonDecode(response.body));
+        return parser.parseUserRegister(jsonDecode(response.body));
       } catch (e) {
-        throw Exception('Failed to fetch created user.');
+        throw Exception('Failed to parse create user\nError Message: User response JSON is different than expected.');
       }
     } else {
-      throw Exception('Failed to load created user.');
+      throw Exception('Error on creating user on server.\nError Message: ${response.body}');
     }
   }
 

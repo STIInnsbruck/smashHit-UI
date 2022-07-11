@@ -1,5 +1,7 @@
 import 'package:smashhit_ui/data/models.dart';
-
+///The response from the ACT Swagger API returns several different forms of
+///responses. For this reason there are several different parsers for one
+///class.
 class ResponseParser {
 
   //USER PARSERS
@@ -12,6 +14,21 @@ class ResponseParser {
       country: jsonUser['country'],
       email: jsonUser['email'],
       phone: jsonUser['phone'],
+    );
+  }
+
+  User parseUserRegister(Map jsonUser) {
+    return User(
+      streetAddress: jsonUser["Address"],
+      companyId: jsonUser["CompanyId"],
+      country: jsonUser["Country"],
+      createDate: formatDate(jsonUser["CreateDate"]).toString(),
+      email: jsonUser["Email"],
+      name: jsonUser["Name"],
+      phone: jsonUser["Phone"],
+      role: jsonUser["Role"],
+      city: jsonUser["territory"],
+      vat: jsonUser["Vat"],
     );
   }
 
@@ -135,6 +152,8 @@ class ResponseParser {
     return jsonList.map((jsonTermType) => parseTermType(jsonTermType)).toList();
   }
 
+  ///The first ten digits in a response for a date format is YYYY-MM-DD.
+  ///The rest of the information is superfluous.
   DateTime formatDate(String dateString) {
     return DateTime.parse(dateString.substring(0, 10));
   }

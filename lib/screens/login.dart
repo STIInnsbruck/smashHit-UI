@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialButton(
                               onPressed: () {
                                 if (_registrationFormKey.currentState!.validate()) {
-                                  _registerUser((name.text + " " + surname.text), (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                                  _registerUser();
                                 }
                               },
                               child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
@@ -351,8 +351,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  _registerUser(String name, String agentId, String address, String city,
-      String country, String state, String phone, String agentType, String email) async {
+  _registerUser() async {
     _toggleLoading();
     try {
       User tmpUser = await dataProvider.createAgent(setUser());
@@ -374,7 +373,10 @@ class _LoginScreenState extends State<LoginScreen> {
       city: city.text,
       phone: phone.text,
       streetAddress: address.text,
-      role: "role",
+      role: "DataSubject",
+      companyId: "cm_86ff4c94-fc62-11ec-93f2-b5bccd42b8bf",
+      createDate: DateTime.now().toIso8601String(),
+      vat: "1111"
     );
   }
 
