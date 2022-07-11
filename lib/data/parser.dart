@@ -22,7 +22,7 @@ class ResponseParser {
       streetAddress: jsonUser["Address"],
       companyId: jsonUser["CompanyId"],
       country: jsonUser["Country"],
-      createDate: formatDate(jsonUser["CreateDate"]).toString(),
+      createDate: jsonUser["CreateDate"],
       email: jsonUser["Email"],
       name: jsonUser["Name"],
       phone: jsonUser["Phone"],
@@ -40,11 +40,15 @@ class ResponseParser {
     return User(
       id: jsonUser['contractorId'],
       streetAddress: jsonUser['address'],
+      companyId: jsonUser['companyId'],
       country: jsonUser['country'],
+      createDate: jsonUser['createDate'],
       email: jsonUser['email'],
       name: jsonUser['name'],
       phone: jsonUser['phone'],
       city: jsonUser['territory'],
+      role: jsonUser['role'],
+      vat: jsonUser['vat']
     );
   }
 

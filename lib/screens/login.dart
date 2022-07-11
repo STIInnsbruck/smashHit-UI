@@ -356,7 +356,6 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       User tmpUser = await dataProvider.createAgent(setUser());
       _toggleLoading();
-      widget.setUserId(tmpUser.id!);
       widget.setUser(tmpUser);
       widget.changeScreen(0);
     } catch (e) {

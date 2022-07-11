@@ -71,7 +71,7 @@ class DataProvider {
   }
 
   Future<User> fetchUserById(String contractorId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contractor/$contractorId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       try {
