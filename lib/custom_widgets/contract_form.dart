@@ -570,9 +570,9 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget contractorCSCDropDownList(int index) {
     return CountryStateCityPicker(
-      state: contractorControllers[index],
-      city: contractorControllers[index + 1],
-      country: contractorControllers[index + 2],
+      country: contractorControllers[index],
+      state: contractorControllers[index + 1],
+      city: contractorControllers[index + 2],
       textFieldInputBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(2.0),
           borderSide: BorderSide(color: Colors.black, width: 2.0)),
@@ -1453,6 +1453,8 @@ class _ContractFormState extends State<ContractForm> {
     contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
     contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
     contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    //State was unexpectedly removed from backend. Set to temporary not required for a contract agreement.
+    contractorControllers[index+4].text = 'State Currently Not Required';
     contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
     contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }

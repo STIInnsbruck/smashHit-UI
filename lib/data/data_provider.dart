@@ -60,7 +60,7 @@ class DataProvider {
   }
 
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: 'contractors/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/contractors/'), headers: headers);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
