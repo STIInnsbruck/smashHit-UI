@@ -89,12 +89,7 @@ class DataProvider {
     final response = await http.delete(kBaseUrl.replace(path: '/contract/contractor/delete/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      if(data.toString().compareTo('{"Success": "No record found for this ID"}') == 0 ) {
-        return true;
-      } else {
-        return false;
-      }
+      return true;
     } else {
       throw Exception('Failed to delete account $contractorId.\nBack-end response: ${response.reasonPhrase}.');
     }

@@ -54,6 +54,13 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   @override
   void initState() {
     super.initState();
+
+    _getAllObligationsOfEachContract().then((value) {
+      setState(() {
+        obligations = obligations;
+        fetchedObligations = true;
+      });
+    });
   }
 
   @override
@@ -72,12 +79,6 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   builder: (context, contractsSnapshot) {
                     if (contractsSnapshot.hasData) {
                       contracts = contractsSnapshot.data!;
-                      _getAllObligationsOfEachContract().then((value) {
-                        setState(() {
-                          obligations = obligations;
-                          fetchedObligations = true;
-                        });
-                      });
                       return _wideScreenLayout();
                     } else if (contractsSnapshot.hasError) {
                       return Text('${contractsSnapshot.error}');
