@@ -34,7 +34,7 @@ class DataProvider {
       "Address": user.streetAddress,
       "CompanyId": user.companyId,
       "Country": user.country,
-      "CreateDate": user.createDate,
+      "CreateDate": user.createDate!.toIso8601String(),
       "Email": user.email,
       "Name": user.name,
       "Phone": user.phone,
@@ -82,6 +82,41 @@ class DataProvider {
 
     } else {
       throw Exception('Failed to load agent by id: $contractorId.');
+    }
+  }
+
+  Future<int> updateUser(User user) async {
+    var body = {
+      "Address": user.streetAddress,
+      "CompanyId": user.companyId,
+      "ContractorId": user.id,
+      "Country": user.country,
+      "CreateDate": user.createDate!.toIso8601String(),
+      "Email": user.email,
+      "Name": user.name,
+      "Phone": user.phone,
+      "Role": user.role,
+      "Territory": user.city,
+      "Vat": user.vat
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.put(kBaseUrl.replace(path: "/contract/contractor/update/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Message: \t $data");
+      if(data.toString().compareTo('{"Success": "No record found for this ID"}') == 0 ) {
+        return -1;
+      } else if (data.toString().compareTo('{"Success": "Record updated successfully"}') == 0 ){
+        return 1;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
     }
   }
 

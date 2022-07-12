@@ -374,7 +374,7 @@ class _LoginScreenState extends State<LoginScreen> {
       streetAddress: address.text,
       role: "DataSubject",
       companyId: "cm_86ff4c94-fc62-11ec-93f2-b5bccd42b8bf",
-      createDate: DateTime.now().toIso8601String(),
+      createDate: DateTime.now(),
       vat: "1111"
     );
   }

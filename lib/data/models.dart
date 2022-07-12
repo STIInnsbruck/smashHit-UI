@@ -11,7 +11,7 @@ class User {
   String? role;
   String? companyId;
   String? vat;
-  String? createDate;
+  DateTime? createDate;
 
   User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role, this.companyId, this.vat, this.createDate});
 
@@ -21,6 +21,17 @@ class User {
   @override
   String toString() {
     return '$name, $email';
+  }
+
+  ///Display user's creation date in format YYYY.MM.DD
+  String displayCreationDate() {
+    String dateString = "";
+    dateString += createDate!.toIso8601String().substring(0, 4);
+    dateString += ".";
+    dateString += createDate!.toIso8601String().substring(5, 7);
+    dateString += ".";
+    dateString += createDate!.toIso8601String().substring(8, 10);
+    return dateString;
   }
 
 }
