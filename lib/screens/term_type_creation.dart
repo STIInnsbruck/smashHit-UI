@@ -4,10 +4,11 @@ import 'package:smashhit_ui/data/data_provider.dart';
 
 class TermTypeCreationPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
+  final String? termTypeId;
   final User? user;
   final bool offlineMode;
 
-  TermTypeCreationPage(this.changeScreen, this.user, this.offlineMode);
+  TermTypeCreationPage(this.changeScreen, this.user, this.offlineMode, this.termTypeId);
 
   @override
   _TermTypeCreationPage createState() => _TermTypeCreationPage();
@@ -23,8 +24,22 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
 
   bool _isLoading = false;
   bool _formComplete = false;
+  bool _isEditing = false;
+
+  late TermType termType;
 
   DataProvider dataProvider = new DataProvider();
+
+  @override
+  void initState() {
+    super.initState();
+
+    //If termTypeId is NOT NULL then the user is editing an existing TermType.
+    if (widget.termTypeId != null) {
+      _isEditing = true;
+      _fillInFields();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +61,8 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: createTermTypeButton(),
+            //If user is editing an existing TermType, display update button NOT create button.
+            child: _isEditing? updateTermTypeButton() : createTermTypeButton(),
           ),
           _isLoading? Center(
               child: CircularProgressIndicator()
@@ -217,4 +233,86 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
     );
   }
 
+  Widget updateTermTypeButton() {
+    return Container(
+      child: MaterialButton(
+          minWidth: 125,
+          onPressed: () async {
+            _toggleLoading();
+            bool success = await dataProvider.updateTermType(widget.termTypeId!, descriptionController.text, nameController.text);
+            if (success) {
+              _toggleLoading();
+              widget.changeScreen(10);
+            } else {
+              _toggleLoading();
+              _showUpdateErrorDialog();
+            }
+          },
+          color: Colors.green,
+          hoverColor: Colors.lightGreen,
+          child: Text("Update Clause Type", style: TextStyle(color: Colors.white))
+      ),
+    );
+  }
+
+  void _fillInFields() async {
+    _toggleLoading();
+    try {
+      termType = await dataProvider.fetchTermTypeById(widget.termTypeId!);
+      nameController.text = termType.name!;
+      descriptionController.text = termType.description!;
+      _toggleLoading();
+    } catch (e) {
+      _toggleLoading();
+      _showTermTypeFetchErrorDialog(e.toString());
+    }
+
+  }
+
+  _showTermTypeFetchErrorDialog(String errorMessage) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Loading...', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Center(child: CircularProgressIndicator()),
+              Container(height: 5),
+              Text('Your Clause Template is being fetched.', textAlign: TextAlign.center),
+            ],
+
+          );
+        }
+    );
+  }
+
+  _showUpdateErrorDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Oops!', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            content: Column(
+              children: [
+                Icon(Icons.error, size: 40, color: Colors.yellow),
+                Container(height: 20),
+                Text('Your Clause Template could not be updated.', textAlign: TextAlign.center),
+              ],
+            ),
+            actions: [
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }
+              )
+            ]
+          );
+        }
+    );
+  }
 }

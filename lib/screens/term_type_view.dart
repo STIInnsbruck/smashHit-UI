@@ -61,7 +61,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
       child: ListView.builder(
         itemCount: termTypeList!.length,
         itemBuilder: (BuildContext context, int index) {
-          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType);
+          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType, changeScreen: widget.changeScreen);
         }
       )
     );

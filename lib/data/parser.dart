@@ -157,6 +157,11 @@ class ResponseParser {
     return jsonList.map((jsonTermType) => parseTermType(jsonTermType)).toList();
   }
 
+  //OTHER PARSERS
+  String parseSuccessResponse(Map jsonSuccess) {
+    return jsonSuccess["Success"];
+  }
+
   ///The first ten digits in a response for a date format is YYYY-MM-DD.
   ///The rest of the information is superfluous.
   DateTime formatDate(String dateString) {

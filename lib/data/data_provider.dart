@@ -370,7 +370,7 @@ class DataProvider {
   }
 
   Future<bool> deleteTermTypeById(String termTypeId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/term/type/delete/$termTypeId/'), headers: headers);
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/term/type/delete/$termTypeId/'), headers: headers);
 
     if (response.statusCode == 200) {
       return true;
@@ -379,13 +379,38 @@ class DataProvider {
     }
   }
 
+  Future<bool> updateTermType(String termTypeId, String description, String name) async {
+    var body = {
+      "CreateDate": DateTime.now().toIso8601String(),
+      "Description": description,
+      "Name": name,
+      "TermTypeId": termTypeId
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.put(kBaseUrl.replace(path: '/contract/term/type/update/'), headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      try {
+        String data = parser.parseSuccessResponse(jsonDecode(response.body));
+        return true;
+      } catch (e) {
+        return false;
+      }
+    } else {
+      throw Exception('Failed to update term type $termTypeId.\nBack-end response: ${response.reasonPhrase}.');
+    }
+  }
+
   Future<TermType> createTermType(String termTypeName, String termTypeDesc) async {
     var body = {
+      "CreateDate": DateTime.now().toIso8601String(),
       "Description": termTypeDesc,
       "Name": termTypeName
     };
     var jsonBody = jsonEncode(body);
-    final response = await http.post(kBaseUrl.replace(path: "/term/type/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contract/term/type/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {

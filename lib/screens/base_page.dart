@@ -171,7 +171,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Profile";
           break;
         case 9:
-          _selectedPage = TermTypeCreationPage(changeScreen, user, offlineMode);
+          _selectedPage = TermTypeCreationPage(changeScreen, user, offlineMode, id);
           _selectedTitle = "Create Term Types";
           break;
         case 10:
