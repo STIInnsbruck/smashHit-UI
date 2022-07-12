@@ -28,6 +28,7 @@ class _BasePageState extends State<BasePage> {
   final FocusNode _searchFocus = FocusNode();
   DataProvider dataProvider = DataProvider();
   String? searchId;
+  bool _isComplianceChecking = false;
 
   //Offline Mode set to true to not use the online endpoints.
   //Setting to true will use locally stored json files to read/write data.
@@ -49,7 +50,7 @@ class _BasePageState extends State<BasePage> {
         appBar: _selectedIndex == 5 ? null : AppBar(
           backgroundColor: Colors.blue,
           title: Center(child: Text(_selectedTitle)),
-          actions: [inboxIcon(), searchField(screenWidth), searchButton()],
+          actions: [checkComplianceButton(), searchField(screenWidth), searchButton()],
         ),
         drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: <Widget>[
@@ -117,7 +118,12 @@ class _BasePageState extends State<BasePage> {
             ),
           ]),
         ),
-        body: _selectedIndex == 0? Dashboard(changeScreen, user, searchId, offlineMode) : _selectedPage,
+        body: Stack(
+          children: [
+            _selectedIndex == 0? Dashboard(changeScreen, user, searchId, offlineMode) : _selectedPage!,
+            _isComplianceChecking ? showCheckingCompliance() : Container()
+          ],
+        ),
         resizeToAvoidBottomInset: true,
       ),
     );
@@ -173,6 +179,21 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "View Term Types";
       }
     });
+  }
+
+  Widget showCheckingCompliance() {
+    return Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: Colors.grey[50],
+        child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                Text("Checking contract compliance. Please wait.")
+              ],
+            )));
   }
 
   setUserId(String agentId) {
@@ -247,6 +268,20 @@ class _BasePageState extends State<BasePage> {
         PopupMenuItem(child: Text("Example Notification 4")),
         PopupMenuItem(child: Text("Example Notification 5"))
       ],
+    );
+  }
+
+  Widget checkComplianceButton() {
+    return Tooltip(
+      message: "Start automatic compliance check.",
+      child: IconButton(
+        icon: Icon(Icons.published_with_changes),
+        onPressed: () async {
+          setState(() { _isComplianceChecking = true; });
+          bool flag = await dataProvider.checkCompliance();
+          setState(() { _isComplianceChecking = false; });
+        },
+      ),
     );
   }
 

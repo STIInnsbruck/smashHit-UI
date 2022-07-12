@@ -54,41 +54,37 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   @override
   void initState() {
     super.initState();
-
-    futureUser = dataProvider.fetchUserById(widget.userId);
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
       child: FutureBuilder<User>(
-        future: futureUser,
+        future: futureUser = dataProvider.fetchUserById(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             user = snapshot.data;
-            insertUserData();
-            return FutureBuilder<List<Contract>>(
-                future: dataProvider.fetchContractsByContractorId(widget.userId),
-                builder: (context, contractsSnapshot) {
-                  if (contractsSnapshot.hasData) {
-                    contracts = contractsSnapshot.data!;
-                    _getAllObligationsOfEachContract().then((value) {
-                      setState(() {
-                        obligations = obligations;
-                        fetchedObligations = true;
+            displayUserData();
+            return Container(
+              child: FutureBuilder<List<Contract>>(
+                  future: dataProvider.fetchContractsByContractorId(widget.userId),
+                  builder: (context, contractsSnapshot) {
+                    if (contractsSnapshot.hasData) {
+                      contracts = contractsSnapshot.data!;
+                      _getAllObligationsOfEachContract().then((value) {
+                        setState(() {
+                          obligations = obligations;
+                          fetchedObligations = true;
+                        });
                       });
-                    });
-                    return _isWideScreen(screenWidth, screenHeight)
-                        ? Center(child: _wideScreenLayout())
-                        : _slimScreenLayout();
-                  } else if (contractsSnapshot.hasError) {
-                    return Text('${contractsSnapshot.error}');
+                      return _wideScreenLayout();
+                    } else if (contractsSnapshot.hasError) {
+                      return Text('${contractsSnapshot.error}');
+                    }
+                    return Center(child: CircularProgressIndicator());
                   }
-                  return Center(child: CircularProgressIndicator());
-                }
+              ),
             );
           } else if (snapshot.hasError) {
             return Center(child: Text('${snapshot.error}'));
@@ -419,7 +415,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     );
   }
 
-  void insertUserData() {
+  void displayUserData() {
     nameController.text = user!.name!;
     phoneController.text = user!.phone!;
     emailController.text = user!.email!;

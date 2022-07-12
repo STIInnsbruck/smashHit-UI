@@ -172,7 +172,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         ContractStepHeader(
             width: width,
-            name: "Step 2. Add Contractors",
+            name: "Step 2. Add Contractual Parties",
             stepComplete: stepTwoComplete,
             onPressed: () async {
               setStepTwo();
@@ -181,7 +181,7 @@ class _ContractFormState extends State<ContractForm> {
             ? ContractStepBody(
             width: width,
             children: [
-              Text("Add Contractor ${currentContractorIndex + 1}",
+              Text("Add Contractual Party ${currentContractorIndex + 1}",
                   style: TextStyle(fontSize: 20)),
               // Every Contractor has 7 Fields. Assign each field the right contractor.
               contractorFieldSuggestor((currentContractorIndex * 7) + 0),

@@ -19,16 +19,17 @@ class ResponseParser {
 
   User parseUserRegister(Map jsonUser) {
     return User(
-      streetAddress: jsonUser["Address"],
-      companyId: jsonUser["CompanyId"],
-      country: jsonUser["Country"],
-      createDate: jsonUser["CreateDate"],
-      email: jsonUser["Email"],
-      name: jsonUser["Name"],
-      phone: jsonUser["Phone"],
-      role: jsonUser["Role"],
+      id: jsonUser["contractorId"],
+      streetAddress: jsonUser["address"],
+      companyId: jsonUser["companyId"],
+      country: jsonUser["country"],
+      createDate: jsonUser["createDate"],
+      email: jsonUser["email"],
+      name: jsonUser["name"],
+      phone: jsonUser["phone"],
+      role: jsonUser["role"],
       city: jsonUser["territory"],
-      vat: jsonUser["Vat"],
+      vat: jsonUser["vat"],
     );
   }
 
@@ -101,17 +102,17 @@ class ResponseParser {
   Obligation parseObligationId(Map jsonObligation) {
     //initiate obligation with its foundational data.
     Obligation obligation = new Obligation(
-      id: jsonObligation["obligationID"],
+      id: jsonObligation["obligationId"],
       description: jsonObligation["obligationDescription"],
       executionDate: formatDate(jsonObligation["executionDate"]),
       endDate: formatDate(jsonObligation["endDate"]),
       state: jsonObligation["state"],
       //the first json has contractorId
-      contractorId: jsonObligation["identifier"][0],
+      contractorId: jsonObligation["identifier"][1],
       //the second json has obligationId
-      contractId: jsonObligation["identifier"][1],
+      contractId: jsonObligation["identifier"][2],
       //the third json has termiId
-      termId: jsonObligation["identifier"][2],
+      termId: jsonObligation["identifier"][3],
     );
 
     return obligation;
@@ -146,7 +147,7 @@ class ResponseParser {
   //TERMTYPE PARSERS
   TermType parseTermType(Map jsonTermType) {
     return TermType(
-        id: jsonTermType["TermTypeId"],
+        id: jsonTermType["termTypeId"],
         description: jsonTermType["description"],
         name: jsonTermType["name"]
     );
