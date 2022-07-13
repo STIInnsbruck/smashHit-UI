@@ -172,7 +172,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         ContractStepHeader(
             width: width,
-            name: "Step 2. Add Contractors",
+            name: "Step 2. Add Contractual Parties",
             stepComplete: stepTwoComplete,
             onPressed: () async {
               setStepTwo();
@@ -181,7 +181,7 @@ class _ContractFormState extends State<ContractForm> {
             ? ContractStepBody(
             width: width,
             children: [
-              Text("Add Contractor ${currentContractorIndex + 1}",
+              Text("Add Contractual Party ${currentContractorIndex + 1}",
                   style: TextStyle(fontSize: 20)),
               // Every Contractor has 7 Fields. Assign each field the right contractor.
               contractorFieldSuggestor((currentContractorIndex * 7) + 0),
@@ -253,7 +253,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         ContractStepHeader(
             width: width,
-            name: "Step 4. Obligations of the Contract",
+            name: "Step 4. Clauses of the Contract",
             stepComplete: stepObligationComplete,
             onPressed: () async {
               setStepObligation();
@@ -262,7 +262,7 @@ class _ContractFormState extends State<ContractForm> {
           ? ContractStepBody(
               width: width,
               children: _termMap.keys.length > 0? [
-                Text("You have ${_termMap.keys.length} term(s), you can add obligations to each term.", style: TextStyle(fontSize: 20)),
+                Text("You have ${_termMap.keys.length} term(s), you can add clauses to each term.", style: TextStyle(fontSize: 20)),
                 SizedBox(height: 10),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -276,7 +276,7 @@ class _ContractFormState extends State<ContractForm> {
                 SizedBox(height: 10),
                 addObligationButton(),
               ] : [
-                Text("You have not added any terms in the previous step. To add obligations you must have terms in your contract.", style: TextStyle(fontSize:20), textAlign: TextAlign.center),
+                Text("You have not added any terms in the previous step. To add clauses you must have terms in your contract.", style: TextStyle(fontSize:20), textAlign: TextAlign.center),
               ]
         )
           : Container()
@@ -416,7 +416,7 @@ class _ContractFormState extends State<ContractForm> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Obligation-${index+1}:", style: TextStyle(fontSize: 15)),
+        Text("Clause-${index+1}:", style: TextStyle(fontSize: 15)),
         SizedBox(width: 10),
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -570,9 +570,9 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget contractorCSCDropDownList(int index) {
     return CountryStateCityPicker(
-      state: contractorControllers[index],
-      city: contractorControllers[index + 1],
-      country: contractorControllers[index + 2],
+      country: contractorControllers[index],
+      state: contractorControllers[index + 1],
+      city: contractorControllers[index + 2],
       textFieldInputBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(2.0),
           borderSide: BorderSide(color: Colors.black, width: 2.0)),
@@ -1175,7 +1175,7 @@ class _ContractFormState extends State<ContractForm> {
   Widget addObligationButton() {
     List<PopupMenuItem> items = [];
     return PopupMenuButton(
-      tooltip: "Add an obligation",
+      tooltip: "Add a clause",
       child: Icon(Icons.add),
       onSelected: (Term term) {
         addObligation(term);
@@ -1453,6 +1453,8 @@ class _ContractFormState extends State<ContractForm> {
     contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
     contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
     contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    //State was unexpectedly removed from backend. Set to temporary not required for a contract agreement.
+    contractorControllers[index+4].text = 'State Currently Not Required';
     contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
     contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
   }

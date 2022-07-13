@@ -8,8 +8,9 @@ class UpdateScreen extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String contractId;
   final User? user;
+  final bool offlineMode;
 
-  UpdateScreen(this.changeScreen, this.contractId, this.user);
+  UpdateScreen(this.changeScreen, this.contractId, this.user, this.offlineMode);
 
   @override
   _UpdateScreenState createState() => new _UpdateScreenState();

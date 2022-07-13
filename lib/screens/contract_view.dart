@@ -9,8 +9,9 @@ class ViewContract extends StatefulWidget {
   final Function(int, [String, List<Obligation>]) changeScreen;
   final String contractId;
   final User? user;
+  final bool offlineMode;
 
-  ViewContract(this.changeScreen, this.contractId, this.user);
+  ViewContract(this.changeScreen, this.contractId, this.user, this.offlineMode);
 
   @override
   _ContractCreationState createState() => new _ContractCreationState();
@@ -152,7 +153,7 @@ class _ContractCreationState extends State<ViewContract> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                           child: Center(
-                              child: Text('Obligation', style: TextStyle(fontSize: 20))),
+                              child: Text('Clause', style: TextStyle(fontSize: 20))),
                         ),
                       ),
                       ListTile(
@@ -169,7 +170,7 @@ class _ContractCreationState extends State<ViewContract> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('Obligation Description: ',
+                            Text('Clause Description: ',
                                 style:
                                 TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                             Text(
@@ -212,6 +213,7 @@ class _ContractCreationState extends State<ViewContract> {
                       ),
                       Spacer(),
                       Center(child: obligationCardButton(obligationSnapshot.data!, userSnapshot.data!)),
+                      Spacer()
                     ],
                   );
                 } else if (userSnapshot.hasError) {
@@ -581,7 +583,7 @@ class _ContractCreationState extends State<ViewContract> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Obligation-${index+1}:", style: TextStyle(fontSize: 15)),
+        Text("Clause-${index+1}:", style: TextStyle(fontSize: 15)),
         SizedBox(width: 10),
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -763,23 +765,23 @@ class _ContractCreationState extends State<ViewContract> {
   Tooltip obligationIconByStatus(String status) {
     if (status.compareTo("hasPending") == 0) {
       return Tooltip(
-        message: "Obligation is pending.",
+        message: "Clause is pending.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
     } else if (status.compareTo("hasInvalid") == 0) {
       return Tooltip(
-          message: "Obligation is invalid.",
+          message: "Clause is invalid.",
           child: Icon(Icons.warning, color: Colors.yellow, size: 30));
     } else if (status.compareTo("hasFulfilled") == 0) {
       return Tooltip(
-          message: "Obligation is fulfilled.",
+          message: "Clause is fulfilled.",
           child: Icon(Icons.check_circle, color: Colors.green, size: 30));
     } else if (status.compareTo("hasValid") == 0) {
       return Tooltip(
-          message: "Obligation is valid.",
+          message: "Clause is valid.",
           child: Icon(Icons.done, color: Colors.grey, size: 30));
     } else {
       return Tooltip(
-        message: "Obligation is completed.",
+        message: "Clause is completed.",
           child: Icon(Icons.check_circle, color: Colors.green, size: 30));
     }
   }
