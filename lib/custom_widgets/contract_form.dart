@@ -253,7 +253,7 @@ class _ContractFormState extends State<ContractForm> {
       children: [
         ContractStepHeader(
             width: width,
-            name: "Step 4. Obligations of the Contract",
+            name: "Step 4. Clauses of the Contract",
             stepComplete: stepObligationComplete,
             onPressed: () async {
               setStepObligation();
@@ -262,7 +262,7 @@ class _ContractFormState extends State<ContractForm> {
           ? ContractStepBody(
               width: width,
               children: _termMap.keys.length > 0? [
-                Text("You have ${_termMap.keys.length} term(s), you can add obligations to each term.", style: TextStyle(fontSize: 20)),
+                Text("You have ${_termMap.keys.length} term(s), you can add clauses to each term.", style: TextStyle(fontSize: 20)),
                 SizedBox(height: 10),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -276,7 +276,7 @@ class _ContractFormState extends State<ContractForm> {
                 SizedBox(height: 10),
                 addObligationButton(),
               ] : [
-                Text("You have not added any terms in the previous step. To add obligations you must have terms in your contract.", style: TextStyle(fontSize:20), textAlign: TextAlign.center),
+                Text("You have not added any terms in the previous step. To add clauses you must have terms in your contract.", style: TextStyle(fontSize:20), textAlign: TextAlign.center),
               ]
         )
           : Container()
@@ -416,7 +416,7 @@ class _ContractFormState extends State<ContractForm> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Obligation-${index+1}:", style: TextStyle(fontSize: 15)),
+        Text("Clause-${index+1}:", style: TextStyle(fontSize: 15)),
         SizedBox(width: 10),
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -1175,7 +1175,7 @@ class _ContractFormState extends State<ContractForm> {
   Widget addObligationButton() {
     List<PopupMenuItem> items = [];
     return PopupMenuButton(
-      tooltip: "Add an obligation",
+      tooltip: "Add a clause",
       child: Icon(Icons.add),
       onSelected: (Term term) {
         addObligation(term);
