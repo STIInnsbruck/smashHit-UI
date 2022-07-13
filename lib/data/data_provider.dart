@@ -32,32 +32,35 @@ class DataProvider {
 
     var body = {
       "Address": user.streetAddress,
+      "CompanyId": user.companyId,
       "Country": user.country,
+      "CreateDate": user.createDate!.toIso8601String(),
       "Email": user.email,
       "Name": user.name,
       "Phone": user.phone,
       "Role": user.role,
-      "Territory": user.city
+      "Territory": user.city,
+      "Vat": user.vat
     };
 
     var jsonBody = jsonEncode(body);
 
-    final response = await http.post(kBaseUrl.replace(path: "/contractor/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contract/contractor/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       try {
-        return parser.parseUser(jsonDecode(response.body));
+        return parser.parseUserRegister(jsonDecode(response.body));
       } catch (e) {
-        throw Exception('Failed to fetch created user.');
+        throw Exception('Failed to parse create user\nError Message: User response JSON is different than expected.');
       }
     } else {
-      throw Exception('Failed to load created user.');
+      throw Exception('Error on creating user on server.\nError Message: ${response.body}');
     }
   }
 
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: 'contractors/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/contractors/'), headers: headers);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
@@ -68,7 +71,7 @@ class DataProvider {
   }
 
   Future<User> fetchUserById(String contractorId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contractor/$contractorId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       try {
@@ -82,13 +85,48 @@ class DataProvider {
     }
   }
 
-  Future<bool> deleteUserById(String agentId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/agent/delete/$agentId/'), headers: headers);
+  Future<int> updateUser(User user) async {
+    var body = {
+      "Address": user.streetAddress,
+      "CompanyId": user.companyId,
+      "ContractorId": user.id,
+      "Country": user.country,
+      "CreateDate": user.createDate!.toIso8601String(),
+      "Email": user.email,
+      "Name": user.name,
+      "Phone": user.phone,
+      "Role": user.role,
+      "Territory": user.city,
+      "Vat": user.vat
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.put(kBaseUrl.replace(path: "/contract/contractor/update/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print("Message: \t $data");
+      if(data.toString().compareTo('{"Success": "No record found for this ID"}') == 0 ) {
+        return -1;
+      } else if (data.toString().compareTo('{"Success": "Record updated successfully"}') == 0 ){
+        return 1;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }
+
+  Future<bool> deleteUserById(String contractorId) async {
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/contractor/delete/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Failed to delete account $agentId.\nBack-end response: ${response.reasonPhrase}.');
+      throw Exception('Failed to delete account $contractorId.\nBack-end response: ${response.reasonPhrase}.');
     }
   }
 
@@ -138,9 +176,9 @@ class DataProvider {
       "ContractStatus": contract.contractStatus,
       "ContractType": contract.contractType,
       "Contractors": contract.contractors,
-      "EffectiveDate": _formatDate(contract.effectiveDate),
-      "EndDate": _formatDate(contract.endDate),
-      "ExecutionDate": _formatDate(contract.executionDate),
+      "EffectiveDate": contract.effectiveDate!.toIso8601String(),
+      "EndDate":contract.endDate!.toIso8601String(),
+      "ExecutionDate": contract.executionDate!.toIso8601String(),
       "Medium": "App Based",
       "Obligations": [
         "string"
@@ -224,9 +262,9 @@ class DataProvider {
       "ContractStatus": contract.contractStatus,
       "ContractType": contract.contractType,
       "Contractors": contract.contractors,
-      "EffectiveDate": _formatDate(contract.effectiveDate),
-      "EndDate": _formatDate(contract.endDate),
-      "ExecutionDate": _formatDate(contract.executionDate),
+      "EffectiveDate": contract.effectiveDate!.toIso8601String(),
+      "EndDate": contract.endDate!.toIso8601String(),
+      "ExecutionDate": contract.executionDate!.toIso8601String(),
       "Medium": "App Based",
       "Obligations": contract.obligations,
       "Purpose": contract.purpose,
@@ -258,7 +296,7 @@ class DataProvider {
 
   //---------------------------- Obligation ------------------------------------
   Future<Obligation> fetchObligationById(String obligationId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/obligation/$obligationId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/obligation/$obligationId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Obligation obligation;
@@ -279,13 +317,13 @@ class DataProvider {
       "ContractIdB2C": "string",
       "ContractorId": obligation.contractorId,
       "Description": obligation.description,
-      "EndDate": _formatDate(obligation.endDate),
-      "ExecutionDate": _formatDate(obligation.executionDate),
+      "EndDate": obligation.endDate!.toIso8601String(),
+      "ExecutionDate": obligation.executionDate!.toIso8601String(),
       "State": obligation.state,
       "TermId": obligation.termId
     };
     var jsonBody = jsonEncode(body);
-    final response = await http.post(kBaseUrl.replace(path: "/obligation/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contract/obligation/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
@@ -302,7 +340,7 @@ class DataProvider {
   }
 
   Future<bool> updateObligationStatus(Obligation obligation, String newStatus) async {
-    final response = await http.get(kBaseUrl.replace(path: '/obligation/status/${obligation.id}/${obligation.contractId}/${obligation.contractorId}/$newStatus'));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/obligation/status/${obligation.id}/${obligation.contractId}/${obligation.contractorId}/$newStatus'));
 
     if (response.statusCode == 200) {
       return true;
@@ -329,7 +367,7 @@ class DataProvider {
   }
 
   Future<TermType> fetchTermTypeById(String termTypeId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/termType/$termTypeId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/termType/$termTypeId/'), headers: headers);
 
     if (response.statusCode == 200) {
       TermType termType;
@@ -346,7 +384,7 @@ class DataProvider {
 
   //---------------------------- Term Type -------------------------------------
   Future<List<TermType>> fetchAllTermTypes() async    {
-    final response = await http.get(kBaseUrl.replace(path: '/term/types'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/term/types'), headers: headers);
 
     if (response.statusCode == 200) {
       List<TermType> termTypes = [];
@@ -361,9 +399,8 @@ class DataProvider {
     }
   }
 
-
   Future<bool> deleteTermTypeById(String termTypeId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/term/type/delete/$termTypeId/'), headers: headers);
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/term/type/delete/$termTypeId/'), headers: headers);
 
     if (response.statusCode == 200) {
       return true;
@@ -372,13 +409,38 @@ class DataProvider {
     }
   }
 
+  Future<bool> updateTermType(String termTypeId, String description, String name) async {
+    var body = {
+      "CreateDate": DateTime.now().toIso8601String(),
+      "Description": description,
+      "Name": name,
+      "TermTypeId": termTypeId
+    };
+
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.put(kBaseUrl.replace(path: '/contract/term/type/update/'), headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      try {
+        String data = parser.parseSuccessResponse(jsonDecode(response.body));
+        return true;
+      } catch (e) {
+        return false;
+      }
+    } else {
+      throw Exception('Failed to update term type $termTypeId.\nBack-end response: ${response.reasonPhrase}.');
+    }
+  }
+
   Future<TermType> createTermType(String termTypeName, String termTypeDesc) async {
     var body = {
+      "CreateDate": DateTime.now().toIso8601String(),
       "Description": termTypeDesc,
       "Name": termTypeName
     };
     var jsonBody = jsonEncode(body);
-    final response = await http.post(kBaseUrl.replace(path: "/term/type/create/"),
+    final response = await http.post(kBaseUrl.replace(path: "/contract/term/type/create/"),
         headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
@@ -397,6 +459,7 @@ class DataProvider {
   Future<Term> createTerm(String contractId, String description, String termTypeId) async {
     var body = {
       "ContractId": contractId,
+      "CreateDate": DateTime.now().toIso8601String(),
       "Description": description,
       "TermTypeId": termTypeId
     };
@@ -414,6 +477,18 @@ class DataProvider {
       }
     } else {
       throw Exception('Failed to load term with termTypeId: $termTypeId.');
+    }
+  }
+
+  //------------------------------ Other ---------------------------------------
+  Future<bool> checkCompliance() async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/compliance/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      String data = json.decode(response.body);
+      return (data.compareTo("Success") == 0);
+    } else {
+      throw Exception('Failed to initiate compliance checking.\nBack-end response: ${response.reasonPhrase}.');
     }
   }
 

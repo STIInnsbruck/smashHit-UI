@@ -9,8 +9,9 @@ class ViewContract extends StatefulWidget {
   final Function(int, [String, List<Obligation>]) changeScreen;
   final String contractId;
   final User? user;
+  final bool offlineMode;
 
-  ViewContract(this.changeScreen, this.contractId, this.user);
+  ViewContract(this.changeScreen, this.contractId, this.user, this.offlineMode);
 
   @override
   _ContractCreationState createState() => new _ContractCreationState();
@@ -212,6 +213,7 @@ class _ContractCreationState extends State<ViewContract> {
                       ),
                       Spacer(),
                       Center(child: obligationCardButton(obligationSnapshot.data!, userSnapshot.data!)),
+                      Spacer()
                     ],
                   );
                 } else if (userSnapshot.hasError) {

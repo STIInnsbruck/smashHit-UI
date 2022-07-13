@@ -28,9 +28,14 @@ class _BasePageState extends State<BasePage> {
   final FocusNode _searchFocus = FocusNode();
   DataProvider dataProvider = DataProvider();
   String? searchId;
+  bool _isComplianceChecking = false;
+
+  //Offline Mode set to true to not use the online endpoints.
+  //Setting to true will use locally stored json files to read/write data.
+  bool offlineMode = false;
 
   _BasePageState() {
-    _selectedPage = LoginScreen(changeScreen, setUserId, setUser);
+    _selectedPage = LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
     _selectedTitle = "Login Screen";
   }
 
@@ -45,7 +50,7 @@ class _BasePageState extends State<BasePage> {
         appBar: _selectedIndex == 5 ? null : AppBar(
           backgroundColor: Colors.blue,
           title: Center(child: Text(_selectedTitle)),
-          actions: [inboxIcon(), searchField(screenWidth), searchButton()],
+          actions: [checkComplianceButton(), searchField(screenWidth), searchButton()],
         ),
         drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: <Widget>[
@@ -113,7 +118,12 @@ class _BasePageState extends State<BasePage> {
             ),
           ]),
         ),
-        body: _selectedIndex == 0? Dashboard(changeScreen, user, searchId) : _selectedPage,
+        body: Stack(
+          children: [
+            _selectedIndex == 0? Dashboard(changeScreen, user, searchId, offlineMode) : _selectedPage!,
+            _isComplianceChecking ? showCheckingCompliance() : Container()
+          ],
+        ),
         resizeToAvoidBottomInset: true,
       ),
     );
@@ -124,15 +134,15 @@ class _BasePageState extends State<BasePage> {
       _selectedIndex = x;
       switch (_selectedIndex) {
         case 0:
-          _selectedPage = Dashboard(changeScreen, user, searchId);
+          _selectedPage = Dashboard(changeScreen, user, searchId, offlineMode);
           _selectedTitle = "Contracts Dashboard";
           break;
         case 1:
-          _selectedPage = ContractCreation(changeScreen, user);
+          _selectedPage = ContractCreation(changeScreen, user, offlineMode);
           _selectedTitle = "Contract Creation";
           break;
         case 2:
-          _selectedPage = ViewContract(changeScreen, id!, user);
+          _selectedPage = ViewContract(changeScreen, id!, user, offlineMode);
           _selectedTitle = "Contract ID: $id";
           (context as Element).performRebuild();
           break;
@@ -141,34 +151,49 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Template Selector";
           break;
         case 4:
-          _selectedPage = ContractViolation(changeScreen, id!, user, obligations!);
+          _selectedPage = ContractViolation(changeScreen, id!, user, obligations!, offlineMode);
           _selectedTitle = "Violation Claim";
           break;
         case 5:
-          _selectedPage = LoginScreen(changeScreen, setUserId, setUser);
+          _selectedPage = LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
           _selectedTitle = "Login Screen";
           break;
         case 6:
-          _selectedPage = UpdateScreen(changeScreen, id!, user);
+          _selectedPage = UpdateScreen(changeScreen, id!, user, offlineMode);
           _selectedTitle = "Change & Update Your Contract";
           break;
         case 7:
-          _selectedPage = ProfileEditorPage(changeScreen, userId!);
+          _selectedPage = ProfileEditorPage(changeScreen, userId!, offlineMode);
           _selectedTitle = "Profile Editor";
           break;
         case 8:
-          _selectedPage = ContractPartyProfile(changeScreen, id!);
+          _selectedPage = ContractPartyProfile(changeScreen, id!, offlineMode);
           _selectedTitle = "Profile";
           break;
         case 9:
-          _selectedPage = TermTypeCreationPage(changeScreen, user);
+          _selectedPage = TermTypeCreationPage(changeScreen, user, offlineMode, id);
           _selectedTitle = "Create Term Types";
           break;
         case 10:
-          _selectedPage = TermTypeViewPage(changeScreen, user);
+          _selectedPage = TermTypeViewPage(changeScreen, user, offlineMode);
           _selectedTitle = "View Term Types";
       }
     });
+  }
+
+  Widget showCheckingCompliance() {
+    return Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: Colors.grey[50],
+        child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                Text("Checking contract compliance. Please wait.")
+              ],
+            )));
   }
 
   setUserId(String agentId) {
@@ -180,6 +205,12 @@ class _BasePageState extends State<BasePage> {
   setUser(User user) {
     setState(() {
       this.user = user;
+    });
+  }
+
+  toggleOfflineMode() {
+    setState(() {
+      offlineMode = !offlineMode;
     });
   }
 
@@ -237,6 +268,20 @@ class _BasePageState extends State<BasePage> {
         PopupMenuItem(child: Text("Example Notification 4")),
         PopupMenuItem(child: Text("Example Notification 5"))
       ],
+    );
+  }
+
+  Widget checkComplianceButton() {
+    return Tooltip(
+      message: "Start automatic compliance check.",
+      child: IconButton(
+        icon: Icon(Icons.published_with_changes),
+        onPressed: () async {
+          setState(() { _isComplianceChecking = true; });
+          bool flag = await dataProvider.checkCompliance();
+          setState(() { _isComplianceChecking = false; });
+        },
+      ),
     );
   }
 

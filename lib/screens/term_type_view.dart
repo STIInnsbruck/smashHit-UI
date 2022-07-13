@@ -6,8 +6,9 @@ import 'package:smashhit_ui/custom_widgets/term_type_tile.dart';
 class TermTypeViewPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final User? user;
+  final bool offlineMode;
 
-  TermTypeViewPage(this.changeScreen, this.user);
+  TermTypeViewPage(this.changeScreen, this.user, this.offlineMode);
 
   @override
   _TermTypeViewPage createState() => _TermTypeViewPage();
@@ -60,7 +61,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
       child: ListView.builder(
         itemCount: termTypeList!.length,
         itemBuilder: (BuildContext context, int index) {
-          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType);
+          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType, changeScreen: widget.changeScreen);
         }
       )
     );

@@ -7,8 +7,9 @@ import 'package:smashhit_ui/data/data_provider.dart';
 class ContractCreation extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final User? user;
+  final bool offlineMode;
 
-  ContractCreation(this.changeScreen, this.user);
+  ContractCreation(this.changeScreen, this.user, this.offlineMode);
 
   @override
   _ContractCreationState createState() => new _ContractCreationState();
@@ -25,7 +26,6 @@ class _ContractCreationState extends State<ContractCreation> {
   String _selectedEntityLabel =
       ""; //Used to set the label of what entity is being contracted and insert it into the sidebar.
   List<User> users = [];
-  DataProvider dataProvider = DataProvider();
   Contract? contract;
   String? contractDropDownType;
   bool isFormComplete = false; //boolean used to toggle the Confirm&Send Button

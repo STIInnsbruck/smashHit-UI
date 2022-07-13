@@ -158,6 +158,11 @@ class _ContractTileState extends State<ContractTile> {
       return Tooltip(
           message: "The contract is still awaiting signatures.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
+    } else if (status.compareTo("statusUpdated") == 0) {
+      return Tooltip(
+          message: "The contract has been updated.",
+          child: Icon(Icons.update, color: Colors.green, size: 30));
+
     } else if (status.compareTo("hasSigned") == 0) {
       return Tooltip(
           message: "The contract has been signed by all parties.",

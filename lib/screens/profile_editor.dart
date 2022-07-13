@@ -6,8 +6,9 @@ import 'package:smashhit_ui/data/models.dart';
 class ProfileEditorPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String userId;
+  final bool offlineMode;
 
-  ProfileEditorPage(this.changeScreen, this.userId);
+  ProfileEditorPage(this.changeScreen, this.userId, this.offlineMode);
 
   @override
   _ProfileEditorPage createState() => _ProfileEditorPage();
@@ -42,6 +43,8 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   bool cityEnabled = false;
   bool addressEnabled = false;
   bool fetchedObligations = false;
+  bool _isLoading = false;
+  bool _userDataLoaded = false;
 
   DataProvider dataProvider = new DataProvider();
   late Future<User> futureUser = User() as Future<User>;
@@ -53,48 +56,60 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   @override
   void initState() {
     super.initState();
-
-    futureUser = dataProvider.fetchUserById(widget.userId);
+    _userDataLoaded = false;
+    _getAllObligationsOfEachContract().then((value) {
+      setState(() {
+        obligations = obligations;
+        fetchedObligations = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
-      child: FutureBuilder<User>(
-        future: futureUser,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            user = snapshot.data;
-            insertUserData();
-            return FutureBuilder<List<Contract>>(
-                future: dataProvider.fetchContractsByContractorId(widget.userId),
-                builder: (context, contractsSnapshot) {
-                  if (contractsSnapshot.hasData) {
-                    contracts = contractsSnapshot.data!;
-                    _getAllObligationsOfEachContract().then((value) {
-                      setState(() {
-                        obligations = obligations;
-                        fetchedObligations = true;
-                      });
-                    });
-                    return _isWideScreen(screenWidth, screenHeight)
-                        ? Center(child: _wideScreenLayout())
-                        : _slimScreenLayout();
-                  } else if (contractsSnapshot.hasError) {
-                    return Text('${contractsSnapshot.error}');
+    return Stack(
+      children: [
+        Container(
+            child: FutureBuilder<User>(
+                future: futureUser = dataProvider.fetchUserById(widget.userId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    user = snapshot.data;
+                    if (!_userDataLoaded) {
+                      displayUserData();
+                      _userDataLoaded = true;
+                    }
+                    return Container(
+                      child: FutureBuilder<List<Contract>>(
+                          future: dataProvider.fetchContractsByContractorId(widget.userId),
+                          builder: (context, contractsSnapshot) {
+                            if (contractsSnapshot.hasData) {
+                              contracts = contractsSnapshot.data!;
+                              return _wideScreenLayout();
+                            } else if (contractsSnapshot.hasError) {
+                              return Text('${contractsSnapshot.error}');
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          }
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('${snapshot.error}'));
                   }
                   return Center(child: CircularProgressIndicator());
                 }
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('${snapshot.error}'));
-          }
-          return Center(child: CircularProgressIndicator());
-        }
-      )
+            )
+        ),
+        _isLoading? Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.grey[200],
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ) : Container()
+      ],
     );
   }
 
@@ -179,6 +194,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     }
   }
 
+  setUser() {
+    user!.name = nameController.text;
+    user!.phone = phoneController.text;
+    user!.email = emailController.text;
+    user!.country = countryController.text;
+    user!.city = cityController.text;
+    user!.streetAddress = addressController.text;
+  }
+
   Widget _slimScreenLayout() {
     return Scrollbar(
       child: SingleChildScrollView(
@@ -219,7 +243,8 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   controller: nameController,
                   decoration: InputDecoration(
                     hintText: "Name",
-                    border: InputBorder.none,
+                    focusColor: Colors.blue,
+                    border: nameEnabled? null : InputBorder.none,
                   ),
                   enabled: nameEnabled,
                   focusNode: _nameFocus,
@@ -247,7 +272,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   controller: phoneController,
                   decoration: InputDecoration(
                     hintText: "Phone",
-                    border: InputBorder.none,
+                    border: phoneEnabled? null : InputBorder.none,
                   ),
                   enabled: phoneEnabled,
                   focusNode: _phoneFocus,
@@ -275,7 +300,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   controller: emailController,
                   decoration: InputDecoration(
                     hintText: "Email",
-                    border: InputBorder.none,
+                    border: emailEnabled? null : InputBorder.none,
                   ),
                   enabled: emailEnabled,
                   focusNode: _emailFocus,
@@ -303,7 +328,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   controller: countryController,
                   decoration: InputDecoration(
                     hintText: "Country",
-                    border: InputBorder.none,
+                    border: countryEnabled? null : InputBorder.none,
                   ),
                   enabled: countryEnabled,
                   focusNode: _countryFocus,
@@ -331,7 +356,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   controller: cityController,
                   decoration: InputDecoration(
                     hintText: "City",
-                    border: InputBorder.none,
+                    border: cityEnabled? null : InputBorder.none,
                   ),
                   enabled: cityEnabled,
                   focusNode: _cityFocus,
@@ -359,7 +384,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   controller: addressController,
                   decoration: InputDecoration(
                     hintText: "House Number and Street Name",
-                    border: InputBorder.none,
+                    border: addressEnabled? null : InputBorder.none,
                   ),
                   enabled: addressEnabled,
                   focusNode: _addressFocus,
@@ -378,6 +403,24 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
               Spacer(),
             ],
           ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Spacer(),
+              Expanded(flex: 3, child: Text("Account Creation Date:")),
+              Expanded(child: Text("${user!.displayCreationDate()}", textAlign: TextAlign.right)),
+              Spacer()
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Spacer(),
+              Expanded(flex: 3, child: Text("VAT Number:")),
+              Expanded(child: Text("${user!.vat}", textAlign: TextAlign.right)),
+              Spacer()
+            ],
+          )
         ]
     );
   }
@@ -386,10 +429,19 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     return MaterialButton(
       color: Colors.blue,
       child: Text("Confirm Changes", style: TextStyle(color: Colors.white)),
-      onPressed: () {
-        print("confirm changes pressed.");
+      onPressed: () async {
+        setUser();
+        _toggleLoading();
+        await dataProvider.updateUser(user!);
+        _toggleLoading();
       },
     );
+  }
+
+  _toggleLoading() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
   }
 
   Widget deleteButton() {
@@ -418,7 +470,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     );
   }
 
-  void insertUserData() {
+  void displayUserData() {
     nameController.text = user!.name!;
     phoneController.text = user!.phone!;
     emailController.text = user!.email!;
