@@ -4,9 +4,10 @@ import 'package:smashhit_ui/data/data_provider.dart';
 
 class TermTypeTile extends StatefulWidget {
   final Function(String) removeTermType;
+  final Function(int, [String]) changeScreen;
   final TermType termType;
 
-  TermTypeTile({required this.termType, required this.removeTermType});
+  TermTypeTile({required this.termType, required this.removeTermType, required this.changeScreen});
 
   @override
   _TermTypeTileState createState() => _TermTypeTileState();
@@ -71,7 +72,7 @@ class _TermTypeTileState extends State<TermTypeTile> {
       padding: EdgeInsets.zero,
       icon: Icon(Icons.edit, size: 30),
       onPressed: () {
-        print("edit term type pressed.");
+        widget.changeScreen(9, widget.termType.id!);
       },
     );
   }

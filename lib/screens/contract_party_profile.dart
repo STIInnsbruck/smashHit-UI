@@ -6,8 +6,9 @@ import 'package:smashhit_ui/custom_widgets/profileStatisticCard.dart';
 class ContractPartyProfile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final String userId;
+  final bool offlineMode;
 
-  ContractPartyProfile(this.changeScreen, this.userId);
+  ContractPartyProfile(this.changeScreen, this.userId, this.offlineMode);
 
   @override
   _ContractPartyProfileState createState() => _ContractPartyProfileState();

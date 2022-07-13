@@ -1,11 +1,13 @@
 import 'package:smashhit_ui/data/models.dart';
-
+///The response from the ACT Swagger API returns several different forms of
+///responses. For this reason there are several different parsers for one
+///class.
 class ResponseParser {
 
   //USER PARSERS
   User parseUser(Map jsonUser) {
     return User(
-      id: jsonUser['ContractorID'],
+      id: jsonUser['contractorId'],
       name: jsonUser['name'],
       streetAddress: jsonUser['address'],
       city: jsonUser['territory'],
@@ -15,19 +17,39 @@ class ResponseParser {
     );
   }
 
+  User parseUserRegister(Map jsonUser) {
+    return User(
+      id: jsonUser["contractorId"],
+      streetAddress: jsonUser["address"],
+      companyId: jsonUser["companyId"],
+      country: jsonUser["country"],
+      createDate: formatDate(jsonUser["createDate"]),
+      email: jsonUser["email"],
+      name: jsonUser["name"],
+      phone: jsonUser["phone"],
+      role: jsonUser["role"],
+      city: jsonUser["territory"],
+      vat: jsonUser["vat"],
+    );
+  }
+
   List<User> parseAllUsers(List jsonList) {
     return jsonList.map((jsonUser) => parseUser(jsonUser)).toList();
   }
 
   User parseUserById(Map jsonUser) {
     return User(
-      id: jsonUser['ContractorID'],
+      id: jsonUser['contractorId'],
       streetAddress: jsonUser['address'],
+      companyId: jsonUser['companyId'],
       country: jsonUser['country'],
+      createDate: formatDate(jsonUser["createDate"]),
       email: jsonUser['email'],
       name: jsonUser['name'],
       phone: jsonUser['phone'],
       city: jsonUser['territory'],
+      role: jsonUser['role'],
+      vat: jsonUser['vat']
     );
   }
 
@@ -47,18 +69,18 @@ class ResponseParser {
   Contract parseContractId(Map jsonContract) {
     //initiate contract with its foundational data.
     Contract contract = new Contract(
-        contractId: jsonContract['Contract'],
-        contractStatus: jsonContract['ContractStatus'],
-        contractType: jsonContract['ContractType'],
-        effectiveDate: formatDate(jsonContract["EffectiveDate"]),
-        executionDate: formatDate(jsonContract["ExecutionDate"]),
-        endDate: formatDate(jsonContract["EndDate"]),
-        medium: jsonContract["Medium"],
-        purpose: jsonContract['Purpose'],
-        consentId: jsonContract['ConsentId'],
+        contractId: jsonContract['contractId'],
+        contractStatus: jsonContract['contractStatus'],
+        contractType: jsonContract['contractType'],
+        effectiveDate: formatDate(jsonContract["effectiveDate"]),
+        executionDate: formatDate(jsonContract["executionDate"]),
+        endDate: formatDate(jsonContract["endDate"]),
+        medium: jsonContract["medium"],
+        purpose: jsonContract['purpose'],
+        consentId: jsonContract['consentId'],
         considerationDescription: jsonContract['consideration'],
         considerationValue: jsonContract['value'],
-        contractCategory: jsonContract['ContractCategory']
+        contractCategory: jsonContract['contractCategory']
     );
 
     contract.contractors = jsonContract['identifiers']['contractors'];
@@ -80,10 +102,10 @@ class ResponseParser {
   Obligation parseObligationId(Map jsonObligation) {
     //initiate obligation with its foundational data.
     Obligation obligation = new Obligation(
-      id: jsonObligation["obligationID"],
-      description: jsonObligation["description"],
-      executionDate: formatDate(jsonObligation["execution_date"]),
-      endDate: formatDate(jsonObligation["end_date"]),
+      id: jsonObligation["obligationId"],
+      description: jsonObligation["obligationDescription"],
+      executionDate: formatDate(jsonObligation["executionDate"]),
+      endDate: formatDate(jsonObligation["endDate"]),
       state: jsonObligation["state"],
       //the first json has contractorId
       contractorId: jsonObligation["identifier"][1],
@@ -111,10 +133,8 @@ class ResponseParser {
 
   Term parseTermId(Map jsonTerm) {
     Term term = new Term(
-      id: jsonTerm["TermId"],
-      description: jsonTerm["description"],
-      contractId: jsonTerm["ContractId"],
-      termTypeId: jsonTerm["TermTypeId"]
+      id: jsonTerm["termId"],
+      description: jsonTerm["description"]
     );
 
     return term;
@@ -127,7 +147,7 @@ class ResponseParser {
   //TERMTYPE PARSERS
   TermType parseTermType(Map jsonTermType) {
     return TermType(
-        id: jsonTermType["TermTypeId"],
+        id: jsonTermType["termTypeId"],
         description: jsonTermType["description"],
         name: jsonTermType["name"]
     );
@@ -137,7 +157,14 @@ class ResponseParser {
     return jsonList.map((jsonTermType) => parseTermType(jsonTermType)).toList();
   }
 
+  //OTHER PARSERS
+  String parseSuccessResponse(Map jsonSuccess) {
+    return jsonSuccess["Success"];
+  }
+
+  ///The first ten digits in a response for a date format is YYYY-MM-DD.
+  ///The rest of the information is superfluous.
   DateTime formatDate(String dateString) {
-    return DateTime.parse(dateString);
+    return DateTime.parse(dateString.substring(0, 10));
   }
 }

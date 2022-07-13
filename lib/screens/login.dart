@@ -8,8 +8,9 @@ class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
   final Function(String) setUserId;
   final Function(User) setUser;
+  final Function() toggleOfflineMode;
 
-  LoginScreen(this.changeScreen, this.setUserId, this.setUser);
+  LoginScreen(this.changeScreen, this.setUserId, this.setUser, this.toggleOfflineMode);
 
   @override
   _LoginScreenState createState() => new _LoginScreenState();
@@ -23,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   double smallSide = 10;
   late Future<User> futureUser = User() as Future<User>;
   User? user;
+
+  bool offlineMode = false;
 
   //TextField CONTROLLERS for Login
   TextEditingController _loginController = new TextEditingController();
@@ -106,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialButton(
                               onPressed: () {
                                 if (_registrationFormKey.currentState!.validate()) {
-                                  _registerUser((name.text + " " + surname.text), (name.text + surname.text), address.text, city.text, country.text, state.text, phone.text, "Person", email.text);
+                                  _registerUser();
                                 }
                               },
                               child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
@@ -116,8 +119,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             ) :
                             MaterialButton(
                               onPressed: () {
-                                if(_loginFormKey.currentState!.validate()) {
-                                  _loginUser(_loginController.text);
+                                if(offlineMode) {
+                                  _loginOfflineMode();
+                                } else {
+                                  if(_loginFormKey.currentState!.validate()) {
+                                    _loginUser(_loginController.text);
+                                  }
                                 }
                               },
                               child: Text('Login', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
@@ -148,6 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
+                      SizedBox(height: 20),
+                      offlineSwitch()
                     ],
                   ),
                 ),
@@ -297,6 +306,25 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget offlineSwitch() {
+    return Row(
+      children: [
+        Spacer(),
+        Text("Offline Mode: "),
+        Switch(
+            value: offlineMode,
+            onChanged: (value) {
+              setState(() {
+                offlineMode = !offlineMode;
+              });
+              widget.toggleOfflineMode();
+            }
+        ),
+        Spacer()
+      ],
+    );
+  }
+
   Widget cscDropdownPicker(double width) {
     return SizedBox(
       width: 400,
@@ -323,13 +351,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  _registerUser(String name, String agentId, String address, String city,
-      String country, String state, String phone, String agentType, String email) async {
+  _registerUser() async {
     _toggleLoading();
     try {
       User tmpUser = await dataProvider.createAgent(setUser());
       _toggleLoading();
-      widget.setUserId(tmpUser.id!);
       widget.setUser(tmpUser);
       widget.changeScreen(0);
     } catch (e) {
@@ -346,16 +372,39 @@ class _LoginScreenState extends State<LoginScreen> {
       city: city.text,
       phone: phone.text,
       streetAddress: address.text,
-      role: "role",
+      role: "DataSubject",
+      companyId: "cm_86ff4c94-fc62-11ec-93f2-b5bccd42b8bf",
+      createDate: DateTime.now(),
+      vat: "1111"
     );
   }
 
-  _loginUser(String agentId) async {
+  User setOfflineUser() {
+    return User(
+      id: "c_0001",
+      name: "Max Mustermann",
+      email: "max.musertmann@email.com",
+      country: "Austria",
+      city: "Innsbruck",
+      phone: "0035269815968",
+      streetAddress: "12, Maria-Theresien-Strasse",
+      role: "DataSubject"
+    );
+  }
+
+  _loginOfflineMode() {
+    _toggleLoading();
+    widget.setUser(setOfflineUser());
+    _toggleLoading();
+    widget.changeScreen(0);
+}
+
+  _loginUser(String userId) async {
     _toggleLoading();
     try {
-      user = await dataProvider.fetchUserById(agentId);
+      user = await dataProvider.fetchUserById(userId);
       _toggleLoading();
-      widget.setUserId(agentId);
+      widget.setUserId(userId);
       widget.setUser(user!);
       widget.changeScreen(0);
     } catch (e) {

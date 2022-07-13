@@ -9,8 +9,9 @@ class ContractViolation extends StatefulWidget {
   final List<Obligation> obligations;
   final String contractId;
   final User? user;
+  final bool offlineMode;
 
-  ContractViolation(this.changeScreen, this.contractId, this.user, this.obligations);
+  ContractViolation(this.changeScreen, this.contractId, this.user, this.obligations, this.offlineMode);
 
   @override
   _ContractViolationState createState() => new _ContractViolationState();
