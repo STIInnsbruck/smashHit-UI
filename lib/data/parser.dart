@@ -108,11 +108,11 @@ class ResponseParser {
       endDate: formatDate(jsonObligation["endDate"]),
       state: jsonObligation["state"],
       //the first json has contractorId
-      contractorId: jsonObligation["identifier"][0],
+      contractorId: parseCorrectIdentifier("c_", jsonObligation),
       //the second json has obligationId
-      contractId: jsonObligation["identifier"][1],
-      //the third json has termiId
-      termId: jsonObligation["identifier"][2],
+      contractId: parseCorrectIdentifier("con", jsonObligation),
+      //the third json has termId
+      termId: parseCorrectIdentifier("term_", jsonObligation),
     );
 
     return obligation;
@@ -163,6 +163,25 @@ class ResponseParser {
   String parseSuccessResponse(Map jsonSuccess) {
     return jsonSuccess["Success"];
   }
+
+  ///Many responses have a list of identifiers in their json format,
+  ///within which the IDs of objects sometimes have a different positions in the
+  ///list. With [idPrefix] this function searches for the prefix of an
+  ///ID to parse the correct position within the given list.
+  ///Example:
+  ///identifiers: [
+  /// c_001 -> represents a contractor, so we have a [idPrefix] of "c_".
+  /// con_xx -> represents a contract, so we have a [idPrefix] of "con".
+  ///]
+  String? parseCorrectIdentifier(String idPrefix, Map jsonObject) {
+    for (int i = 0; i < (jsonObject["identifier"] as List).length; i++) {
+      if ((jsonObject["identifier"][i] as String).startsWith(idPrefix)) {
+        return jsonObject["identifier"][i];
+      }
+    }
+    return "identifier not found";
+  }
+
 
   ///The first ten digits in a response for a date format is YYYY-MM-DD.
   ///The rest of the information is superfluous.

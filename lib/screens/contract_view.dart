@@ -140,7 +140,11 @@ class _ContractCreationState extends State<ViewContract> {
         future: dataProvider.fetchObligationById(obligationId),
         builder: (context, obligationSnapshot) {
           if (obligationSnapshot.hasData) {
-            obligations.add(obligationSnapshot.data!);
+            //Only add obligation if it is absent.
+            //UI currently recalls this method when it is rebuilt.
+            if (_containsObligation(obligationId)) {
+              obligations.add(obligationSnapshot.data!);
+            }
             return FutureBuilder<User>(
               future: dataProvider.fetchUserById(obligationSnapshot.data!.contractorId!),
               builder: (context, userSnapshot) {
@@ -454,9 +458,12 @@ class _ContractCreationState extends State<ViewContract> {
           ),
           contractTAC(contract),
           termWidgets.isNotEmpty
-            ? Column(
-            children: termWidgets,
-          )
+            ? Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+              child: Column(
+              children: termWidgets,
+          ),
+            )
             : Center(child: Text("No terms were found in the contract.")),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
@@ -540,11 +547,13 @@ class _ContractCreationState extends State<ViewContract> {
                   if (typeSnapshot.hasData) {
                     return Column(
                       children: [
+                        //Title comes from template
                         contractTermTitle("$index. ${typeSnapshot.data!.name!}"),
+                        //Description text comes from actual added term created by user
                         contractTermText(snapshot.data!.description!),
                         SizedBox(height: 10),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: Column(
                             children: displayATermsObligations(termId),
                           ),
@@ -585,17 +594,31 @@ class _ContractCreationState extends State<ViewContract> {
       children: [
         Text("Clause-${index+1}:", style: TextStyle(fontSize: 15)),
         SizedBox(width: 10),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Description: ${obligation.description}", textAlign: TextAlign.justify),
-            Text("Execution Date: ${obligation.getExecutionDateAsString()}"),
-            Text("End Date: ${obligation.getEndDateAsString()}"),
-          ]
+        Flexible(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              formattedObligationText("Description: ", obligation.description!),
+              formattedObligationText("Execution Date: ", obligation.getExecutionDateAsString()),
+              formattedObligationText("End Date: ", obligation.getEndDateAsString()),
+            ]
+          ),
         )
       ],
     );
+  }
+
+  RichText formattedObligationText(String obligationElement, String text) {
+    return RichText(
+          textAlign: TextAlign.justify,
+          text: TextSpan(
+              style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black),
+              children: [
+                TextSpan(text: "$obligationElement: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: "$text")
+              ]
+          ));
   }
 
   void buildContractTerms(Contract contract) {
@@ -821,6 +844,16 @@ class _ContractCreationState extends State<ViewContract> {
   String _formatDate(DateTime dateTime) {
     String dateString = '${dateTime.day}.${dateTime.month}.${dateTime.year}';
     return dateString;
+  }
+
+  bool _containsObligation(String obligationId) {
+    bool absent = true;
+    for (int i = 0; i < obligations.length; i++) {
+      if (obligations[i].id == obligationId) {
+        absent = false;
+      }
+    }
+    return absent;
   }
 
   ///Return and integer deciding if big, medium or small screen.

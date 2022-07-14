@@ -79,11 +79,11 @@ class DataProvider {
       try {
         return parser.parseUserById(jsonDecode(response.body));
       }catch (e) {
-        throw Exception('Failed to fetch agent by id: $contractorId.');
+        throw Exception('Failed to fetch user by id: $contractorId.');
       }
 
     } else {
-      throw Exception('Failed to load agent by id: $contractorId.');
+      throw Exception('Failed to load user by id: $contractorId.');
     }
   }
 
