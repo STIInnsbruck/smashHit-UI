@@ -389,7 +389,7 @@ class _ContractFormState extends State<ContractForm> {
     List<Widget> widgets = [];
     int index = 0;
     _obligationMap.values.forEach((element) {
-      if(element.term.id == term.id) {
+      if(element.term.termTypeId == term.termTypeId) {
         widgets.add(obligationInfo(element, index));
         widgets.add(SizedBox(height: 20));
         index++;
