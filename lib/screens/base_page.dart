@@ -172,11 +172,11 @@ class _BasePageState extends State<BasePage> {
           break;
         case 9:
           _selectedPage = TermTypeCreationPage(changeScreen, user, offlineMode, id);
-          _selectedTitle = "Create Term Types";
+          _selectedTitle = "Create Clause Types";
           break;
         case 10:
           _selectedPage = TermTypeViewPage(changeScreen, user, offlineMode);
-          _selectedTitle = "View Term Types";
+          _selectedTitle = "View Clause Types";
       }
     });
   }

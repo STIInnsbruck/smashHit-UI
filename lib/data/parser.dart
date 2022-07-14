@@ -110,9 +110,9 @@ class ResponseParser {
       //the first json has contractorId
       contractorId: jsonObligation["identifier"][0],
       //the second json has obligationId
-      contractId: jsonObligation["identifier"][1],
-      //the third json has termiId
-      termId: jsonObligation["identifier"][2],
+      contractId: jsonObligation["identifier"][2],
+      //the third json has termId
+      termId: jsonObligation["identifier"][3],
     );
 
     return obligation;
