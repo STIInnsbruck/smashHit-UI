@@ -1025,7 +1025,7 @@ class _ContractFormState extends State<ContractForm> {
     setBaseContractDetails();
     contract.contractId = await dataProvider.createBaseContract(contract);
     _termMap.forEach((key, value) async {
-      Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.term.description!, value.term.termTypeId!);
+      Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.textController.text, value.term.termTypeId!);
       value.term.id = tempTerm.id;
       contract.terms.add(tempTerm.id!);
       _obligationMap.forEach((key, obl) async {
