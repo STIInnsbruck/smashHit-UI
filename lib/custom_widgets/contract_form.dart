@@ -1023,11 +1023,14 @@ class _ContractFormState extends State<ContractForm> {
   Future<void> performContractCreation() async {
     _toggleLoading();
     setBaseContractDetails();
+    //create contract
     contract.contractId = await dataProvider.createBaseContract(contract);
+    //create a term associated to the created base contract.
     _termMap.forEach((key, value) async {
       Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.textController.text, value.term.termTypeId!);
       value.term.id = tempTerm.id;
       contract.terms.add(tempTerm.id!);
+      //create an obligation associated to the previously created term
       _obligationMap.forEach((key, obl) async {
         if(obl.term.termTypeId == value.term.termTypeId) {
           obl.obligation.termId = value.term.id;
