@@ -20,7 +20,9 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
+  List<Widget> signatureWidgets = [];
   List<Obligation> obligations = [];
+  List<Signature> signatures = [];
   DataProvider dataProvider = new DataProvider();
   Contract? contract;
   String? contractDropDownType;
@@ -32,6 +34,8 @@ class _ContractCreationState extends State<ViewContract> {
   @override
   void initState() {
     super.initState();
+
+    fetchAllSignatures();
   }
 
   @override
@@ -278,6 +282,10 @@ class _ContractCreationState extends State<ViewContract> {
     }
   }
 
+  Future<void> fetchAllSignatures() async {
+    signatures = await dataProvider.fetchAllSignaturesByContractId(widget.contractId);
+  }
+
   Card contractStatusCard(Contract contract) {
     return Card(
       elevation: 10.0,
@@ -398,6 +406,7 @@ class _ContractCreationState extends State<ViewContract> {
   Card contractDetailsCard(Contract contract) {
     buildContractUsers(contract);
     buildContractTerms(contract);
+    buildContractSignatures(contract);
     return Card(
       elevation: 10.0,
       child: Column(
@@ -465,6 +474,9 @@ class _ContractCreationState extends State<ViewContract> {
           ),
             )
             : Center(child: Text("No terms were found in the contract.")),
+          Column(
+            children: signatureWidgets,
+          ),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
               child: contractDates()
@@ -488,6 +500,13 @@ class _ContractCreationState extends State<ViewContract> {
     contractorWidgets.clear();
     contract.contractors.forEach((contractorId) {
       contractorWidgets.add(contractorDetails(contractorId));
+    });
+  }
+
+  void buildContractSignatures(Contract contract) {
+    signatureWidgets.clear();
+    contract.signatures.forEach((signatureId) {
+      signatureWidgets.add(signatureDetails(signatureId));
     });
   }
 
@@ -518,6 +537,28 @@ class _ContractCreationState extends State<ViewContract> {
           }
           return CircularProgressIndicator();
         }
+      )
+    );
+  }
+
+  Widget signatureDetails(String signatureId) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+      child: FutureBuilder<Signature> (
+        future: dataProvider.fetchSignatureById(signatureId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Row(
+              children: [
+                Text("Signature Text: ${snapshot.data!.signatureText}"),
+                Text("Signature Text: ${snapshot.data!.createDate!.toIso8601String().substring(0,10)}"),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        },
       )
     );
   }
@@ -786,7 +827,7 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   Tooltip obligationIconByStatus(String status) {
-    if (status.compareTo("statePending") == 0) {
+    if (status.compareTo("hasPending") == 0) {
       return Tooltip(
         message: "Clause is pending.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
@@ -801,11 +842,11 @@ class _ContractCreationState extends State<ViewContract> {
     } else if (status.compareTo("stateValid") == 0) {
       return Tooltip(
           message: "Clause is valid.",
-          child: Icon(Icons.done, color: Colors.grey, size: 30));
+          child: Icon(Icons.done, color: Colors.green, size: 30));
     } else {
       return Tooltip(
-        message: "Clause is completed.",
-          child: Icon(Icons.check_circle, color: Colors.green, size: 30));
+        message: "Clause status could not be read.",
+          child: Icon(Icons.question_mark, color: Colors.grey, size: 30));
     }
   }
 

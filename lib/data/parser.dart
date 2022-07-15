@@ -173,6 +173,21 @@ class ResponseParser {
     return signature;
   }
 
+  Signature parseSignatureByListByContractId(Map jsonSignature) {
+    Signature signature = new Signature(
+        id: jsonSignature["signatureId"],
+        contractorId: jsonSignature["contractorId"],
+        signatureText: jsonSignature["signatureText"],
+        createDate: formatDate(jsonSignature["createDate"])
+    );
+
+    return signature;
+  }
+
+  List<Signature> parseAllSignaturesByContractId(List jsonList) {
+    return jsonList.map((jsonSignature) => parseSignatureByListByContractId(jsonSignature)).toList();
+  }
+
   //OTHER PARSERS
   String parseSuccessResponse(Map jsonSuccess) {
     return jsonSuccess["Success"];

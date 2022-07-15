@@ -270,9 +270,7 @@ class DataProvider {
       "Medium": "App Based",
       "Obligations": contract.obligations,
       "Purpose": contract.purpose,
-      "Signatures": [
-        "string"
-      ],
+      "Signatures": contract.signatures,
       "Terms": contract.terms
     };
 
@@ -483,6 +481,30 @@ class DataProvider {
   }
 
   //------------------------------ Other ---------------------------------------
+  Future<Signature> createSignature(Signature signature) async {
+    var body = {
+      "ContractId": signature.contractId,
+      "ContractorId": signature.contractorId,
+      "CreateDate": signature.createDate!.toIso8601String().substring(0,10),
+      "Signature": signature.signatureText,
+    };
+
+    var jsonBody = jsonEncode(body);
+    final response = await http.post(kBaseUrl.replace(path: "/contract/signature/create/"), headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      Signature signature;
+      try {
+        signature = parser.parseSignatureId(jsonDecode(response.body)[0]);
+        return signature;
+      } catch (e) {
+        throw Exception('Failed to parse response for signature.');
+      }
+    } else {
+      throw Exception('Failed to create signature.');
+    }
+  }
+
   Future<Signature> fetchSignatureById(String signatureId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/signature/$signatureId/'), headers: headers);
 
@@ -496,6 +518,22 @@ class DataProvider {
       }
     } else {
       throw Exception('Failed to load signature $signatureId.');
+    }
+  }
+
+  Future<List<Signature>> fetchAllSignaturesByContractId(String contractId) async    {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/signatures/$contractId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      List<Signature> signatures = [];
+      try {
+        signatures = parser.parseAllSignaturesByContractId(jsonDecode(response.body));
+        return signatures;
+      } catch (e) {
+        return signatures;
+      }
+    } else {
+      throw Exception('Failed to load all term types.');
     }
   }
 
