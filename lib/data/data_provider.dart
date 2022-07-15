@@ -342,7 +342,7 @@ class DataProvider {
   }
 
   Future<bool> updateObligationStatus(Obligation obligation, String newStatus) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/obligation/status/${obligation.id}/${obligation.contractId}/${obligation.contractorId}/$newStatus'));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/obligation/status/${obligation.id}/${obligation.contractId}/${obligation.contractorId}/$newStatus/'));
 
     if (response.statusCode == 200) {
       return true;
