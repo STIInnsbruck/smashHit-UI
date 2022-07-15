@@ -87,15 +87,10 @@ class _DashboardState extends State<Dashboard> {
         children: [
           Expanded(flex: 1, child: Text("Type", textAlign: TextAlign.center)),
           Expanded(flex: 4, child: Text("ID")),
-          //Spacer(flex: 12),
           Expanded(flex: 3, child: Text("Purpose")),
-          //Spacer(flex: 10),
           Expanded(flex: 2, child: Text("Signatures")),
-          //Spacer(flex: 2),
           Expanded(flex: 1, child: Text("Status", textAlign: TextAlign.center)),
-          //Spacer(flex: 5),
           Expanded(flex: 2, child: Text("Actions", textAlign: TextAlign.center)),
-          //Spacer(flex: 2)
         ],
       ),
     );
