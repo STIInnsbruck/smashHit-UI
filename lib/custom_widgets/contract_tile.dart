@@ -169,7 +169,6 @@ class _ContractTileState extends State<ContractTile> {
   Widget contractSignedIcon() {
     int numSignatures = widget.contract!.signatures.length;
     int numContractors = widget.contract!.contractors.length;
-    //fetchAllSignatures();
 
     return Container(
         child: _isLoading
