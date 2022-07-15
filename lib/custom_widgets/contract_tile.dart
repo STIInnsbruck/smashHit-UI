@@ -72,15 +72,12 @@ class _ContractTileState extends State<ContractTile> {
                 flex: 4,
                 child: Text('${widget.contract!.contractId!}',
                     overflow: TextOverflow.ellipsis)),
-            //Spacer(flex: 25),
             Expanded(
                 flex: 3,
                 child: Text('${widget.contract!.purpose}',
                     overflow: TextOverflow.ellipsis)),
             Expanded(flex: 2, child: contractSignedIcon()),
-            //Spacer(flex: 2),
             Expanded(flex: 1, child: contractIconByStatus(widget.contract!.contractStatus!)),
-            //Spacer(flex: 3),
             Expanded(
               flex: 2,
               child: Row(
@@ -180,8 +177,9 @@ class _ContractTileState extends State<ContractTile> {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  hasSignedIcon(),
-                  Text("$numSignatures/$numContractors")],
+                  Text("$numSignatures/$numContractors"),
+                  SizedBox(width: 5),
+                  hasSignedIcon()],
               ));
   }
 
@@ -224,34 +222,34 @@ class _ContractTileState extends State<ContractTile> {
       return Tooltip(
           message: "The contract has recently been created.",
           child: Icon(Icons.new_releases, color: Colors.blue, size: 30));
-    } else if (status.compareTo("hasPending") == 0) {
+    } else if (status.compareTo("statusPending") == 0) {
       return Tooltip(
           message: "The contract is still awaiting signatures.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
     } else if (status.compareTo("statusUpdated") == 0) {
       return Tooltip(
           message: "The contract has been updated.",
-          child: Icon(Icons.update, color: Colors.green, size: 30));
-    } else if (status.compareTo("hasSigned") == 0) {
+          child: Icon(Icons.update, color: Colors.blue, size: 30));
+    } else if (status.compareTo("statusSigned") == 0) {
       return Tooltip(
           message: "The contract has been signed by all parties.",
-          child: Icon(Icons.thumb_up, color: Colors.blue, size: 30));
-    } else if (status.compareTo("hasTerminated") == 0) {
+          child: Icon(Icons.thumb_up, color: Colors.green, size: 30));
+    } else if (status.compareTo("statusTerminated") == 0) {
       return Tooltip(
           message: "The contract has been terminated.",
           child: Icon(Icons.do_not_disturb, color: Colors.yellow, size: 30));
-    } else if (status.compareTo("hasRenewed") == 0) {
+    } else if (status.compareTo("statusRenewed") == 0) {
       return Tooltip(
           message: "The contract has been renewed.",
           child: Icon(Icons.history, color: Colors.blue, size: 30));
-    } else if (status.compareTo("hasExpired") == 0) {
+    } else if (status.compareTo("statusExpired") == 0) {
       return Tooltip(
           message: "The contract has expired.",
           child: Icon(Icons.hourglass_bottom, color: Colors.blue, size: 30));
     } else {
       return Tooltip(
-          message: "The contract has recently been created.",
-          child: Icon(Icons.new_releases, color: Colors.blue, size: 30));
+          message: "The contract's status could not be read. Please review the contract.",
+          child: Icon(Icons.question_mark, color: Colors.blue, size: 30));
     }
   }
 
