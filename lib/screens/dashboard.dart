@@ -85,15 +85,17 @@ class _DashboardState extends State<Dashboard> {
     return ListTile(
       title: Row(
         children: [
-          Container(width: 75, child: Text("Type")),
-          Text("ID"),
-          Spacer(flex: 12),
-          Text("Purpose"),
-          Spacer(flex: 12),
-          Text("Status"),
-          Spacer(flex: 5),
-          Text("Actions"),
-          Spacer(flex: 2)
+          Expanded(flex: 1, child: Text("Type", textAlign: TextAlign.center)),
+          Expanded(flex: 4, child: Text("ID")),
+          //Spacer(flex: 12),
+          Expanded(flex: 3, child: Text("Purpose")),
+          //Spacer(flex: 10),
+          Expanded(flex: 2, child: Text("Signatures")),
+          //Spacer(flex: 2),
+          Expanded(flex: 1, child: Text("Status", textAlign: TextAlign.center)),
+          //Spacer(flex: 5),
+          Expanded(flex: 2, child: Text("Actions", textAlign: TextAlign.center)),
+          //Spacer(flex: 2)
         ],
       ),
     );
@@ -113,11 +115,11 @@ class _DashboardState extends State<Dashboard> {
           itemBuilder: (BuildContext context, int index) {
             if (searchId == null) {
               return ContractTile(widget.changeScreen, refreshContractList,
-                  contractList![index]);
+                  contractList![index], widget.user!.id);
             } else {
               if (contractList![index].contractId!.contains(searchId!)) {
                 return ContractTile(widget.changeScreen, refreshContractList,
-                    contractList![index]);
+                    contractList![index], widget.user!.id);
               } else {
                 return Container();
               }

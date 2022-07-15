@@ -86,6 +86,7 @@ class ResponseParser {
     contract.contractors = jsonContract['identifiers']['contractors'];
     contract.obligations = jsonContract['identifiers']['obligations'];
     contract.terms = jsonContract['identifiers']['terms'];
+    contract.signatures = jsonContract['identifiers']['signatures'];
 
     return contract;
   }
@@ -157,6 +158,19 @@ class ResponseParser {
 
   List<TermType> parseAllTermTypes(List jsonList) {
     return jsonList.map((jsonTermType) => parseTermType(jsonTermType)).toList();
+  }
+
+  //SIGNATURE PARSERS
+  Signature parseSignatureId(Map jsonSignature) {
+    Signature signature = new Signature(
+      id: jsonSignature["signatureId"],
+      contractId: parseCorrectIdentifier("con", jsonSignature),
+      contractorId: parseCorrectIdentifier("c_", jsonSignature),
+      signatureText: jsonSignature["signatureText"],
+      createDate: formatDate(jsonSignature["createDate"])
+    );
+
+    return signature;
   }
 
   //OTHER PARSERS

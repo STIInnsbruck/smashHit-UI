@@ -368,6 +368,31 @@ class DataProvider {
     }
   }
 
+  Future<Term> createTerm(String contractId, String description, String termTypeId) async {
+    var body = {
+      "ContractId": contractId,
+      "CreateDate": DateTime.now().toIso8601String(),
+      "Description": description,
+      "TermTypeId": termTypeId
+    };
+    var jsonBody = jsonEncode(body);
+    final response = await http.post(kBaseUrl.replace(path: "/contract/term/create/"),
+        headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      Term tmpTerm;
+      try {
+        tmpTerm = parser.parseTermId(jsonDecode(response.body));
+        return tmpTerm;
+      } catch (e) {
+        throw Exception('Failed to parse response for term with termTypeId: $termTypeId.');
+      }
+    } else {
+      throw Exception('Failed to load term with termTypeId: $termTypeId.');
+    }
+  }
+
+  //---------------------------- Term Type -------------------------------------
   Future<TermType> fetchTermTypeById(String termTypeId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/termType/$termTypeId/'), headers: headers);
 
@@ -384,7 +409,6 @@ class DataProvider {
     }
   }
 
-  //---------------------------- Term Type -------------------------------------
   Future<List<TermType>> fetchAllTermTypes() async    {
     final response = await http.get(kBaseUrl.replace(path: '/contract/term/types'), headers: headers);
 
@@ -458,27 +482,20 @@ class DataProvider {
     }
   }
 
-  Future<Term> createTerm(String contractId, String description, String termTypeId) async {
-    var body = {
-      "ContractId": contractId,
-      "CreateDate": DateTime.now().toIso8601String(),
-      "Description": description,
-      "TermTypeId": termTypeId
-    };
-    var jsonBody = jsonEncode(body);
-    final response = await http.post(kBaseUrl.replace(path: "/contract/term/create/"),
-        headers: headers, body: jsonBody);
+  //------------------------------ Other ---------------------------------------
+  Future<Signature> fetchSignatureById(String signatureId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/signature/$signatureId/'), headers: headers);
 
     if (response.statusCode == 200) {
-      Term tmpTerm;
+      Signature signature;
       try {
-        tmpTerm = parser.parseTermId(jsonDecode(response.body));
-        return tmpTerm;
+        signature = parser.parseSignatureId(jsonDecode(response.body)[0]);
+        return signature;
       } catch (e) {
-        throw Exception('Failed to parse response for term with termTypeId: $termTypeId.');
+        throw Exception('Failed to parse response for signature $signatureId.');
       }
     } else {
-      throw Exception('Failed to load term with termTypeId: $termTypeId.');
+      throw Exception('Failed to load signature $signatureId.');
     }
   }
 
