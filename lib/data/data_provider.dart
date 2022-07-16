@@ -522,7 +522,7 @@ class DataProvider {
   }
 
   Future<List<Signature>> fetchAllSignaturesByContractId(String contractId) async    {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/signatures/$contractId/'), headers: headers);
+    final response = await http.get(kBaseUrl.replace(path: '/contract/signatures/$contractId'), headers: headers);
 
     if (response.statusCode == 200) {
       List<Signature> signatures = [];
