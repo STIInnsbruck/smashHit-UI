@@ -20,7 +20,9 @@ class ViewContract extends StatefulWidget {
 class _ContractCreationState extends State<ViewContract> {
   List<Widget> contractorWidgets = [];
   List<Widget> termWidgets = [];
+  List<Widget> signatureWidgets = [];
   List<Obligation> obligations = [];
+  List<Signature> signatures = [];
   DataProvider dataProvider = new DataProvider();
   Contract? contract;
   String? contractDropDownType;
@@ -32,6 +34,8 @@ class _ContractCreationState extends State<ViewContract> {
   @override
   void initState() {
     super.initState();
+
+    fetchAllSignatures();
   }
 
   @override
@@ -101,17 +105,17 @@ class _ContractCreationState extends State<ViewContract> {
           Expanded(child: reportIssueCard(contract))
         ]),
         GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: orientation == Orientation.portrait ? 1.55 : 2.70,
-          ),
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: contract.obligations.length,
-          itemBuilder: (BuildContext context, index) {
-            return partyObligationCard(contract.obligations[index]);
-          }
-        ),
+              childAspectRatio:
+                  orientation == Orientation.portrait ? 1.55 : 2.70,
+            ),
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: contract.obligations.length,
+            itemBuilder: (BuildContext context, index) {
+              return partyObligationCard(contract.obligations[index]);
+            }),
         contractDetailsCard(contract),
       ],
     );
@@ -135,106 +139,113 @@ class _ContractCreationState extends State<ViewContract> {
 
   Card partyObligationCard(String obligationId) {
     return Card(
-      elevation: 10.0,
-      child: FutureBuilder<Obligation>(
-        future: dataProvider.fetchObligationById(obligationId),
-        builder: (context, obligationSnapshot) {
-          if (obligationSnapshot.hasData) {
-            //Only add obligation if it is absent.
-            //UI currently recalls this method when it is rebuilt.
-            if (_containsObligation(obligationId)) {
-              obligations.add(obligationSnapshot.data!);
-            }
-            return FutureBuilder<User>(
-              future: dataProvider.fetchUserById(obligationSnapshot.data!.contractorId!),
-              builder: (context, userSnapshot) {
-                if (userSnapshot.hasData) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                          child: Center(
-                              child: Text('Clause', style: TextStyle(fontSize: 20))),
-                        ),
-                      ),
-                      ListTile(
-                        leading: CircleAvatar(child: Icon(Icons.person)),
-                        title: GestureDetector(
-                            onTap: () {
-                              widget.changeScreen(8, "${obligationSnapshot.data!.contractorId}");
-                            },
-                            child: Text('${userSnapshot.data!.name}')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Clause Description: ',
-                                style:
-                                TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                            Text(
-                              '${obligationSnapshot.data!.description}',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.justify,
-                            )
-                          ],
-                        ),
-                      ),
-                      Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Time Remaining: ',
-                                    style: TextStyle(
-                                        fontSize: 15, fontWeight: FontWeight.bold)),
-                                Text('${obligationSnapshot.data!.getEndDateAsString()}')
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Status: ',
-                                    style: TextStyle(
-                                        fontSize: 15, fontWeight: FontWeight.bold)),
-                                obligationIconByStatus(obligationSnapshot.data!.state!)
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Center(child: obligationCardButton(obligationSnapshot.data!, userSnapshot.data!)),
-                      Spacer()
-                    ],
-                  );
-                } else if (userSnapshot.hasError) {
-                  return Text('${userSnapshot.error}');
+        elevation: 10.0,
+        child: FutureBuilder<Obligation>(
+            future: dataProvider.fetchObligationById(obligationId),
+            builder: (context, obligationSnapshot) {
+              if (obligationSnapshot.hasData) {
+                //Only add obligation if it is absent.
+                //UI currently recalls this method when it is rebuilt.
+                if (_containsObligation(obligationId)) {
+                  obligations.add(obligationSnapshot.data!);
                 }
-                return Center(child: CircularProgressIndicator());
-              },
-            );
-          } else if (obligationSnapshot.hasError) {
-            return Center(
-              child: Text('${obligationSnapshot.error}')
-            );
-          }
-          return Center(child: CircularProgressIndicator());
-        }
-      )
-    );
+                return FutureBuilder<User>(
+                  future: dataProvider
+                      .fetchUserById(obligationSnapshot.data!.contractorId!),
+                  builder: (context, userSnapshot) {
+                    if (userSnapshot.hasData) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: Center(
+                                  child: Text('Clause',
+                                      style: TextStyle(fontSize: 20))),
+                            ),
+                          ),
+                          ListTile(
+                            leading: CircleAvatar(child: Icon(Icons.person)),
+                            title: GestureDetector(
+                                onTap: () {
+                                  widget.changeScreen(8,
+                                      "${obligationSnapshot.data!.contractorId}");
+                                },
+                                child: Text('${userSnapshot.data!.name}')),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Clause Description: ',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                  '${obligationSnapshot.data!.description}',
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.justify,
+                                )
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Time Remaining: ',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        '${obligationSnapshot.data!.getEndDateAsString()}')
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Status: ',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold)),
+                                    obligationIconByStatus(
+                                        obligationSnapshot.data!.state!)
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          Center(
+                              child: obligationCardButton(
+                                  obligationSnapshot.data!,
+                                  userSnapshot.data!)),
+                          Spacer()
+                        ],
+                      );
+                    } else if (userSnapshot.hasError) {
+                      return Text('${userSnapshot.error}');
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                );
+              } else if (obligationSnapshot.hasError) {
+                return Center(child: Text('${obligationSnapshot.error}'));
+              }
+              return Center(child: CircularProgressIndicator());
+            }));
   }
 
   MaterialButton obligationCardButton(Obligation obligation, User user) {
@@ -256,8 +267,8 @@ class _ContractCreationState extends State<ViewContract> {
           onPressed: () {
             _showObligationCompletionDialog(obligation);
           },
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Text('Tap to confirm completion',
               style: TextStyle(color: Colors.white)),
           color: Colors.blue,
@@ -278,6 +289,13 @@ class _ContractCreationState extends State<ViewContract> {
     }
   }
 
+  Future<void> fetchAllSignatures() async {
+    setState(() async {
+      signatures =
+          await dataProvider.fetchAllSignaturesByContractId(widget.contractId);
+    });
+  }
+
   Card contractStatusCard(Contract contract) {
     return Card(
       elevation: 10.0,
@@ -294,9 +312,8 @@ class _ContractCreationState extends State<ViewContract> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Center(
-                  child:
-                      contractIconByStatus(contract.contractStatus!)),
+              child:
+                  Center(child: contractIconByStatus(contract.contractStatus!)),
             ),
           ),
         ],
@@ -355,8 +372,10 @@ class _ContractCreationState extends State<ViewContract> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Start: ${contract.getFormattedStartDate()}', style: TextStyle(fontSize: 15)),
-                      Text('End: ${contract.getFormattedEndDate()}', style: TextStyle(fontSize: 15))
+                      Text('Start: ${contract.getFormattedStartDate()}',
+                          style: TextStyle(fontSize: 15)),
+                      Text('End: ${contract.getFormattedEndDate()}',
+                          style: TextStyle(fontSize: 15))
                     ],
                   )),
             ),
@@ -382,8 +401,10 @@ class _ContractCreationState extends State<ViewContract> {
                                   BorderRadius.all(Radius.circular(10)),
                               color: Colors.blue),
                           child: Center(
-                              child:
-                                  Text('${percentageCompleted.toInt()}%', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                              child: Text('${percentageCompleted.toInt()}%',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold))),
                         ),
                       ),
                     ),
@@ -398,6 +419,7 @@ class _ContractCreationState extends State<ViewContract> {
   Card contractDetailsCard(Contract contract) {
     buildContractUsers(contract);
     buildContractTerms(contract);
+    buildContractSignatures(contract);
     return Card(
       elevation: 10.0,
       child: Column(
@@ -415,28 +437,32 @@ class _ContractCreationState extends State<ViewContract> {
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 1),
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: contractDetailText("Contract ID: ", "${contract.contractId}")),
+                  child: contractDetailText(
+                      "Contract ID: ", "${contract.contractId}")),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 1, 15, 1),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: contractDetailText("Contract Type: ", "${contract.contractType}"),
+              child: contractDetailText(
+                  "Contract Type: ", "${contract.contractType}"),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: contractDetailText("Contract Medium: ", "${contract.medium}"),
+              child:
+                  contractDetailText("Contract Medium: ", "${contract.medium}"),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: contractDetailText("Contract Category: ", "${contract.contractCategory}"),
+              child: contractDetailText(
+                  "Contract Category: ", "${contract.contractCategory}"),
             ),
           ),
           Column(
@@ -453,22 +479,30 @@ class _ContractCreationState extends State<ViewContract> {
             padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: contractDetailText("Consideration: ", "${contract.considerationDescription}"),
+              child: contractDetailText(
+                  "Consideration: ", "${contract.considerationDescription}"),
             ),
           ),
           contractTAC(contract),
           termWidgets.isNotEmpty
-            ? Padding(
-            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
-              child: Column(
-              children: termWidgets,
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+                  child: Column(
+                    children: termWidgets,
+                  ),
+                )
+              : Center(child: Text("No terms were found in the contract.")),
+          Column(
+            children: signatureWidgets,
           ),
-            )
-            : Center(child: Text("No terms were found in the contract.")),
+          Column(
+            children: [
+              Text("Existing sigs: ${signatures.length}"),
+            ],
+          ),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-              child: contractDates()
-          )
+              child: contractDates())
         ],
       ),
     );
@@ -477,9 +511,15 @@ class _ContractCreationState extends State<ViewContract> {
   Widget contractDates() {
     return Row(
       children: [
-        Expanded(child: contractDetailText("Effective Date:", contract!.getFormattedEffectiveDate())),
-        Expanded(child: contractDetailText("Execution Date:", contract!.getFormattedExecutionDate())),
-        Expanded(child: contractDetailText("End Date:", contract!.getFormattedEndDate())),
+        Expanded(
+            child: contractDetailText(
+                "Effective Date:", contract!.getFormattedEffectiveDate())),
+        Expanded(
+            child: contractDetailText(
+                "Execution Date:", contract!.getFormattedExecutionDate())),
+        Expanded(
+            child: contractDetailText(
+                "End Date:", contract!.getFormattedEndDate())),
       ],
     );
   }
@@ -491,35 +531,55 @@ class _ContractCreationState extends State<ViewContract> {
     });
   }
 
+  void buildContractSignatures(Contract contract) {
+    signatureWidgets.clear();
+    signatures.forEach((signature) {
+      signatureWidgets.add(signatureDetails(signature));
+    });
+  }
+
   Widget contractorDetails(String contractorId) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
-      child: FutureBuilder<User>(
-        future: dataProvider.fetchUserById(contractorId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                contractDetailText("Contractor: ", "${snapshot.data!.name}"),
-                SizedBox(height: 2),
-                contractDetailText("Email: ", "${snapshot.data!.email}"),
-                SizedBox(height: 2),
-                contractDetailText("Phone: ", "${snapshot.data!.phone}"),
-                SizedBox(height: 2),
-                contractDetailText("Country: ", "${snapshot.data!.country}"),
-                SizedBox(height: 2),
-                contractDetailText("City: ", "${snapshot.data!.city}"),
-                SizedBox(height: 2),
-                contractDetailText("Address: ", "${snapshot.data!.streetAddress}")
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return CircularProgressIndicator();
-        }
-      )
-    );
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+        child: FutureBuilder<User>(
+            future: dataProvider.fetchUserById(contractorId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    contractDetailText(
+                        "Contractor: ", "${snapshot.data!.name}"),
+                    SizedBox(height: 2),
+                    contractDetailText("Email: ", "${snapshot.data!.email}"),
+                    SizedBox(height: 2),
+                    contractDetailText("Phone: ", "${snapshot.data!.phone}"),
+                    SizedBox(height: 2),
+                    contractDetailText(
+                        "Country: ", "${snapshot.data!.country}"),
+                    SizedBox(height: 2),
+                    contractDetailText("City: ", "${snapshot.data!.city}"),
+                    SizedBox(height: 2),
+                    contractDetailText(
+                        "Address: ", "${snapshot.data!.streetAddress}")
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return CircularProgressIndicator();
+            }));
+  }
+
+  Widget signatureDetails(Signature signature) {
+    return Container(
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+        child: Row(
+          children: [
+            Text("Contracting Party:"),
+            Text("Signature Text: ${signature.signatureText}"),
+            Text("Signature Text: ${signature.createDate!.toIso8601String().substring(0, 10)}"),
+          ],
+        ));
   }
 
   Widget contractDetailText(String type, String content) {
@@ -537,49 +597,48 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget contractTerm(String termId, int index) {
     return Container(
-      child: FutureBuilder<Term>(
-          future: dataProvider.fetchTermById(termId),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return FutureBuilder<TermType>(
-                future: dataProvider.fetchTermTypeById(snapshot.data!.termTypeId!),
-                builder: (context, typeSnapshot) {
-                  if (typeSnapshot.hasData) {
-                    return Column(
-                      children: [
-                        //Title comes from template
-                        contractTermTitle("$index. ${typeSnapshot.data!.name!}"),
-                        //Description text comes from actual added term created by user
-                        contractTermText(snapshot.data!.description!),
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: Column(
-                            children: displayATermsObligations(termId),
-                          ),
-                        )
-                      ],
-                    );
-                  } else if (typeSnapshot.hasError) {
-                    return Center(child: Text('${snapshot.error}'));
-                  }
-                  return Center(child: CircularProgressIndicator());
-                }
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text('${snapshot.error}'));
-            }
-            return Center(child: CircularProgressIndicator());
-          }
-      )
-    );
+        child: FutureBuilder<Term>(
+            future: dataProvider.fetchTermById(termId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return FutureBuilder<TermType>(
+                    future: dataProvider
+                        .fetchTermTypeById(snapshot.data!.termTypeId!),
+                    builder: (context, typeSnapshot) {
+                      if (typeSnapshot.hasData) {
+                        return Column(
+                          children: [
+                            //Title comes from template
+                            contractTermTitle(
+                                "$index. ${typeSnapshot.data!.name!}"),
+                            //Description text comes from actual added term created by user
+                            contractTermText(snapshot.data!.description!),
+                            SizedBox(height: 10),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Column(
+                                children: displayATermsObligations(termId),
+                              ),
+                            )
+                          ],
+                        );
+                      } else if (typeSnapshot.hasError) {
+                        return Center(child: Text('${snapshot.error}'));
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    });
+              } else if (snapshot.hasError) {
+                return Center(child: Text('${snapshot.error}'));
+              }
+              return Center(child: CircularProgressIndicator());
+            }));
   }
 
   List<Widget> displayATermsObligations(String termId) {
     List<Widget> widgets = [];
     int index = 0;
     obligations.forEach((element) {
-      if(element.termId == termId) {
+      if (element.termId == termId) {
         widgets.add(obligationInfo(element, index));
         widgets.add(SizedBox(height: 20));
         index++;
@@ -592,18 +651,20 @@ class _ContractCreationState extends State<ViewContract> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Clause-${index+1}:", style: TextStyle(fontSize: 15)),
+        Text("Clause-${index + 1}:", style: TextStyle(fontSize: 15)),
         SizedBox(width: 10),
         Flexible(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              formattedObligationText("Description: ", obligation.description!),
-              formattedObligationText("Execution Date: ", obligation.getExecutionDateAsString()),
-              formattedObligationText("End Date: ", obligation.getEndDateAsString()),
-            ]
-          ),
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                formattedObligationText(
+                    "Description: ", obligation.description!),
+                formattedObligationText(
+                    "Execution Date: ", obligation.getExecutionDateAsString()),
+                formattedObligationText(
+                    "End Date: ", obligation.getEndDateAsString()),
+              ]),
         )
       ],
     );
@@ -611,14 +672,16 @@ class _ContractCreationState extends State<ViewContract> {
 
   RichText formattedObligationText(String obligationElement, String text) {
     return RichText(
-          textAlign: TextAlign.justify,
-          text: TextSpan(
-              style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black),
-              children: [
-                TextSpan(text: "$obligationElement: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: "$text")
-              ]
-          ));
+        textAlign: TextAlign.justify,
+        text: TextSpan(
+            style:
+                TextStyle(fontWeight: FontWeight.normal, color: Colors.black),
+            children: [
+              TextSpan(
+                  text: "$obligationElement: ",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: "$text")
+            ]));
   }
 
   void buildContractTerms(Contract contract) {
@@ -739,7 +802,8 @@ class _ContractCreationState extends State<ViewContract> {
               ),
               MaterialButton(
                 onPressed: () async {
-                  bool updateSuccess = await dataProvider.updateObligationStatus(obligation, "hasFulfilled");
+                  bool updateSuccess = await dataProvider
+                      .updateObligationStatus(obligation, "hasFulfilled");
                   if (updateSuccess) {
                     setState(() {
                       obligation.state = "hasFulfilled";
@@ -761,13 +825,13 @@ class _ContractCreationState extends State<ViewContract> {
   }
 
   void _showObligationUpdateError(Obligation obligation) {
-
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('Error on completing your obligation.'),
-            content: Text('There appears to be an error on completing the obligation with ID: ${obligation.id}'),
+            content: Text(
+                'There appears to be an error on completing the obligation with ID: ${obligation.id}'),
             actions: [
               MaterialButton(
                 onPressed: () {
@@ -781,63 +845,67 @@ class _ContractCreationState extends State<ViewContract> {
               )
             ],
           );
-        }
-    );
+        });
   }
 
   Tooltip obligationIconByStatus(String status) {
     if (status.compareTo("hasPending") == 0) {
       return Tooltip(
-        message: "Clause is pending.",
+          message: "Clause is pending.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
-    } else if (status.compareTo("hasInvalid") == 0) {
+    } else if (status.compareTo("stateInvalid") == 0) {
       return Tooltip(
           message: "Clause is invalid.",
           child: Icon(Icons.warning, color: Colors.yellow, size: 30));
-    } else if (status.compareTo("hasFulfilled") == 0) {
+    } else if (status.compareTo("stateFulfilled") == 0) {
       return Tooltip(
           message: "Clause is fulfilled.",
           child: Icon(Icons.check_circle, color: Colors.green, size: 30));
-    } else if (status.compareTo("hasValid") == 0) {
+    } else if (status.compareTo("stateValid") == 0) {
       return Tooltip(
           message: "Clause is valid.",
-          child: Icon(Icons.done, color: Colors.grey, size: 30));
+          child: Icon(Icons.done, color: Colors.green, size: 30));
     } else {
       return Tooltip(
-        message: "Clause is completed.",
-          child: Icon(Icons.check_circle, color: Colors.green, size: 30));
+          message: "Clause status could not be read.",
+          child: Icon(Icons.question_mark, color: Colors.grey, size: 30));
     }
   }
 
   Tooltip contractIconByStatus(String status) {
-    if (status.compareTo("hasCreated") == 0) {
+    if (status.compareTo("statusCreated") == 0) {
       return Tooltip(
-        message: "The contract has recently been created.",
-        child: Icon(Icons.new_releases, color: Colors.blue, size: 50));
-    } else if (status.compareTo("hasPending") == 0) {
+          message: "The contract has recently been created.",
+          child: Icon(Icons.new_releases, color: Colors.blue, size: 50));
+    } else if (status.compareTo("statusPending") == 0) {
       return Tooltip(
           message: "The contract is still awaiting signatures.",
           child: Icon(Icons.pending, color: Colors.grey, size: 50));
-    } else if (status.compareTo("hasSigned") == 0) {
+    } else if (status.compareTo("statusSigned") == 0) {
       return Tooltip(
           message: "The contract has been signed by all parties.",
           child: Icon(Icons.thumb_up, color: Colors.blue, size: 50));
-    } else if (status.compareTo("hasTerminated") == 0) {
+    } else if (status.compareTo("statusTerminated") == 0) {
       return Tooltip(
           message: "The contract has been terminated.",
           child: Icon(Icons.do_not_disturb, color: Colors.yellow, size: 50));
-    } else if (status.compareTo("hasRenewed") == 0) {
+    } else if (status.compareTo("statusRenewed") == 0) {
       return Tooltip(
           message: "The contract has been renewed.",
           child: Icon(Icons.history, color: Colors.blue, size: 50));
-    } else if (status.compareTo("hasExpired") == 0) {
+    } else if (status.compareTo("statusUpdated") == 0) {
+      return Tooltip(
+          message: "The contract has been renewed.",
+          child: Icon(Icons.update, color: Colors.blue, size: 50));
+    } else if (status.compareTo("statusExpired") == 0) {
       return Tooltip(
           message: "The contract has expired.",
           child: Icon(Icons.hourglass_bottom, color: Colors.blue, size: 50));
     } else {
       return Tooltip(
-          message: "The contract has recently been created.",
-          child: Icon(Icons.new_releases, color: Colors.blue, size: 50));
+          message:
+              "The contract's status could not be read. Please review the contract.",
+          child: Icon(Icons.question_mark, color: Colors.blue, size: 50));
     }
   }
 

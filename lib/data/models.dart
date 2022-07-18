@@ -56,6 +56,7 @@ class Contract {
   List contractors = [];
   List obligations = [];
   List terms = [];
+  List signatures = [];
 
 
   Contract({
@@ -116,7 +117,6 @@ class Contract {
     String dateString = "${this.endDate!.day}.${this.endDate!.month}.${this.endDate!.year}";
     return dateString;
   }
-
 
   String getContractorName() {
     return this.contractors[0].replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
@@ -239,6 +239,16 @@ class TermType {
       name: json['name']
     );
   }
+}
+
+class Signature {
+  String? id;
+  String? contractId;
+  String? contractorId;
+  DateTime? createDate;
+  String? signatureText;
+
+  Signature({this.id, this.contractId, this.contractorId, this.createDate, this.signatureText});
 }
 
 /// Object model to be used in a Contract. It describes the actual object
