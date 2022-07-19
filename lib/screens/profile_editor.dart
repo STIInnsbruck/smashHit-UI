@@ -201,18 +201,15 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     List<Obligation> oblList =  [];
     for(Contract pContract in pContracts) {
       for(String oblId in pContract.obligations) {
-        oblList.add(await dataProvider.fetchObligationById(oblId));
+        Obligation tmpObligation = await dataProvider.fetchObligationById(oblId);
+        if (tmpObligation.contractorId == widget.userId) {
+          oblList.add(await dataProvider.fetchObligationById(oblId));
+        }
       }
     }
     setState(() {
       obligations = oblList;
     });
-  }
-
-  someFunc() async {
-    for (Contract contract in contracts) {
-      await dataProvider.fetchAllTermTypes();
-    }
   }
 
   setUser() {
