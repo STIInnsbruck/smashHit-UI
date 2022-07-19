@@ -34,7 +34,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    print("Offline Mode?: ${widget.offlineMode}");
     if (widget.offlineMode) {
       _generateOfflineData();
       contractList = offlineContracts;
