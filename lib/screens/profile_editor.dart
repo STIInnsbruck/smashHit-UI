@@ -45,24 +45,22 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   bool fetchedObligations = false;
   bool _isLoading = false;
   bool _userDataLoaded = false;
+  bool _allObligationsCompleted = false;
 
   DataProvider dataProvider = new DataProvider();
   late Future<User> futureUser = User() as Future<User>;
   User? user;
 
+  late Future<List<Contract>> futureContracts;
   List<Contract> contracts = [];
   List<Obligation> obligations = [];
 
   @override
   void initState() {
+
+    futureContracts = fetchContractAndObligationsStatistics();
     super.initState();
     _userDataLoaded = false;
-    _getAllObligationsOfEachContract().then((value) {
-      setState(() {
-        obligations = obligations;
-        fetchedObligations = true;
-      });
-    });
   }
 
   @override
@@ -82,11 +80,12 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                     }
                     return Container(
                       child: FutureBuilder<List<Contract>>(
-                          future: dataProvider.fetchContractsByContractorId(widget.userId),
+                          future: futureContracts,
                           builder: (context, contractsSnapshot) {
                             if (contractsSnapshot.hasData) {
                               contracts = contractsSnapshot.data!;
                               return _wideScreenLayout();
+                              //return _wideScreenLayout();
                             } else if (contractsSnapshot.hasError) {
                               return Text('${contractsSnapshot.error}');
                             }
@@ -132,7 +131,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
             Row(
               children: [
                 Spacer(flex: 1),
-                Expanded(child: ProfileStatisticCard(title: "Obligation Completed", tooltipMessage: "The amount of obligation you have completed against the amount you have in total.", value: fetchedObligations? "${numCompletedObligation()}/${obligations.length}" : "Loading...")),
+                Expanded(child: ProfileStatisticCard(title: "Obligations Completed", tooltipMessage: "The amount of obligations you have completed against the amount you have in total.", value: "${numCompletedObligation()}/${obligations.length}", color: _allObligationsCompleted? Colors.green : Colors.black)),
                 Expanded(child: ProfileStatisticCard(title: "Total Contracts", tooltipMessage: "The amount of contracts you have.", value: "${contracts.length}")),
                 Expanded(child: ProfileStatisticCard(title: "Completed Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numCompletedContracts()}")),
                 Expanded(child: ProfileStatisticCard(title: "Running Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numRunningContract()}")),
@@ -152,6 +151,13 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
         ),
       ),
     );
+  }
+
+  Future<List<Contract>> fetchContractAndObligationsStatistics() async {
+    List<Contract> tmpContracts = await dataProvider.fetchContractsByContractorId(widget.userId);
+    await _getAllObligationsOfEachContract(tmpContracts);
+
+    return tmpContracts;
   }
 
   int numCompletedContracts() {
@@ -176,21 +182,36 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
 
   int numCompletedObligation() {
     int numCompleted = 0;
+
     obligations.forEach((element) {
       if (element.state!.compareTo("hasFulfilled") == 0) {
         numCompleted++;
       }
     });
+
+    if(numCompleted == obligations.length) {
+      setState(() {
+        _allObligationsCompleted = true;
+      });
+    }
     return numCompleted;
   }
   
-  Future<void> _getAllObligationsOfEachContract() async {
-    if (fetchedObligations == false) {
-      contracts.forEach((element) {
-        element.obligations.forEach((obl) async {
-          obligations.add(await dataProvider.fetchObligationById(obl as String));
-        });
-      });
+  Future<void> _getAllObligationsOfEachContract(List<Contract> pContracts) async {
+    List<Obligation> oblList =  [];
+    for(Contract pContract in pContracts) {
+      for(String oblId in pContract.obligations) {
+        oblList.add(await dataProvider.fetchObligationById(oblId));
+      }
+    }
+    setState(() {
+      obligations = oblList;
+    });
+  }
+
+  someFunc() async {
+    for (Contract contract in contracts) {
+      await dataProvider.fetchAllTermTypes();
     }
   }
 
