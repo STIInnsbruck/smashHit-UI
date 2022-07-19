@@ -12,6 +12,7 @@ import 'package:smashhit_ui/screens/profile_editor.dart';
 import 'package:smashhit_ui/screens/contract_party_profile.dart';
 import 'package:smashhit_ui/screens/term_type_creation.dart';
 import 'package:smashhit_ui/screens/term_type_view.dart';
+import 'package:smashhit_ui/screens/obligation_dashboard.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -62,6 +63,13 @@ class _BasePageState extends State<BasePage> {
               title: Text("Contracts Dashboard"),
               onTap: () {
                 changeScreen(0);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text("View My Obligations"),
+              onTap: () {
+                changeScreen(11);
                 Navigator.of(context).pop();
               },
             ),
@@ -177,6 +185,10 @@ class _BasePageState extends State<BasePage> {
         case 10:
           _selectedPage = TermTypeViewPage(changeScreen, user, offlineMode);
           _selectedTitle = "View Clause Types";
+          break;
+        case 11:
+          _selectedPage = ObligationsDashboard(changeScreen, user, searchId, offlineMode);
+          _selectedTitle = "View My Obligations";
       }
     });
   }

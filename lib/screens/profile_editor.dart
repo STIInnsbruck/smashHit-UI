@@ -65,7 +65,6 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Stack(
       children: [
         Container(
@@ -199,11 +198,11 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   
   Future<void> _getAllObligationsOfEachContract(List<Contract> pContracts) async {
     List<Obligation> oblList =  [];
-    for(Contract pContract in pContracts) {
-      for(String oblId in pContract.obligations) {
+    for (Contract pContract in pContracts) {
+      for (String oblId in pContract.obligations) {
         Obligation tmpObligation = await dataProvider.fetchObligationById(oblId);
         if (tmpObligation.contractorId == widget.userId) {
-          oblList.add(await dataProvider.fetchObligationById(oblId));
+          oblList.add(tmpObligation);
         }
       }
     }
