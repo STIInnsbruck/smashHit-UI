@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/misc/legal_term_texts.dart';
 import 'dart:convert';
@@ -23,20 +24,20 @@ class ContractForm extends StatefulWidget {
   String? contractDropDownType;
   User user;
 
-  ContractForm(this.changeScreen, this.contract, this.user, [this.toggleEditing]);
+  ContractForm(this.changeScreen, this.contract, this.user,
+      [this.toggleEditing]);
 
   @override
   _ContractFormState createState() => new _ContractFormState();
 }
 
 class _ContractFormState extends State<ContractForm> {
-
-
   TextEditingController titleController = TextEditingController();
   TextEditingController considerationDescController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController considerationValController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController signatureController = TextEditingController();
   List<TextEditingController> contractorControllers = [];
 
   //------------------- General Variables --------------------------------------
@@ -64,18 +65,19 @@ class _ContractFormState extends State<ContractForm> {
   List<GlobalKey<FormState>> step2Keys = [];
   List<GlobalKey<FormState>> step3Keys = [];
   final _step4Key = GlobalKey<FormState>();
+  final _signatureKey = GlobalKey<FormState>();
 
   //------------------- Other Variables ----------------------------------------
   static List<User> contractors = []; //list of all existing contractors
-  List<User> addedContractors = [];   //list of contractors added to the form
+  List<User> addedContractors = []; //list of contractors added to the form
   int currentContractorIndex = 0;
   int addedContractorsIndex = 0;
   Contract? tmpContract;
-  List<TermType> _termTypeList = [];  //list of all existing termTypes
+  List<TermType> _termTypeList = []; //list of all existing termTypes
   Map<String, TermWidget> _termMap = {};
   Map<String, ObligationWidget> _obligationMap = {};
   Contract contract = new Contract();
-
+  bool _hasSigned = false;
 
   @override
   void initState() {
@@ -94,43 +96,35 @@ class _ContractFormState extends State<ContractForm> {
 
     if (widget.contract != null) {
       //tmpContract = widget.contract;
-    } else {
-
-    }
+    } else {}
   }
 
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double formWidth = screenWidth * (_isWideScreen(screenWidth, screenHeight)? 0.7 : 1);
+    double formWidth =
+        screenWidth * (_isWideScreen(screenWidth, screenHeight) ? 0.7 : 1);
 
     return Stack(children: [
       Container(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                contractStepOne(formWidth),
-                contractStepTwo(formWidth),
-                contractStepFour(formWidth),
-                contractStepObligation(formWidth),
-                contractStepFinal(formWidth),
-              ])),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        contractStepOne(formWidth),
+        contractStepTwo(formWidth),
+        contractStepFour(formWidth),
+        contractStepObligation(formWidth),
+        contractStepFinal(formWidth),
+      ])),
       Container(
         height: screenHeight,
         width: screenWidth,
         child: Align(
           alignment: Alignment.center,
-          child: Row(
-              children: [
-                previousStepButton(),
-                Spacer(),
-                contractStep == 5
-                  ? createContractButton()
-                  : nextStepButton()
-              ]
-          ),
+          child: Row(children: [
+            previousStepButton(),
+            Spacer(),
+            contractStep == 5 ? createContractButton() : nextStepButton()
+          ]),
         ),
       )
     ]);
@@ -147,21 +141,19 @@ class _ContractFormState extends State<ContractForm> {
           onPressed: () => setStepOne(),
         ),
         contractStep == 1
-            ? ContractStepBody(
-            width: width,
-            children: [
-              titleField(),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  contractTypeDropDown(),
-                  contractCategoryDropDown(),
-                ],
-              ),
-              SizedBox(height: 10),
-              _wideScreenDateButtonsLayout()
-            ])
+            ? ContractStepBody(width: width, children: [
+                titleField(),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    contractTypeDropDown(),
+                    contractCategoryDropDown(),
+                  ],
+                ),
+                SizedBox(height: 10),
+                _wideScreenDateButtonsLayout()
+              ])
             : Container(),
       ],
     );
@@ -178,56 +170,51 @@ class _ContractFormState extends State<ContractForm> {
               setStepTwo();
             }),
         contractStep == 2
-            ? ContractStepBody(
-            width: width,
-            children: [
-              Text("Add Contractual Party ${currentContractorIndex + 1}",
-                  style: TextStyle(fontSize: 20)),
-              // Every Contractor has 7 Fields. Assign each field the right contractor.
-              contractorFieldSuggestor((currentContractorIndex * 7) + 0),
-              contractorEmailField((currentContractorIndex * 7) + 1),
-              contractorAddressField((currentContractorIndex * 7) + 2),
-              SizedBox(height: 10),
-              contractorCSCDropDownList((currentContractorIndex * 7) + 3),
-              SizedBox(height: 10),
-              contractorPhoneField((currentContractorIndex * 7) + 6),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  currentContractorIndex != 0
-                      ? Expanded(child: previousContractorButton())
-                      : Expanded(child: Container()),
-                  currentContractorIndex != 0
-                      ? Expanded(flex: 2, child: removeContractorButton())
-                      : Expanded(child: Container()),
-                  Expanded(flex: 2, child: addContractorButton()),
-                  currentContractorIndex < (addedContractorsIndex - 1)
-                      ? Expanded(child: nextContractorButton())
-                      : Expanded(child: Container())
-                ],
-              ),
-            ])
+            ? ContractStepBody(width: width, children: [
+                Text("Add Contractual Party ${currentContractorIndex + 1}",
+                    style: TextStyle(fontSize: 20)),
+                // Every Contractor has 7 Fields. Assign each field the right contractor.
+                contractorFieldSuggestor((currentContractorIndex * 7) + 0),
+                contractorEmailField((currentContractorIndex * 7) + 1),
+                contractorAddressField((currentContractorIndex * 7) + 2),
+                SizedBox(height: 10),
+                contractorCSCDropDownList((currentContractorIndex * 7) + 3),
+                SizedBox(height: 10),
+                contractorPhoneField((currentContractorIndex * 7) + 6),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    currentContractorIndex != 0
+                        ? Expanded(child: previousContractorButton())
+                        : Expanded(child: Container()),
+                    currentContractorIndex != 0
+                        ? Expanded(flex: 2, child: removeContractorButton())
+                        : Expanded(child: Container()),
+                    Expanded(flex: 2, child: addContractorButton()),
+                    currentContractorIndex < (addedContractorsIndex - 1)
+                        ? Expanded(child: nextContractorButton())
+                        : Expanded(child: Container())
+                  ],
+                ),
+              ])
             : Container()
       ],
     );
   }
 
   Widget contractStepFour(double width) {
-    return Column(
-      children: [
-        ContractStepHeader(
-            width: width,
-            name: "Step 3. Terms & Conditions of the Contract",
-            stepComplete: stepFourComplete,
-            onPressed:  () {
-              setStepFour();
-            }
-        ),
-        contractStep == 3
-          ? ContractStepBody(
-            width: width,
-            children: [
-              Text("Add Terms to Your Contract", style: TextStyle(fontSize: 20)),
+    return Column(children: [
+      ContractStepHeader(
+          width: width,
+          name: "Step 3. Terms & Conditions of the Contract",
+          stepComplete: stepFourComplete,
+          onPressed: () {
+            setStepFour();
+          }),
+      contractStep == 3
+          ? ContractStepBody(width: width, children: [
+              Text("Add Terms to Your Contract",
+                  style: TextStyle(fontSize: 20)),
               SizedBox(height: 10),
               ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -236,52 +223,52 @@ class _ContractFormState extends State<ContractForm> {
                   itemBuilder: (BuildContext context, int index) {
                     String key = _termMap.keys.elementAt(index);
                     return _termMap[key]!;
-                  }
-              ),
+                  }),
               Text("Add a term to the contract"),
               addTermButton(),
-            ]
-        )
-            : Container()
-      ]
-    );
-
+            ])
+          : Container()
+    ]);
   }
 
   Widget contractStepObligation(double width) {
-    return Column(
-      children: [
-        ContractStepHeader(
-            width: width,
-            name: "Step 4. Clauses of the Contract",
-            stepComplete: stepObligationComplete,
-            onPressed: () async {
-              setStepObligation();
-            }),
-        contractStep == 4
+    return Column(children: [
+      ContractStepHeader(
+          width: width,
+          name: "Step 4. Clauses of the Contract",
+          stepComplete: stepObligationComplete,
+          onPressed: () async {
+            setStepObligation();
+          }),
+      contractStep == 4
           ? ContractStepBody(
               width: width,
-              children: _termMap.keys.length > 0? [
-                Text("You have ${_termMap.keys.length} term(s), you can add clauses to each term.", style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10),
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: _obligationMap.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    String key = _obligationMap.keys.elementAt(index);
-                    return _obligationMap[key]!;
-                  },
-                ),
-                SizedBox(height: 10),
-                addObligationButton(),
-              ] : [
-                Text("You have not added any terms in the previous step. To add clauses you must have terms in your contract.", style: TextStyle(fontSize:20), textAlign: TextAlign.center),
-              ]
-        )
+              children: _termMap.keys.length > 0
+                  ? [
+                      Text(
+                          "You have ${_termMap.keys.length} term(s), you can add clauses to each term.",
+                          style: TextStyle(fontSize: 20)),
+                      SizedBox(height: 10),
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _obligationMap.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          String key = _obligationMap.keys.elementAt(index);
+                          return _obligationMap[key]!;
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      addObligationButton(),
+                    ]
+                  : [
+                      Text(
+                          "You have not added any terms in the previous step. To add clauses you must have terms in your contract.",
+                          style: TextStyle(fontSize: 20),
+                          textAlign: TextAlign.center),
+                    ])
           : Container()
-      ]
-    );
+    ]);
   }
 
   Widget contractStepFinal(double width) {
@@ -290,43 +277,43 @@ class _ContractFormState extends State<ContractForm> {
         ContractStepHeader(
             width: width,
             name: "Final Step - Overview",
-            onPressed: () => setStepFinal()
-        ),
+            onPressed: () => setStepFinal()),
         contractStep == 5
-            ? ContractStepBody(
-            width: width,
-            children: [
-              Text('${titleController.text}',
-                  style: TextStyle(
-                      fontSize: 25, decoration: TextDecoration.underline),
-                  textAlign: TextAlign.center),
-              SizedBox(height: 20),
-              Align(
-                child: Text('Contract Type: $contractType',
-                    style: TextStyle(fontSize: 15)),
-                alignment: Alignment.centerLeft,
-              ),
-              SizedBox(height: 10),
-              Column(
-                children: displayAllContractorsInfo(),
-              ),
-              Align(
-                child: Text("Consideration: ${considerationDescController.text}"),
-                alignment: Alignment.centerLeft
-              ),
-              SizedBox(height: 10),
-              Column(
-                children: displayAllTerms(),
-              ),
-              SizedBox(height: 10),
-              Align(
-                child: Text("Contract Category: $contractCategory", style: TextStyle(fontSize: 15)),
-                alignment: Alignment.centerLeft
-              ),
-              SizedBox(height: 10),
-              contractDates()
-            ]
-        )
+            ? ContractStepBody(width: width, children: [
+                Text('${titleController.text}',
+                    style: TextStyle(
+                        fontSize: 25, decoration: TextDecoration.underline),
+                    textAlign: TextAlign.center),
+                SizedBox(height: 20),
+                Align(
+                  child: Text('Contract Type: $contractType',
+                      style: TextStyle(fontSize: 15)),
+                  alignment: Alignment.centerLeft,
+                ),
+                SizedBox(height: 10),
+                Column(
+                  children: displayAllContractorsInfo(),
+                ),
+                Align(
+                    child: Text(
+                        "Consideration: ${considerationDescController.text}"),
+                    alignment: Alignment.centerLeft),
+                SizedBox(height: 10),
+                Column(
+                  children: displayAllTerms(),
+                ),
+                SizedBox(height: 10),
+                Align(
+                    child: Text("Contract Category: $contractCategory",
+                        style: TextStyle(fontSize: 15)),
+                    alignment: Alignment.centerLeft),
+                SizedBox(height: 10),
+                Column(
+                  children: displayAllSignatureFields(),
+                ),
+                SizedBox(height: 10),
+                contractDates()
+              ])
             : Container()
       ],
     );
@@ -335,16 +322,22 @@ class _ContractFormState extends State<ContractForm> {
   Widget contractDates() {
     return Row(
       children: [
-        Expanded(child: Text("Effective Date: ${_formatDate(effectiveDate)}", textAlign: TextAlign.center)),
-        Expanded(child: Text("Execution Date: ${_formatDate(executionDate)}", textAlign: TextAlign.center)),
-        Expanded(child: Text("End Date: ${_formatDate(endDate)}", textAlign: TextAlign.center)),
+        Expanded(
+            child: Text("Effective Date: ${_formatDate(effectiveDate)}",
+                textAlign: TextAlign.center)),
+        Expanded(
+            child: Text("Execution Date: ${_formatDate(executionDate)}",
+                textAlign: TextAlign.center)),
+        Expanded(
+            child: Text("End Date: ${_formatDate(endDate)}",
+                textAlign: TextAlign.center)),
       ],
     );
   }
 
   List<Widget> displayAllContractorsInfo() {
     List<Widget> widgets = [];
-    for (int i = 0; i < addedContractorsIndex; i++) {
+    for (int i = 0; i < addedContractors.length; i++) {
       widgets.add(contractorInfo(i));
       widgets.add(SizedBox(height: 10));
     }
@@ -355,7 +348,7 @@ class _ContractFormState extends State<ContractForm> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Contractor-${index+1}:', style: TextStyle(fontSize: 15)),
+        Text('Contractual Party-${index + 1}:', style: TextStyle(fontSize: 15)),
         SizedBox(width: 10),
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -370,6 +363,104 @@ class _ContractFormState extends State<ContractForm> {
             Text("${contractorControllers[index * 7 + 6].text}"),
           ],
         )
+      ],
+    );
+  }
+
+  List<Widget> displayAllSignatureFields() {
+    List<Widget> widgets = [];
+    for (int i = 0; i < addedContractors.length; i++) {
+      if (addedContractors[i].id == widget.user.id) {
+        widgets.add(ownSignatureField(i, _hasSigned));
+      } else {
+        widgets.add(otherContractorSignatureField(i));
+      }
+      widgets.add(SizedBox(height: 10));
+    }
+    return widgets;
+  }
+
+  Widget ownSignatureField(int index, bool hasSigned) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text('Signature of Contractual Party-${index + 1}:',
+            style: TextStyle(fontSize: 15)),
+        SizedBox(width: 10),
+        Expanded(
+            child: hasSigned
+                ? MaterialButton(
+                    elevation: 0,
+                    enableFeedback: false,
+                    child: Text("You Have Signed This Contract",
+                        style: TextStyle(fontSize: 15, color: Colors.green)),
+                    color: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.green),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    onPressed: null,
+                  )
+                : MaterialButton(
+                    child: Text("Click To legally Apply Your Signature",
+                        style: TextStyle(fontSize: 15, color: Colors.white)),
+                    color: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    onPressed: () {
+                      _confirmSignatureDialog();
+                    },
+                  )),
+        SizedBox(width: 10),
+        //The viewing date is the signing date.
+        hasSigned
+            ? Expanded(
+                child: Text(
+                    'Signing Date: ${DateTime.now().toIso8601String().substring(0, 10)}'))
+            : Expanded(child: Text('Signing Date: Awaiting Signature'))
+      ],
+    );
+  }
+
+  void signContract() {
+    setState(() {
+      _hasSigned = true;
+    });
+  }
+
+  Signature createSignatureObject(String contractId) {
+    return Signature(
+      contractId: contractId,
+      contractorId: widget.user.id,
+      createDate: DateTime.now(),
+      signatureText: signatureController.text
+    );
+  }
+
+  Widget otherContractorSignatureField(int index) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text('Signature of Contractual Party-${index + 1}:',
+            style: TextStyle(fontSize: 15)),
+        SizedBox(width: 10),
+        Expanded(
+          child: MaterialButton(
+            elevation: 0,
+            enableFeedback: false,
+            child: Text(
+                "${addedContractors[index].name} must sign on their behalf",
+                style: TextStyle(fontSize: 15, color: Colors.grey)),
+            color: Colors.grey,
+            onPressed: null,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+        ),
+        SizedBox(width: 10),
+        Spacer()
       ],
     );
   }
@@ -389,7 +480,7 @@ class _ContractFormState extends State<ContractForm> {
     List<Widget> widgets = [];
     int index = 0;
     _obligationMap.values.forEach((element) {
-      if(element.term.termTypeId == term.termTypeId) {
+      if (element.term.termTypeId == term.termTypeId) {
         widgets.add(obligationInfo(element, index));
         widgets.add(SizedBox(height: 20));
         index++;
@@ -401,7 +492,9 @@ class _ContractFormState extends State<ContractForm> {
   Widget termInfo(TermWidget termWidget, int index) {
     return Column(
       children: [
-        Text("${index+1} ${termWidget.term.name}", style: TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
+        Text("${index + 1} ${termWidget.term.name}",
+            style:
+                TextStyle(fontSize: 20, decoration: TextDecoration.underline)),
         SizedBox(height: 10),
         Text("${termWidget.textController.text}", textAlign: TextAlign.justify),
         SizedBox(height: 10),
@@ -416,15 +509,18 @@ class _ContractFormState extends State<ContractForm> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Clause-${index+1}:", style: TextStyle(fontSize: 15)),
+        Text("Clause-${index + 1}:", style: TextStyle(fontSize: 15)),
         SizedBox(width: 10),
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Description: ${obligationWidget.textController.text}", textAlign: TextAlign.justify),
-            Text("Execution Date: ${obligationWidget.obligation.getExecutionDateAsString()}"),
-            Text("End Date: ${obligationWidget.obligation.getEndDateAsString()}"),
+            Text("Description: ${obligationWidget.textController.text}",
+                textAlign: TextAlign.justify),
+            Text(
+                "Execution Date: ${obligationWidget.obligation.getExecutionDateAsString()}"),
+            Text(
+                "End Date: ${obligationWidget.obligation.getEndDateAsString()}"),
           ],
         ),
       ],
@@ -435,10 +531,7 @@ class _ContractFormState extends State<ContractForm> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
-            flex: 2,
-            child: effectiveDateButton()
-        ),
+        Expanded(flex: 2, child: effectiveDateButton()),
         Spacer(),
         Expanded(
           flex: 2,
@@ -473,9 +566,7 @@ class _ContractFormState extends State<ContractForm> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              "$fieldText",
-              style: TextStyle(fontSize: 15)),
+          Text("$fieldText", style: TextStyle(fontSize: 15)),
           SizedBox(height: 5),
           TextFormField(
             decoration: InputDecoration(
@@ -509,8 +600,7 @@ class _ContractFormState extends State<ContractForm> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              "Name", style: TextStyle(fontSize: 15)),
+          Text("Name", style: TextStyle(fontSize: 15)),
           SizedBox(height: 5),
           Autocomplete(
             displayStringForOption: _displayStringForOption,
@@ -519,7 +609,9 @@ class _ContractFormState extends State<ContractForm> {
                 return const Iterable<User>.empty();
               }
               return contractors.where((User option) {
-                return option.toString().contains(textEditingValue.text.toLowerCase());
+                return option
+                    .toString()
+                    .contains(textEditingValue.text.toLowerCase());
               });
             },
             onSelected: (User selection) {
@@ -529,13 +621,12 @@ class _ContractFormState extends State<ContractForm> {
                 print("insert response");
               }
             },
-            fieldViewBuilder: (
-                BuildContext context,
+            fieldViewBuilder: (BuildContext context,
                 TextEditingController fieldTextEditingController,
                 FocusNode fieldFocusNode,
-                VoidCallback onFieldSubmitted
-                ) {
-              fieldTextEditingController.text = contractorControllers[index].text;
+                VoidCallback onFieldSubmitted) {
+              fieldTextEditingController.text =
+                  contractorControllers[index].text;
               return TextField(
                 controller: fieldTextEditingController,
                 focusNode: fieldFocusNode,
@@ -565,7 +656,8 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget contractorAddressField(int index) {
-    return contractorInfoFieldForm(index, "House Number and Street Name:", "Please enter an address.");
+    return contractorInfoFieldForm(
+        index, "House Number and Street Name:", "Please enter an address.");
   }
 
   Widget contractorCSCDropDownList(int index) {
@@ -580,7 +672,8 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   Widget contractorPhoneField(int index) {
-    return contractorInfoFieldForm(index, "Phone number:", "Please enter a phone number.");
+    return contractorInfoFieldForm(
+        index, "Phone number:", "Please enter a phone number.");
   }
 
   //------------------- CONTRACT FIELDS ----------------------------------------
@@ -732,7 +825,8 @@ class _ContractFormState extends State<ContractForm> {
   Widget contractTypeDropDown() {
     return Column(
       children: [
-        Text("What type of contract is being formed?", style: TextStyle(fontSize: 15)),
+        Text("What type of contract is being formed?",
+            style: TextStyle(fontSize: 15)),
         DropdownButton(
             items: contractTypes,
             hint: Text("Select a type"),
@@ -741,8 +835,7 @@ class _ContractFormState extends State<ContractForm> {
               setState(() {
                 contractType = value!;
               });
-            }
-        )
+            })
       ],
     );
   }
@@ -750,7 +843,8 @@ class _ContractFormState extends State<ContractForm> {
   Widget contractCategoryDropDown() {
     return Column(
       children: [
-        Text("What is the category of your contract?", style: TextStyle(fontSize: 15)),
+        Text("What is the category of your contract?",
+            style: TextStyle(fontSize: 15)),
         DropdownButton(
             items: contractCategories,
             hint: Text("Select a category"),
@@ -759,15 +853,15 @@ class _ContractFormState extends State<ContractForm> {
               setState(() {
                 contractCategory = value!;
               });
-            }
-        )
+            })
       ],
     );
   }
 
   removeTermWidget(String id) {
     setState(() {
-      _obligationMap.removeWhere((key, value) => value.term.id == _termMap[id]!.term.id);
+      _obligationMap
+          .removeWhere((key, value) => value.term.id == _termMap[id]!.term.id);
       _termMap.remove(id);
     });
     validateStepFour();
@@ -992,7 +1086,7 @@ class _ContractFormState extends State<ContractForm> {
         minWidth: 125,
         onPressed: () {
           setState(() {
-            if(contractStep < 5) {
+            if (contractStep < 5) {
               setNextStep();
             }
           });
@@ -1025,24 +1119,31 @@ class _ContractFormState extends State<ContractForm> {
     setBaseContractDetails();
     //create contract
     contract.contractId = await dataProvider.createBaseContract(contract);
+    //add signature if already signed by contract creator
+    if (_hasSigned) {
+      Signature tmpSignature = await dataProvider.createSignature(createSignatureObject(contract.contractId!));
+      contract.signatures.add(tmpSignature.id!);
+    }
     //create a term associated to the created base contract.
     _termMap.forEach((key, value) async {
-      Term tempTerm = await dataProvider.createTerm(contract.contractId!, value.textController.text, value.term.termTypeId!);
+      Term tempTerm = await dataProvider.createTerm(contract.contractId!,
+          value.textController.text, value.term.termTypeId!);
       value.term.id = tempTerm.id;
       contract.terms.add(tempTerm.id!);
       //create an obligation associated to the previously created term
       _obligationMap.forEach((key, obl) async {
-        if(obl.term.termTypeId == value.term.termTypeId) {
+        if (obl.term.termTypeId == value.term.termTypeId) {
           obl.obligation.termId = value.term.id;
           obl.obligation.contractorId = obl.selectedContractor!.id;
           obl.obligation.description = obl.textController.text;
           obl.obligation.state = "hasPending";
           obl.obligation.contractId = contract.contractId;
-          Obligation tmpObligation = await dataProvider.createObligation(contract, obl.obligation);
+          Obligation tmpObligation =
+              await dataProvider.createObligation(contract, obl.obligation);
           contract.obligations.add(tmpObligation.id!);
           await dataProvider.updateContract(contract);
         }
-        if(contract.obligations.length == _obligationMap.values.length) {
+        if (contract.obligations.length == _obligationMap.values.length) {
           //all obligations have been added, stop loading
           _toggleLoading();
           //navigate to contract viewing page
@@ -1064,7 +1165,7 @@ class _ContractFormState extends State<ContractForm> {
         minWidth: 125,
         onPressed: () {
           setState(() {
-            if(contractStep > 1) {
+            if (contractStep > 1) {
               contractStep--;
             }
           });
@@ -1079,20 +1180,19 @@ class _ContractFormState extends State<ContractForm> {
   Widget confirmEditButton() {
     //TODO: adjust to new api
     return Container(
-      child: MaterialButton(
-        color: Colors.grey,
-        hoverColor: Colors.blueGrey,
-        child: Text("Confirm Changes", style: TextStyle(color: Colors.white)),
-        onPressed: () {
-          print("Original contract ID: ${widget.contract!.contractId!}");
-          setState(() {
-            widget.contract = tmpContract;
-            print("Modified contract ID: ${widget.contract!.contractId!}");
-          });
-          widget.toggleEditing!(null);
-        }
-      )
-    );
+        child: MaterialButton(
+            color: Colors.grey,
+            hoverColor: Colors.blueGrey,
+            child:
+                Text("Confirm Changes", style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              print("Original contract ID: ${widget.contract!.contractId!}");
+              setState(() {
+                widget.contract = tmpContract;
+                print("Modified contract ID: ${widget.contract!.contractId!}");
+              });
+              widget.toggleEditing!(null);
+            }));
   }
 
   Widget addContractorButton() {
@@ -1158,20 +1258,18 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget addTermButton() {
     return PopupMenuButton(
-        tooltip: "Add a term",
-        child: Icon(Icons.add),
-        onSelected: (TermType termType) {
-          //getTerm(termTypeId.toString());
-          createTerm(termType);
-        },
-        itemBuilder: (BuildContext context) {
-          return _termTypeList.map((TermType element) {
-            return PopupMenuItem<TermType>(
-              value: element,
-              child: Text(element.name!)
-            );
-          }).toList();
-        },
+      tooltip: "Add a term",
+      child: Icon(Icons.add),
+      onSelected: (TermType termType) {
+        //getTerm(termTypeId.toString());
+        createTerm(termType);
+      },
+      itemBuilder: (BuildContext context) {
+        return _termTypeList.map((TermType element) {
+          return PopupMenuItem<TermType>(
+              value: element, child: Text(element.name!));
+        }).toList();
+      },
     );
   }
 
@@ -1185,11 +1283,9 @@ class _ContractFormState extends State<ContractForm> {
       },
       itemBuilder: (BuildContext context) {
         return _termMap.values.map((TermWidget tw) {
-            return PopupMenuItem<Term>(
-              value: tw.term,
-              child: Text(tw.term.name!)
-            );
-          }).toList();
+          return PopupMenuItem<Term>(
+              value: tw.term, child: Text(tw.term.name!));
+        }).toList();
       },
     );
   }
@@ -1198,7 +1294,10 @@ class _ContractFormState extends State<ContractForm> {
     setState(() {
       //Must be unique, otherwise deletion of all obligations with same termId
       String id = UniqueKey().toString();
-      _obligationMap.putIfAbsent(id, () => ObligationWidget(term, "SAMPLE NAME", addedContractors, removeObligationWidget, id, effectiveDate, endDate));
+      _obligationMap.putIfAbsent(
+          id,
+          () => ObligationWidget(term, "SAMPLE NAME", addedContractors,
+              removeObligationWidget, id, effectiveDate, endDate));
     });
   }
 
@@ -1206,34 +1305,33 @@ class _ContractFormState extends State<ContractForm> {
   /// displayed under the signature line.
   Widget signatureField(String name) {
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-      children: [
-        Text("_________________________"),
-        Text(name, textAlign: TextAlign.center, style: TextStyle(fontSize: 10))
-      ],
-    ));
+          children: [
+            Text("_________________________"),
+            Text(name,
+                textAlign: TextAlign.center, style: TextStyle(fontSize: 10))
+          ],
+        ));
   }
 
   /// Function to dynamically display the correct amount of signature fields
   /// according to the amount of parties involved. [userList] is used to
   /// display the signatureFields for that type of users in that list.
   Widget displaySignatureFields(List<dynamic> userList) {
-
     List<Widget> fields = [];
-    for(int i = 0; i < userList.length; i += 7) {
+    for (int i = 0; i < userList.length; i += 7) {
       fields.add(signatureField(userList[i].text));
     }
 
     return Expanded(
-      child: ListView.builder(
-        shrinkWrap: true,
-          itemCount: fields.length,
-          itemBuilder: (BuildContext context, int index) {
-            return fields[index];
-          })
-    );
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: fields.length,
+            itemBuilder: (BuildContext context, int index) {
+              return fields[index];
+            }));
   }
 
   /// Helper function to display contract value without the uri. This is just
@@ -1243,24 +1341,24 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setNextStep() {
-    switch(contractStep) {
+    switch (contractStep) {
       case 1:
-        if(validateStepOne()) {
+        if (validateStepOne()) {
           incrementContractStep();
         }
         break;
       case 2:
-        if(validateStepTwo()) {
+        if (validateStepTwo()) {
           incrementContractStep();
         }
         break;
       case 3:
-        if(validateStepFour()) {
+        if (validateStepFour()) {
           incrementContractStep();
         }
         break;
       case 4:
-        if(validateStepObligation()) {
+        if (validateStepObligation()) {
           incrementContractStep();
         }
         break;
@@ -1293,7 +1391,10 @@ class _ContractFormState extends State<ContractForm> {
 
   void setStepFinal() {
     validateStepFour();
-    if (stepOneComplete && stepTwoComplete && stepFourComplete && stepObligationComplete) {
+    if (stepOneComplete &&
+        stepTwoComplete &&
+        stepFourComplete &&
+        stepObligationComplete) {
     } else {
       print("you have not completed the contract.");
       showContractNotCompleteDialog();
@@ -1308,15 +1409,23 @@ class _ContractFormState extends State<ContractForm> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Icon(Icons.warning, size: 60, color: Colors.yellow)),
+                Center(
+                    child: Icon(Icons.warning, size: 60, color: Colors.yellow)),
                 Container(height: 10),
-                Text('You have not filled out all contract details. Please complete the form before you move on to the final step.\nRevisit the following steps:'),
+                Text(
+                    'You have not filled out all contract details. Please complete the form before you move on to the final step.\nRevisit the following steps:'),
                 Container(height: 10),
-                stepOneComplete? Container() : Text('-    Step 1. Contract Base Information'),
+                stepOneComplete
+                    ? Container()
+                    : Text('-    Step 1. Contract Base Information'),
                 Container(height: 5),
-                stepTwoComplete? Container() : Text('-    Step 2. Data Controller(s) Details'),
+                stepTwoComplete
+                    ? Container()
+                    : Text('-    Step 2. Data Controller(s) Details'),
                 Container(height: 5),
-                stepFourComplete? Container() : Text('-    Step 4. Terms & Conditions of the Contract'),
+                stepFourComplete
+                    ? Container()
+                    : Text('-    Step 4. Terms & Conditions of the Contract'),
                 Container(height: 5)
               ],
             ),
@@ -1356,13 +1465,14 @@ class _ContractFormState extends State<ContractForm> {
 
     tempTerms = body.map((dynamic e) => Term.fromTemplateJson(e)).toList();
     tempTerms.forEach((element) {
-      if(element.termTypeId == termTypeId) {
+      if (element.termTypeId == termTypeId) {
         setState(() {
           String id = UniqueKey().toString();
-          _termMap.putIfAbsent(id, () =>
-              //termWidget(element, id)
-              TermWidget(element, removeTermWidget, id)
-          );
+          _termMap.putIfAbsent(
+              id,
+              () =>
+                  //termWidget(element, id)
+                  TermWidget(element, removeTermWidget, id));
         });
       }
     });
@@ -1378,9 +1488,7 @@ class _ContractFormState extends State<ContractForm> {
     //Add created term into map with the id so that deleting it is easy.
     setState(() {
       String id = termType.id!;
-      _termMap.putIfAbsent(id, () =>
-          TermWidget(term, removeTermWidget, id)
-      );
+      _termMap.putIfAbsent(id, () => TermWidget(term, removeTermWidget, id));
     });
   }
 
@@ -1394,13 +1502,71 @@ class _ContractFormState extends State<ContractForm> {
             contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
             children: [
               Icon(Icons.schedule, color: Colors.grey, size: 100),
-              Text('Your contract is being created.', textAlign: TextAlign.center),
+              Text('Your contract is being created.',
+                  textAlign: TextAlign.center),
               Container(height: 5),
               Center(child: CircularProgressIndicator())
             ],
-
           );
-        }
+        });
+  }
+
+  _confirmSignatureDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Confirm Your Signature", textAlign: TextAlign.center),
+          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Form(
+                key: _signatureKey,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(2.0),
+                        borderSide: BorderSide(color: Colors.blue)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(2.0),
+                        borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                  ),
+                  style: TextStyle(fontSize: 15),
+                  controller: signatureController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a signature text to confirm your signature.";
+                    }
+                    return null;
+                  },
+                ),
+              )
+            ],
+          ),
+          actions: [
+            MaterialButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                _dismissDialog();
+              },
+            ),
+            MaterialButton(
+              child: Text('Agree & Sign Contract', style: TextStyle(color: Colors.white)),
+              color: Colors.blue,
+              onPressed: () {
+                if (_signatureKey.currentState!.validate() == true) {
+                  signContract();
+                  _dismissDialog();
+                }
+              },
+            ),
+          ],
+        );
+      }
     );
   }
 
@@ -1413,7 +1579,8 @@ class _ContractFormState extends State<ContractForm> {
             contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
             children: [
               Icon(Icons.check_circle, color: Colors.green, size: 100),
-              Text('The contract was successfully created!', textAlign: TextAlign.center),
+              Text('The contract was successfully created!',
+                  textAlign: TextAlign.center),
               Container(height: 5),
               MaterialButton(
                 child: Text('Okay'),
@@ -1422,10 +1589,8 @@ class _ContractFormState extends State<ContractForm> {
                 },
               ),
             ],
-
           );
-        }
-    );
+        });
   }
 
   _showCreateFailDialog() {
@@ -1445,26 +1610,36 @@ class _ContractFormState extends State<ContractForm> {
                 },
               ),
             ],
-
           );
-        }
-    );
+        });
   }
 
   void _fillRequesterForm(User selected, int index) {
-    contractorControllers[index].text = selected.name == null ? 'No name found' : selected.name!;
-    contractorControllers[index+1].text = selected.email == null ? 'No email found' : selected.email!;
-    contractorControllers[index+2].text = selected.streetAddress == null ? 'No street address found' : selected.streetAddress!;
-    contractorControllers[index+3].text = selected.country == null ? 'No country found' : selected.country!;
+    contractorControllers[index].text =
+        selected.name == null ? 'No name found' : selected.name!;
+    contractorControllers[index + 1].text =
+        selected.email == null ? 'No email found' : selected.email!;
+    contractorControllers[index + 2].text = selected.streetAddress == null
+        ? 'No street address found'
+        : selected.streetAddress!;
+    contractorControllers[index + 3].text =
+        selected.country == null ? 'No country found' : selected.country!;
     //State was unexpectedly removed from backend. Set to temporary not required for a contract agreement.
-    contractorControllers[index+4].text = 'State Currently Not Required';
-    contractorControllers[index+5].text = selected.city == null ? 'No city found' : selected.city!;
-    contractorControllers[index+6].text = selected.phone == null ? 'No phone number found' : selected.phone!;
+    contractorControllers[index + 4].text = 'State Currently Not Required';
+    contractorControllers[index + 5].text =
+        selected.city == null ? 'No city found' : selected.city!;
+    contractorControllers[index + 6].text =
+        selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
   bool validateStepOne() {
     var flag = step1Key.currentState!.validate() == true;
-    if (flag && contractCategory != null && contractType != null && effectiveDate != null && executionDate != null && endDate != null) {
+    if (flag &&
+        contractCategory != null &&
+        contractType != null &&
+        effectiveDate != null &&
+        executionDate != null &&
+        endDate != null) {
       setState(() {
         stepOneComplete = true;
       });
@@ -1483,7 +1658,7 @@ class _ContractFormState extends State<ContractForm> {
     contract.contractCategory = contractCategory;
     contract.contractStatus = "hasCreated";
     contract.contractType = contractType;
-    for(User user in addedContractors) {
+    for (User user in addedContractors) {
       contract.contractors.add(user.id);
     }
     contract.effectiveDate = effectiveDate;
@@ -1496,7 +1671,10 @@ class _ContractFormState extends State<ContractForm> {
   /// are listed. After the user sets enters the contractor's details in the UI
   /// the contractor's ID must be attained based on the email entered.
   void setContractor(String email) {
-    String id = contractors.firstWhere((User contractor) => contractor.email!.compareTo(email) == 0).id!;
+    String id = contractors
+        .firstWhere(
+            (User contractor) => contractor.email!.compareTo(email) == 0)
+        .id!;
     contract.contractors.add(id);
   }
 
@@ -1521,25 +1699,25 @@ class _ContractFormState extends State<ContractForm> {
     bool textFlag = true;
     bool dateFlag = true;
     bool contractorFlag = true;
-    if(_obligationMap.keys.isNotEmpty) {
+    if (_obligationMap.keys.isNotEmpty) {
       _obligationMap.values.forEach((element) {
-        if(textFlag && dateFlag && contractorFlag) {
+        if (textFlag && dateFlag && contractorFlag) {
           textFlag = element.textController.text.isNotEmpty;
           dateFlag = obligationHasBothDates(element);
           contractorFlag = element.selectedContractor != null;
         }
       });
-      if(textFlag && dateFlag && contractorFlag) {
+      if (textFlag && dateFlag && contractorFlag) {
         setState(() {
           stepObligationComplete = true;
         });
         return true;
       } else {
-          setState(() {
-            stepObligationComplete = false;
-          });
-          return false;
-        }
+        setState(() {
+          stepObligationComplete = false;
+        });
+        return false;
+      }
     } else {
       setState(() {
         stepObligationComplete = false;
@@ -1549,7 +1727,7 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   bool obligationHasBothDates(ObligationWidget ow) {
-    if(ow.obligation.executionDate == null || ow.obligation.endDate == null) {
+    if (ow.obligation.executionDate == null || ow.obligation.endDate == null) {
       return false;
     } else {
       return true;
@@ -1566,13 +1744,13 @@ class _ContractFormState extends State<ContractForm> {
   ///   - End Date
   bool validateStepFour() {
     bool flag = true;
-    if(_termMap.keys.isNotEmpty) {
+    if (_termMap.keys.isNotEmpty) {
       _termMap.values.forEach((element) {
-        if(flag) {
+        if (flag) {
           flag = element.textController.text.isNotEmpty;
         }
       });
-      if(flag) {
+      if (flag) {
         setState(() {
           stepFourComplete = true;
         });

@@ -6,16 +6,26 @@ class ContractTile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final Function() refresh;
   final Contract? contract;
+  final String? userId;
 
-  ContractTile(this.changeScreen, this.refresh, this.contract);
+  ContractTile(this.changeScreen, this.refresh, this.contract, this.userId);
 
   @override
   _ContractTileState createState() => _ContractTileState();
 }
 
 class _ContractTileState extends State<ContractTile> {
-
   DataProvider dataProvider = new DataProvider();
+  List<Signature> signatures = [];
+  bool _hasSigned = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchAllSignatures();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +34,9 @@ class _ContractTileState extends State<ContractTile> {
       child: InkWell(
         //TODO: fix splash effect, currently it is behind the container
         splashColor: Colors.white,
-        child: _isSmallScreen(screenWidth)? smallContractTile() : bigContractTile(),
+        child: _isSmallScreen(screenWidth)
+            ? smallContractTile()
+            : bigContractTile(),
         onTap: () {
           widget.changeScreen(2, '${widget.contract!.contractId!}');
         },
@@ -55,22 +67,27 @@ class _ContractTileState extends State<ContractTile> {
       child: Center(
         child: Row(
           children: [
-            Expanded(flex: 2, child: Icon(Icons.folder_shared, size: 25)),
+            Expanded(flex: 1, child: Align(alignment: Alignment.center, child: Icon(Icons.folder_shared, size: 25))),
             Expanded(
-                flex: 10,
-                child: Text('${widget.contract!.contractId!}', overflow: TextOverflow.ellipsis)
-            ),
-            //Spacer(flex: 25),
+                flex: 4,
+                child: Text('${widget.contract!.contractId!}',
+                    overflow: TextOverflow.ellipsis)),
             Expanded(
-              flex: 11,
-              child: Text('${widget.contract!.purpose}', overflow: TextOverflow.ellipsis)
+                flex: 3,
+                child: Text('${widget.contract!.purpose}',
+                    overflow: TextOverflow.ellipsis)),
+            Expanded(flex: 2, child: contractSignedIcon()),
+            Expanded(flex: 1, child: contractIconByStatus(widget.contract!.contractStatus!)),
+            Expanded(
+              flex: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  editContractButton(widget.contract!.contractId!),
+                  deleteContractButton(widget.contract!.contractId!),
+                ],
+              ),
             ),
-            contractIconByStatus(widget.contract!.contractStatus!),
-            Spacer(flex: 3),
-            editContractButton(widget.contract!.contractId!),
-            Spacer(),
-            deleteContractButton(widget.contract!.contractId!),
-            Spacer()
           ],
         ),
       ),
@@ -98,18 +115,18 @@ class _ContractTileState extends State<ContractTile> {
               child: Row(
                 children: [
                   Icon(Icons.folder_shared, size: 75),
-                  SizedBox(width: 200,child: Text('${widget.contract!.contractId!}', overflow: TextOverflow.ellipsis))
+                  SizedBox(
+                      width: 200,
+                      child: Text('${widget.contract!.contractId!}',
+                          overflow: TextOverflow.ellipsis))
                 ],
               ),
             ),
             Expanded(
               flex: 1,
               child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(width: 1)
-                  )
-                ),
+                decoration:
+                    BoxDecoration(border: Border(top: BorderSide(width: 1))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -118,17 +135,17 @@ class _ContractTileState extends State<ContractTile> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text("Status:"),
-                          contractIconByStatus(widget.contract!.contractStatus!),
+                          contractIconByStatus(
+                              widget.contract!.contractStatus!),
                         ],
                       ),
                     ),
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border(
-                            left: BorderSide(width: 1),
-                          )
-                        ),
+                            border: Border(
+                          left: BorderSide(width: 1),
+                        )),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -149,40 +166,90 @@ class _ContractTileState extends State<ContractTile> {
     );
   }
 
+  Widget contractSignedIcon() {
+    int numSignatures = widget.contract!.signatures.length;
+    int numContractors = widget.contract!.contractors.length;
+
+    return Container(
+        child: _isLoading
+            ? CircularProgressIndicator()
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("$numSignatures/$numContractors"),
+                  SizedBox(width: 5),
+                  hasSignedIcon()],
+              ));
+  }
+
+  Future<void> fetchAllSignatures() async {
+    _toggleLoading();
+    widget.contract!.signatures.forEach((element) async {
+      Signature signature = await dataProvider.fetchSignatureById(element);
+      signatures.add(signature);
+      if (signature.contractorId == widget.userId) {
+        setState(() {
+          _hasSigned = true;
+        });
+      }
+    });
+    _toggleLoading();
+  }
+
+  void _toggleLoading() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
+
+  Widget hasSignedIcon() {
+    if (_hasSigned) {
+      return Tooltip(
+        message: "You have signed this contract.",
+        child: Icon(Icons.done_all, color: Colors.green, size: 30),
+      );
+    } else {
+      return Tooltip(
+        message: "Please view this contract and confirm it with your signature.",
+        child: Icon(Icons.priority_high, color: Colors.red, size: 30),
+      );
+    }
+  }
+
   Tooltip contractIconByStatus(String status) {
-    if (status.compareTo("hasCreated") == 0) {
+    if (status.contains("Created") || status.contains("created")) {
       return Tooltip(
           message: "The contract has recently been created.",
           child: Icon(Icons.new_releases, color: Colors.blue, size: 30));
-    } else if (status.compareTo("hasPending") == 0) {
+    } else if (status.contains("Pending") || status.contains("pending")) {
       return Tooltip(
           message: "The contract is still awaiting signatures.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
-    } else if (status.compareTo("statusUpdated") == 0) {
-      return Tooltip(
-          message: "The contract has been updated.",
-          child: Icon(Icons.update, color: Colors.green, size: 30));
-
-    } else if (status.compareTo("hasSigned") == 0) {
+    } else if (status.contains("Signed") || status.contains("signed")) {
       return Tooltip(
           message: "The contract has been signed by all parties.",
           child: Icon(Icons.thumb_up, color: Colors.blue, size: 30));
-    } else if (status.compareTo("hasTerminated") == 0) {
+    } else if (status.contains("Terminated") || status.contains("terminated")) {
       return Tooltip(
           message: "The contract has been terminated.",
           child: Icon(Icons.do_not_disturb, color: Colors.yellow, size: 30));
-    } else if (status.compareTo("hasRenewed") == 0) {
+    } else if (status.contains("Renewed") || status.contains("renewed")) {
       return Tooltip(
           message: "The contract has been renewed.",
           child: Icon(Icons.history, color: Colors.blue, size: 30));
-    } else if (status.compareTo("hasExpired") == 0) {
+    } else if (status.contains("Updated") || status.contains("updated")) {
+      return Tooltip(
+          message: "The contract has been renewed.",
+          child: Icon(Icons.update, color: Colors.blue, size: 30));
+    } else if (status.contains("Expired") || status.contains("expired")) {
       return Tooltip(
           message: "The contract has expired.",
           child: Icon(Icons.hourglass_bottom, color: Colors.blue, size: 30));
     } else {
       return Tooltip(
-          message: "The contract has recently been created.",
-          child: Icon(Icons.new_releases, color: Colors.blue, size: 30));
+          message:
+          "The contract's status could not be read. Please review the contract.",
+          child: Icon(Icons.question_mark, color: Colors.blue, size: 30));
     }
   }
 
@@ -217,7 +284,8 @@ class _ContractTileState extends State<ContractTile> {
               children: [
                 Icon(Icons.warning, size: 40, color: Colors.red),
                 Container(height: 20),
-                Text("Are you sure you want to delete the contract: $contractId?"),
+                Text(
+                    "Are you sure you want to delete the contract: $contractId?"),
               ],
             ),
             actions: [
@@ -240,8 +308,7 @@ class _ContractTileState extends State<ContractTile> {
                       _dismissDialog();
                       showFailedDeletionDialog(contractId);
                     }
-                  }
-              ),
+                  }),
             ],
           );
         });
@@ -250,25 +317,24 @@ class _ContractTileState extends State<ContractTile> {
   showSuccessfulDeletionDialog(String contractId) {
     widget.refresh();
     showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: Text('Success!', textAlign: TextAlign.center),
-          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
-          children: [
-            Icon(Icons.check_circle, color: Colors.green, size: 100),
-            Text('The contract $contractId was successfully deleted!', textAlign: TextAlign.center),
-            MaterialButton(
-              child: Text('Okay'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-
-        );
-      }
-    );
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Success!', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 100),
+              Text('The contract $contractId was successfully deleted!',
+                  textAlign: TextAlign.center),
+              MaterialButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   _showDeletingDialog() {
@@ -281,14 +347,13 @@ class _ContractTileState extends State<ContractTile> {
             contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
             children: [
               Icon(Icons.schedule, color: Colors.grey, size: 100),
-              Text('Your contract is being deleted.', textAlign: TextAlign.center),
+              Text('Your contract is being deleted.',
+                  textAlign: TextAlign.center),
               Container(height: 5),
               Center(child: CircularProgressIndicator())
             ],
-
           );
-        }
-    );
+        });
   }
 
   showFailedDeletionDialog(String contractId) {
@@ -307,10 +372,8 @@ class _ContractTileState extends State<ContractTile> {
                 },
               ),
             ],
-
           );
-        }
-    );
+        });
   }
 
   String _formatContractUri(String contractUri) {
@@ -321,5 +384,4 @@ class _ContractTileState extends State<ContractTile> {
   _dismissDialog() {
     Navigator.pop(context);
   }
-
 }

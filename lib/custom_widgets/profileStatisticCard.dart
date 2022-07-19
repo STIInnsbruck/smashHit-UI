@@ -4,8 +4,9 @@ class ProfileStatisticCard extends StatefulWidget {
   final String title;
   final String tooltipMessage;
   final String value;
+  final Color? color;
 
-  ProfileStatisticCard({required this.title, required this.tooltipMessage, required this.value});
+  ProfileStatisticCard({required this.title, required this.tooltipMessage, required this.value, this.color});
 
   @override
   _ProfileStatisticCardState createState() => _ProfileStatisticCardState();
@@ -41,7 +42,7 @@ class _ProfileStatisticCardState extends State<ProfileStatisticCard> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text(widget.value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+                  child: Text(widget.value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: widget.color != null ? widget.color : Colors.black))
               ),
             ),
           ],
