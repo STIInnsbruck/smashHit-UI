@@ -144,19 +144,19 @@ class _ObligationTileState extends State<ObligationTile> {
 
 
   Tooltip obligationIconByStatus(String status) {
-    if (status.compareTo("hasPending") == 0) {
+    if (status.contains("Pending") || status.contains("pending")) {
       return Tooltip(
           message: "Clause is pending.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
-    } else if (status.compareTo("stateInvalid") == 0) {
+    } else if (status.contains("Invalid") || status.contains("invalid")) {
       return Tooltip(
           message: "Clause is invalid.",
           child: Icon(Icons.warning, color: Colors.yellow, size: 30));
-    } else if (status.compareTo("stateFulfilled") == 0) {
+    } else if (status.contains("Fulfilled") || status.contains("fulfilled")) {
       return Tooltip(
           message: "Clause is fulfilled.",
           child: Icon(Icons.check_circle, color: Colors.green, size: 30));
-    } else if (status.compareTo("stateValid") == 0) {
+    } else if (status.contains("Valid") || status.contains("valid")) {
       return Tooltip(
           message: "Clause is valid.",
           child: Icon(Icons.done, color: Colors.green, size: 30));

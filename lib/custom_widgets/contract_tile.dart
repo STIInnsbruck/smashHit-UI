@@ -217,37 +217,38 @@ class _ContractTileState extends State<ContractTile> {
   }
 
   Tooltip contractIconByStatus(String status) {
-    if (status.compareTo("hasCreated") == 0) {
+    if (status.contains("Created") || status.contains("created")) {
       return Tooltip(
           message: "The contract has recently been created.",
           child: Icon(Icons.new_releases, color: Colors.blue, size: 30));
-    } else if (status.compareTo("statusPending") == 0) {
+    } else if (status.contains("Pending") || status.contains("pending")) {
       return Tooltip(
           message: "The contract is still awaiting signatures.",
           child: Icon(Icons.pending, color: Colors.grey, size: 30));
-    } else if (status.compareTo("statusUpdated") == 0) {
-      return Tooltip(
-          message: "The contract has been updated.",
-          child: Icon(Icons.update, color: Colors.blue, size: 30));
-    } else if (status.compareTo("statusSigned") == 0) {
+    } else if (status.contains("Signed") || status.contains("signed")) {
       return Tooltip(
           message: "The contract has been signed by all parties.",
-          child: Icon(Icons.thumb_up, color: Colors.green, size: 30));
-    } else if (status.compareTo("statusTerminated") == 0) {
+          child: Icon(Icons.thumb_up, color: Colors.blue, size: 30));
+    } else if (status.contains("Terminated") || status.contains("terminated")) {
       return Tooltip(
           message: "The contract has been terminated.",
           child: Icon(Icons.do_not_disturb, color: Colors.yellow, size: 30));
-    } else if (status.compareTo("statusRenewed") == 0) {
+    } else if (status.contains("Renewed") || status.contains("renewed")) {
       return Tooltip(
           message: "The contract has been renewed.",
           child: Icon(Icons.history, color: Colors.blue, size: 30));
-    } else if (status.compareTo("statusExpired") == 0) {
+    } else if (status.contains("Updated") || status.contains("updated")) {
+      return Tooltip(
+          message: "The contract has been renewed.",
+          child: Icon(Icons.update, color: Colors.blue, size: 30));
+    } else if (status.contains("Expired") || status.contains("expired")) {
       return Tooltip(
           message: "The contract has expired.",
           child: Icon(Icons.hourglass_bottom, color: Colors.blue, size: 30));
     } else {
       return Tooltip(
-          message: "The contract's status could not be read. Please review the contract.",
+          message:
+          "The contract's status could not be read. Please review the contract.",
           child: Icon(Icons.question_mark, color: Colors.blue, size: 30));
     }
   }
