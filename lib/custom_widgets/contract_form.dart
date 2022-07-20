@@ -402,7 +402,7 @@ class _ContractFormState extends State<ContractForm> {
                     onPressed: null,
                   )
                 : MaterialButton(
-                    child: Text("Click To legally Apply Your Signature",
+                    child: Text("Click To Legally Apply Your Signature",
                         style: TextStyle(fontSize: 15, color: Colors.white)),
                     color: Colors.blue,
                     shape: RoundedRectangleBorder(
@@ -1136,7 +1136,7 @@ class _ContractFormState extends State<ContractForm> {
           obl.obligation.termId = value.term.id;
           obl.obligation.contractorId = obl.selectedContractor!.id;
           obl.obligation.description = obl.textController.text;
-          obl.obligation.state = "hasPending";
+          obl.obligation.state = "statePending";
           obl.obligation.contractId = contract.contractId;
           Obligation tmpObligation =
               await dataProvider.createObligation(contract, obl.obligation);
