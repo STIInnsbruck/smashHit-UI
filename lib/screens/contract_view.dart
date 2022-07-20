@@ -255,7 +255,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   MaterialButton obligationCardButton(Obligation obligation, User user) {
     if (user.id!.compareTo(widget.user!.id!) == 0) {
-      if (obligation.state!.compareTo("hasFulfilled") == 0) {
+      if (obligation.state!.contains("Fulfilled") || obligation.state!.contains("fulfilled")) {
         return MaterialButton(
           elevation: 0,
           onPressed: null,
@@ -952,10 +952,10 @@ class _ContractCreationState extends State<ViewContract> {
               MaterialButton(
                 onPressed: () async {
                   bool updateSuccess = await dataProvider
-                      .updateObligationStatus(obligation, "hasFulfilled");
+                      .updateObligationStatus(obligation, "stateFulfilled");
                   if (updateSuccess) {
                     setState(() {
-                      obligation.state = "hasFulfilled";
+                      obligation.state = "stateFulfilled";
                     });
                   } else {
                     _showObligationUpdateError(obligation);
