@@ -402,7 +402,7 @@ class _ContractFormState extends State<ContractForm> {
                     onPressed: null,
                   )
                 : MaterialButton(
-                    child: Text("Click To legally Apply Your Signature",
+                    child: Text("Click To Legally Apply Your Signature",
                         style: TextStyle(fontSize: 15, color: Colors.white)),
                     color: Colors.blue,
                     shape: RoundedRectangleBorder(
