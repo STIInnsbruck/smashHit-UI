@@ -414,11 +414,20 @@ class _ClaimFormState extends State<ClaimForm> {
   }
 
   MaterialButton confirmViolationButton() {
-    return MaterialButton(
-      color: existsAViolation ? Colors.green : Colors.grey,
-      onPressed: () => widget.changeScreen(0),
-      child: Text('CONFIRM', style: TextStyle(fontSize: 40, color: Colors.white)),
-    );
+    return existsAViolation
+        ? MaterialButton(
+            color: Colors.green,
+            onPressed: () async {
+              widget.contract.contractStatus = "stateViolated";
+              print("new contract status is: ${widget.contract.contractStatus}");
+              await dataProvider.updateContract(widget.contract);
+              widget.changeScreen(2, widget.contract.contractId!);
+            },
+            child: Text('CONFIRM', style: TextStyle(fontSize: 40, color: Colors.white)))
+        : MaterialButton(
+            color: Colors.grey,
+            onPressed: () => null,
+            child: Text('CONFIRM', style: TextStyle(fontSize: 40, color: Colors.white)));
   }
 
   void setExistsAViolation() {
