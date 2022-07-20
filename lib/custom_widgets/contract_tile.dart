@@ -170,6 +170,8 @@ class _ContractTileState extends State<ContractTile> {
     int numSignatures = widget.contract!.signatures.length;
     int numContractors = widget.contract!.contractors.length;
 
+    bool allSigned = numSignatures == numContractors;
+
     return Container(
         child: _isLoading
             ? CircularProgressIndicator()
@@ -178,7 +180,7 @@ class _ContractTileState extends State<ContractTile> {
                 children: [
                   Text("$numSignatures/$numContractors"),
                   SizedBox(width: 5),
-                  hasSignedIcon()],
+                  hasSignedIcon(allSigned)],
               ));
   }
 
@@ -202,11 +204,13 @@ class _ContractTileState extends State<ContractTile> {
     });
   }
 
-  Widget hasSignedIcon() {
+  Widget hasSignedIcon(bool allSigned) {
     if (_hasSigned) {
       return Tooltip(
         message: "You have signed this contract.",
-        child: Icon(Icons.done_all, color: Colors.green, size: 30),
+        child: allSigned
+            ? Icon(Icons.done_all, color: Colors.green, size: 30)
+            : Icon(Icons.done, color: Colors.green, size: 30)
       );
     } else {
       return Tooltip(
@@ -241,6 +245,10 @@ class _ContractTileState extends State<ContractTile> {
       return Tooltip(
           message: "The contract has been renewed.",
           child: Icon(Icons.update, color: Colors.blue, size: 30));
+    } else if (status.contains("Violated") || status.contains("violated")) {
+      return Tooltip(
+          message: "An issue in the contract has been reported.",
+          child: Icon(Icons.report, color: Colors.red, size: 30));
     } else if (status.contains("Expired") || status.contains("expired")) {
       return Tooltip(
           message: "The contract has expired.",
