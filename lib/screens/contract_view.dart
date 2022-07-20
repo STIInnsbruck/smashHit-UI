@@ -1014,6 +1014,10 @@ class _ContractCreationState extends State<ViewContract> {
       return Tooltip(
           message: "Clause is valid.",
           child: Icon(Icons.done, color: Colors.green, size: 30));
+    } else if (status.contains("Violated") || status.contains("violated")) {
+      return Tooltip(
+          message: "An issue in the obligation has been reported.",
+          child: Icon(Icons.report, color: Colors.red, size: 30));
     } else {
       return Tooltip(
           message: "Clause status could not be read.",
@@ -1046,6 +1050,10 @@ class _ContractCreationState extends State<ViewContract> {
       return Tooltip(
           message: "The contract has been renewed.",
           child: Icon(Icons.update, color: Colors.blue, size: 50));
+    } else if (status.contains("Violated") || status.contains("violated")) {
+      return Tooltip(
+          message: "An issue in the contract has been reported.",
+          child: Icon(Icons.report, color: Colors.red, size: 50));
     } else if (status.contains("Expired") || status.contains("expired")) {
       return Tooltip(
           message: "The contract has expired.",
