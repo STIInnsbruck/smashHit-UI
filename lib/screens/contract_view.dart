@@ -30,6 +30,11 @@ class _ContractCreationState extends State<ViewContract> {
   double smallSide = 10;
   double textSize = 0;
   int screenSize = 0;
+  //check if user has signed the contract already or not
+  bool _hasSigned = false;
+  //variables in case the user has not yet signed the contract
+  TextEditingController signatureController = TextEditingController();
+  final _signatureKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -250,7 +255,7 @@ class _ContractCreationState extends State<ViewContract> {
 
   MaterialButton obligationCardButton(Obligation obligation, User user) {
     if (user.id!.compareTo(widget.user!.id!) == 0) {
-      if (obligation.state!.compareTo("hasFulfilled") == 0) {
+      if (obligation.state!.contains("Fulfilled") || obligation.state!.contains("fulfilled")) {
         return MaterialButton(
           elevation: 0,
           onPressed: null,
@@ -492,13 +497,18 @@ class _ContractCreationState extends State<ViewContract> {
                   ),
                 )
               : Center(child: Text("No terms were found in the contract.")),
-          Column(
-            children: signatureWidgets,
-          ),
-          Column(
-            children: [
-              Text("Existing sigs: ${signatures.length}"),
-            ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 1, 15, 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Signatures", style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                Column(
+                  children: signatureWidgets
+                )
+              ],
+            ),
           ),
           Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
@@ -506,6 +516,108 @@ class _ContractCreationState extends State<ViewContract> {
         ],
       ),
     );
+  }
+
+  Widget ownSignatureField() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text("You have not yet signed this contract.", style: TextStyle(fontSize: 15)),
+        MaterialButton(
+          child: Text("Click To Legally Apply Your Signature", style: TextStyle(fontSize: 15, color: Colors.white)),
+          color: Colors.blue,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20)),
+          onPressed: () {
+            _confirmSignatureDialog();
+          }
+        )
+      ],
+    );
+  }
+
+  _confirmSignatureDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Confirm Your Signature", textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Form(
+                  key: _signatureKey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(2.0),
+                          borderSide: BorderSide(color: Colors.blue)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(2.0),
+                          borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                    ),
+                    style: TextStyle(fontSize: 15),
+                    controller: signatureController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter a signature text to confirm your signature.";
+                      }
+                      return null;
+                    },
+                  ),
+                )
+              ],
+            ),
+            actions: [
+              MaterialButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  _dismissDialog();
+                },
+              ),
+              MaterialButton(
+                child: Text('Agree & Sign Contract', style: TextStyle(color: Colors.white)),
+                color: Colors.blue,
+                onPressed: () async {
+                  if (_signatureKey.currentState!.validate() == true) {
+                    await signContract();
+                    _dismissDialog();
+                  }
+                },
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  Future<void> signContract() async {
+    //Show signing feedback
+    _showSigningDialog();
+    //create signature object
+    Signature tmpSignature = Signature(
+      contractId: widget.contractId,
+      contractorId: widget.user!.id,
+      createDate: DateTime.now(),
+      signatureText: signatureController.text
+    );
+
+    //create signature and get signature id
+    tmpSignature = await dataProvider.createSignature(tmpSignature);
+    //update contract with new signature
+    contract!.signatures.add(tmpSignature.id);
+    await dataProvider.updateContract(contract!);
+    //Dismiss signing feedback
+    _dismissDialog();
+
+    setState(() {
+      signatures.add(tmpSignature);
+      _hasSigned = true;
+    });
   }
 
   Widget contractDates() {
@@ -534,8 +646,34 @@ class _ContractCreationState extends State<ViewContract> {
   void buildContractSignatures(Contract contract) {
     signatureWidgets.clear();
     signatures.forEach((signature) {
+      if (signature.contractorId == widget.user!.id) {
+        _hasSigned = true;
+      }
       signatureWidgets.add(signatureDetails(signature));
+      signatureWidgets.add(SizedBox(height: 10));
     });
+    if (!_hasSigned) {
+      signatureWidgets.add(ownSignatureField());
+    }
+  }
+
+  _showSigningDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text('Signing...', textAlign: TextAlign.center),
+          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+          children: [
+            Icon(Icons.schedule, color: Colors.grey, size: 100),
+            Text('One moment please, your signature is being applied to the contract.', textAlign: TextAlign.center),
+            SizedBox(height: 5),
+            Center(child: CircularProgressIndicator())
+          ],
+        );
+      }
+    );
   }
 
   Widget contractorDetails(String contractorId) {
@@ -572,13 +710,24 @@ class _ContractCreationState extends State<ViewContract> {
 
   Widget signatureDetails(Signature signature) {
     return Container(
-        padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
-        child: Row(
-          children: [
-            Text("Contracting Party:"),
-            Text("Signature Text: ${signature.signatureText}"),
-            Text("Signature Text: ${signature.createDate!.toIso8601String().substring(0, 10)}"),
-          ],
+        child: FutureBuilder<User>(
+          future: dataProvider.fetchUserById(signature.contractorId!),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Row(
+                children: [
+                  Text("Signature of ${snapshot.data!.name}"),
+                  SizedBox(width: 10),
+                  Text("Signature Text: ${signature.signatureText}"),
+                  SizedBox(width: 10),
+                  Text("Signing Date: ${signature.createDate!.toIso8601String().substring(0, 10)}"),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text("Error loading signature: ${snapshot.error}");
+            }
+            return Center(child: CircularProgressIndicator());
+          }
         ));
   }
 
@@ -803,10 +952,10 @@ class _ContractCreationState extends State<ViewContract> {
               MaterialButton(
                 onPressed: () async {
                   bool updateSuccess = await dataProvider
-                      .updateObligationStatus(obligation, "hasFulfilled");
+                      .updateObligationStatus(obligation, "stateFulfilled");
                   if (updateSuccess) {
                     setState(() {
-                      obligation.state = "hasFulfilled";
+                      obligation.state = "stateFulfilled";
                     });
                   } else {
                     _showObligationUpdateError(obligation);
