@@ -1136,7 +1136,7 @@ class _ContractFormState extends State<ContractForm> {
           obl.obligation.termId = value.term.id;
           obl.obligation.contractorId = obl.selectedContractor!.id;
           obl.obligation.description = obl.textController.text;
-          obl.obligation.state = "hasPending";
+          obl.obligation.state = "statePending";
           obl.obligation.contractId = contract.contractId;
           Obligation tmpObligation =
               await dataProvider.createObligation(contract, obl.obligation);
