@@ -162,7 +162,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   int numCompletedContracts() {
     int numCompleted = 0;
     contracts.forEach((element) {
-      if (element.contractStatus!.compareTo("hasFulfilled") == 0) {
+      if (element.contractStatus!.contains("Fulfilled") || element.contractStatus!.contains("fulfilled")) {
         numCompleted++;
       }
     });
@@ -172,7 +172,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   int numRunningContract() {
     int numRunning = 0;
     contracts.forEach((element) {
-      if (element.contractStatus!.compareTo("hasFulfilled") != 0) {
+      if (element.contractStatus!.contains("Fulfilled") == false || element.contractStatus!.contains("fulfilled") == false) {
         numRunning++;
       }
     });
@@ -183,15 +183,13 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     int numCompleted = 0;
 
     obligations.forEach((element) {
-      if (element.state!.compareTo("hasFulfilled") == 0) {
+      if (element.state!.contains("Fulfilled") ||element.state!.contains("fulfilled")) {
         numCompleted++;
       }
     });
 
     if(numCompleted == obligations.length) {
-      setState(() {
-        _allObligationsCompleted = true;
-      });
+      _allObligationsCompleted = true;
     }
     return numCompleted;
   }
