@@ -1484,7 +1484,6 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-
   void showStep2NotCompleteDialog() {
     showDialog(
         context: context,
@@ -1503,6 +1502,40 @@ class _ContractFormState extends State<ContractForm> {
                       : Container(),
                   addedContractors.length == 1
                       ? Text('-    You only have one contracting party in the contract. Please add at least 1 or more contracting parties to the contract.')
+                      : Container(),
+                ]
+            ),
+            children: <Widget>[
+              TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  void showStep3NotCompleteDialog(bool? flag) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+                  ),
+                  SizedBox(height: 10),
+                  Text('Please fill out the following details to continue:'),
+                  _termMap.keys.isEmpty
+                      ? Text('-    You have not added any terms to the contract. Please add at least 1 term to the contract.')
+                      : Container(),
+                  flag != null
+                      ? Text('-    Not all terms contain text. Please fill out the text for each term added to the contract.')
                       : Container(),
                 ]
             ),
@@ -1822,10 +1855,6 @@ class _ContractFormState extends State<ContractForm> {
   /// contract to validate if each field has content in it.
   /// Checked fields:
   ///   - Terms & Conditions Field
-  ///   - Start Date
-  ///   - Effective Date
-  ///   - Execution Date
-  ///   - End Date
   bool validateStepFour() {
     bool flag = true;
     if (_termMap.keys.isNotEmpty) {
@@ -1843,12 +1872,14 @@ class _ContractFormState extends State<ContractForm> {
         setState(() {
           stepFourComplete = false;
         });
+        showStep3NotCompleteDialog(flag);
         return false;
       }
     } else {
       setState(() {
         stepFourComplete = false;
       });
+      showStep3NotCompleteDialog(null);
       return false;
     }
   }
