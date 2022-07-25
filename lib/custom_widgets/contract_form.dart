@@ -1197,7 +1197,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget addContractorButton() {
     return Tooltip(
-      message: "Add another contractor.",
+      message: "Add another contracting party.",
       child: CircleAvatar(
           radius: 20,
           backgroundColor: Colors.blue,
@@ -1213,7 +1213,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget removeContractorButton() {
     return Tooltip(
-        message: "Remove this data controller.",
+        message: "Remove this contracting party.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
@@ -1484,6 +1484,41 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
+
+  void showStep2NotCompleteDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+                  ),
+                  SizedBox(height: 10),
+                  Text('Please fill out the following details to continue:'),
+                  addedContractors.length == 0
+                      ? Text('-    You have no contracting parties. Please add at least 2 or more contracting parties to the contract.')
+                      : Container(),
+                  addedContractors.length == 1
+                      ? Text('-    You only have one contracting party in the contract. Please add at least 1 or more contracting parties to the contract.')
+                      : Container(),
+                ]
+            ),
+            children: <Widget>[
+              TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
+  }
+
   Future<void> getTermType() async {
     _termTypeList.clear();
     var jsonString = await rootBundle.loadString('assets/term_type.json');
@@ -1676,6 +1711,7 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   bool validateStepOne()  {
+    //Check if form is completed by user.
     var flag = step1Key.currentState!.validate() == true;
     if (flag &&
         contractCategory != null &&
@@ -1691,6 +1727,7 @@ class _ContractFormState extends State<ContractForm> {
       setState(() {
         stepOneComplete = false;
       });
+      //Only display completion dialog if the form is complete.
       if(flag) {
         showStep1NotCompleteDialog();
       }
@@ -1728,7 +1765,7 @@ class _ContractFormState extends State<ContractForm> {
   /// contract to validate if each field has content in it.
   bool validateStepTwo() {
     var flag = true;
-    if (flag) {
+    if (addedContractors.length >= 2) {
       setState(() {
         stepTwoComplete = true;
       });
@@ -1737,6 +1774,7 @@ class _ContractFormState extends State<ContractForm> {
       setState(() {
         stepTwoComplete = false;
       });
+      showStep2NotCompleteDialog();
       return false;
     }
   }
@@ -1866,8 +1904,10 @@ class _ContractFormState extends State<ContractForm> {
       for (int i = (index * 7) + 6; i >= (index * 7); i--) {
         contractorControllers.removeAt(i);
       }
+      addedContractors.removeAt(index);
+      addedContractorsIndex -= 1;
       currentContractorIndex -= 1;
-    });
+    } );
   }
 
   /// Helper function to add 6 keys to validate each textFormField in the
