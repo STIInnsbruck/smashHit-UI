@@ -57,7 +57,7 @@ class _ContractFormState extends State<ContractForm> {
   bool stepOneComplete = false;
   bool stepTwoComplete = false;
   bool stepObligationComplete = false;
-  bool stepFourComplete = false;
+  bool stepThreeComplete = false;
   bool loading = false;
 
   //------------------- Validation Keys ----------------------------------------
@@ -111,7 +111,7 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         contractStepOne(formWidth),
         contractStepTwo(formWidth),
-        contractStepFour(formWidth),
+        contractStepThree(formWidth),
         contractStepObligation(formWidth),
         contractStepFinal(formWidth),
       ])),
@@ -202,14 +202,14 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget contractStepFour(double width) {
+  Widget contractStepThree(double width) {
     return Column(children: [
       ContractStepHeader(
           width: width,
           name: "Step 3. Terms & Conditions of the Contract",
-          stepComplete: stepFourComplete,
+          stepComplete: stepThreeComplete,
           onPressed: () {
-            setStepFour();
+            setStepThree();
           }),
       contractStep == 3
           ? ContractStepBody(width: width, children: [
@@ -864,7 +864,7 @@ class _ContractFormState extends State<ContractForm> {
           .removeWhere((key, value) => value.term.id == _termMap[id]!.term.id);
       _termMap.remove(id);
     });
-    validateStepFour();
+    validateStepThree();
     validateStepObligation();
   }
 
@@ -1353,7 +1353,7 @@ class _ContractFormState extends State<ContractForm> {
         }
         break;
       case 3:
-        if (validateStepFour()) {
+        if (validateStepThree()) {
           incrementContractStep();
         }
         break;
@@ -1381,19 +1381,19 @@ class _ContractFormState extends State<ContractForm> {
     validateStepOne();
   }
 
-  void setStepFour() {
+  void setStepThree() {
     validateStepTwo();
   }
 
   void setStepObligation() {
-    validateStepFour();
+    validateStepThree();
   }
 
   void setStepFinal() {
-    validateStepFour();
+    validateStepThree();
     if (stepOneComplete &&
         stepTwoComplete &&
-        stepFourComplete &&
+        stepThreeComplete &&
         stepObligationComplete) {
     } else {
       //Display dialog to notify user that the contract has not been completed.
@@ -1423,7 +1423,7 @@ class _ContractFormState extends State<ContractForm> {
                     ? Container()
                     : Text('-    Step 2. Data Controller(s) Details'),
                 Container(height: 5),
-                stepFourComplete
+                stepThreeComplete
                     ? Container()
                     : Text('-    Step 4. Terms & Conditions of the Contract'),
                 Container(height: 5)
@@ -1851,11 +1851,11 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
-  /// Function that checks every textFormField in the fourth step of the
+  /// Function that checks every textFormField in the third step of the
   /// contract to validate if each field has content in it.
   /// Checked fields:
   ///   - Terms & Conditions Field
-  bool validateStepFour() {
+  bool validateStepThree() {
     bool flag = true;
     if (_termMap.keys.isNotEmpty) {
       _termMap.values.forEach((element) {
@@ -1865,19 +1865,19 @@ class _ContractFormState extends State<ContractForm> {
       });
       if (flag) {
         setState(() {
-          stepFourComplete = true;
+          stepThreeComplete = true;
         });
         return true;
       } else {
         setState(() {
-          stepFourComplete = false;
+          stepThreeComplete = false;
         });
         showStep3NotCompleteDialog(flag);
         return false;
       }
     } else {
       setState(() {
-        stepFourComplete = false;
+        stepThreeComplete = false;
       });
       showStep3NotCompleteDialog(null);
       return false;
