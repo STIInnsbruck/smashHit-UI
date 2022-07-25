@@ -1396,7 +1396,7 @@ class _ContractFormState extends State<ContractForm> {
         stepFourComplete &&
         stepObligationComplete) {
     } else {
-      print("you have not completed the contract.");
+      //Display dialog to notify user that the contract has not been completed.
       showContractNotCompleteDialog();
     }
   }
@@ -1439,6 +1439,49 @@ class _ContractFormState extends State<ContractForm> {
             ],
           );
         });
+  }
+
+  void showStep1NotCompleteDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                  child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+              ),
+              SizedBox(height: 10),
+              Text('Please fill out the following details to continue:'),
+              contractCategory == null
+                ? Text('-    Select A Contract Category')
+                : Container(),
+              contractType == null
+                  ? Text('-    Select A Contract Type')
+                  : Container(),
+              effectiveDate == null
+                  ? Text('-    Select An Effective Date')
+                  : Container(),
+              executionDate == null
+                  ? Text('-    Select An Execution Date')
+                  : Container(),
+              endDate == null
+                  ? Text('-    Select An End Date')
+                  : Container(),
+            ]
+          ),
+          children: <Widget>[
+            TextButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }
+            )
+          ],
+        );
+      }
+    );
   }
 
   Future<void> getTermType() async {
@@ -1632,7 +1675,7 @@ class _ContractFormState extends State<ContractForm> {
         selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
-  bool validateStepOne() {
+  bool validateStepOne()  {
     var flag = step1Key.currentState!.validate() == true;
     if (flag &&
         contractCategory != null &&
@@ -1648,6 +1691,9 @@ class _ContractFormState extends State<ContractForm> {
       setState(() {
         stepOneComplete = false;
       });
+      if(flag) {
+        showStep1NotCompleteDialog();
+      }
       return false;
     }
   }
