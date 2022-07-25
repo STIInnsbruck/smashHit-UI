@@ -1535,7 +1535,47 @@ class _ContractFormState extends State<ContractForm> {
                       ? Text('-    You have not added any terms to the contract. Please add at least 1 term to the contract.')
                       : Container(),
                   flag != null
-                      ? Text('-    Not all terms contain text. Please fill out the text for each term added to the contract.')
+                      ? Text('-    Missing Text: Please fill out the text for each term added to the contract.')
+                      : Container(),
+                ]
+            ),
+            children: <Widget>[
+              TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  void showStep4NotCompleteDialog(bool contractorFlag, bool textFlag, bool dateFlag) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+                  ),
+                  SizedBox(height: 10),
+                  Text('Please fill out the following details to continue:'),
+                  _obligationMap.keys.isEmpty
+                      ? Text('-    You have not added any obligations to the contract. Please add at least one obligation to the contract.')
+                      : Container(),
+                  contractorFlag == false
+                      ? Text('-    Missing Contracting Party: Please make sure all obligations have a contractor assigned.')
+                      : Container(),
+                  textFlag == false
+                      ? Text('-    Missing Text: Please fill out the text for each obligation added to the contract.')
+                      : Container(),
+                  dateFlag == false
+                      ? Text('-    Missing Dates: Please be sure to add a start and end date to each obligation.')
                       : Container(),
                 ]
             ),
@@ -1833,12 +1873,14 @@ class _ContractFormState extends State<ContractForm> {
         setState(() {
           stepObligationComplete = false;
         });
+        showStep4NotCompleteDialog(contractorFlag, textFlag, dateFlag);
         return false;
       }
     } else {
       setState(() {
         stepObligationComplete = false;
       });
+      showStep4NotCompleteDialog(contractorFlag, textFlag, dateFlag);
       return false;
     }
   }
