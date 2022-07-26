@@ -311,6 +311,7 @@ class _ContractTileState extends State<ContractTile> {
                     _showDeletingDialog();
                     if (await dataProvider.deleteContractById(contractId)) {
                       _dismissDialog();
+                      widget.refresh();
                       showSuccessfulDeletionDialog(contractId);
                     } else {
                       _dismissDialog();
@@ -323,7 +324,6 @@ class _ContractTileState extends State<ContractTile> {
   }
 
   showSuccessfulDeletionDialog(String contractId) {
-    widget.refresh();
     showDialog(
         context: context,
         builder: (context) {

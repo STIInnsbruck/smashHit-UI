@@ -49,13 +49,13 @@ class _ObligationWidgetState extends State<ObligationWidget> {
                       ? Icon(Icons.unfold_less, color: Colors.black)
                       : Icon(Icons.unfold_more, color: Colors.black),
                   Text(
-                      "Obligation to the term ${widget.term.name} for the contractor ",
+                      "Obligation to the term ${widget.term.name} for the contracting party ",
                       style: TextStyle(color: Colors.black)),
                 ]),
               ),
               DropdownButton(
                 items: listContractors(),
-                hint: Text("Select a contractor"),
+                hint: Text("Select a contracting party"),
                 value: widget.selectedContractor,
                 onChanged: (User? selected) {
                   setState(() {

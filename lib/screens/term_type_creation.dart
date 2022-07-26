@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
+import 'package:smashhit_ui/misc/term_type_templates.dart';
 
 class TermTypeCreationPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -21,6 +22,8 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
   //CONTROLLERS
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
+
+  TermType? selectedTermTypeTemplate;
 
   bool _isLoading = false;
   bool _formComplete = false;
@@ -60,7 +63,7 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
             ],
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.centerRight,
             //If user is editing an existing TermType, display update button NOT create button.
             child: _isEditing? updateTermTypeButton() : createTermTypeButton(),
           ),
@@ -104,7 +107,7 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
                 children: [
                   Expanded(
                       child: Text(
-                          "Please enter you term type's name and description.",
+                          "Please enter you term type's name and text.",
                           style: TextStyle(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
@@ -139,7 +142,26 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("What is the name of you term type?", style: TextStyle(fontSize: 15)),
+                Row(
+                  children: [
+                    Text("Select a template (optional)", style: TextStyle(fontSize: 15)),
+                    SizedBox(width: 5),
+                    DropdownButton(
+                      value: selectedTermTypeTemplate,
+                      hint: Text("Select a template"),
+                      items: termTypeTemplates,
+                      onChanged: (TermType? selected) {
+                        setState(() {
+                          nameController.text = selected!.name!;
+                          descriptionController.text = selected.description!;
+                          selectedTermTypeTemplate = selected;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text("What is the name of your new term type?", style: TextStyle(fontSize: 15)),
                 SizedBox(height: 5),
                 TextFormField(
                     decoration: InputDecoration(
@@ -155,13 +177,13 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
                     controller: nameController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter a name for your term type.";
+                        return "Please enter a name for your new term type.";
                       }
                       return null;
                     }
                 ),
                 SizedBox(height: 10),
-                Text("Enter you term type's description.", style: TextStyle(fontSize: 15)),
+                Text("Enter you term type's text.", style: TextStyle(fontSize: 15)),
                 SizedBox(height: 5),
                 Expanded(
                   child: TextFormField(
@@ -184,7 +206,7 @@ class _TermTypeCreationPage extends State<TermTypeCreationPage> {
                       style: TextStyle(height: 1.5),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please enter a description for your term type.";
+                          return "Please enter a text for your new term type.";
                         }
                         return null;
                       }

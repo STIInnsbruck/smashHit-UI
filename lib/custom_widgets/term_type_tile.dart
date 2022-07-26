@@ -35,32 +35,20 @@ class _TermTypeTileState extends State<TermTypeTile> {
             child:
             Row(
               children: [
+                Expanded(flex: 2, child: Icon(Icons.description, size: 25)),
+                Expanded(flex: 4, child: Text(widget.termType.id!)),
+                Expanded(flex: 2, child: Text(widget.termType.name!)),
+                Expanded(flex: 8, child: Text(widget.termType.description!)),
                 Expanded(
-                  flex: 28,
-                  child: MaterialButton(
-                    height: double.infinity,
-                    onPressed: () {
-                      setState(() {
-                        expand = !expand;
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Expanded(flex: 2, child: Icon(Icons.description, size: 25)),
-                        Expanded(
-                            flex: 22,
-                            child: Text('Name: ${widget.termType.name}\tID: ${widget.termType.id}', overflow: TextOverflow.ellipsis)
-                        ),
-                        //Spacer(flex: 25),
-                        Spacer(flex: 3),
-                      ],
-                    ),
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      editTermTypeButton(widget.termType.id!),
+                      deleteTermTypeButton(widget.termType.id!),
+                    ],
                   ),
                 ),
-                editTermTypeButton(widget.termType.id!),
-                Spacer(),
-                deleteTermTypeButton(widget.termType.id!),
-                Spacer()
               ],
             ),
         )
