@@ -13,6 +13,7 @@ class User {
   String? vat;
   DateTime? createDate;
 
+
   User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role, this.companyId, this.vat, this.createDate});
 
   String? get getId => id;
