@@ -13,6 +13,7 @@ import 'package:smashhit_ui/screens/contract_party_profile.dart';
 import 'package:smashhit_ui/screens/term_type_creation.dart';
 import 'package:smashhit_ui/screens/term_type_view.dart';
 import 'package:smashhit_ui/screens/obligation_dashboard.dart';
+import 'package:smashhit_ui/screens/contractors_view.dart';
 
 class BasePage extends StatefulWidget {
   @override
@@ -76,7 +77,7 @@ class _BasePageState extends State<BasePage> {
             ListTile(
               title: Text("View Data Requesters"),
               onTap: () {
-                changeScreen(3);
+                changeScreen(12);
                 Navigator.of(context).pop();
               },
             ),
@@ -189,6 +190,10 @@ class _BasePageState extends State<BasePage> {
         case 11:
           _selectedPage = ObligationsDashboard(changeScreen, user, searchId, offlineMode);
           _selectedTitle = "View My Obligations";
+          break;
+        case 12:
+          _selectedPage = ContractorViewPage(changeScreen, user, offlineMode);
+          _selectedTitle = "View Data Requesters";
       }
     });
   }

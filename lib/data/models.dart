@@ -13,8 +13,21 @@ class User {
   String? vat;
   DateTime? createDate;
 
+  //---Dummy Contractor Statistics Variables---
+  int? numGdprFines;
+  // €XX'XXX
+  String? avgFineAmount;
+  // XXX Days Agp
+  String? recentFine;
+  // Art XX paragraph Y
+  String? recentViolation;
+  // XX%
+  String? oblCompetionRate;
+  // X out of 5 stars
+  int? rating;
 
-  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role, this.companyId, this.vat, this.createDate});
+
+  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role, this.companyId, this.vat, this.createDate, this.numGdprFines, this.avgFineAmount, this.recentFine, this.recentViolation, this.oblCompetionRate, this.rating});
 
   String? get getId => id;
   String? get getName => name;

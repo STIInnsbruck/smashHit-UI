@@ -34,12 +34,12 @@ class _ContractorViewPage extends State<ContractorViewPage> {
                 future: futureContractorList = dataProvider.fetchAllUsers(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    contractorList = snapshot.data;
+                    //contractorList = snapshot.data;
+                    filterOutDummyContractors(snapshot.data!);
                     return Column(
                       children: [
                         listHeader(),
-                        snapshot.data!.isEmpty
-                            ? noTermTypesText() : termTypeListWidget()
+                        contractorListWidget()
                       ],
                     );
                   } else if (snapshot.hasError) {
@@ -47,15 +47,7 @@ class _ContractorViewPage extends State<ContractorViewPage> {
                   }
                   return Center(child: CircularProgressIndicator());
                 }
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: createTermTypeButton(),
-              ),
-            ),
-            SizedBox(height: 5)
+            )
           ],
         )
     );
@@ -65,51 +57,61 @@ class _ContractorViewPage extends State<ContractorViewPage> {
     return ListTile(
       title: Row(
         children: [
-          Expanded(flex: 2, child: Text("Type", textAlign: TextAlign.center)),
-          Expanded(flex: 4, child: Text("ID")),
-          Expanded(flex: 2, child: Text("Name")),
-          Expanded(flex: 8, child: Text("Description")),
-          Spacer(flex: 2)
+          Expanded(flex: 1, child: Text("Type", textAlign: TextAlign.left)),
+          Expanded(flex: 1, child: Text("Name", textAlign: TextAlign.left)),
+          Expanded(flex: 1, child: Text("Description", textAlign: TextAlign.left)),
+          Expanded(flex: 1, child: Text("Rating", textAlign: TextAlign.left)),
+          Spacer(flex: 1)
         ],
       ),
     );
   }
 
-  Widget termTypeListWidget() {
+  Widget contractorListWidget() {
     return Expanded(
         child: ListView.builder(
             itemCount: contractorList!.length,
             itemBuilder: (BuildContext context, int index) {
-              return ContractorTile(contractor: contractorList![index], changeScreen: widget.changeScreen(2, contractorList![index].id!));
+              return ContractorTile(contractor: contractorList![index], changeScreen: widget.changeScreen);
             }
         )
     );
   }
 
-  void removeTermType(String termTypeId) {
-    setState(() {
-      contractorList!.removeWhere((element) => element.id!.compareTo(termTypeId) == 0);
-    });
+  void filterOutDummyContractors(List<User> list) {
+    contractorList!.clear();
+    const String dummyId1 = "c_12d91e9e-0d1a-11ed-a172-0242ac150002";
+    const String dummyId2 = "c_d6c5b656-0d19-11ed-8ab1-0242ac150002";
+    const String dummyId3 = "c_3ea24178-0d19-11ed-94d9-0242ac150002";
+    const String dummyId4 = "c_951f0046-0d18-11ed-8bcd-0242ac150002";
+
+    for(int i = 0; i < list.length; i++) {
+      if (list[i].id == dummyId1 || list[i].id == dummyId2 || list[i].id == dummyId3 || list[i].id == dummyId4) {
+        contractorList!.add(addDummyStatistics(list[i]));
+      }
+    }
   }
 
-  Widget noTermTypesText() {
-    return Expanded(
-        child: Center(
-            child: Text("There are currently no existing term types. Please create a new term type before creating a contract.")));
+  User addDummyStatistics(User user) {
+    if (user.id == "c_12d91e9e-0d1a-11ed-a172-0242ac150002") {
+      return addDummyStats(user, 21, "€1000,00", "41 Days Ago", "Art. 13 (2) GDPR", "100%", 5);
+    } else if (user.id == "c_d6c5b656-0d19-11ed-8ab1-0242ac150002") {
+      return addDummyStats(user, 0, "€0,00", "None", "None", "20%", 1);
+    } else if (user.id == "c_3ea24178-0d19-11ed-94d9-0242ac150002") {
+      return addDummyStats(user, 1, "€16'000,00", "437 Days Ago", "Art. 5 (1) a) GDPR", "98%", 4);
+    } else {
+      return addDummyStats(user, 7, "€5'132,00", "3 Days Ago", "Art. 28 (2) GDPR, Art. 3", "80%", 4);
+    }
   }
 
-  Widget createTermTypeButton() {
-    return Container(
-      child: MaterialButton(
-          minWidth: 125,
-          onPressed: () async {
-            widget.changeScreen(9);
-          },
-          color: Colors.green,
-          hoverColor: Colors.lightGreen,
-          child: Text("Create A New Term Type", style: TextStyle(color: Colors.white))
-      ),
-    );
-  }
+  User addDummyStats(User user, int numGdprFines, String avgFineAmount, String recentFine, String recentViolation, String oblCompletionRate, int rating) {
+    user.numGdprFines = numGdprFines;
+    user.avgFineAmount = avgFineAmount;
+    user.recentFine = recentFine;
+    user.recentViolation = recentViolation;
+    user.oblCompetionRate = oblCompletionRate;
+    user.rating = rating;
 
+    return user;
+  }
 }
