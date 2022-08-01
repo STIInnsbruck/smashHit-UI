@@ -325,7 +325,7 @@ class _BasePageState extends State<BasePage> {
           backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
           radius: 50,
         ),
-        Text("username")
+        Text("Max Mustermann")
       ],
     );
   }

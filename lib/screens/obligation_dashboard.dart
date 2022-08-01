@@ -63,11 +63,12 @@ class _ObligationDashboardState extends State<ObligationsDashboard> {
     return ListTile(
       title: Row(
         children: [
-          Expanded(flex: 1, child: Text("Type", textAlign: TextAlign.center)),
-          Expanded(flex: 4, child: Text("ID")),
-          Expanded(flex: 8, child: Text("Description")),
-          Expanded(flex: 1, child: Text("End Date")),
-          Expanded(flex: 1, child: Text("Status", textAlign: TextAlign.center)),
+          Spacer(),
+          Expanded(flex: 2, child: Text("Type", textAlign: TextAlign.left)),
+          Expanded(flex: 8, child: Text("ID")),
+          Expanded(flex: 16, child: Text("Description")),
+          Expanded(flex: 2, child: Text("End Date", textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text("Status", textAlign: TextAlign.center)),
         ],
       ),
     );
@@ -86,10 +87,10 @@ class _ObligationDashboardState extends State<ObligationsDashboard> {
         itemCount: obligationList!.length,
         itemBuilder: (BuildContext context, int index) {
           if (searchId == null) {
-            return ObligationTile(widget.changeScreen, obligationList![index], widget.user!.id);
+            return ObligationTile(widget.changeScreen, obligationList![index], widget.user!.id, index+1);
           } else {
             if (obligationList![index].id!.contains(searchId!)) {
-              return ObligationTile(widget.changeScreen, obligationList![index], widget.user!.id);
+              return ObligationTile(widget.changeScreen, obligationList![index], widget.user!.id, index+1);
             } else {
               return Container();
             }

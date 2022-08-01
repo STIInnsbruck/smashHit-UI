@@ -65,11 +65,12 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
     return ListTile(
       title: Row(
         children: [
+          Spacer(),
           Expanded(flex: 2, child: Text("Type", textAlign: TextAlign.center)),
-          Expanded(flex: 4, child: Text("ID")),
-          Expanded(flex: 2, child: Text("Name")),
-          Expanded(flex: 8, child: Text("Description")),
-          Spacer(flex: 2)
+          Expanded(flex: 8, child: Text("ID")),
+          Expanded(flex: 4, child: Text("Name")),
+          Expanded(flex: 16, child: Text("Description")),
+          Expanded(flex: 4, child: Text("Actions", textAlign: TextAlign.center))
         ],
       ),
     );
@@ -80,7 +81,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
       child: ListView.builder(
         itemCount: termTypeList!.length,
         itemBuilder: (BuildContext context, int index) {
-          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType, changeScreen: widget.changeScreen);
+          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType, changeScreen: widget.changeScreen, index: index+1);
         }
       )
     );

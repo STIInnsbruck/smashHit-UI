@@ -380,7 +380,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                     child: Tooltip(
-                      message: "The violation description of this user's most recently issued GDPR violation.",
+                      message: "The average amount of obligation this user has completed in time. Only obligations of completed contracts are considered.",
                       child: Icon(Icons.info, color: Colors.grey),
                     )
                 )
