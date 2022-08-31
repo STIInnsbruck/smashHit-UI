@@ -58,41 +58,33 @@ class ResponseParser {
   }
 
   //CONTRACT PARSERS
-  Contract parseContract(Map jsonContract) {
-    return Contract(
-        contractId: jsonContract['Contract'],
-        purpose: jsonContract['Purpose'],
-        contractStatus: jsonContract['ContractStatus']
-    );
-  }
-
-  Contract parseContractId(Map jsonContract) {
-    //initiate contract with its foundational data.
+  Contract parseContractById(Map jsonContract) {
+    //Initiate contract with its base data.
     Contract contract = new Contract(
-        contractId: jsonContract['contractId'],
-        contractStatus: jsonContract['contractStatus'],
-        contractType: jsonContract['contractType'],
-        effectiveDate: formatDate(jsonContract["effectiveDate"]),
-        executionDate: formatDate(jsonContract["executionDate"]),
-        endDate: formatDate(jsonContract["endDate"]),
-        medium: jsonContract["medium"],
-        purpose: jsonContract['purpose'],
-        consentId: jsonContract['consentId'],
+        contractId:               jsonContract['contractId'],
+        contractStatus:           jsonContract['contractStatus'],
+        contractType:             jsonContract['contractType'],
+        effectiveDate:            formatDate(jsonContract["effectiveDate"]),
+        executionDate:            formatDate(jsonContract["executionDate"]),
+        endDate:                  formatDate(jsonContract["endDate"]),
+        medium:                   jsonContract["medium"],
+        purpose:                  jsonContract['purpose'],
+        consentId:                jsonContract['consentId'],
         considerationDescription: jsonContract['consideration'],
-        considerationValue: jsonContract['value'],
-        contractCategory: jsonContract['contractCategory']
+        considerationValue:       jsonContract['value'],
+        contractCategory:         jsonContract['contractCategory']
     );
-
+    //Set the initiated contracts identifier lists.
     contract.contractors = jsonContract['identifiers']['contractors'];
     contract.obligations = jsonContract['identifiers']['obligations'];
-    contract.terms = jsonContract['identifiers']['terms'];
-    contract.signatures = jsonContract['identifiers']['signatures'];
+    contract.terms       = jsonContract['identifiers']['terms'];
+    contract.signatures  = jsonContract['identifiers']['signatures'];
 
     return contract;
   }
 
   List<Contract> parseAllContracts(List jsonList) {
-    return jsonList.map((jsonContract) => parseContractId(jsonContract)).toList();
+    return jsonList.map((jsonContract) => parseContractById(jsonContract)).toList();
   }
 
   //OBLIGATION PARSERS

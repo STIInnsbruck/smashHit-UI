@@ -6,21 +6,11 @@ import 'package:smashhit_ui/data/parser.dart';
 import 'package:smashhit_ui/data/models.dart';
 
 class DataProvider {
-
   ResponseParser parser = ResponseParser();
-
-  //TODO: change dynamic model to the contract model.
-  dynamic model;
-
-
-  //----------------------ACT CONTRACT API--------------------------------------
-
+  //----------------------ACT CONTRACT API DETAILS------------------------------
   static final String kHost = 'actool.contract.sti2.at';
   static final String kBasePath = '/';
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
-
-  static final String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjQwNDI3Mzc4fQ.aD7XNfGsCqgzshdiwcqWEc2srtd56TlNCtAm0o-fFLI";
 
   var headers = {
     'accept': 'application/json',
@@ -202,7 +192,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       Contract contract;
       try {
-        contract = parser.parseContractId(jsonDecode(response.body));
+        contract = parser.parseContractById(jsonDecode(response.body));
         return contract.contractId!;
       } catch (e) {
         throw Exception('Failed to load contract.');
@@ -218,7 +208,7 @@ class DataProvider {
     if (response.statusCode == 200) {
       Contract contract;
       try {
-        contract = parser.parseContractId(jsonDecode(response.body));
+        contract = parser.parseContractById(jsonDecode(response.body));
         return contract;
       } catch (e) {
         throw Exception('Failed to load contract.');

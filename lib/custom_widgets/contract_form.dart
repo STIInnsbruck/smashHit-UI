@@ -57,7 +57,7 @@ class _ContractFormState extends State<ContractForm> {
   bool stepOneComplete = false;
   bool stepTwoComplete = false;
   bool stepObligationComplete = false;
-  bool stepFourComplete = false;
+  bool stepThreeComplete = false;
   bool loading = false;
 
   //------------------- Validation Keys ----------------------------------------
@@ -111,8 +111,8 @@ class _ContractFormState extends State<ContractForm> {
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         contractStepOne(formWidth),
         contractStepTwo(formWidth),
+        contractStepThree(formWidth),
         contractStepFour(formWidth),
-        contractStepObligation(formWidth),
         contractStepFinal(formWidth),
       ])),
       Container(
@@ -202,14 +202,14 @@ class _ContractFormState extends State<ContractForm> {
     );
   }
 
-  Widget contractStepFour(double width) {
+  Widget contractStepThree(double width) {
     return Column(children: [
       ContractStepHeader(
           width: width,
           name: "Step 3. Terms & Conditions of the Contract",
-          stepComplete: stepFourComplete,
+          stepComplete: stepThreeComplete,
           onPressed: () {
-            setStepFour();
+            setStepThree();
           }),
       contractStep == 3
           ? ContractStepBody(width: width, children: [
@@ -231,7 +231,7 @@ class _ContractFormState extends State<ContractForm> {
     ]);
   }
 
-  Widget contractStepObligation(double width) {
+  Widget contractStepFour(double width) {
     return Column(children: [
       ContractStepHeader(
           width: width,
@@ -277,6 +277,7 @@ class _ContractFormState extends State<ContractForm> {
         ContractStepHeader(
             width: width,
             name: "Final Step - Overview",
+            stepComplete: false,
             onPressed: () => setStepFinal()),
         contractStep == 5
             ? ContractStepBody(width: width, children: [
@@ -864,7 +865,7 @@ class _ContractFormState extends State<ContractForm> {
           .removeWhere((key, value) => value.term.id == _termMap[id]!.term.id);
       _termMap.remove(id);
     });
-    validateStepFour();
+    validateStepThree();
     validateStepObligation();
   }
 
@@ -1197,7 +1198,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget addContractorButton() {
     return Tooltip(
-      message: "Add another contractor.",
+      message: "Add another contracting party.",
       child: CircleAvatar(
           radius: 20,
           backgroundColor: Colors.blue,
@@ -1213,7 +1214,7 @@ class _ContractFormState extends State<ContractForm> {
 
   Widget removeContractorButton() {
     return Tooltip(
-        message: "Remove this data controller.",
+        message: "Remove this contracting party.",
         child: CircleAvatar(
             radius: 20,
             backgroundColor: Colors.blue,
@@ -1353,7 +1354,7 @@ class _ContractFormState extends State<ContractForm> {
         }
         break;
       case 3:
-        if (validateStepFour()) {
+        if (validateStepThree()) {
           incrementContractStep();
         }
         break;
@@ -1381,22 +1382,22 @@ class _ContractFormState extends State<ContractForm> {
     validateStepOne();
   }
 
-  void setStepFour() {
+  void setStepThree() {
     validateStepTwo();
   }
 
   void setStepObligation() {
-    validateStepFour();
+    validateStepThree();
   }
 
   void setStepFinal() {
-    validateStepFour();
+    validateStepThree();
     if (stepOneComplete &&
         stepTwoComplete &&
-        stepFourComplete &&
+        stepThreeComplete &&
         stepObligationComplete) {
     } else {
-      print("you have not completed the contract.");
+      //Display dialog to notify user that the contract has not been completed.
       showContractNotCompleteDialog();
     }
   }
@@ -1423,7 +1424,7 @@ class _ContractFormState extends State<ContractForm> {
                     ? Container()
                     : Text('-    Step 2. Data Controller(s) Details'),
                 Container(height: 5),
-                stepFourComplete
+                stepThreeComplete
                     ? Container()
                     : Text('-    Step 4. Terms & Conditions of the Contract'),
                 Container(height: 5)
@@ -1439,6 +1440,157 @@ class _ContractFormState extends State<ContractForm> {
             ],
           );
         });
+  }
+
+  void showStep1NotCompleteDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                  child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+              ),
+              SizedBox(height: 10),
+              Text('Please fill out the following details to continue:'),
+              contractCategory == null
+                ? Text('-    Select A Contract Category')
+                : Container(),
+              contractType == null
+                  ? Text('-    Select A Contract Type')
+                  : Container(),
+              effectiveDate == null
+                  ? Text('-    Select An Effective Date')
+                  : Container(),
+              executionDate == null
+                  ? Text('-    Select An Execution Date')
+                  : Container(),
+              endDate == null
+                  ? Text('-    Select An End Date')
+                  : Container(),
+            ]
+          ),
+          children: <Widget>[
+            TextButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  void showStep2NotCompleteDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+                  ),
+                  SizedBox(height: 10),
+                  Text('Please fill out the following details to continue:'),
+                  addedContractors.length == 0
+                      ? Text('-    You have no contracting parties. Please add at least 2 or more contracting parties to the contract.')
+                      : Container(),
+                  addedContractors.length == 1
+                      ? Text('-    You only have one contracting party in the contract. Please add at least 1 or more contracting parties to the contract.')
+                      : Container(),
+                ]
+            ),
+            children: <Widget>[
+              TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  void showStep3NotCompleteDialog(bool? flag) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+                  ),
+                  SizedBox(height: 10),
+                  Text('Please fill out the following details to continue:'),
+                  _termMap.keys.isEmpty
+                      ? Text('-    You have not added any terms to the contract. Please add at least 1 term to the contract.')
+                      : Container(),
+                  flag != null
+                      ? Text('-    Missing Text: Please fill out the text for each term added to the contract.')
+                      : Container(),
+                ]
+            ),
+            children: <Widget>[
+              TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  void showStep4NotCompleteDialog(bool contractorFlag, bool textFlag, bool dateFlag) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Icon(Icons.warning, size: 60, color: Colors.yellow)
+                  ),
+                  SizedBox(height: 10),
+                  Text('Please fill out the following details to continue:'),
+                  _obligationMap.keys.isEmpty
+                      ? Text('-    You have not added any obligations to the contract. Please add at least one obligation to the contract.')
+                      : Container(),
+                  contractorFlag == false
+                      ? Text('-    Missing Contracting Party: Please make sure all obligations have a contractor assigned.')
+                      : Container(),
+                  textFlag == false
+                      ? Text('-    Missing Text: Please fill out the text for each obligation added to the contract.')
+                      : Container(),
+                  dateFlag == false
+                      ? Text('-    Missing Dates: Please be sure to add a start and end date to each obligation.')
+                      : Container(),
+                ]
+            ),
+            children: <Widget>[
+              TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
   }
 
   Future<void> getTermType() async {
@@ -1632,7 +1784,8 @@ class _ContractFormState extends State<ContractForm> {
         selected.phone == null ? 'No phone number found' : selected.phone!;
   }
 
-  bool validateStepOne() {
+  bool validateStepOne()  {
+    //Check if form is completed by user.
     var flag = step1Key.currentState!.validate() == true;
     if (flag &&
         contractCategory != null &&
@@ -1648,6 +1801,10 @@ class _ContractFormState extends State<ContractForm> {
       setState(() {
         stepOneComplete = false;
       });
+      //Only display completion dialog if the form is complete.
+      if(flag) {
+        showStep1NotCompleteDialog();
+      }
       return false;
     }
   }
@@ -1682,7 +1839,7 @@ class _ContractFormState extends State<ContractForm> {
   /// contract to validate if each field has content in it.
   bool validateStepTwo() {
     var flag = true;
-    if (flag) {
+    if (addedContractors.length >= 2) {
       setState(() {
         stepTwoComplete = true;
       });
@@ -1691,6 +1848,7 @@ class _ContractFormState extends State<ContractForm> {
       setState(() {
         stepTwoComplete = false;
       });
+      showStep2NotCompleteDialog();
       return false;
     }
   }
@@ -1716,12 +1874,14 @@ class _ContractFormState extends State<ContractForm> {
         setState(() {
           stepObligationComplete = false;
         });
+        showStep4NotCompleteDialog(contractorFlag, textFlag, dateFlag);
         return false;
       }
     } else {
       setState(() {
         stepObligationComplete = false;
       });
+      showStep4NotCompleteDialog(contractorFlag, textFlag, dateFlag);
       return false;
     }
   }
@@ -1734,15 +1894,11 @@ class _ContractFormState extends State<ContractForm> {
     }
   }
 
-  /// Function that checks every textFormField in the fourth step of the
+  /// Function that checks every textFormField in the third step of the
   /// contract to validate if each field has content in it.
   /// Checked fields:
   ///   - Terms & Conditions Field
-  ///   - Start Date
-  ///   - Effective Date
-  ///   - Execution Date
-  ///   - End Date
-  bool validateStepFour() {
+  bool validateStepThree() {
     bool flag = true;
     if (_termMap.keys.isNotEmpty) {
       _termMap.values.forEach((element) {
@@ -1752,19 +1908,21 @@ class _ContractFormState extends State<ContractForm> {
       });
       if (flag) {
         setState(() {
-          stepFourComplete = true;
+          stepThreeComplete = true;
         });
         return true;
       } else {
         setState(() {
-          stepFourComplete = false;
+          stepThreeComplete = false;
         });
+        showStep3NotCompleteDialog(flag);
         return false;
       }
     } else {
       setState(() {
-        stepFourComplete = false;
+        stepThreeComplete = false;
       });
+      showStep3NotCompleteDialog(null);
       return false;
     }
   }
@@ -1820,8 +1978,10 @@ class _ContractFormState extends State<ContractForm> {
       for (int i = (index * 7) + 6; i >= (index * 7); i--) {
         contractorControllers.removeAt(i);
       }
+      addedContractors.removeAt(index);
+      addedContractorsIndex -= 1;
       currentContractorIndex -= 1;
-    });
+    } );
   }
 
   /// Helper function to add 6 keys to validate each textFormField in the

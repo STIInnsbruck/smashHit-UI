@@ -29,7 +29,6 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     Orientation orientation = MediaQuery.of(context).orientation;
 
     screenSize = _screenSize(screenWidth);
@@ -39,7 +38,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         future: dataProvider.fetchUserById(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            user = snapshot.data;
+            user = addDummyStatistics(snapshot.data!);
             return Container(
               margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
               child: screenSize == 2
@@ -102,7 +101,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Spacer(),
             Expanded(child: mostRecentFineTypeCard()),
             Expanded(child: obligationCompletionRateCard()),
-            Spacer(),
+            Expanded(child: ratingCard()),
             Spacer(),
           ],
         ),
@@ -143,7 +142,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Spacer(),
             Expanded(flex: 3, child: mostRecentFineTypeCard()),
             Expanded(flex: 3, child: obligationCompletionRateCard()),
-            Spacer(flex: 3),
+            Expanded(flex: 3, child: ratingCard()),
             Spacer(),
           ],
         ),
@@ -250,7 +249,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
           Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-              child: Text('13', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+              child: Text('${user!.numGdprFines}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
             ),
           ),
         ],
@@ -285,7 +284,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text("€13'213,00", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+                  child: Text('${user!.avgFineAmount}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
               ),
             ),
           ],
@@ -320,7 +319,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text('29 Days ago', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+                  child: Text('${user!.recentFine}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
               ),
             ),
           ],
@@ -355,7 +354,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text('Art. 28 (2) GDPR, Art. 32 GDPR', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis), maxLines: 1)
+                  child: Text('${user!.recentViolation}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis), maxLines: 1)
               ),
             ),
           ],
@@ -381,7 +380,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                     child: Tooltip(
-                      message: "The violation description of this user's most recently issued GDPR violation.",
+                      message: "The average amount of obligation this user has completed in time. Only obligations of completed contracts are considered.",
                       child: Icon(Icons.info, color: Colors.grey),
                     )
                 )
@@ -390,11 +389,68 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
             Container(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
-                  child: Text('100%', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+                  child: Text('${user!.oblCompetionRate}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
               ),
             ),
           ],
         )
+    );
+  }
+
+  Widget ratingCard() {
+    return Card(
+        elevation: 10.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 5),
+                    child: Text('Average Contracting\nRating'),
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: Tooltip(
+                      message: "The average rating of this user, rated by their past contracting parties' experiences with this user.",
+                      child: Icon(Icons.info, color: Colors.grey),
+                    )
+                )
+              ],
+            ),
+            Container(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 5, 10),
+                  child: starRating(user!.rating!)
+                  //child: Text('${user!.rating}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+              ),
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget starRating(int rating) {
+    List<Icon> stars = [];
+    //max amount of starts is 5
+    int numEmptyStars = 5 - rating;
+    for(int i = 0; i < rating; i++) {
+      stars.add(Icon(Icons.star, color: Colors.yellow, size: 25));
+    }
+    for(int i = 0; i < numEmptyStars; i++) {
+      stars.add(Icon(Icons.star_border, color: Colors.grey, size: 25));
+    }
+    return Row(
+      children: [
+        stars[0],
+        stars[1],
+        stars[2],
+        stars[3],
+        stars[4],
+      ],
     );
   }
 
@@ -419,6 +475,29 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         profileDetailElement("Street Address", user.streetAddress!),
       ],
     );
+  }
+
+  User addDummyStatistics(User user) {
+    if (user.id == "c_12d91e9e-0d1a-11ed-a172-0242ac150002") {
+      return addDummyStats(user, 21, "€1000,00", "41 Days Ago", "Art. 13 (2) GDPR", "100%", 5);
+    } else if (user.id == "c_d6c5b656-0d19-11ed-8ab1-0242ac150002") {
+      return addDummyStats(user, 0, "€0,00", "None", "None", "20%", 1);
+    } else if (user.id == "c_3ea24178-0d19-11ed-94d9-0242ac150002") {
+      return addDummyStats(user, 1, "€16'000,00", "437 Days Ago", "Art. 5 (1) a) GDPR", "98%", 4);
+    } else {
+      return addDummyStats(user, 7, "€5'132,00", "3 Days Ago", "Art. 28 (2) GDPR, Art. 3", "80%", 4);
+    }
+  }
+
+  User addDummyStats(User user, int numGdprFines, String avgFineAmount, String recentFine, String recentViolation, String oblCompletionRate, int rating) {
+    user.numGdprFines = numGdprFines;
+    user.avgFineAmount = avgFineAmount;
+    user.recentFine = recentFine;
+    user.recentViolation = recentViolation;
+    user.oblCompetionRate = oblCompletionRate;
+    user.rating = rating;
+
+    return user;
   }
 
   Widget profileDetailElement(String elementName, String elementData) {

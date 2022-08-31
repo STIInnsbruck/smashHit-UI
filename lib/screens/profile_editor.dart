@@ -130,10 +130,22 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
             Row(
               children: [
                 Spacer(flex: 1),
-                Expanded(child: ProfileStatisticCard(title: "Obligations Completed", tooltipMessage: "The amount of obligations you have completed against the amount you have in total.", value: "${numCompletedObligation()}/${obligations.length}", color: _allObligationsCompleted? Colors.green : Colors.black)),
-                Expanded(child: ProfileStatisticCard(title: "Total Contracts", tooltipMessage: "The amount of contracts you have.", value: "${contracts.length}")),
-                Expanded(child: ProfileStatisticCard(title: "Completed Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numCompletedContracts()}")),
-                Expanded(child: ProfileStatisticCard(title: "Running Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numRunningContract()}")),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Obligations Completed", tooltipMessage: "The amount of obligations you have completed against the amount you have in total.", value: "${numCompletedObligation()}/${obligations.length}", color: _allObligationsCompleted? Colors.green : Colors.black)),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Total Contracts", tooltipMessage: "The amount of contracts you have.", value: "${contracts.length}")),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Completed Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numCompletedContracts()}")),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Running Contracts", tooltipMessage: "The amount of contracts you have.", value: "${numRunningContract()}")),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Obligation Completion Rate", tooltipMessage: "The average amount of obligation you have completed in time. Only obligations of completed contracts are considered.", value: "100%", color: Colors.green)),
+                Spacer(flex: 1)
+              ],
+            ),
+            Row(
+              children: [
+                Spacer(flex: 1),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Total GDPR Fines", tooltipMessage: "The amount of publicly listed GDPR violations issued to you.", value: "0", color: _allObligationsCompleted? Colors.green : Colors.black)),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Average Fine Amount", tooltipMessage: "The overall average of all publicly available GDPR fines issued to you.\n Higher fines are given depending on the severity of the violation.", value: "None")),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Most Recent Fine", tooltipMessage: "The amount of days ago when the most recent publicly available GDPR fine was issued to you.", value: "None")),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Recent Violation Type", tooltipMessage: "The violation description of your most recently issued GDPR violation.", value: "None")),
+                Expanded(flex: 3, child: ProfileStatisticCard(title: "Contracting Rating", tooltipMessage: "Your average rating, given by your past contracting parties' experiences with you.", value: "5", widget: starRating(5))),
                 Spacer(flex: 1)
               ],
             ),
@@ -152,6 +164,27 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     );
   }
 
+  Widget starRating(int rating) {
+    List<Icon> stars = [];
+    //max amount of starts is 5
+    int numEmptyStars = 5 - rating;
+    for(int i = 0; i < rating; i++) {
+      stars.add(Icon(Icons.star, color: Colors.yellow, size: 25));
+    }
+    for(int i = 0; i < numEmptyStars; i++) {
+      stars.add(Icon(Icons.star_border, color: Colors.grey, size: 25));
+    }
+    return Row(
+      children: [
+        stars[0],
+        stars[1],
+        stars[2],
+        stars[3],
+        stars[4],
+      ],
+    );
+  }
+
   Future<List<Contract>> fetchContractAndObligationsStatistics() async {
     List<Contract> tmpContracts = await dataProvider.fetchContractsByContractorId(widget.userId);
     await _getAllObligationsOfEachContract(tmpContracts);
@@ -162,7 +195,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   int numCompletedContracts() {
     int numCompleted = 0;
     contracts.forEach((element) {
-      if (element.contractStatus!.compareTo("hasFulfilled") == 0) {
+      if (element.contractStatus!.contains("Fulfilled") || element.contractStatus!.contains("fulfilled")) {
         numCompleted++;
       }
     });
@@ -172,7 +205,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   int numRunningContract() {
     int numRunning = 0;
     contracts.forEach((element) {
-      if (element.contractStatus!.compareTo("hasFulfilled") != 0) {
+      if (element.contractStatus!.contains("Fulfilled") == false || element.contractStatus!.contains("fulfilled") == false) {
         numRunning++;
       }
     });
@@ -183,15 +216,13 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     int numCompleted = 0;
 
     obligations.forEach((element) {
-      if (element.state!.compareTo("hasFulfilled") == 0) {
+      if (element.state!.contains("Fulfilled") ||element.state!.contains("fulfilled")) {
         numCompleted++;
       }
     });
 
     if(numCompleted == obligations.length) {
-      setState(() {
-        _allObligationsCompleted = true;
-      });
+      _allObligationsCompleted = true;
     }
     return numCompleted;
   }

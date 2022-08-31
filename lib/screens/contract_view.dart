@@ -255,7 +255,8 @@ class _ContractCreationState extends State<ViewContract> {
 
   MaterialButton obligationCardButton(Obligation obligation, User user) {
     if (user.id!.compareTo(widget.user!.id!) == 0) {
-      if (obligation.state!.contains("Fulfilled") || obligation.state!.contains("fulfilled")) {
+      if (obligation.state!.contains("Fulfilled") ||
+          obligation.state!.contains("fulfilled")) {
         return MaterialButton(
           elevation: 0,
           onPressed: null,
@@ -502,11 +503,10 @@ class _ContractCreationState extends State<ViewContract> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Signatures", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("Signatures",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
-                Column(
-                  children: signatureWidgets
-                )
+                Column(children: signatureWidgets)
               ],
             ),
           ),
@@ -522,16 +522,17 @@ class _ContractCreationState extends State<ViewContract> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("You have not yet signed this contract.", style: TextStyle(fontSize: 15)),
+        Text("You have not yet signed this contract.",
+            style: TextStyle(fontSize: 15)),
         MaterialButton(
-          child: Text("Click To Legally Apply Your Signature", style: TextStyle(fontSize: 15, color: Colors.white)),
-          color: Colors.blue,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)),
-          onPressed: () {
-            _confirmSignatureDialog();
-          }
-        )
+            child: Text("Click To Legally Apply Your Signature",
+                style: TextStyle(fontSize: 15, color: Colors.white)),
+            color: Colors.blue,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            onPressed: () {
+              _confirmSignatureDialog();
+            })
       ],
     );
   }
@@ -558,7 +559,8 @@ class _ContractCreationState extends State<ViewContract> {
                           borderSide: BorderSide(color: Colors.blue)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(2.0),
-                          borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1.0)),
                     ),
                     style: TextStyle(fontSize: 15),
                     controller: signatureController,
@@ -580,7 +582,8 @@ class _ContractCreationState extends State<ViewContract> {
                 },
               ),
               MaterialButton(
-                child: Text('Agree & Sign Contract', style: TextStyle(color: Colors.white)),
+                child: Text('Agree & Sign Contract',
+                    style: TextStyle(color: Colors.white)),
                 color: Colors.blue,
                 onPressed: () async {
                   if (_signatureKey.currentState!.validate() == true) {
@@ -591,8 +594,7 @@ class _ContractCreationState extends State<ViewContract> {
               ),
             ],
           );
-        }
-    );
+        });
   }
 
   Future<void> signContract() async {
@@ -600,11 +602,10 @@ class _ContractCreationState extends State<ViewContract> {
     _showSigningDialog();
     //create signature object
     Signature tmpSignature = Signature(
-      contractId: widget.contractId,
-      contractorId: widget.user!.id,
-      createDate: DateTime.now(),
-      signatureText: signatureController.text
-    );
+        contractId: widget.contractId,
+        contractorId: widget.user!.id,
+        createDate: DateTime.now(),
+        signatureText: signatureController.text);
 
     //create signature and get signature id
     tmpSignature = await dataProvider.createSignature(tmpSignature);
@@ -659,21 +660,22 @@ class _ContractCreationState extends State<ViewContract> {
 
   _showSigningDialog() {
     showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: Text('Signing...', textAlign: TextAlign.center),
-          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
-          children: [
-            Icon(Icons.schedule, color: Colors.grey, size: 100),
-            Text('One moment please, your signature is being applied to the contract.', textAlign: TextAlign.center),
-            SizedBox(height: 5),
-            Center(child: CircularProgressIndicator())
-          ],
-        );
-      }
-    );
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Signing...', textAlign: TextAlign.center),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+            children: [
+              Icon(Icons.schedule, color: Colors.grey, size: 100),
+              Text(
+                  'One moment please, your signature is being applied to the contract.',
+                  textAlign: TextAlign.center),
+              SizedBox(height: 5),
+              Center(child: CircularProgressIndicator())
+            ],
+          );
+        });
   }
 
   Widget contractorDetails(String contractorId) {
@@ -711,24 +713,24 @@ class _ContractCreationState extends State<ViewContract> {
   Widget signatureDetails(Signature signature) {
     return Container(
         child: FutureBuilder<User>(
-          future: dataProvider.fetchUserById(signature.contractorId!),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Row(
-                children: [
-                  Text("Signature of ${snapshot.data!.name}"),
-                  SizedBox(width: 10),
-                  Text("Signature Text: ${signature.signatureText}"),
-                  SizedBox(width: 10),
-                  Text("Signing Date: ${signature.createDate!.toIso8601String().substring(0, 10)}"),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text("Error loading signature: ${snapshot.error}");
-            }
-            return Center(child: CircularProgressIndicator());
-          }
-        ));
+            future: dataProvider.fetchUserById(signature.contractorId!),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Row(
+                  children: [
+                    Text("Signature of ${snapshot.data!.name}"),
+                    SizedBox(width: 10),
+                    Text("Signature Text: ${signature.signatureText}"),
+                    SizedBox(width: 10),
+                    Text(
+                        "Signing Date: ${signature.createDate!.toIso8601String().substring(0, 10)}"),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text("Error loading signature: ${snapshot.error}");
+              }
+              return Center(child: CircularProgressIndicator());
+            }));
   }
 
   Widget contractDetailText(String type, String content) {
@@ -1021,7 +1023,7 @@ class _ContractCreationState extends State<ViewContract> {
     } else {
       return Tooltip(
           message: "Clause status could not be read.",
-          child: Icon(Icons.question_mark, color: Colors.grey, size: 30));
+          child: Icon(Icons.error, color: Colors.grey, size: 30));
     }
   }
 
@@ -1062,7 +1064,7 @@ class _ContractCreationState extends State<ViewContract> {
       return Tooltip(
           message:
               "The contract's status could not be read. Please review the contract.",
-          child: Icon(Icons.question_mark, color: Colors.blue, size: 50));
+          child: Icon(Icons.error, color: Colors.blue, size: 50));
     }
   }
 

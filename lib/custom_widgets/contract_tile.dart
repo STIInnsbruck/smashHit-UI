@@ -7,8 +7,9 @@ class ContractTile extends StatefulWidget {
   final Function() refresh;
   final Contract? contract;
   final String? userId;
+  final int? index;
 
-  ContractTile(this.changeScreen, this.refresh, this.contract, this.userId);
+  ContractTile(this.changeScreen, this.refresh, this.contract, this.userId, this.index);
 
   @override
   _ContractTileState createState() => _ContractTileState();
@@ -67,19 +68,20 @@ class _ContractTileState extends State<ContractTile> {
       child: Center(
         child: Row(
           children: [
+            Expanded(child: Center(child: Text("${widget.index}."))),
             Expanded(flex: 1, child: Align(alignment: Alignment.center, child: Icon(Icons.folder_shared, size: 25))),
             Expanded(
-                flex: 4,
+                flex: 8,
                 child: Text('${widget.contract!.contractId!}',
                     overflow: TextOverflow.ellipsis)),
             Expanded(
-                flex: 3,
+                flex: 6,
                 child: Text('${widget.contract!.purpose}',
                     overflow: TextOverflow.ellipsis)),
-            Expanded(flex: 2, child: contractSignedIcon()),
-            Expanded(flex: 1, child: contractIconByStatus(widget.contract!.contractStatus!)),
+            Expanded(flex: 4, child: contractSignedIcon()),
+            Expanded(flex: 2, child: contractIconByStatus(widget.contract!.contractStatus!)),
             Expanded(
-              flex: 2,
+              flex: 4,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -257,7 +259,7 @@ class _ContractTileState extends State<ContractTile> {
       return Tooltip(
           message:
           "The contract's status could not be read. Please review the contract.",
-          child: Icon(Icons.question_mark, color: Colors.blue, size: 30));
+          child: Icon(Icons.error, color: Colors.blue, size: 30));
     }
   }
 
@@ -311,6 +313,7 @@ class _ContractTileState extends State<ContractTile> {
                     _showDeletingDialog();
                     if (await dataProvider.deleteContractById(contractId)) {
                       _dismissDialog();
+                      widget.refresh();
                       showSuccessfulDeletionDialog(contractId);
                     } else {
                       _dismissDialog();
@@ -323,7 +326,6 @@ class _ContractTileState extends State<ContractTile> {
   }
 
   showSuccessfulDeletionDialog(String contractId) {
-    widget.refresh();
     showDialog(
         context: context,
         builder: (context) {
