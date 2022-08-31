@@ -1023,7 +1023,7 @@ class _ContractCreationState extends State<ViewContract> {
     } else {
       return Tooltip(
           message: "Clause status could not be read.",
-          child: Icon(Icons.question_mark, color: Colors.grey, size: 30));
+          child: Icon(Icons.error, color: Colors.grey, size: 30));
     }
   }
 
@@ -1064,7 +1064,7 @@ class _ContractCreationState extends State<ViewContract> {
       return Tooltip(
           message:
               "The contract's status could not be read. Please review the contract.",
-          child: Icon(Icons.question_mark, color: Colors.blue, size: 50));
+          child: Icon(Icons.error, color: Colors.blue, size: 50));
     }
   }
 

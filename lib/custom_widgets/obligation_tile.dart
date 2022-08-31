@@ -165,7 +165,7 @@ class _ObligationTileState extends State<ObligationTile> {
     } else {
       return Tooltip(
           message: "Clause status could not be read.",
-          child: Icon(Icons.question_mark, color: Colors.grey, size: 30));
+          child: Icon(Icons.error, color: Colors.grey, size: 30));
     }
   }
 }

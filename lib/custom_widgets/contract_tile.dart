@@ -259,7 +259,7 @@ class _ContractTileState extends State<ContractTile> {
       return Tooltip(
           message:
           "The contract's status could not be read. Please review the contract.",
-          child: Icon(Icons.question_mark, color: Colors.blue, size: 30));
+          child: Icon(Icons.error, color: Colors.blue, size: 30));
     }
   }
 
