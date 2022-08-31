@@ -15,12 +15,29 @@ import 'package:smashhit_ui/screens/term_type_view.dart';
 import 'package:smashhit_ui/screens/obligation_dashboard.dart';
 import 'package:smashhit_ui/screens/contractors_view.dart';
 
+
+const int DASHBOARD_PAGE = 0;
+const int CONTRACT_CREATION_PAGE = 1;
+const int CONTRACT_VIEW_PAGE = 2;
+const int TEMPLATE_SELECTOR_PAGE = 3;
+const int CONTRACT_VIOLATION_PAGE = 4;
+const int LOGIN_PAGE = 5;
+const int CONTRACT_UPDATE_PAGE = 6;
+const int PROFILE_EDITOR_PAGE = 7;
+const int CONTRACT_PARTY_PROFILE_PAGE = 8;
+const int TERM_TYPE_CREATION_PAGE = 9;
+const int TERM_TYPE_VIEW_PAGE = 10;
+const int OBLIGATIONS_DASHBOARD = 11;
+const int CONTRACTOR_VIEW_PAGE = 12;
+
 class BasePage extends StatefulWidget {
   @override
   _BasePageState createState() => _BasePageState();
 }
 
 class _BasePageState extends State<BasePage> {
+
+
   int _selectedIndex = 5;
   String _selectedTitle = "";
   Widget? _selectedPage;
@@ -37,7 +54,8 @@ class _BasePageState extends State<BasePage> {
   bool offlineMode = false;
 
   _BasePageState() {
-    _selectedPage = LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
+    _selectedPage =
+        LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
     _selectedTitle = "Login Screen";
   }
 
@@ -45,95 +63,103 @@ class _BasePageState extends State<BasePage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return DefaultTabController(
-      initialIndex: 1,
-      length: 4,
-      child: Scaffold(
-        appBar: _selectedIndex == 5 ? null : AppBar(
-          backgroundColor: Colors.blue,
-          title: Center(child: Text(_selectedTitle)),
-          actions: [checkComplianceButton(), searchField(screenWidth), searchButton()],
-        ),
-        drawer: Drawer(
-          child: ListView(padding: EdgeInsets.zero, children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: userInformation(screenWidth),
-            ),
-            ListTile(
-              title: Text("Contracts Dashboard"),
-              onTap: () {
-                changeScreen(0);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("View My Obligations"),
-              onTap: () {
-                changeScreen(11);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("View Data Requesters"),
-              onTap: () {
-                changeScreen(12);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("View Term Types"),
-              onTap: () {
-                changeScreen(10);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("Create a new term"),
-              onTap: () {
-                changeScreen(9);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("Create a new contract"),
-              onTap: () {
-                changeScreen(3);
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Row(children: [
-                Icon(Icons.person),
-                SizedBox(width: 5),
-                Text("Profile")
-              ]),
-              onTap: () {
-                changeScreen(7);
-                Navigator.of(context).pop();
-              },
-            ),
-            //Spacer(),
-            ListTile(
-              title: Row(children: [
-                Icon(Icons.logout),
-                SizedBox(width: 5),
-                Text("Logout")
-              ]),
-              onTap: () {
-                changeScreen(5);
-                Navigator.of(context).pop();
-              },
-            ),
-          ]),
-        ),
-        body: Stack(
-          children: [
-            _selectedIndex == 0? Dashboard(changeScreen, user, searchId, offlineMode) : _selectedPage!,
-            _isComplianceChecking ? showCheckingCompliance() : Container()
-          ],
-        ),
-        resizeToAvoidBottomInset: true,
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: _selectedIndex == LOGIN_PAGE
+          ? null
+          : AppBar(
+        backgroundColor: Colors.blue,
+        title: Center(child: Text(_selectedTitle)),
+        actions: [
+          checkComplianceButton(),
+          searchField(screenWidth),
+          searchButton()
+        ],
+      ),
+      drawer: _selectedIndex == LOGIN_PAGE
+          ? null
+          :Drawer(
+        child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: userInformation(screenWidth),
+          ),
+          ListTile(
+            title: Text("Contracts Dashboard"),
+            onTap: () {
+              changeScreen(DASHBOARD_PAGE);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text("View My Obligations"),
+            onTap: () {
+              changeScreen(OBLIGATIONS_DASHBOARD);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text("View Data Requesters"),
+            onTap: () {
+              changeScreen(CONTRACTOR_VIEW_PAGE);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text("View Term Types"),
+            onTap: () {
+              changeScreen(TERM_TYPE_VIEW_PAGE);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text("Create a new term"),
+            onTap: () {
+              changeScreen(TERM_TYPE_CREATION_PAGE);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text("Create a new contract"),
+            onTap: () {
+              changeScreen(TEMPLATE_SELECTOR_PAGE);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Row(children: [
+              Icon(Icons.person),
+              SizedBox(width: 5),
+              Text("Profile")
+            ]),
+            onTap: () {
+              changeScreen(PROFILE_EDITOR_PAGE);
+              Navigator.of(context).pop();
+            },
+          ),
+          //Spacer(),
+          ListTile(
+            title: Row(children: [
+              Icon(Icons.logout),
+              SizedBox(width: 5),
+              Text("Logout")
+            ]),
+            onTap: () {
+              changeScreen(LOGIN_PAGE);
+              Navigator.of(context).pop();
+            },
+          ),
+        ]),
+      ),
+      body: Stack(
+        children: [
+          _selectedIndex == DASHBOARD_PAGE
+              ? Dashboard(changeScreen, user, searchId, offlineMode)
+              : _selectedPage!,
+          _isComplianceChecking
+              ? showCheckingCompliance()
+              : Container()
+        ],
       ),
     );
   }
@@ -142,56 +168,60 @@ class _BasePageState extends State<BasePage> {
     setState(() {
       _selectedIndex = x;
       switch (_selectedIndex) {
-        case 0:
+        case DASHBOARD_PAGE:
           _selectedPage = Dashboard(changeScreen, user, searchId, offlineMode);
           _selectedTitle = "Contracts Dashboard";
           break;
-        case 1:
+        case CONTRACT_CREATION_PAGE:
           _selectedPage = ContractCreation(changeScreen, user, offlineMode);
           _selectedTitle = "Contract Creation";
           break;
-        case 2:
+        case CONTRACT_VIEW_PAGE:
           _selectedPage = ViewContract(changeScreen, id!, user, offlineMode);
           _selectedTitle = "Contract ID: $id";
           (context as Element).performRebuild();
           break;
-        case 3:
+        case TEMPLATE_SELECTOR_PAGE:
           _selectedPage = TemplateSelector(changeScreen, user);
           _selectedTitle = "Template Selector";
           break;
-        case 4:
-          _selectedPage = ContractViolation(changeScreen, id!, user, obligations!, offlineMode);
+        case CONTRACT_VIOLATION_PAGE:
+          _selectedPage = ContractViolation(
+              changeScreen, id!, user, obligations!, offlineMode);
           _selectedTitle = "Violation Claim";
           break;
-        case 5:
-          _selectedPage = LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
+        case LOGIN_PAGE:
+          _selectedPage =
+              LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
           _selectedTitle = "Login Screen";
           break;
-        case 6:
+        case CONTRACT_UPDATE_PAGE:
           _selectedPage = UpdateScreen(changeScreen, id!, user, offlineMode);
           _selectedTitle = "Change & Update Your Contract";
           break;
-        case 7:
+        case PROFILE_EDITOR_PAGE:
           _selectedPage = ProfileEditorPage(changeScreen, userId!, offlineMode);
           _selectedTitle = "Profile Editor";
           break;
-        case 8:
+        case CONTRACT_PARTY_PROFILE_PAGE:
           _selectedPage = ContractPartyProfile(changeScreen, id!, offlineMode);
           _selectedTitle = "Profile";
           break;
-        case 9:
-          _selectedPage = TermTypeCreationPage(changeScreen, user, offlineMode, id);
+        case TERM_TYPE_CREATION_PAGE:
+          _selectedPage =
+              TermTypeCreationPage(changeScreen, user, offlineMode, id);
           _selectedTitle = "Create Clause Types";
           break;
-        case 10:
+        case TERM_TYPE_VIEW_PAGE:
           _selectedPage = TermTypeViewPage(changeScreen, user, offlineMode);
           _selectedTitle = "View Clause Types";
           break;
-        case 11:
-          _selectedPage = ObligationsDashboard(changeScreen, user, searchId, offlineMode);
+        case OBLIGATIONS_DASHBOARD:
+          _selectedPage =
+              ObligationsDashboard(changeScreen, user, searchId, offlineMode);
           _selectedTitle = "View My Obligations";
           break;
-        case 12:
+        case CONTRACTOR_VIEW_PAGE:
           _selectedPage = ContractorViewPage(changeScreen, user, offlineMode);
           _selectedTitle = "View Data Requesters";
       }
@@ -205,12 +235,12 @@ class _BasePageState extends State<BasePage> {
         color: Colors.grey[50],
         child: Center(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                Text("Checking contract compliance. Please wait.")
-              ],
-            )));
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            Text("Checking contract compliance. Please wait.")
+          ],
+        )));
   }
 
   setUserId(String agentId) {
@@ -277,7 +307,9 @@ class _BasePageState extends State<BasePage> {
           ],
         ),
       ),
-      onSelected: (value) { print("Selected value: $value"); },
+      onSelected: (value) {
+        print("Selected value: $value");
+      },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<Object>>[
         PopupMenuItem(child: Text("Example Notification 1")),
         PopupMenuItem(child: Text("Example Notification 2")),
@@ -294,9 +326,13 @@ class _BasePageState extends State<BasePage> {
       child: IconButton(
         icon: Icon(Icons.published_with_changes),
         onPressed: () async {
-          setState(() { _isComplianceChecking = true; });
+          setState(() {
+            _isComplianceChecking = true;
+          });
           bool flag = await dataProvider.checkCompliance();
-          setState(() { _isComplianceChecking = false; });
+          setState(() {
+            _isComplianceChecking = false;
+          });
         },
       ),
     );
@@ -307,7 +343,7 @@ class _BasePageState extends State<BasePage> {
       icon: Icon(Icons.search),
       iconSize: 30,
       onPressed: () {
-        changeScreen(2, searchBarController.text);
+        changeScreen(CONTRACT_VIEW_PAGE, searchBarController.text);
       },
     );
   }
@@ -322,7 +358,9 @@ class _BasePageState extends State<BasePage> {
       children: [
         CircleAvatar(
           backgroundColor: Colors.blue,
-          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
+          backgroundImage:
+              Image.asset('assets/images/placeholders/example_profile_pic.png')
+                  .image,
           radius: 50,
         ),
         Text("Max Mustermann")

@@ -112,7 +112,7 @@ class _ContractFormState extends State<ContractForm> {
         contractStepOne(formWidth),
         contractStepTwo(formWidth),
         contractStepThree(formWidth),
-        contractStepObligation(formWidth),
+        contractStepFour(formWidth),
         contractStepFinal(formWidth),
       ])),
       Container(
@@ -231,7 +231,7 @@ class _ContractFormState extends State<ContractForm> {
     ]);
   }
 
-  Widget contractStepObligation(double width) {
+  Widget contractStepFour(double width) {
     return Column(children: [
       ContractStepHeader(
           width: width,
@@ -277,6 +277,7 @@ class _ContractFormState extends State<ContractForm> {
         ContractStepHeader(
             width: width,
             name: "Final Step - Overview",
+            stepComplete: false,
             onPressed: () => setStepFinal()),
         contractStep == 5
             ? ContractStepBody(width: width, children: [
