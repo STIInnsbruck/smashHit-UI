@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
+import 'package:smashhit_ui/misc/contractor_roles.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
@@ -24,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   double smallSide = 10;
   late Future<User> futureUser = User() as Future<User>;
   User? user;
+  String? selectedRole;
 
   bool offlineMode = false;
 
@@ -300,6 +302,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   _addressFocus.unfocus();
                 }
             ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select a role.';
+                      }
+                    },
+                    isExpanded: true,
+                    items: contractorRoles,
+                    hint: Text("Select your role"),
+                    value: selectedRole,
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedRole = value!;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -372,7 +398,7 @@ class _LoginScreenState extends State<LoginScreen> {
       city: city.text,
       phone: phone.text,
       streetAddress: address.text,
-      role: "DataSubject",
+      role: selectedRole,
       companyId: "cm_86ff4c94-fc62-11ec-93f2-b5bccd42b8bf",
       createDate: DateTime.now(),
       vat: "1111"

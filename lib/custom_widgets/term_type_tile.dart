@@ -6,8 +6,9 @@ class TermTypeTile extends StatefulWidget {
   final Function(String) removeTermType;
   final Function(int, [String]) changeScreen;
   final TermType termType;
+  final int? index;
 
-  TermTypeTile({required this.termType, required this.removeTermType, required this.changeScreen});
+  TermTypeTile({required this.termType, required this.removeTermType, required this.changeScreen, this.index});
 
   @override
   _TermTypeTileState createState() => _TermTypeTileState();
@@ -35,32 +36,23 @@ class _TermTypeTileState extends State<TermTypeTile> {
             child:
             Row(
               children: [
+                Expanded(child: Center(child: Text("${widget.index}."))),
+                Expanded(flex: 2, child: Icon(Icons.description, size: 25)),
+                Expanded(flex: 8, child: Text(widget.termType.id!, overflow: TextOverflow.ellipsis)),
+                Expanded(flex: 4, child: Text(widget.termType.name!, overflow: TextOverflow.ellipsis)),
+                Expanded(flex: 16, child: Text(widget.termType.description!, textAlign: TextAlign.justify, maxLines: 3, overflow: TextOverflow.ellipsis)),
                 Expanded(
-                  flex: 28,
-                  child: MaterialButton(
-                    height: double.infinity,
-                    onPressed: () {
-                      setState(() {
-                        expand = !expand;
-                      });
-                    },
+                  flex: 4,
+                  child: Center(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Expanded(flex: 2, child: Icon(Icons.description, size: 25)),
-                        Expanded(
-                            flex: 22,
-                            child: Text('Name: ${widget.termType.name}\tID: ${widget.termType.id}', overflow: TextOverflow.ellipsis)
-                        ),
-                        //Spacer(flex: 25),
-                        Spacer(flex: 3),
+                        editTermTypeButton(widget.termType.id!),
+                        deleteTermTypeButton(widget.termType.id!),
                       ],
                     ),
                   ),
                 ),
-                editTermTypeButton(widget.termType.id!),
-                Spacer(),
-                deleteTermTypeButton(widget.termType.id!),
-                Spacer()
               ],
             ),
         )

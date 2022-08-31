@@ -37,6 +37,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
                   termTypeList = snapshot.data;
                   return Column(
                     children: [
+                      listHeader(),
                       snapshot.data!.isEmpty
                           ? noTermTypesText() : termTypeListWidget()
                     ],
@@ -49,10 +50,29 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: createTermTypeButton(),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: createTermTypeButton(),
+            ),
           ),
+          SizedBox(height: 5)
         ],
       )
+    );
+  }
+
+  ListTile listHeader() {
+    return ListTile(
+      title: Row(
+        children: [
+          Spacer(),
+          Expanded(flex: 2, child: Text("Type", textAlign: TextAlign.center)),
+          Expanded(flex: 8, child: Text("ID")),
+          Expanded(flex: 4, child: Text("Name")),
+          Expanded(flex: 16, child: Text("Description")),
+          Expanded(flex: 4, child: Text("Actions", textAlign: TextAlign.center))
+        ],
+      ),
     );
   }
 
@@ -61,7 +81,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
       child: ListView.builder(
         itemCount: termTypeList!.length,
         itemBuilder: (BuildContext context, int index) {
-          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType, changeScreen: widget.changeScreen);
+          return TermTypeTile(termType: termTypeList![index], removeTermType: removeTermType, changeScreen: widget.changeScreen, index: index+1);
         }
       )
     );
@@ -88,7 +108,7 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
           },
           color: Colors.green,
           hoverColor: Colors.lightGreen,
-          child: Text("Create A New Type", style: TextStyle(color: Colors.white))
+          child: Text("Create A New Term Type", style: TextStyle(color: Colors.white))
       ),
     );
   }

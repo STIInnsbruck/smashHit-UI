@@ -6,8 +6,9 @@ class ObligationTile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
   final Obligation? obligation;
   final String? userId;
+  final int? index;
 
-  ObligationTile(this.changeScreen, this.obligation, this.userId);
+  ObligationTile(this.changeScreen, this.obligation, this.userId, this.index);
 
   @override
   _ObligationTileState createState() => _ObligationTileState();
@@ -63,17 +64,18 @@ class _ObligationTileState extends State<ObligationTile> {
       child: Center(
         child: Row(
           children: [
-            Expanded(flex: 1, child: Align(alignment: Alignment.center, child: Text("Obligation"))),
+            Expanded(child: Center(child: Text("${widget.index}."))),
+            Expanded(flex: 2, child: Align(alignment: Alignment.centerLeft, child: Text("Obligation"))),
             Expanded(
-                flex: 4,
+                flex: 8,
                 child: Text('${widget.obligation!.id!}',
                     overflow: TextOverflow.ellipsis)),
             Expanded(
-                flex: 8,
+                flex: 16,
                 child: Text('${widget.obligation!.description}',
                     overflow: TextOverflow.ellipsis)),
-            Expanded(flex: 1, child: Text('${widget.obligation!.endDate!.toIso8601String().substring(0,10)}')),
-            Expanded(flex: 1, child: obligationIconByStatus(widget.obligation!.state!)),
+            Expanded(flex: 2, child: Text('${widget.obligation!.endDate!.toIso8601String().substring(0,10)}', textAlign: TextAlign.left,)),
+            Expanded(flex: 2, child: obligationIconByStatus(widget.obligation!.state!)),
           ],
         ),
       ),
@@ -163,7 +165,7 @@ class _ObligationTileState extends State<ObligationTile> {
     } else {
       return Tooltip(
           message: "Clause status could not be read.",
-          child: Icon(Icons.question_mark, color: Colors.grey, size: 30));
+          child: Icon(Icons.error, color: Colors.grey, size: 30));
     }
   }
 }
