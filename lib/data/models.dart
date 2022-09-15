@@ -56,17 +56,17 @@ class User {
 /// then make the startDate and endDate the same date.
 class Contract {
   String? consentId;
-  String? contractId;
-  String? contractCategory;
-  String? contractStatus;
-  String? contractType;
+  String? id;
+  String? category;
+  String? status;
+  String? type;
   DateTime? effectiveDate;
   DateTime? endDate;
   DateTime? executionDate;
   String? medium;
   String? purpose;
-  String? considerationDescription;
-  String? considerationValue;
+  String? consideration;
+  String? value;
   List contractors = [];
   List obligations = [];
   List terms = [];
@@ -74,24 +74,24 @@ class Contract {
 
 
   Contract({
-    this.contractId,
+    this.id,
     this.consentId,
-    this.contractCategory,
-    this.contractStatus,
-    this.contractType,
+    this.category,
+    this.status,
+    this.type,
     this.executionDate,
     this.endDate,
     this.effectiveDate,
     this.medium,
     this.purpose,
-    this.considerationDescription,
-    this.considerationValue
+    this.consideration,
+    this.value
   });
 
   /// Returns an int given the contract's status. The int is needed for the
   /// contract_status_bar as it takes in an int to track the process.
   int getContractStatusAsInt() {
-    switch (contractStatus) {
+    switch (status) {
       case "http://ontologies.atb-bremen.de/smashHitCore#Created":
         return 0;
       case "http://ontologies.atb-bremen.de/smashHitCore#Offer":
@@ -109,7 +109,7 @@ class Contract {
   }
 
   String getContractType() {
-    return this.contractType!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.type!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   String getFormattedEffectiveDate() {
@@ -141,7 +141,7 @@ class Contract {
   }
 
   String formatContractId() {
-    return this.contractId!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
+    return this.id!.replaceAll('http://ontologies.atb-bremen.de/smashHitCore#', '');
   }
 
   static DateTime formatDate(String dateString) {
@@ -167,7 +167,7 @@ class Contract {
   /// an icon. In the event of having a contract type that is not listed, the
   /// default icon Icon.description is given.
   IconData getIconDataFromContractType() {
-    switch (contractType) {
+    switch (type) {
     }
     //Default icon incase another type of Contract was given but is not listed here.
     return Icons.description;

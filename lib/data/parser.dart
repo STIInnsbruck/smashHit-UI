@@ -61,18 +61,18 @@ class ResponseParser {
   Contract parseContractById(Map jsonContract) {
     //Initiate contract with its base data.
     Contract contract = new Contract(
-        contractId:               jsonContract['contractId'],
-        contractStatus:           jsonContract['contractStatus'],
-        contractType:             jsonContract['contractType'],
+        id:               jsonContract['contractId'],
+        status:           jsonContract['contractStatus'],
+        type:             jsonContract['contractType'],
         effectiveDate:            formatDate(jsonContract["effectiveDate"]),
         executionDate:            formatDate(jsonContract["executionDate"]),
         endDate:                  formatDate(jsonContract["endDate"]),
         medium:                   jsonContract["medium"],
         purpose:                  jsonContract['purpose'],
         consentId:                jsonContract['consentId'],
-        considerationDescription: jsonContract['consideration'],
-        considerationValue:       jsonContract['value'],
-        contractCategory:         jsonContract['contractCategory']
+        consideration: jsonContract['consideration'],
+        value:       jsonContract['value'],
+        category:         jsonContract['contractCategory']
     );
     //Set the initiated contracts identifier lists.
     contract.contractors = jsonContract['identifiers']['contractors'];

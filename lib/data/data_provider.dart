@@ -137,7 +137,7 @@ class DataProvider {
   Future<bool> createContract(Contract contract) async {
 
     var body = {
-      "ContractId": contract.contractId!.replaceAll(' ', ''),
+      "ContractId": contract.id!.replaceAll(' ', ''),
       "ContractStatus": "string"
     };
 
@@ -162,11 +162,11 @@ class DataProvider {
   Future<String> createBaseContract(Contract contract) async {
     var body = {
       "ConsentId": "string",
-      "ConsiderationDescription": contract.considerationDescription,
-      "ConsiderationValue": contract.considerationValue,
-      "ContractCategory": contract.contractCategory,
-      "ContractStatus": contract.contractStatus,
-      "ContractType": contract.contractType,
+      "ConsiderationDescription": contract.consideration,
+      "ConsiderationValue": contract.value,
+      "ContractCategory": contract.category,
+      "ContractStatus": contract.status,
+      "ContractType": contract.type,
       "Contractors": contract.contractors,
       "EffectiveDate": contract.effectiveDate!.toIso8601String(),
       "EndDate":contract.endDate!.toIso8601String(),
@@ -193,7 +193,7 @@ class DataProvider {
       Contract contract;
       try {
         contract = parser.parseContractById(jsonDecode(response.body));
-        return contract.contractId!;
+        return contract.id!;
       } catch (e) {
         throw Exception('Failed to load contract.');
       }
@@ -247,12 +247,12 @@ class DataProvider {
   Future<int> updateContract(Contract contract) async {
     var body = {
       "ConsentId": "string",
-      "ConsiderationDescription": contract.considerationDescription,
-      "ConsiderationValue": contract.considerationValue,
-      "ContractCategory": contract.contractCategory,
-      "ContractId": contract.contractId,
-      "ContractStatus": contract.contractStatus,
-      "ContractType": contract.contractType,
+      "ConsiderationDescription": contract.consideration,
+      "ConsiderationValue": contract.value,
+      "ContractCategory": contract.category,
+      "ContractId": contract.id,
+      "ContractStatus": contract.status,
+      "ContractType": contract.type,
       "Contractors": contract.contractors,
       "EffectiveDate": contract.effectiveDate!.toIso8601String(),
       "EndDate": contract.endDate!.toIso8601String(),
@@ -303,7 +303,7 @@ class DataProvider {
 
   Future<Obligation> createObligation(Contract contract, Obligation obligation) async {
     var body = {
-      "ContractId": contract.contractId,
+      "ContractId": contract.id,
       "ContractIdB2C": "string",
       "ContractorId": obligation.contractorId,
       "Description": obligation.description,

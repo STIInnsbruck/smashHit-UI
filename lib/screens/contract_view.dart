@@ -319,7 +319,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               child:
-                  Center(child: contractIconByStatus(contract.contractStatus!)),
+                  Center(child: contractIconByStatus(contract.status!)),
             ),
           ),
         ],
@@ -444,7 +444,7 @@ class _ContractCreationState extends State<ViewContract> {
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: contractDetailText(
-                      "Contract ID: ", "${contract.contractId}")),
+                      "Contract ID: ", "${contract.id}")),
             ),
           ),
           Padding(
@@ -452,7 +452,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: contractDetailText(
-                  "Contract Type: ", "${contract.contractType}"),
+                  "Contract Type: ", "${contract.type}"),
             ),
           ),
           Padding(
@@ -468,7 +468,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: contractDetailText(
-                  "Contract Category: ", "${contract.contractCategory}"),
+                  "Contract Category: ", "${contract.category}"),
             ),
           ),
           Column(
@@ -486,7 +486,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: contractDetailText(
-                  "Consideration: ", "${contract.considerationDescription}"),
+                  "Consideration: ", "${contract.consideration}"),
             ),
           ),
           contractTAC(contract),
