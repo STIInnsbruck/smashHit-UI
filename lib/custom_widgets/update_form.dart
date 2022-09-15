@@ -104,7 +104,7 @@ class _UpdateFormState extends State<UpdateForm> {
             ),
             Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                child: Text('Contract ID: ${widget.contract.contractId}')),
+                child: Text('Contract ID: ${widget.contract.id}')),
             Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5 , 5),
                 child: Text('Contract Type: ${widget.contract.getContractType()}')),
@@ -113,13 +113,13 @@ class _UpdateFormState extends State<UpdateForm> {
                 child: Text('Contract Medium: ${widget.contract.medium}')),
             Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5 , 5),
-                child: Text('Contract Category: ${widget.contract.contractCategory}')),
+                child: Text('Contract Category: ${widget.contract.category}')),
             Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5 , 5),
                 child: Text('Purpose: ${widget.contract.purpose}')),
             Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
-                child: Text('Consideration: ${widget.contract.considerationDescription}')),
+                child: Text('Consideration: ${widget.contract.consideration}')),
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 0, 5, 15),
               child: Row(

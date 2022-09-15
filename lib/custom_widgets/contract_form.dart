@@ -1119,15 +1119,15 @@ class _ContractFormState extends State<ContractForm> {
     _toggleLoading();
     setBaseContractDetails();
     //create contract
-    contract.contractId = await dataProvider.createBaseContract(contract);
+    contract.id = await dataProvider.createBaseContract(contract);
     //add signature if already signed by contract creator
     if (_hasSigned) {
-      Signature tmpSignature = await dataProvider.createSignature(createSignatureObject(contract.contractId!));
+      Signature tmpSignature = await dataProvider.createSignature(createSignatureObject(contract.id!));
       contract.signatures.add(tmpSignature.id!);
     }
     //create a term associated to the created base contract.
     _termMap.forEach((key, value) async {
-      Term tempTerm = await dataProvider.createTerm(contract.contractId!,
+      Term tempTerm = await dataProvider.createTerm(contract.id!,
           value.textController.text, value.term.termTypeId!);
       value.term.id = tempTerm.id;
       contract.terms.add(tempTerm.id!);
@@ -1138,7 +1138,7 @@ class _ContractFormState extends State<ContractForm> {
           obl.obligation.contractorId = obl.selectedContractor!.id;
           obl.obligation.description = obl.textController.text;
           obl.obligation.state = "statePending";
-          obl.obligation.contractId = contract.contractId;
+          obl.obligation.contractId = contract.id;
           Obligation tmpObligation =
               await dataProvider.createObligation(contract, obl.obligation);
           contract.obligations.add(tmpObligation.id!);
@@ -1148,7 +1148,7 @@ class _ContractFormState extends State<ContractForm> {
           //all obligations have been added, stop loading
           _toggleLoading();
           //navigate to contract viewing page
-          widget.changeScreen(2, '${contract.contractId!}');
+          widget.changeScreen(2, '${contract.id!}');
         }
       });
     });
@@ -1187,10 +1187,10 @@ class _ContractFormState extends State<ContractForm> {
             child:
                 Text("Confirm Changes", style: TextStyle(color: Colors.white)),
             onPressed: () {
-              print("Original contract ID: ${widget.contract!.contractId!}");
+              print("Original contract ID: ${widget.contract!.id!}");
               setState(() {
                 widget.contract = tmpContract;
-                print("Modified contract ID: ${widget.contract!.contractId!}");
+                print("Modified contract ID: ${widget.contract!.id!}");
               });
               widget.toggleEditing!(null);
             }));
@@ -1810,11 +1810,11 @@ class _ContractFormState extends State<ContractForm> {
   }
 
   void setBaseContractDetails() {
-    contract.considerationDescription = considerationDescController.text;
-    contract.considerationValue = considerationValController.text;
-    contract.contractCategory = contractCategory;
-    contract.contractStatus = "hasCreated";
-    contract.contractType = contractType;
+    contract.consideration = considerationDescController.text;
+    contract.value = considerationValController.text;
+    contract.category = contractCategory;
+    contract.status = "hasCreated";
+    contract.type = contractType;
     for (User user in addedContractors) {
       contract.contractors.add(user.id);
     }

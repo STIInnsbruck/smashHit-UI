@@ -177,7 +177,7 @@ class _ClaimFormState extends State<ClaimForm> {
               child: Row(
                 children: [
                   Text("Consideration: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(widget.contract.considerationDescription!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                  Text(widget.contract.consideration!,style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                 ],
               ), violationCallback: setExistsAViolation);
     });
@@ -408,7 +408,7 @@ class _ClaimFormState extends State<ClaimForm> {
   MaterialButton cancelViolationButton() {
     return MaterialButton(
       color: Colors.grey,
-      onPressed: () => widget.changeScreen(2, widget.contract.contractId!),
+      onPressed: () => widget.changeScreen(2, widget.contract.id!),
       child: Text('CANCEL', style: TextStyle(fontSize: 40, color: Colors.white)),
     );
   }
@@ -418,10 +418,10 @@ class _ClaimFormState extends State<ClaimForm> {
         ? MaterialButton(
             color: Colors.green,
             onPressed: () async {
-              widget.contract.contractStatus = "stateViolated";
-              print("new contract status is: ${widget.contract.contractStatus}");
+              widget.contract.status = "stateViolated";
+              print("new contract status is: ${widget.contract.status}");
               await dataProvider.updateContract(widget.contract);
-              widget.changeScreen(2, widget.contract.contractId!);
+              widget.changeScreen(2, widget.contract.id!);
             },
             child: Text('CONFIRM', style: TextStyle(fontSize: 40, color: Colors.white)))
         : MaterialButton(
