@@ -111,7 +111,7 @@ class _DashboardState extends State<Dashboard> {
               return ContractTile(widget.changeScreen, refreshContractList,
                   contractList![index], widget.user!.id, index+1);
             } else {
-              if (contractList![index].contractId!.contains(searchId!)) {
+              if (contractList![index].id!.contains(searchId!)) {
                 return ContractTile(widget.changeScreen, refreshContractList,
                     contractList![index], widget.user!.id, index+1);
               } else {
@@ -243,7 +243,7 @@ class _DashboardState extends State<Dashboard> {
         "Online",
         "Sharing Personal Data",
         "Selling Personal Data",
-        "300",
+        "300", //kept at parse incase type is changed back to string.
         contractors,
         obligations,
         terms);
@@ -328,17 +328,17 @@ class _DashboardState extends State<Dashboard> {
       List obligations,
       List terms) {
     Contract contract = new Contract(
-      contractId: contractId,
-      contractCategory: category,
-      contractStatus: status,
-      contractType: type,
+      id: contractId,
+      category: category,
+      status: status,
+      type: type,
       effectiveDate: effectiveDate,
       endDate: endDate,
       executionDate: executionDate,
       medium: medium,
       purpose: purpose,
-      considerationDescription: considDescription,
-      considerationValue: considValue,
+      consideration: considDescription,
+      value: considValue,
     );
 
     contract.contractors = contractors;
