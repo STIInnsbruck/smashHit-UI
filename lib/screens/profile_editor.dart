@@ -195,7 +195,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   int numCompletedContracts() {
     int numCompleted = 0;
     contracts.forEach((element) {
-      if (element.contractStatus!.contains("Fulfilled") || element.contractStatus!.contains("fulfilled")) {
+      if (element.status!.contains("Fulfilled") || element.status!.contains("fulfilled")) {
         numCompleted++;
       }
     });
@@ -205,7 +205,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   int numRunningContract() {
     int numRunning = 0;
     contracts.forEach((element) {
-      if (element.contractStatus!.contains("Fulfilled") == false || element.contractStatus!.contains("fulfilled") == false) {
+      if (element.status!.contains("Fulfilled") == false || element.status!.contains("fulfilled") == false) {
         numRunning++;
       }
     });

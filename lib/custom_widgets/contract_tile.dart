@@ -39,7 +39,7 @@ class _ContractTileState extends State<ContractTile> {
             ? smallContractTile()
             : bigContractTile(),
         onTap: () {
-          widget.changeScreen(2, '${widget.contract!.contractId!}');
+          widget.changeScreen(2, '${widget.contract!.id!}');
         },
       ),
     );
@@ -72,21 +72,21 @@ class _ContractTileState extends State<ContractTile> {
             Expanded(flex: 1, child: Align(alignment: Alignment.center, child: Icon(Icons.folder_shared, size: 25))),
             Expanded(
                 flex: 8,
-                child: Text('${widget.contract!.contractId!}',
+                child: Text('${widget.contract!.id!}',
                     overflow: TextOverflow.ellipsis)),
             Expanded(
                 flex: 6,
                 child: Text('${widget.contract!.purpose}',
                     overflow: TextOverflow.ellipsis)),
             Expanded(flex: 4, child: contractSignedIcon()),
-            Expanded(flex: 2, child: contractIconByStatus(widget.contract!.contractStatus!)),
+            Expanded(flex: 2, child: contractIconByStatus(widget.contract!.status!)),
             Expanded(
               flex: 4,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  editContractButton(widget.contract!.contractId!),
-                  deleteContractButton(widget.contract!.contractId!),
+                  editContractButton(widget.contract!.id!),
+                  deleteContractButton(widget.contract!.id!),
                 ],
               ),
             ),
@@ -119,7 +119,7 @@ class _ContractTileState extends State<ContractTile> {
                   Icon(Icons.folder_shared, size: 75),
                   SizedBox(
                       width: 200,
-                      child: Text('${widget.contract!.contractId!}',
+                      child: Text('${widget.contract!.id!}',
                           overflow: TextOverflow.ellipsis))
                 ],
               ),
@@ -138,7 +138,7 @@ class _ContractTileState extends State<ContractTile> {
                         children: [
                           Text("Status:"),
                           contractIconByStatus(
-                              widget.contract!.contractStatus!),
+                              widget.contract!.status!),
                         ],
                       ),
                     ),
@@ -152,8 +152,8 @@ class _ContractTileState extends State<ContractTile> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text("Actions:"),
-                            editContractButton(widget.contract!.contractId!),
-                            deleteContractButton(widget.contract!.contractId!),
+                            editContractButton(widget.contract!.id!),
+                            deleteContractButton(widget.contract!.id!),
                           ],
                         ),
                       ),

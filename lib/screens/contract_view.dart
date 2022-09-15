@@ -163,81 +163,103 @@ class _ContractCreationState extends State<ViewContract> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                              child: Center(
-                                  child: Text('Clause',
-                                      style: TextStyle(fontSize: 20))),
+                          Expanded(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                child: Center(
+                                    child: Text('Clause',
+                                        style: TextStyle(fontSize: 15))),
+                              ),
                             ),
                           ),
-                          ListTile(
-                            leading: CircleAvatar(child: Icon(Icons.person)),
-                            title: GestureDetector(
-                                onTap: () {
-                                  widget.changeScreen(8,
-                                      "${obligationSnapshot.data!.contractorId}");
-                                },
-                                child: Text('${userSnapshot.data!.name}')),
+                          Expanded(
+                            flex: 2,
+                            child: ListTile(
+                              leading: CircleAvatar(child: Icon(Icons.person), radius: 15),
+                              title: GestureDetector(
+                                  onTap: () {
+                                    widget.changeScreen(8,
+                                        "${obligationSnapshot.data!.contractorId}");
+                                  },
+                                  child: Text('${userSnapshot.data!.name}')),
+                            ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
+                          SizedBox(height: 5),
+                          Expanded(
+                            flex: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Clause Description: ',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                  Expanded(
+                                    child: Scrollbar(
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: Expanded(
+                                          child: Container(
+                                            child: Text(
+                                              '${obligationSnapshot.data!.description}',
+                                              textAlign: TextAlign.justify,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Clause Description: ',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold)),
-                                Text(
-                                  '${obligationSnapshot.data!.description}',
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.justify,
-                                )
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Time Remaining: ',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                          '${obligationSnapshot.data!.getEndDateAsString()}')
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Status: ',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold)),
+                                      obligationIconByStatus(
+                                          obligationSnapshot.data!.state!)
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          Spacer(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('Time Remaining: ',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                    Text(
-                                        '${obligationSnapshot.data!.getEndDateAsString()}')
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('Status: ',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                    obligationIconByStatus(
-                                        obligationSnapshot.data!.state!)
-                                  ],
-                                ),
-                              ),
-                            ],
+                          Expanded(
+                            flex: 2,
+                            child: Center(
+                                child: obligationCardButton(
+                                    obligationSnapshot.data!,
+                                    userSnapshot.data!)),
                           ),
-                          Spacer(),
-                          Center(
-                              child: obligationCardButton(
-                                  obligationSnapshot.data!,
-                                  userSnapshot.data!)),
-                          Spacer()
+                          SizedBox(height: 5)
                         ],
                       );
                     } else if (userSnapshot.hasError) {
@@ -319,7 +341,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               child:
-                  Center(child: contractIconByStatus(contract.contractStatus!)),
+                  Center(child: contractIconByStatus(contract.status!)),
             ),
           ),
         ],
@@ -444,7 +466,7 @@ class _ContractCreationState extends State<ViewContract> {
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: contractDetailText(
-                      "Contract ID: ", "${contract.contractId}")),
+                      "Contract ID: ", "${contract.id}")),
             ),
           ),
           Padding(
@@ -452,7 +474,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: contractDetailText(
-                  "Contract Type: ", "${contract.contractType}"),
+                  "Contract Type: ", "${contract.type}"),
             ),
           ),
           Padding(
@@ -468,7 +490,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: contractDetailText(
-                  "Contract Category: ", "${contract.contractCategory}"),
+                  "Contract Category: ", "${contract.category}"),
             ),
           ),
           Column(
@@ -486,7 +508,7 @@ class _ContractCreationState extends State<ViewContract> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: contractDetailText(
-                  "Consideration: ", "${contract.considerationDescription}"),
+                  "Consideration: ", "${contract.consideration}"),
             ),
           ),
           contractTAC(contract),
