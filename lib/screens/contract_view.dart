@@ -203,7 +203,7 @@ class _ContractCreationState extends State<ViewContract> {
                                       child: Text(
                                         '${obligationSnapshot.data!.description}',
                                         textAlign: TextAlign.justify,
-                                        maxLines: 5,
+                                        maxLines: 8,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
