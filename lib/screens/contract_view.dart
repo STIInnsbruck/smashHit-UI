@@ -199,17 +199,12 @@ class _ContractCreationState extends State<ViewContract> {
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold)),
                                   Expanded(
-                                    child: Scrollbar(
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Expanded(
-                                          child: Container(
-                                            child: Text(
-                                              '${obligationSnapshot.data!.description}',
-                                              textAlign: TextAlign.justify,
-                                            ),
-                                          ),
-                                        ),
+                                    child: Container(
+                                      child: Text(
+                                        '${obligationSnapshot.data!.description}',
+                                        textAlign: TextAlign.justify,
+                                        maxLines: 5,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   )
