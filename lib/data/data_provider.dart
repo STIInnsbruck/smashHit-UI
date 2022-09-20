@@ -306,7 +306,7 @@ class DataProvider {
       "ContractId": contract.id,
       "ContractIdB2C": "string",
       "ContractorId": obligation.contractorId,
-      "Description": obligation.description,
+      "Description": obligation.description!.replaceAll("\n", ""),
       "EndDate": obligation.endDate!.toIso8601String(),
       "ExecutionDate": obligation.executionDate!.toIso8601String(),
       "State": obligation.state,
@@ -360,7 +360,7 @@ class DataProvider {
     var body = {
       "ContractId": contractId,
       "CreateDate": DateTime.now().toIso8601String(),
-      "Description": description,
+      "Description": description.replaceAll("\n", ""),
       "TermTypeId": termTypeId
     };
     var jsonBody = jsonEncode(body);
