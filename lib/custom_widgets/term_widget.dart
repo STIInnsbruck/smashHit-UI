@@ -103,7 +103,7 @@ class _TermWidgetState extends State<TermWidget> {
                       minLines: null,
                       maxLines: null,
                       controller: widget.textController,
-                      textAlign: TextAlign.justify,
+                      //textAlign: TextAlign.justify,
                       style: TextStyle(height: 1.5),
                     ),
                   )
