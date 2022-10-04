@@ -74,6 +74,7 @@ class _ContractTileState extends State<ContractTile> {
                 flex: 8,
                 child: Text('${widget.contract!.id!}',
                     overflow: TextOverflow.ellipsis)),
+            Expanded(flex: 4, child: Text("Contracting Party")),
             Expanded(
                 flex: 6,
                 child: Text('${widget.contract!.purpose}',

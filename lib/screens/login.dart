@@ -9,9 +9,10 @@ class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
   final Function(String) setUserId;
   final Function(User) setUser;
+  final Function(String) setToken;
   final Function() toggleOfflineMode;
 
-  LoginScreen(this.changeScreen, this.setUserId, this.setUser, this.toggleOfflineMode);
+  LoginScreen(this.changeScreen, this.setUserId, this.setUser, this.setToken, this.toggleOfflineMode);
 
   @override
   _LoginScreenState createState() => new _LoginScreenState();
@@ -31,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //TextField CONTROLLERS for Login
   TextEditingController _loginController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
 
   //TextField CONTROLLERS for Registration
   TextEditingController city = new TextEditingController();
@@ -125,7 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   _loginOfflineMode();
                                 } else {
                                   if(_loginFormKey.currentState!.validate()) {
-                                    _loginUser(_loginController.text);
+                                    //_loginUser(_loginController.text);
+                                    _performLogin(_loginController.text, _passwordController.text);
                                   }
                                 }
                               },
@@ -190,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            //NAME FIELD
             TextFormField(
               controller: _loginController,
               decoration: InputDecoration(
@@ -198,6 +202,20 @@ class _LoginScreenState extends State<LoginScreen> {
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter your name.';
+                }
+              },
+              textAlign: TextAlign.left,
+            ),
+            //PASSWORD FIELD
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: 'Password',
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your password.';
                 }
               },
               textAlign: TextAlign.left,
@@ -425,6 +443,7 @@ class _LoginScreenState extends State<LoginScreen> {
     widget.changeScreen(0);
 }
 
+  ///@deprecated
   _loginUser(String userId) async {
     _toggleLoading();
     try {
@@ -432,6 +451,20 @@ class _LoginScreenState extends State<LoginScreen> {
       _toggleLoading();
       widget.setUserId(userId);
       widget.setUser(user!);
+      widget.changeScreen(0);
+    } catch (e) {
+      _toggleLoading();
+      _showUserNotFoundDialog();
+    }
+  }
+
+  _performLogin(String name, String password) async {
+    _toggleLoading();
+    try {
+      user = await dataProvider.loginUser(name, password);
+      _toggleLoading();
+      widget.setUser(user!);
+      widget.setToken(user!.token!);
       widget.changeScreen(0);
     } catch (e) {
       _toggleLoading();

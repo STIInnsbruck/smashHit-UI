@@ -15,6 +15,7 @@ class DataProvider {
   var headers = {
     'accept': 'application/json',
     'Content-Type': 'application/json',
+    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ik1heCBNdXN0ZXJtYW5uIiwiZXhwIjoxNjY0NjQ4ODI4fQ.rsrJT1aClhUM2-zF4ApknSv7qFupvykA8gfmlHE72T0'
   };
 
   //---------------------------- CONTRACTORS -----------------------------------
@@ -63,6 +64,42 @@ class DataProvider {
   }
 
   Future<User> fetchUserById(String contractorId) async {
+    final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers: headers);
+
+    if (response.statusCode == 200) {
+      try {
+        return parser.parseUserById(jsonDecode(response.body));
+      }catch (e) {
+        throw Exception('Failed to fetch user by id: $contractorId.');
+      }
+
+    } else {
+      throw Exception('Failed to load user by id: $contractorId.');
+    }
+  }
+
+  Future<User> loginUser(String name, String password) async {
+    var body = {
+      "Name": name,
+      "Password": password
+    };
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: '/contract/login/'), headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      try {
+        return parser.parseNewUser(jsonDecode(response.body));
+      }catch (e) {
+        throw Exception('Failed to load user.');
+      }
+
+    } else {
+      throw Exception('Failed to fetch user.');
+    }
+  }
+
+  Future<User> instantLoginMaxMustermann(String contractorId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {

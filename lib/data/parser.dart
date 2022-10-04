@@ -17,6 +17,15 @@ class ResponseParser {
     );
   }
 
+  User parseNewUser(Map jsonUser) {
+    return User(
+      id: jsonUser['id'],
+      email: jsonUser['email'],
+      name: jsonUser['name'],
+      token: jsonUser['token'],
+    );
+  }
+
   User parseUserRegister(Map jsonUser) {
     return User(
       id: jsonUser["contractorId"],

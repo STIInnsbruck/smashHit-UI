@@ -13,6 +13,8 @@ class User {
   String? vat;
   DateTime? createDate;
 
+  String? token;
+
   //---Dummy Contractor Statistics Variables---
   int? numGdprFines;
   // €XX'XXX
@@ -27,7 +29,7 @@ class User {
   int? rating;
 
 
-  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role, this.companyId, this.vat, this.createDate, this.numGdprFines, this.avgFineAmount, this.recentFine, this.recentViolation, this.oblCompetionRate, this.rating});
+  User({this.id, this.name, this.email, this.streetAddress, this.country, this.city, this.phone, this.role, this.companyId, this.vat, this.createDate, this.numGdprFines, this.avgFineAmount, this.recentFine, this.recentViolation, this.oblCompetionRate, this.rating, this.token});
 
   String? get getId => id;
   String? get getName => name;

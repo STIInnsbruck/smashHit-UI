@@ -43,6 +43,7 @@ class _BasePageState extends State<BasePage> {
   Widget? _selectedPage;
   User? user;
   String? userId;
+  String? token;
   final TextEditingController searchBarController = new TextEditingController();
   final FocusNode _searchFocus = FocusNode();
   DataProvider dataProvider = DataProvider();
@@ -55,7 +56,7 @@ class _BasePageState extends State<BasePage> {
 
   _BasePageState() {
     _selectedPage =
-        LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
+        LoginScreen(changeScreen, setUserId, setUser, setToken, toggleOfflineMode);
     _selectedTitle = "Login Screen";
   }
 
@@ -192,7 +193,7 @@ class _BasePageState extends State<BasePage> {
           break;
         case LOGIN_PAGE:
           _selectedPage =
-              LoginScreen(changeScreen, setUserId, setUser, toggleOfflineMode);
+              LoginScreen(changeScreen, setUserId, setUser, setToken, toggleOfflineMode);
           _selectedTitle = "Login Screen";
           break;
         case CONTRACT_UPDATE_PAGE:
@@ -246,6 +247,12 @@ class _BasePageState extends State<BasePage> {
   setUserId(String agentId) {
     setState(() {
       userId = agentId;
+    });
+  }
+
+  setToken(String token) {
+    setState(() {
+      token = token;
     });
   }
 

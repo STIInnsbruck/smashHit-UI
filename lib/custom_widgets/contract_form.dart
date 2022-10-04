@@ -152,7 +152,7 @@ class _ContractFormState extends State<ContractForm> {
                   ],
                 ),
                 SizedBox(height: 10),
-                _wideScreenDateButtonsLayout()
+                _wideScreenDateButtonsLayout(),
               ])
             : Container(),
       ],
