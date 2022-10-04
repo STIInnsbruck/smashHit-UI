@@ -42,13 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController name = new TextEditingController();
   TextEditingController surname = new TextEditingController();
   TextEditingController email = new TextEditingController();
-  TextEditingController phone = new TextEditingController();
+  TextEditingController password = new TextEditingController();
 
   //TextField FOCUSNODES
   final FocusNode _nameFocus = FocusNode();
   final FocusNode _surnameFocus = FocusNode();
   final FocusNode _emailFocus = FocusNode();
-  final FocusNode _phoneFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
   final FocusNode _addressFocus = FocusNode();
 
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: (_signUp? 20 : 40)),
                       _signUp?
-                      registrationForm(smallSide) : loginForm(smallSide),
+                      newRegistrationForm(smallSide) : loginForm(smallSide),
                       SizedBox(height: 20),
                       SizedBox(
                         width: 400,
@@ -113,7 +113,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialButton(
                               onPressed: () {
                                 if (_registrationFormKey.currentState!.validate()) {
-                                  _registerUser();
+                                  //_registerUser();
+                                  _performRegistration(name.text, email.text, password.text);
                                 }
                               },
                               child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
@@ -226,6 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  ///@deprecated
   Widget registrationForm(double screenWidth) {
     return Form(
       key: _registrationFormKey,
@@ -282,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textInputAction: TextInputAction.next,
                 focusNode: _emailFocus,
                 onFieldSubmitted: (v) {
-                  _focusNextTextField(context, _emailFocus, _phoneFocus);
+                  _focusNextTextField(context, _emailFocus, _passwordFocus);
                 }
             ),
             TextFormField(
@@ -294,12 +296,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   return 'Please enter your phone number.';
                 }
               },
-              controller: phone,
+              controller: password,
               textAlign: TextAlign.left,
               textInputAction: TextInputAction.next,
-                focusNode: _phoneFocus,
+                focusNode: _passwordFocus,
                 onFieldSubmitted: (v) {
-                  _focusNextTextField(context, _phoneFocus, _addressFocus);
+                  _focusNextTextField(context, _passwordFocus, _addressFocus);
                 }
             ),
             cscDropdownPicker(screenWidth * 0.30),
@@ -344,6 +346,72 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget newRegistrationForm(double screenWidth) {
+    return Form(
+      key: _registrationFormKey,
+      child: SizedBox(
+        width: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Name',
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your name.';
+                }
+              },
+              controller: name,
+              textAlign: TextAlign.left,
+              textInputAction: TextInputAction.next,
+              focusNode: _nameFocus,
+              onFieldSubmitted: (v) {
+                _focusNextTextField(context, _nameFocus, _surnameFocus);
+              },
+            ),
+            TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your email.';
+                  }
+                },
+                controller: email,
+                textAlign: TextAlign.left,
+                textInputAction: TextInputAction.next,
+                focusNode: _emailFocus,
+                onFieldSubmitted: (v) {
+                  _focusNextTextField(context, _emailFocus, _passwordFocus);
+                }
+            ),
+            TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                ),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your password.';
+                  }
+                },
+                controller: password,
+                textAlign: TextAlign.left,
+                textInputAction: TextInputAction.next,
+                focusNode: _passwordFocus,
+                onFieldSubmitted: (v) {
+                  _passwordFocus.unfocus();
+                }
+            ),
           ],
         ),
       ),
@@ -395,6 +463,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  ///@deprecated
   _registerUser() async {
     _toggleLoading();
     try {
@@ -408,13 +477,29 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  _performRegistration(String name, String email, String password) async {
+    _toggleLoading();
+    try {
+      bool success = await dataProvider.register(name, email, password);
+      _toggleLoading();
+      if (success) {
+        _performLogin(name, password);
+      } else {
+        showRegisterErrorDialog();
+      }
+    } catch (e) {
+      _toggleLoading();
+      showRegisterErrorDialog();
+    }
+  }
+
   User setUser() {
     return User(
       name: (name.text + " " + surname.text),
       email: email.text,
       country: country.text,
       city: city.text,
-      phone: phone.text,
+      phone: password.text,
       streetAddress: address.text,
       role: selectedRole,
       companyId: "cm_86ff4c94-fc62-11ec-93f2-b5bccd42b8bf",

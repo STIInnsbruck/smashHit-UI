@@ -99,6 +99,33 @@ class DataProvider {
     }
   }
 
+  Future<bool> register(String name, String email, String password) async {
+    var body = {
+      "Name": name,
+      "Email": email,
+      "Password": password
+    };
+    var jsonBody = jsonEncode(body);
+
+    final response = await http.post(kBaseUrl.replace(path: '/contract/register/'), headers: headers, body: jsonBody);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      try {
+        if (data.toString().compareTo('{Success: Record added successfully.}') == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        throw Exception('Failed to load user.');
+      }
+
+    } else {
+      throw Exception('Failed to fetch user.');
+    }
+  }
+
   Future<User> instantLoginMaxMustermann(String contractorId) async {
     final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers: headers);
 
