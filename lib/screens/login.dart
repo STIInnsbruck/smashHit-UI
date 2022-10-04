@@ -549,7 +549,7 @@ class _LoginScreenState extends State<LoginScreen> {
       user = await dataProvider.loginUser(name, password);
       _toggleLoading();
       widget.setUser(user!);
-      widget.setToken(user!.token!);
+      widget.setToken(user!.token!);      //probably not needed
       widget.changeScreen(0);
     } catch (e) {
       _toggleLoading();

@@ -10,12 +10,12 @@ class DataProvider {
   //----------------------ACT CONTRACT API DETAILS------------------------------
   static final String kHost = 'actool.contract.sti2.at';
   static final String kBasePath = '/';
+  String? token;
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
 
   var headers = {
     'accept': 'application/json',
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ik1heCBNdXN0ZXJtYW5uIiwiZXhwIjoxNjY0NjQ4ODI4fQ.rsrJT1aClhUM2-zF4ApknSv7qFupvykA8gfmlHE72T0'
   };
 
   //---------------------------- CONTRACTORS -----------------------------------
@@ -123,21 +123,6 @@ class DataProvider {
 
     } else {
       throw Exception('Failed to fetch user.');
-    }
-  }
-
-  Future<User> instantLoginMaxMustermann(String contractorId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers: headers);
-
-    if (response.statusCode == 200) {
-      try {
-        return parser.parseUserById(jsonDecode(response.body));
-      }catch (e) {
-        throw Exception('Failed to fetch user by id: $contractorId.');
-      }
-
-    } else {
-      throw Exception('Failed to load user by id: $contractorId.');
     }
   }
 
@@ -292,10 +277,16 @@ class DataProvider {
     }
   }
 
-  Future<List<Contract>> fetchContractsByContractorId(String contractorId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
+  Future<List<Contract>> fetchContractsByContractorId(String contractorId, String token) async {
+    var headers = {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
 
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
     if (response.statusCode == 200) {
+      var data = json.decode(response.body);
       List<Contract> contracts = [];
       try {
         contracts = parser.parseAllContracts(jsonDecode(response.body));

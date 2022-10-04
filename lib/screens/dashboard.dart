@@ -52,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
         child: !widget.offlineMode
             ? FutureBuilder<List<Contract>>(
                 future: futureContractList =
-                    dataProvider.fetchContractsByContractorId(widget.user!.id!),
+                    dataProvider.fetchContractsByContractorId(widget.user!.id!, widget.user!.token!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     contractList = snapshot.data;

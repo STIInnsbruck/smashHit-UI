@@ -5,10 +5,10 @@ import 'package:smashhit_ui/data/models.dart';
 
 class ProfileEditorPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
-  final String userId;
+  final User? user;
   final bool offlineMode;
 
-  ProfileEditorPage(this.changeScreen, this.userId, this.offlineMode);
+  ProfileEditorPage(this.changeScreen, this.user, this.offlineMode);
 
   @override
   _ProfileEditorPage createState() => _ProfileEditorPage();
@@ -69,7 +69,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
       children: [
         Container(
             child: FutureBuilder<User>(
-                future: futureUser = dataProvider.fetchUserById(widget.userId),
+                future: futureUser = dataProvider.fetchUserById(widget.user!.id!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     user = snapshot.data;
@@ -186,7 +186,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   }
 
   Future<List<Contract>> fetchContractAndObligationsStatistics() async {
-    List<Contract> tmpContracts = await dataProvider.fetchContractsByContractorId(widget.userId);
+    List<Contract> tmpContracts = await dataProvider.fetchContractsByContractorId(widget.user!.id!, widget.user!.token!);
     await _getAllObligationsOfEachContract(tmpContracts);
 
     return tmpContracts;
@@ -232,7 +232,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
     for (Contract pContract in pContracts) {
       for (String oblId in pContract.obligations) {
         Obligation tmpObligation = await dataProvider.fetchObligationById(oblId);
-        if (tmpObligation.contractorId == widget.userId) {
+        if (tmpObligation.contractorId == widget.user!.id!) {
           oblList.add(tmpObligation);
         }
       }
@@ -552,12 +552,12 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
                   child: Text('Delete', style: TextStyle(color: Colors.white)),
                   color: Colors.red,
                   onPressed: () async {
-                    if (await dataProvider.deleteUserById(widget.userId)) {
+                    if (await dataProvider.deleteUserById(widget.user!.id!)) {
                       Navigator.of(context).pop();
-                      showSuccessfulDeletionDialog(widget.userId);
+                      showSuccessfulDeletionDialog(widget.user!.id!);
                     } else {
                       Navigator.of(context).pop();
-                      showFailedDeletionDialog(widget.userId);
+                      showFailedDeletionDialog(widget.user!.id!);
                     }
                   }
               ),

@@ -201,7 +201,7 @@ class _BasePageState extends State<BasePage> {
           _selectedTitle = "Change & Update Your Contract";
           break;
         case PROFILE_EDITOR_PAGE:
-          _selectedPage = ProfileEditorPage(changeScreen, userId!, offlineMode);
+          _selectedPage = ProfileEditorPage(changeScreen, user, offlineMode);
           _selectedTitle = "Profile Editor";
           break;
         case CONTRACT_PARTY_PROFILE_PAGE:
