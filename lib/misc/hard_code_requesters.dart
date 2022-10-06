@@ -28,7 +28,11 @@ User requesterThree = User(
   createDate: DateTime.parse("20220919"),
   vat: "1111111",
   name: "YourDataForMoney SARL",
-  email: "contact@yourdataformoney.com"
+  email: "contact@yourdataformoney.com",
+  phone: "003526945823",
+  country: "Luxembourg",
+  city: "Luxembourg",
+  streetAddress: "11, rue J. F. Kennedy"
 );
 
 User requesterFour = User(

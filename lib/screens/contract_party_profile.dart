@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/custom_widgets/profileStatisticCard.dart';
+import 'package:smashhit_ui/misc/hard_code_requesters.dart';
 
 class ContractPartyProfile extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -18,7 +19,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
 
   DataProvider dataProvider = new DataProvider();
   late Future<User> futureUser = User() as Future<User>;
-  User? user;
+  User? user = hardCodeRequesters[2];
   int screenSize = 0;
 
   @override
@@ -38,7 +39,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         future: dataProvider.fetchUserById(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            user = addDummyStatistics(snapshot.data!);
+            user = addDummyStatistics(hardCodeRequesters[2]);
             return Container(
               margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
               child: screenSize == 2
@@ -46,15 +47,13 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
                   : mediumScreenBuild(user!, orientation)
             );
           } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("The user's profile was not found.", style: TextStyle(fontSize: 32)),
-                  Text('${snapshot.error}')
-                ],
-              ),
+
+            user = addDummyStatistics(hardCodeRequesters[2]);
+            return Container(
+                margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                child: screenSize == 2
+                    ? smallScreenBuild(user!, orientation)
+                    : mediumScreenBuild(user!, orientation)
             );
           }
           return Center(child: CircularProgressIndicator());
