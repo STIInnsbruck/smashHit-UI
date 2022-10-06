@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/custom_widgets/contract_tile.dart';
+import 'package:smashhit_ui/misc/hard_code_contracts.dart';
+import 'package:smashhit_ui/misc/hard_code_signatures.dart';
+import 'package:smashhit_ui/misc/hard_code_contractors.dart';
+
 
 class Dashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -20,7 +24,7 @@ class _DashboardState extends State<Dashboard> {
   DataProvider dataProvider = DataProvider();
 
   late Future<List<Contract>> futureContractList = [] as Future<List<Contract>>;
-  List<Contract>? contractList = [];
+  List<Contract>? contractList = hardCodeContracts;
   String? searchId;
 
   //Offline Variables
@@ -37,6 +41,7 @@ class _DashboardState extends State<Dashboard> {
       _generateOfflineData();
       contractList = offlineContracts;
     }
+    contractList = hardCodeContracts;
   }
 
   @override
@@ -56,6 +61,19 @@ class _DashboardState extends State<Dashboard> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     contractList = snapshot.data;
+                    contractList = hardCodeContracts;
+                    //first contract
+                    contractList![0].signatures = signatureToOne;
+                    contractList![0].contractors.add(contractorMax);
+                    contractList![0].contractors.add(contractorAnon);
+                    //second contract
+                    contractList![1].signatures = signatureToTwo;
+                    contractList![1].contractors.add(contractorMax);
+                    contractList![1].contractors.add(contractorAnon);
+                    //third contract
+                    contractList![2].signatures = signatureToThree;
+                    contractList![2].contractors.add(contractorMax);
+                    contractList![2].contractors.add(contractorAnon);
                     return Column(
                       children: [
                         _isSmallScreen(screenWidth)

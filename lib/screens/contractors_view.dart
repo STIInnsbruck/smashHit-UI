@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/custom_widgets/contractor_tile.dart';
+import 'package:smashhit_ui/misc/hard_code_requesters.dart';
 
 class ContractorViewPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -19,7 +20,13 @@ class _ContractorViewPage extends State<ContractorViewPage> {
   DataProvider dataProvider = new DataProvider();
 
   late Future<List<User>> futureContractorList = [] as Future<List<User>>;
-  List<User>? contractorList = [];
+  List<User>? contractorList = hardCodeRequesters;
+
+  @override
+  void initState() {
+    super.initState();
+    contractorList = hardCodeRequesters;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +42,10 @@ class _ContractorViewPage extends State<ContractorViewPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     //contractorList = snapshot.data;
-                    filterOutDummyContractors(snapshot.data!);
+                    contractorList = hardCodeRequesters;
+                    addStats();
+                    //filterOutDummyContractors(snapshot.data!);
+                    //filterOutDummyContractors(contractorList!);
                     return Column(
                       children: [
                         listHeader(),
@@ -43,7 +53,17 @@ class _ContractorViewPage extends State<ContractorViewPage> {
                       ],
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    contractorList = hardCodeRequesters;
+                    addStats();
+                    //filterOutDummyContractors(snapshot.data!);
+                    //filterOutDummyContractors(contractorList!);
+                    return Column(
+                      children: [
+                        listHeader(),
+                        contractorListWidget()
+                      ],
+                    );
+                    //return Text('${snapshot.error}');
                   }
                   return Center(child: CircularProgressIndicator());
                 }
@@ -79,7 +99,7 @@ class _ContractorViewPage extends State<ContractorViewPage> {
   }
 
   void filterOutDummyContractors(List<User> list) {
-    contractorList!.clear();
+    //contractorList!.clear();
     const String dummyId1 = "c_12d91e9e-0d1a-11ed-a172-0242ac150002";
     const String dummyId2 = "c_d6c5b656-0d19-11ed-8ab1-0242ac150002";
     const String dummyId3 = "c_3ea24178-0d19-11ed-94d9-0242ac150002";
@@ -89,6 +109,12 @@ class _ContractorViewPage extends State<ContractorViewPage> {
       if (list[i].id == dummyId1 || list[i].id == dummyId2 || list[i].id == dummyId3 || list[i].id == dummyId4) {
         contractorList!.add(addDummyStatistics(list[i]));
       }
+    }
+  }
+
+  addStats() {
+    for(int i = 0; i < contractorList!.length; i++) {
+      addDummyStatistics(contractorList![i]);
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/custom_widgets/obligation_tile.dart';
+import 'package:smashhit_ui/misc/hard_code_obligations.dart';
 
 class ObligationsDashboard extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -20,12 +21,13 @@ class _ObligationDashboardState extends State<ObligationsDashboard> {
   DataProvider dataProvider = DataProvider();
 
   late Future<List<Obligation>> futureObligations;
-  List<Obligation>? obligationList = [];
+  List<Obligation>? obligationList = hardCodeObligations;
   String? searchId;
 
   @override
   void initState() {
     super.initState();
+    obligationList = hardCodeObligations;
   }
 
   @override
@@ -42,6 +44,7 @@ class _ObligationDashboardState extends State<ObligationsDashboard> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             obligationList = snapshot.data!;
+            obligationList = hardCodeObligations;
             return Column(
               children: [
                 listHeader(),

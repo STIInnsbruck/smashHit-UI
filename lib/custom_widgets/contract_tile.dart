@@ -74,7 +74,7 @@ class _ContractTileState extends State<ContractTile> {
                 flex: 8,
                 child: Text('${widget.contract!.id!}',
                     overflow: TextOverflow.ellipsis)),
-            Expanded(flex: 4, child: Text("Contracting Party")),
+            //Expanded(flex: 4, child: Text("Contracting Party")),
             Expanded(
                 flex: 6,
                 child: Text('${widget.contract!.purpose}',
@@ -140,6 +140,8 @@ class _ContractTileState extends State<ContractTile> {
                           Text("Status:"),
                           contractIconByStatus(
                               widget.contract!.status!),
+                          Text("Signatures:"),
+                          contractSignedIcon()
                         ],
                       ),
                     ),
@@ -190,9 +192,9 @@ class _ContractTileState extends State<ContractTile> {
   Future<void> fetchAllSignatures() async {
     _toggleLoading();
     widget.contract!.signatures.forEach((element) async {
-      Signature signature = await dataProvider.fetchSignatureById(element);
-      signatures.add(signature);
-      if (signature.contractorId == widget.userId) {
+      //Signature signature = await dataProvider.fetchSignatureById(element);
+      //signatures.add(signature);
+      if (element.contractorId == "28d62043878d4506a552683bec832eab") {
         setState(() {
           _hasSigned = true;
         });

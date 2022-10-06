@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/custom_widgets/term_type_tile.dart';
+import 'package:smashhit_ui/misc/hard_code_term_types.dart';
 
 class TermTypeViewPage extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -19,7 +20,12 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
   DataProvider dataProvider = new DataProvider();
 
   late Future<List<TermType>> futureTermTypeList = [] as Future<List<TermType>>;
-  List<TermType>? termTypeList = [];
+  List<TermType>? termTypeList = hardCodeTermTypes;
+
+  void initState() {
+    super.initState();
+    termTypeList = hardCodeTermTypes;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,16 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   termTypeList = snapshot.data;
+                  termTypeList = hardCodeTermTypes;
+                  return Column(
+                    children: [
+                      listHeader(),
+                      termTypeList!.isEmpty
+                          ? noTermTypesText() : termTypeListWidget()
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  termTypeList = hardCodeTermTypes;
                   return Column(
                     children: [
                       listHeader(),
@@ -42,7 +58,6 @@ class _TermTypeViewPage extends State<TermTypeViewPage> {
                           ? noTermTypesText() : termTypeListWidget()
                     ],
                   );
-                } else if (snapshot.hasError) {
                   return Text('${snapshot.error}');
                 }
                 return Center(child: CircularProgressIndicator());
