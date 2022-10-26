@@ -21865,7 +21865,7 @@ this.b=b},
 amg:function amg(a){this.a=a},
 amf:function amf(){},
 eG(){var s="application/json",r=t.N
-return new A.Xw(new A.a5x(),A.aJZ("https","actool.contract.sti2.at","/",null),A.aF(["accept",s,"Content-Type",s,"Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkpvbmFzIiwiZXhwIjoxNjY2NzA1Mjk4fQ.Le4jCKnBLz63v8tLRwTB_LaJv0HvbMdZcIJZkC25qsM"],r,r))},
+return new A.Xw(new A.a5x(),A.aJZ("https","actool.contract.sti2.at","/",null),A.aF(["accept",s,"Content-Type",s,"Authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkpvbmFzIiwiZXhwIjoxNjY2NzgzODQ5fQ.9r0ePMLnG-5Fr8TY-5d7nKqUL6uKFo57NrF-iTJSlN8"],r,r))},
 Xw:function Xw(a,b,c){this.a=a
 this.c=b
 this.d=c},
