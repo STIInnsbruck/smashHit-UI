@@ -3,31 +3,33 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/assets/term.json": "1b836f263148e1eb368cbf0c9644519d",
-"assets/assets/term_type.json": "df3bb614491b2591e40cc0eb1c990d16",
+  "assets/AssetManifest.json": "54fa2887558829029d3ebbc839b8bba3",
 "assets/assets/images/placeholders/example_profile_pic.png": "6d26d8e233646a7ed6f109762d598fa6",
+"assets/assets/images/placeholders/user_avatar.png": "92704abad4ef94714113fcba75e9d433",
 "assets/assets/images/process_timeline/status1.png": "b03d6aff411ff53eadf87582709d9941",
-"assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
+"assets/assets/term.json": "1b836f263148e1eb368cbf0c9644519d",
+"assets/assets/term_type.json": "df3bb614491b2591e40cc0eb1c990d16",
+"assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
+"assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
+"assets/NOTICES": "b99f73f1bbc259e1d1d0748b57c72f7a",
 "assets/packages/country_state_city_pro/assets/city.json": "5b4561801e6ace0b0c6227e4c407335a",
 "assets/packages/country_state_city_pro/assets/country.json": "5ca87997912198c22eeb2e828d211220",
 "assets/packages/country_state_city_pro/assets/state.json": "ecd4ea833def1c6e3db7ee2f6a132dcb",
-"assets/NOTICES": "a98d3fa3a56ee713e2c8494df89f7d61",
-"assets/AssetManifest.json": "73a13ebc6a6501c09891267f80c63975",
-"assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-"assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
-"index.html": "c9d70f37fd494a1f43e0e49f59d89d20",
-"/": "c9d70f37fd494a1f43e0e49f59d89d20",
-"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
-"canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
-"canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
-"canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
-"canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
-"manifest.json": "ebb49a5409d7d6546f0c01ecc7740209",
+"assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
+"assets/shaders/ink_sparkle.frag": "6333b551ea27fd9d8e1271e92def26a9",
+"canvaskit/canvaskit.js": "2bc454a691c631b07a9307ac4ca47797",
+"canvaskit/canvaskit.wasm": "bf50631470eb967688cca13ee181af62",
+"canvaskit/profiling/canvaskit.js": "38164e5a72bdad0faa4ce740c9b8e564",
+"canvaskit/profiling/canvaskit.wasm": "95a45378b69e77af5ed2bc72b2209b94",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"main.dart.js": "971d11ac9f4d41bbf11c38cfcd981346",
-"version.json": "889654efd90cc87fd49cb6e39cb54ba7",
-"flutter.js": "0816e65a103ba8ba51b174eeeeb2cb67"
+"flutter.js": "f85e6fb278b0fd20c349186fb46ae36d",
+"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
+"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
+"index.html": "729d3097f448fe9ff90557b5e8dd7d37",
+"/": "729d3097f448fe9ff90557b5e8dd7d37",
+"main.dart.js": "66a128698886edc33e221a1e75c7c239",
+"manifest.json": "ebb49a5409d7d6546f0c01ecc7740209",
+"version.json": "889654efd90cc87fd49cb6e39cb54ba7"
 };
 
 // The application shell files that are downloaded before a service worker can
@@ -35,7 +37,6 @@ const RESOURCES = {
 const CORE = [
   "main.dart.js",
 "index.html",
-"assets/NOTICES",
 "assets/AssetManifest.json",
 "assets/FontManifest.json"];
 // During install, the TEMP cache is populated with the application shell files.
@@ -134,9 +135,11 @@ self.addEventListener("fetch", (event) => {
     .then((cache) =>  {
       return cache.match(event.request).then((response) => {
         // Either respond with the cached resource, or perform a fetch and
-        // lazily populate the cache.
+        // lazily populate the cache only if the resource was successfully fetched.
         return response || fetch(event.request).then((response) => {
-          cache.put(event.request, response.clone());
+          if (response && Boolean(response.ok)) {
+            cache.put(event.request, response.clone());
+          }
           return response;
         });
       })
