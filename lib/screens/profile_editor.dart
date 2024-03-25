@@ -186,7 +186,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
   }
 
   Future<List<Contract>> fetchContractAndObligationsStatistics() async {
-    List<Contract> tmpContracts = await dataProvider.fetchContractsByContractorId(widget.user!.id!, widget.user!.token!);
+    List<Contract> tmpContracts = await dataProvider.fetchContractsByContractorId(widget.user!.id!);
     await _getAllObligationsOfEachContract(tmpContracts);
 
     return tmpContracts;
@@ -510,7 +510,7 @@ class _ProfileEditorPage extends State<ProfileEditorPage> {
         Center(
           child: CircleAvatar(
             backgroundColor: Colors.blue,
-            backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
+            backgroundImage: Image.asset('assets/images/placeholders/user_avatar.png').image,
             radius: 75,
           ),
         )

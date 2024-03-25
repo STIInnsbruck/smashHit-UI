@@ -52,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
         child: !widget.offlineMode
             ? FutureBuilder<List<Contract>>(
                 future: futureContractList =
-                    dataProvider.fetchContractsByContractorId(widget.user!.id!, widget.user!.token!),
+                dataProvider.fetchContractsByContractorId(widget.user!.id!),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     contractList = snapshot.data;
@@ -84,12 +84,13 @@ class _DashboardState extends State<Dashboard> {
       title: Row(
         children: [
           Spacer(),
-          Expanded(flex: 1, child: Text("Type", textAlign: TextAlign.left)),
-          Expanded(flex: 8, child: Text("ID")),
-          Expanded(flex: 6, child: Text("Purpose")),
-          Expanded(flex: 4, child: Text("Signatures")),
-          Expanded(flex: 2, child: Text("Status", textAlign: TextAlign.center)),
-          Expanded(flex: 4, child: Text("Actions", textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text("Type", textAlign: TextAlign.left)),
+          Expanded(flex: 12, child: Text("ID")),
+          Expanded(flex: 14, child: Text("Purpose")),
+          Expanded(flex: 6, child: Text("Signatures")),
+          Expanded(flex: 4, child: Text("Status", textAlign: TextAlign.center)),
+          Expanded(flex: 6, child: Text("Actions", textAlign: TextAlign.center)),
+           Expanded(flex: 3, child: Text("Check Consistency", textAlign: TextAlign.center)),
         ],
       ),
     );

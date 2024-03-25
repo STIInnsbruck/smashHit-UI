@@ -52,6 +52,7 @@ flutter:
     - assets/images/
     - assets/images/process_timeline/
     - assets/images/placeholders/example_profile_pic.png
+    - assets/images/placeholders/user_avatar.png
     - assets/term_type.json
     - assets/term.json
 

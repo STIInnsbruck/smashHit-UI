@@ -215,7 +215,7 @@ class _ContractPartyProfileState extends State<ContractPartyProfile> {
         Text("Profile Picture"),
         CircleAvatar(
           backgroundColor: Colors.blue,
-          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.png').image,
+          backgroundImage: Image.asset('assets/images/placeholders/example_profile_pic.pg').image,
           radius: 75,
         )
       ],

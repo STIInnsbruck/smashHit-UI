@@ -366,11 +366,11 @@ class _BasePageState extends State<BasePage> {
         CircleAvatar(
           backgroundColor: Colors.blue,
           backgroundImage:
-              Image.asset('assets/images/placeholders/example_profile_pic.png')
+              Image.asset('assets/images/placeholders/user_avatar.png')
                   .image,
           radius: 50,
         ),
-        Text("Max Mustermann")
+        //Text("Geni Bushati")
       ],
     );
   }

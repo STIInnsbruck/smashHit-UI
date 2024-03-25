@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
+import 'dart:developer';
 class ViewContract extends StatefulWidget {
   final Function(int, [String, List<Obligation>]) changeScreen;
   final String contractId;
@@ -627,7 +627,9 @@ class _ContractCreationState extends State<ViewContract> {
     //create signature and get signature id
     tmpSignature = await dataProvider.createSignature(tmpSignature);
     //update contract with new signature
+    var aa = tmpSignature.id;
     contract!.signatures.add(tmpSignature.id);
+     log("This is the Signature ID--$aa");
     await dataProvider.updateContract(contract!);
     //Dismiss signing feedback
     _dismissDialog();
