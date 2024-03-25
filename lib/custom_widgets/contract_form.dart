@@ -12,7 +12,6 @@ import 'package:smashhit_ui/custom_widgets/term_widget.dart';
 import 'package:smashhit_ui/misc/contract_categories.dart';
 import 'package:smashhit_ui/misc/contract_types.dart';
 import 'package:smashhit_ui/custom_widgets/obligation_widget.dart';
-import 'package:flutter/services.dart';
 
 class ContractForm extends StatefulWidget {
   final Function(int, [String]) changeScreen;
@@ -607,9 +606,9 @@ class _ContractFormState extends State<ContractForm> {
           Autocomplete(
             displayStringForOption: _displayStringForOption,
             optionsBuilder: (TextEditingValue textEditingValue) {
-              // if (textEditingValue.text == '') {
-              //   return const Iterable<User>.empty();
-              // }
+              if (textEditingValue.text == '') {
+                return const Iterable<User>.empty();
+              }
               return contractors.where((User option) {
                 return option
                     .toString()
@@ -797,7 +796,7 @@ class _ContractFormState extends State<ContractForm> {
             },
           ),
           SizedBox(height: 10),
-          Text("What is the value (numerical) of your contract?",
+          Text("What is the value of your contract?",
               style: TextStyle(fontSize: 15)),
           SizedBox(height: 5),
           TextFormField(
@@ -811,10 +810,6 @@ class _ContractFormState extends State<ContractForm> {
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: BorderSide(color: Colors.black, width: 1.0)),
             ),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly
-             ],
             controller: considerationValController,
             validator: (value) {
               if (value == null || value.isEmpty) {

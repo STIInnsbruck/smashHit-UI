@@ -4,113 +4,23 @@ import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
 import 'package:smashhit_ui/data/parser.dart';
 import 'package:smashhit_ui/data/models.dart';
-import 'dart:developer';
+
 class DataProvider {
   ResponseParser parser = ResponseParser();
   //----------------------ACT CONTRACT API DETAILS------------------------------
   static final String kHost = 'actool.contract.sti2.at';
   static final String kBasePath = '/';
-  String? token='';
+  String? token;
   Uri kBaseUrl = new Uri.https(kHost, kBasePath);
- 
-  
-   Future<User> loginUser(String name, String password) async {
-    // var body = {
-    //   "Name": name,
-    //   "Password": password
-    // };
-    // var jsonBody = jsonEncode(body);
 
-    // final response = await http.post(kBaseUrl.replace(path: '/contract/login/'),  headers:await make_header("apiendpoint"), body: jsonBody);
+  var headers = {
+    'accept': 'application/json',
+    'Content-Type': 'application/json',
+  };
 
-
-    // if (response.statusCode == 200) {
-    //   try {
-    //     token  = parser.parseNewUser(jsonDecode(response.body)).token;
-   var a = make_header("userlogin");
-    log("resposnse--$a");
-      
-        return parser.parseNewUser(make_header("userlogin"));
-    //   }catch (e) {
-    //     throw Exception('Failed to load token.');
-    //   }
-
-    // } else {
-    //   throw Exception('Failed to fetch token');
-    // }
-  }
-
-make_header(fromUser) async {
-  String? token;  
-  String name = "Jonas";
-  String password = "Jonas123";
-  var usercredential = {
-      "Name": "Jonas",
-      "Password": "Jonas123"
-    };
-  var jsonBody = jsonEncode(usercredential);
-  var contenttype = {'Content-Type': 'application/json'};
-
-  final responses = await http.post(kBaseUrl.replace(path: '/contract/login/'), headers: contenttype, body: jsonBody);
-
-  if (responses.statusCode == 200 && fromUser=="apiendpoint") {
-      try {
-        token  = parser.parseNewUser(jsonDecode(responses.body)).token;
-        log("Token from server: $token");
-
-        var headers = {
-        'accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
-      print("header gen from code: $headers");
-    //var otype = headeroriginal.runtimeType;
-
-      
-        return headers;
-      }catch (e) {
-        throw Exception('Failed to load token. $e');
-      }
-
-    }
-     if  (responses.statusCode == 200 && fromUser=="userlogin") {
-      var res = jsonDecode(responses.body);
-       log("Success==$res");
-       return res;
-    }
-    
-    //  else {
-    //   var a = responses.statusCode;
-    //   throw Exception('Failed to fetch token 2----$a ');
-    // }
-
- 
-  
-  }
-//log(make_header("apiendpoint"));
-//make_header("apiendpoint"); 
-/*
-   final response = await http.post(kBaseUrl.replace(path: "/contract/login/"),
-
-
-}
-
-def make_header("apiendpoint"){
-  token=login_user();
-   var headers = {
-      'accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    return header;
-  
-
-}
-*/
   //---------------------------- CONTRACTORS -----------------------------------
 
   Future<User> createAgent(User user) async {
-
 
     var body = {
       "Address": user.streetAddress,
@@ -128,7 +38,7 @@ def make_header("apiendpoint"){
     var jsonBody = jsonEncode(body);
 
     final response = await http.post(kBaseUrl.replace(path: "/contract/contractor/create/"),
-         headers:await make_header("apiendpoint"), body: jsonBody);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
 
@@ -143,7 +53,7 @@ def make_header("apiendpoint"){
   }
 
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/contractors/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/contractors/'), headers: headers);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
@@ -154,9 +64,7 @@ def make_header("apiendpoint"){
   }
 
   Future<User> fetchUserById(String contractorId) async {
-    
-    final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers:await make_header("apiendpoint") );
- 
+    final response = await http.get(kBaseUrl.replace(path: '/contract/contractor/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       try {
@@ -170,7 +78,7 @@ def make_header("apiendpoint"){
     }
   }
 
-  /*Future<User> loginUser(String name, String password) async {
+  Future<User> loginUser(String name, String password) async {
     var body = {
       "Name": name,
       "Password": password
@@ -181,9 +89,6 @@ def make_header("apiendpoint"){
 
     if (response.statusCode == 200) {
       try {
-        token  = parser.parseNewUser(jsonDecode(response.body)).token;
-      headers['Authorization'] = 'Bearer $token';
-        log('token $token');
         return parser.parseNewUser(jsonDecode(response.body));
       }catch (e) {
         throw Exception('Failed to load user.');
@@ -193,7 +98,7 @@ def make_header("apiendpoint"){
       throw Exception('Failed to fetch user.');
     }
   }
-*/
+
   Future<bool> register(String name, String email, String password) async {
     var body = {
       "Name": name,
@@ -202,7 +107,7 @@ def make_header("apiendpoint"){
     };
     var jsonBody = jsonEncode(body);
 
-    final response = await http.post(kBaseUrl.replace(path: '/contract/register/'),  headers:await make_header("apiendpoint"), body: jsonBody);
+    final response = await http.post(kBaseUrl.replace(path: '/contract/register/'), headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -239,7 +144,7 @@ def make_header("apiendpoint"){
     var jsonBody = jsonEncode(body);
 
     final response = await http.put(kBaseUrl.replace(path: "/contract/contractor/update/"),
-         headers:await make_header("apiendpoint"), body: jsonBody);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -257,7 +162,7 @@ def make_header("apiendpoint"){
   }
 
   Future<bool> deleteUserById(String contractorId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/contract/contractor/delete/$contractorId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/contractor/delete/$contractorId/'), headers: headers);
 
     if (response.statusCode == 200) {
       return true;
@@ -268,7 +173,7 @@ def make_header("apiendpoint"){
 
   //---------------------------- Contract --------------------------------------
   Future<List<Contract>> fetchAllContracts() async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/list_of_contracts/'), headers: headers);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
@@ -288,7 +193,7 @@ def make_header("apiendpoint"){
     var jsonBody = jsonEncode(body);
 
     final response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
-         headers:await make_header("apiendpoint"), body: jsonBody);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -331,7 +236,7 @@ def make_header("apiendpoint"){
     var jsonBody = jsonEncode(body);
 
     final response = await http.post(kBaseUrl.replace(path: "/contract/create/"),
-         headers:await make_header("apiendpoint"), body: jsonBody);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       Contract contract;
@@ -347,7 +252,7 @@ def make_header("apiendpoint"){
   }
 
   Future<Contract> fetchContractById(String contractId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/byContract/$contractId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContract/$contractId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Contract contract;
@@ -363,7 +268,7 @@ def make_header("apiendpoint"){
   }
 
   Future<bool> deleteContractById(String contractId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/delete/$contractId/'), headers: headers);
 
     if (response.statusCode == 200) {
       return true;
@@ -372,10 +277,14 @@ def make_header("apiendpoint"){
     }
   }
 
-  Future<List<Contract>> fetchContractsByContractorId(String contractorId) async {
-   
+  Future<List<Contract>> fetchContractsByContractorId(String contractorId, String token) async {
+    var headers = {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
 
-    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/byContractor/$contractorId/'), headers: headers);
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       List<Contract> contracts = [];
@@ -403,7 +312,7 @@ def make_header("apiendpoint"){
       "EffectiveDate": contract.effectiveDate!.toIso8601String(),
       "EndDate": contract.endDate!.toIso8601String(),
       "ExecutionDate": contract.executionDate!.toIso8601String(),
-      "Medium": contract.medium,
+      "Medium": "App Based",
       "Obligations": contract.obligations,
       "Purpose": contract.purpose,
       "Signatures": contract.signatures,
@@ -412,13 +321,11 @@ def make_header("apiendpoint"){
 
     var jsonBody = jsonEncode(body);
 
-    final response = await http.put(kBaseUrl.replace(path: "/contract/update/"), headers:await make_header("apiendpoint"), body: jsonBody);
-     
+    final response = await http.put(kBaseUrl.replace(path: "/contract/update/"),
+        headers: headers, body: jsonBody);
 
-     
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      log("Contract is being updated");
       print("Message: \t $data");
       if(data.toString().compareTo('{"Success": "No record found for this ID"}') == 0 ) {
         return -1;
@@ -428,15 +335,13 @@ def make_header("apiendpoint"){
         return 0;
       }
     } else {
-      var aa = response.statusCode;
-     log("Response for update: $aa");
       return 0;
     }
   }
 
   //---------------------------- Obligation ------------------------------------
   Future<Obligation> fetchObligationById(String obligationId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/obligation/$obligationId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/obligation/$obligationId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Obligation obligation;
@@ -464,7 +369,7 @@ def make_header("apiendpoint"){
     };
     var jsonBody = jsonEncode(body);
     final response = await http.post(kBaseUrl.replace(path: "/contract/obligation/create/"),
-         headers:await make_header("apiendpoint"), body: jsonBody);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       Obligation tmpObligation;
@@ -491,7 +396,7 @@ def make_header("apiendpoint"){
 
   //---------------------------- Term ------------------------------------------
   Future<Term> fetchTermById(String termId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/term/$termId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/term/$termId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Term term;
@@ -515,7 +420,7 @@ def make_header("apiendpoint"){
     };
     var jsonBody = jsonEncode(body);
     final response = await http.post(kBaseUrl.replace(path: "/contract/term/create/"),
-         headers:await make_header("apiendpoint"), body: jsonBody);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       Term tmpTerm;
@@ -532,7 +437,7 @@ def make_header("apiendpoint"){
 
   //---------------------------- Term Type -------------------------------------
   Future<TermType> fetchTermTypeById(String termTypeId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/termType/$termTypeId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/termType/$termTypeId/'), headers: headers);
 
     if (response.statusCode == 200) {
       TermType termType;
@@ -548,7 +453,7 @@ def make_header("apiendpoint"){
   }
 
   Future<List<TermType>> fetchAllTermTypes() async    {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/term/types'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/term/types'), headers: headers);
 
     if (response.statusCode == 200) {
       List<TermType> termTypes = [];
@@ -564,7 +469,7 @@ def make_header("apiendpoint"){
   }
 
   Future<bool> deleteTermTypeById(String termTypeId) async {
-    final response = await http.delete(kBaseUrl.replace(path: '/contract/term/type/delete/$termTypeId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.delete(kBaseUrl.replace(path: '/contract/term/type/delete/$termTypeId/'), headers: headers);
 
     if (response.statusCode == 200) {
       return true;
@@ -583,7 +488,7 @@ def make_header("apiendpoint"){
 
     var jsonBody = jsonEncode(body);
 
-    final response = await http.put(kBaseUrl.replace(path: '/contract/term/type/update/'),  headers:await make_header("apiendpoint"), body: jsonBody);
+    final response = await http.put(kBaseUrl.replace(path: '/contract/term/type/update/'), headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       try {
@@ -605,7 +510,7 @@ def make_header("apiendpoint"){
     };
     var jsonBody = jsonEncode(body);
     final response = await http.post(kBaseUrl.replace(path: "/contract/term/type/create/"),
-         headers:await make_header("apiendpoint"), body: jsonBody);
+        headers: headers, body: jsonBody);
 
     if (response.statusCode == 200) {
       TermType tmpTermType;
@@ -630,14 +535,12 @@ def make_header("apiendpoint"){
     };
 
     var jsonBody = jsonEncode(body);
-    final response = await http.post(kBaseUrl.replace(path: "/contract/signature/create/"),  headers:await make_header("apiendpoint"), body: jsonBody);
-    var aa = response.statusCode;
-   
+    final response = await http.post(kBaseUrl.replace(path: "/contract/signature/create/"), headers: headers, body: jsonBody);
+
     if (response.statusCode == 200) {
       Signature signature;
       try {
         signature = parser.parseSignatureId(jsonDecode(response.body)[0]);
-         log("Response for signature---$signature");
         return signature;
       } catch (e) {
         throw Exception('Failed to parse response for signature.');
@@ -648,7 +551,7 @@ def make_header("apiendpoint"){
   }
 
   Future<Signature> fetchSignatureById(String signatureId) async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/signature/$signatureId/'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/signature/$signatureId/'), headers: headers);
 
     if (response.statusCode == 200) {
       Signature signature;
@@ -664,7 +567,7 @@ def make_header("apiendpoint"){
   }
 
   Future<List<Signature>> fetchAllSignaturesByContractId(String contractId) async    {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/signatures/$contractId'),  headers:await make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/signatures/$contractId'), headers: headers);
 
     if (response.statusCode == 200) {
       List<Signature> signatures = [];
@@ -681,7 +584,7 @@ def make_header("apiendpoint"){
 
   //------------------------------ Other ---------------------------------------
   Future<bool> checkCompliance() async {
-    final response = await http.get(kBaseUrl.replace(path: '/contract/compliance/'), headers:make_header("apiendpoint"));
+    final response = await http.get(kBaseUrl.replace(path: '/contract/compliance/'), headers: headers);
 
     if (response.statusCode == 200) {
       String data = json.decode(response.body);

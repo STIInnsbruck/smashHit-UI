@@ -102,7 +102,7 @@ class _ObligationDashboardState extends State<ObligationsDashboard> {
 
   Future<List<Obligation>> fetchAllObligationsOfUser() async {
     //fetch all contracts of the user
-    List<Contract> contractList = await dataProvider.fetchContractsByContractorId(widget.user!.id!);
+    List<Contract> contractList = await dataProvider.fetchContractsByContractorId(widget.user!.id!, widget.user!.token!);
     List<Obligation> oblList = [];
 
     //search all obligations in each contract

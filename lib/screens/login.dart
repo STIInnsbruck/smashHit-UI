@@ -4,8 +4,7 @@ import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:smashhit_ui/data/data_provider.dart';
 import 'package:smashhit_ui/data/models.dart';
 import 'package:smashhit_ui/misc/contractor_roles.dart';
-import 'dart:async';
-import 'dart:developer';
+
 class LoginScreen extends StatefulWidget {
   final Function(int) changeScreen;
   final Function(String) setUserId;
@@ -103,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: (_signUp? 20 : 40)),
                       _signUp?
-                      registrationForm(smallSide) : loginForm(smallSide),
+                      newRegistrationForm(smallSide) : loginForm(smallSide),
                       SizedBox(height: 20),
                       SizedBox(
                         width: 400,
@@ -115,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () {
                                 if (_registrationFormKey.currentState!.validate()) {
                                   //_registerUser();
-                                  _registerUser();
+                                  _performRegistration(name.text, email.text, password.text);
                                 }
                               },
                               child: Text('Register', style: TextStyle(color: Colors.white, fontSize: smallSide * 0.05), overflow: TextOverflow.ellipsis),
@@ -130,14 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 } else {
                                   if(_loginFormKey.currentState!.validate()) {
                                     //_loginUser(_loginController.text);
-                                    //_performLogin("Jonas", "Jonas123");
-                                    _performLogin("Jonas", "Jonas123");
-                                    _loginUser(_loginController.text);
-                                    
-                                    //var timer = Timer(Duration(seconds: 5), () =>_loginUser(_loginController.text) );
-                                   //timer.cancel();
-                                    
-
+                                    _performLogin(_loginController.text, _passwordController.text);
                                   }
                                 }
                               },
@@ -170,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      //offlineSwitch()
+                      offlineSwitch()
                     ],
                   ),
                 ),
@@ -206,16 +198,29 @@ class _LoginScreenState extends State<LoginScreen> {
             TextFormField(
               controller: _loginController,
               decoration: InputDecoration(
-                  hintText: 'ID',
+                  hintText: 'Name',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter your ID';
+                  return 'Please enter your name.';
                 }
               },
               textAlign: TextAlign.left,
             ),
-            
+            //PASSWORD FIELD
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: 'Password',
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your password.';
+                }
+              },
+              textAlign: TextAlign.left,
+            ),
           ],
         ),
       ),
@@ -527,7 +532,6 @@ class _LoginScreenState extends State<LoginScreen> {
   _loginUser(String userId) async {
     _toggleLoading();
     try {
-      log("fetch user  by id first call $userId");
       user = await dataProvider.fetchUserById(userId);
       _toggleLoading();
       widget.setUserId(userId);
@@ -549,7 +553,7 @@ class _LoginScreenState extends State<LoginScreen> {
       widget.changeScreen(0);
     } catch (e) {
       _toggleLoading();
-     
+      _showUserNotFoundDialog();
     }
   }
 

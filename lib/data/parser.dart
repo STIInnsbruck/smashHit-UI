@@ -1,5 +1,4 @@
 import 'package:smashhit_ui/data/models.dart';
-
 ///The response from the ACT Swagger API returns several different forms of
 ///responses. For this reason there are several different parsers for one
 ///class.
@@ -15,8 +14,6 @@ class ResponseParser {
       country: jsonUser['country'],
       email: jsonUser['email'],
       phone: jsonUser['phone'],
-      token: jsonUser['token'],
-
     );
   }
 
@@ -42,7 +39,6 @@ class ResponseParser {
       role: jsonUser["role"],
       city: jsonUser["territory"],
       vat: jsonUser["vat"],
-      token: jsonUser['token'],
     );
   }
 
@@ -62,9 +58,7 @@ class ResponseParser {
       phone: jsonUser['phone'],
       city: jsonUser['territory'],
       role: jsonUser['role'],
-      vat: jsonUser['vat'],
-      
-
+      vat: jsonUser['vat']
     );
   }
 

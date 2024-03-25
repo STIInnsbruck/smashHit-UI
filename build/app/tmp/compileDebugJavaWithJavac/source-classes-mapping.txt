@@ -25,18 +25,6 @@ androidx/lifecycle/livedata/R.java
  androidx.lifecycle.livedata.R
 androidx/lifecycle/R.java
  androidx.lifecycle.R
-io/flutter/plugins/connectivity/R.java
- io.flutter.plugins.connectivity.R
- io.flutter.plugins.connectivity.R$attr
- io.flutter.plugins.connectivity.R$color
- io.flutter.plugins.connectivity.R$dimen
- io.flutter.plugins.connectivity.R$drawable
- io.flutter.plugins.connectivity.R$id
- io.flutter.plugins.connectivity.R$integer
- io.flutter.plugins.connectivity.R$layout
- io.flutter.plugins.connectivity.R$string
- io.flutter.plugins.connectivity.R$style
- io.flutter.plugins.connectivity.R$styleable
 androidx/arch/core/R.java
  androidx.arch.core.R
 androidx/fragment/R.java
